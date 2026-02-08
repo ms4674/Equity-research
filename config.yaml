@@ -1,0 +1,141 @@
+# ============================================================================
+# Daily Software Stock Memo - Configuration
+# ============================================================================
+
+# Data source configuration
+data_source:
+  # Options: "bloomberg", "yahoo"
+  # "bloomberg" requires Bloomberg Terminal + blpapi Python SDK
+  # "yahoo" uses yfinance (free, no license required)
+  provider: "yahoo"
+
+  bloomberg:
+    host: "localhost"
+    port: 8194
+
+# Software stock universe
+# Major publicly traded software companies organized by sub-sector
+stock_universe:
+  enterprise_software:
+    - ticker: "CRM"
+      name: "Salesforce"
+    - ticker: "NOW"
+      name: "ServiceNow"
+    - ticker: "WDAY"
+      name: "Workday"
+    - ticker: "INTU"
+      name: "Intuit"
+    - ticker: "ADBE"
+      name: "Adobe"
+    - ticker: "ORCL"
+      name: "Oracle"
+    - ticker: "SAP"
+      name: "SAP SE"
+    - ticker: "PANW"
+      name: "Palo Alto Networks"
+    - ticker: "SNPS"
+      name: "Synopsys"
+    - ticker: "CDNS"
+      name: "Cadence Design"
+    - ticker: "ANSS"
+      name: "Ansys"
+    - ticker: "TEAM"
+      name: "Atlassian"
+    - ticker: "HUBS"
+      name: "HubSpot"
+    - ticker: "DDOG"
+      name: "Datadog"
+    - ticker: "ZS"
+      name: "Zscaler"
+    - ticker: "FTNT"
+      name: "Fortinet"
+
+  cloud_infrastructure:
+    - ticker: "MSFT"
+      name: "Microsoft"
+    - ticker: "GOOGL"
+      name: "Alphabet"
+    - ticker: "AMZN"
+      name: "Amazon"
+    - ticker: "SNOW"
+      name: "Snowflake"
+    - ticker: "MDB"
+      name: "MongoDB"
+    - ticker: "NET"
+      name: "Cloudflare"
+    - ticker: "DDOG"
+      name: "Datadog"
+    - ticker: "CRWD"
+      name: "CrowdStrike"
+
+  consumer_software:
+    - ticker: "META"
+      name: "Meta Platforms"
+    - ticker: "SHOP"
+      name: "Shopify"
+    - ticker: "SQ"
+      name: "Block (Square)"
+    - ticker: "UBER"
+      name: "Uber"
+    - ticker: "ABNB"
+      name: "Airbnb"
+    - ticker: "SPOT"
+      name: "Spotify"
+    - ticker: "PINS"
+      name: "Pinterest"
+    - ticker: "SNAP"
+      name: "Snap"
+
+  semiconductors_adjacent:
+    - ticker: "NVDA"
+      name: "NVIDIA"
+    - ticker: "AMD"
+      name: "AMD"
+    - ticker: "AVGO"
+      name: "Broadcom"
+    - ticker: "ARM"
+      name: "Arm Holdings"
+
+  emerging_ai_software:
+    - ticker: "AI"
+      name: "C3.ai"
+    - ticker: "PLTR"
+      name: "Palantir"
+    - ticker: "PATH"
+      name: "UiPath"
+    - ticker: "S"
+      name: "SentinelOne"
+    - ticker: "CFLT"
+      name: "Confluent"
+    - ticker: "DOCN"
+      name: "DigitalOcean"
+    - ticker: "ESTC"
+      name: "Elastic"
+    - ticker: "GTLB"
+      name: "GitLab"
+    - ticker: "IOT"
+      name: "Samsara"
+
+# Memo generation settings
+memo:
+  # Number of top movers to feature in the memo (gainers + losers each)
+  top_movers_count: 5
+
+  # Minimum absolute percent change to be considered a "notable mover"
+  min_move_threshold: 1.0
+
+  # Output format: "markdown", "html", "text"
+  output_format: "markdown"
+
+  # Output directory
+  output_dir: "output"
+
+  # Include sector performance summary
+  include_sector_summary: true
+
+  # Include volume analysis
+  include_volume_analysis: true
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
