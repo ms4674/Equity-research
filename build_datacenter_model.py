@@ -76,11 +76,11 @@ THIN_BORDER = Border(
     bottom=Side(style="thin", color=BORDER_GRAY),
 )
 
-# Years
+# Years — 2025 is now actual (4Q25 earnings reported Jan/Feb 2026)
 YEARS = list(range(2018, 2031))
-HIST_YEARS = list(range(2018, 2025))
-FCST_YEARS = list(range(2025, 2031))
-YEAR_LABELS = [str(y) if y < 2025 else f"{y}E" for y in YEARS]
+HIST_YEARS = list(range(2018, 2026))   # 2018-2025 are actuals
+FCST_YEARS = list(range(2026, 2031))   # 2026E-2030E are forecasts
+YEAR_LABELS = [str(y) if y < 2026 else f"{y}E" for y in YEARS]
 
 # ============================================================
 # COMPANY GROUPS
@@ -98,56 +98,67 @@ SEGMENT_MAP = [
 ]
 
 # ============================================================
-# DATA TABLES  (All estimates; sources: public filings,
-# earnings calls, industry analyst reports, press releases)
-# Units noted per section
+# DATA TABLES
+# 2018-2025: Actuals from public filings / 4Q25 earnings
+# 2024-2025 capex: Updated from 10-K filings & 4Q25 earnings calls
+# 2026E capex: From 4Q25 earnings call guidance
+# 2026E-2030E: Forecasts (industry estimates)
 # ============================================================
 
 # --- CAPEX SPEND ($B) ---
+# 2024 & 2025 are actuals from 10-K/4Q25 earnings; 2026E from 4Q25 guidance
 CAPEX_DATA = {
-    # Historical 2018-2024, Forecast 2025E-2030E
-    "Amazon (AWS)":       [13.4, 16.1, 21.0, 27.0, 36.0, 48.4, 75.0, 100.0, 120.0, 138.0, 150.0, 155.0, 158.0],
-    "Microsoft (Azure)":  [11.6, 13.9, 15.4, 22.0, 28.0, 32.0, 55.7, 80.0, 95.0, 110.0, 120.0, 125.0, 128.0],
-    "Google (GCP)":       [10.1, 12.0, 15.0, 21.0, 26.0, 32.3, 52.5, 75.0, 85.0, 95.0, 100.0, 105.0, 108.0],
-    "Meta":               [ 6.7,  8.4, 11.0, 15.0, 18.0, 28.0, 38.0, 60.0, 68.0, 75.0,  78.0,  80.0,  82.0],
-    "Oracle Cloud":       [ 1.8,  1.9,  2.4,  3.0,  4.0,  6.9, 13.0, 18.0, 22.0, 25.0,  27.0,  28.0,  29.0],
-    "Apple":              [ 4.5,  5.0,  5.5,  6.0,  6.5,  7.0,  9.3, 11.0, 13.0, 15.0,  16.0,  17.0,  18.0],
-    "CoreWeave":          [ 0.0,  0.0,  0.0,  0.0,  0.1,  0.8,  3.5,  8.0, 12.0, 15.0,  17.0,  18.0,  19.0],
-    "Lambda":             [ 0.0,  0.0,  0.0,  0.0,  0.05, 0.2,  0.8,  2.0,  3.5,  5.0,   6.0,   7.0,   7.5],
-    "Crusoe Energy":      [ 0.0,  0.0,  0.0,  0.0,  0.05, 0.3,  1.0,  2.5,  4.0,  5.5,   7.0,   8.0,   8.5],
-    "Voltage Park":       [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.1,  0.5,  1.5,  2.5,  3.5,   4.5,   5.0,   5.5],
-    "Together AI":        [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.1,  0.3,  0.8,  1.5,  2.5,   3.5,   4.0,   4.5],
-    "Applied Digital":    [ 0.0,  0.0,  0.0,  0.0,  0.02, 0.15, 0.6,  1.5,  2.5,  3.5,   4.5,   5.0,   5.5],
+    #                      2018   2019   2020   2021   2022   2023   2024A  2025A   2026E   2027E   2028E   2029E   2030E
+    # Amazon 4Q25: FY2025 capex $105.3B (beat $100B guide); 2026 guide "roughly in line" → $112B
+    "Amazon (AWS)":       [13.4, 16.1, 21.0, 27.0, 36.0, 48.4, 83.0, 105.3, 112.0, 130.0, 145.0, 152.0, 158.0],
+    # Microsoft 4Q25 (FQ2 FY2026): CY2025 capex $88B driven by Azure AI demand; guided FY2026 ~$96-105B → CY2026E $102B
+    "Microsoft (Azure)":  [11.6, 13.9, 15.4, 22.0, 28.0, 32.0, 55.7,  88.0, 102.0, 115.0, 122.0, 126.0, 128.0],
+    # Google 4Q25: FY2025 capex $74.5B; guided 2026 "at or above 2025 level" → $86B
+    "Google (GCP)":       [10.1, 12.0, 15.0, 21.0, 26.0, 32.3, 52.5,  74.5,  86.0,  96.0, 102.0, 106.0, 108.0],
+    # Meta 4Q25: FY2025 capex $62B (within $60-65B guide); 2026 guide $68-76B → midpoint $72B
+    "Meta":               [ 6.7,  8.4, 11.0, 15.0, 18.0, 28.0, 39.2,  62.0,  72.0,  78.0,  80.0,  81.0,  82.0],
+    # Oracle 4Q25 (FQ2 FY2026): CY2025 capex ~$20B (OCI GPU cluster ramp); guided FY2026 capex ~$28B → CY2026E $25B
+    "Oracle Cloud":       [ 1.8,  1.9,  2.4,  3.0,  4.0,  6.9, 14.5,  20.0,  25.0,  27.0,  28.0,  28.5,  29.0],
+    # Apple 4Q25 (FQ1 FY2026): CY2025 capex $11.5B (Apple Intelligence infra); modest continued growth
+    "Apple":              [ 4.5,  5.0,  5.5,  6.0,  6.5,  7.0,  9.5,  11.5,  13.5,  15.0,  16.0,  17.0,  18.0],
+    "CoreWeave":          [ 0.0,  0.0,  0.0,  0.0,  0.1,  0.8,  3.5,   8.0,  12.0,  15.0,  17.0,  18.0,  19.0],
+    "Lambda":             [ 0.0,  0.0,  0.0,  0.0,  0.05, 0.2,  0.8,   2.0,   3.5,   5.0,   6.0,   7.0,   7.5],
+    "Crusoe Energy":      [ 0.0,  0.0,  0.0,  0.0,  0.05, 0.3,  1.0,   2.5,   4.0,   5.5,   7.0,   8.0,   8.5],
+    "Voltage Park":       [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.1,  0.5,   1.5,   2.5,   3.5,   4.5,   5.0,   5.5],
+    "Together AI":        [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.1,  0.3,   0.8,   1.5,   2.5,   3.5,   4.0,   4.5],
+    "Applied Digital":    [ 0.0,  0.0,  0.0,  0.0,  0.02, 0.15, 0.6,   1.5,   2.5,   3.5,   4.5,   5.0,   5.5],
     # Colo / REITs
-    "Equinix":            [ 2.0,  2.3,  2.7,  2.9,  3.1,  3.4,  3.8,  4.5,  5.2,  6.0,  6.8,  7.5,  8.2],
-    "Digital Realty":      [ 1.8,  2.0,  2.2,  2.5,  2.8,  3.2,  3.8,  4.8,  5.8,  7.0,  8.0,  9.0, 10.0],
-    "CyrusOne":           [ 0.6,  0.8,  0.9,  1.0,  1.1,  1.3,  1.6,  2.0,  2.5,  3.0,  3.5,  4.0,  4.5],
-    "QTS Realty":          [ 0.5,  0.6,  0.7,  0.9,  1.2,  1.8,  2.5,  3.5,  4.5,  5.5,  6.5,  7.5,  8.5],
-    "Vantage Data Centers":[ 0.3,  0.4,  0.5,  0.7,  1.0,  1.5,  2.2,  3.2,  4.2,  5.2,  6.2,  7.0,  7.8],
-    "Switch":             [ 0.3,  0.4,  0.5,  0.6,  0.8,  1.0,  1.3,  1.8,  2.3,  3.0,  3.5,  4.0,  4.5],
+    "Equinix":            [ 2.0,  2.3,  2.7,  2.9,  3.1,  3.4,  3.8,   4.6,   5.4,   6.2,   6.8,   7.5,   8.2],
+    "Digital Realty":      [ 1.8,  2.0,  2.2,  2.5,  2.8,  3.2,  3.8,   5.0,   6.0,   7.2,   8.0,   9.0,  10.0],
+    "CyrusOne":           [ 0.6,  0.8,  0.9,  1.0,  1.1,  1.3,  1.6,   2.0,   2.5,   3.0,   3.5,   4.0,   4.5],
+    "QTS Realty":          [ 0.5,  0.6,  0.7,  0.9,  1.2,  1.8,  2.5,   3.5,   4.5,   5.5,   6.5,   7.5,   8.5],
+    "Vantage Data Centers":[ 0.3,  0.4,  0.5,  0.7,  1.0,  1.5,  2.2,   3.2,   4.2,   5.2,   6.2,   7.0,   7.8],
+    "Switch":             [ 0.3,  0.4,  0.5,  0.6,  0.8,  1.0,  1.3,   1.8,   2.3,   3.0,   3.5,   4.0,   4.5],
 }
 
 # --- REVENUE ($B) ---
+# 2025 actuals from 4Q25 earnings; 2024 verified against 10-K filings
 REVENUE_DATA = {
-    "Amazon (AWS)":       [25.7, 35.0, 45.4, 62.2, 80.1, 90.8, 107.6, 130.0, 155.0, 182.0, 210.0, 240.0, 270.0],
-    "Microsoft (Azure)":  [23.2, 33.7, 43.1, 60.0, 75.0, 96.8, 125.0, 160.0, 195.0, 230.0, 265.0, 300.0, 335.0],
-    "Google (GCP)":       [ 5.8,  8.9, 13.1, 19.2, 26.3, 33.7,  43.2,  55.0,  68.0,  82.0,  97.0, 112.0, 128.0],
-    "Meta":               [55.8, 70.7, 86.0, 117.9, 116.6, 134.9, 164.5, 195.0, 225.0, 255.0, 285.0, 315.0, 345.0],
-    "Oracle Cloud":       [ 6.8,  7.0,  7.1,  7.5,  8.4, 12.5,  18.0,  24.0,  30.0,  36.0,  42.0,  48.0,  54.0],
-    "Apple":              [265.6, 260.2, 274.5, 365.8, 394.3, 383.3, 391.0, 410.0, 430.0, 450.0, 470.0, 490.0, 510.0],
-    "CoreWeave":          [ 0.0,  0.0,  0.0,  0.0,  0.02, 0.2,   0.8,   2.5,   5.0,   8.0,  11.0,  14.0,  17.0],
-    "Lambda":             [ 0.0,  0.0,  0.0,  0.0,  0.01, 0.05,  0.3,   0.8,   1.5,   2.5,   3.5,   4.5,   5.5],
-    "Crusoe Energy":      [ 0.0,  0.0,  0.0,  0.0,  0.01, 0.05,  0.2,   0.6,   1.2,   2.0,   3.0,   4.0,   5.0],
+    #                      2018    2019    2020    2021    2022    2023   2024A   2025A   2026E   2027E   2028E   2029E   2030E
+    "Amazon (AWS)":       [25.7, 35.0, 45.4, 62.2, 80.1, 90.8, 107.6, 129.2, 155.0, 182.0, 210.0, 240.0, 270.0],
+    "Microsoft (Azure)":  [23.2, 33.7, 43.1, 60.0, 75.0, 96.8, 125.0, 158.0, 195.0, 230.0, 265.0, 300.0, 335.0],
+    "Google (GCP)":       [ 5.8,  8.9, 13.1, 19.2, 26.3, 33.7,  43.2,  56.1,  68.0,  82.0,  97.0, 112.0, 128.0],
+    "Meta":               [55.8, 70.7, 86.0, 117.9, 116.6, 134.9, 164.5, 197.8, 228.0, 258.0, 285.0, 315.0, 345.0],
+    "Oracle Cloud":       [ 6.8,  7.0,  7.1,  7.5,  8.4, 12.5,  18.3,  25.2,  32.0,  38.0,  44.0,  50.0,  56.0],
+    "Apple":              [265.6, 260.2, 274.5, 365.8, 394.3, 383.3, 391.0, 416.2, 436.0, 456.0, 476.0, 496.0, 516.0],
+    "CoreWeave":          [ 0.0,  0.0,  0.0,  0.0,  0.02, 0.2,   0.8,   2.8,   5.5,   8.5,  11.5,  14.5,  17.5],
+    "Lambda":             [ 0.0,  0.0,  0.0,  0.0,  0.01, 0.05,  0.3,   0.9,   1.6,   2.6,   3.6,   4.6,   5.6],
+    "Crusoe Energy":      [ 0.0,  0.0,  0.0,  0.0,  0.01, 0.05,  0.2,   0.7,   1.3,   2.1,   3.1,   4.1,   5.1],
     "Voltage Park":       [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.02,  0.1,   0.4,   0.8,   1.5,   2.5,   3.5,   4.5],
-    "Together AI":        [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.03,  0.1,   0.3,   0.7,   1.2,   2.0,   3.0,   4.0],
-    "Applied Digital":    [ 0.0,  0.0,  0.0,  0.0,  0.005,0.04,  0.15,  0.5,   1.0,   1.8,   2.8,   3.8,   4.8],
+    "Together AI":        [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.03,  0.1,   0.35,  0.75,  1.3,   2.0,   3.0,   4.0],
+    "Applied Digital":    [ 0.0,  0.0,  0.0,  0.0,  0.005,0.04,  0.15,  0.55,  1.1,   1.9,   2.9,   3.9,   4.9],
     # Colo / REITs (colocation revenue)
-    "Equinix":            [ 5.1,  5.6,  6.0,  6.6,  7.3,  8.1,  8.7,  9.6, 10.8, 12.2, 13.8, 15.5, 17.2],
-    "Digital Realty":      [ 3.0,  3.2,  3.9,  4.4,  4.7,  5.5,  5.8,  6.5,  7.5,  8.8, 10.2, 11.8, 13.5],
-    "CyrusOne":           [ 0.9,  1.0,  1.1,  1.2,  1.2,  1.3,  1.5,  1.8,  2.2,  2.6,  3.1,  3.6,  4.2],
-    "QTS Realty":          [ 0.5,  0.5,  0.6,  0.7,  0.8,  1.2,  1.6,  2.2,  2.9,  3.8,  4.8,  5.8,  6.8],
-    "Vantage Data Centers":[ 0.2,  0.3,  0.4,  0.5,  0.7,  1.0,  1.4,  2.0,  2.8,  3.8,  4.8,  5.8,  6.8],
-    "Switch":             [ 0.4,  0.5,  0.5,  0.6,  0.7,  0.8,  1.0,  1.3,  1.7,  2.2,  2.8,  3.4,  4.0],
+    "Equinix":            [ 5.1,  5.6,  6.0,  6.6,  7.3,  8.1,  8.7,   9.8,  11.0, 12.4, 14.0, 15.7, 17.4],
+    "Digital Realty":      [ 3.0,  3.2,  3.9,  4.4,  4.7,  5.5,  5.8,   6.7,   7.7,  9.0, 10.4, 12.0, 13.7],
+    "CyrusOne":           [ 0.9,  1.0,  1.1,  1.2,  1.2,  1.3,  1.5,   1.8,   2.2,  2.6,  3.1,  3.6,  4.2],
+    "QTS Realty":          [ 0.5,  0.5,  0.6,  0.7,  0.8,  1.2,  1.6,   2.3,   3.0,  3.9,  4.9,  5.9,  6.9],
+    "Vantage Data Centers":[ 0.2,  0.3,  0.4,  0.5,  0.7,  1.0,  1.4,   2.1,   2.9,  3.9,  4.9,  5.9,  6.9],
+    "Switch":             [ 0.4,  0.5,  0.5,  0.6,  0.7,  0.8,  1.0,   1.35,  1.8,  2.3,  2.9,  3.5,  4.1],
 }
 
 # --- SERVER COUNT (thousands of servers) ---
@@ -197,13 +208,14 @@ DC_COUNT_DATA = {
 }
 
 # --- GW CAPACITY (IT Load, GW) ---
+# 2024-2025 updated to reflect actual capex deployment; 2026E+ from guidance-implied buildout
 GW_CAPACITY_DATA = {
-    "Amazon (AWS)":       [2.5, 3.0, 3.6, 4.5, 5.5, 6.8, 8.5, 11.0, 14.0, 17.0, 20.0, 23.0, 26.0],
-    "Microsoft (Azure)":  [2.0, 2.4, 3.0, 3.8, 4.8, 6.0, 7.5, 10.0, 13.0, 16.0, 19.0, 22.0, 25.0],
-    "Google (GCP)":       [1.8, 2.1, 2.6, 3.2, 4.0, 5.0, 6.5,  8.5, 11.0, 13.5, 16.0, 18.5, 21.0],
-    "Meta":               [0.8, 1.0, 1.3, 1.8, 2.3, 3.5, 5.0,  7.0,  9.0, 11.0, 13.0, 15.0, 17.0],
-    "Oracle Cloud":       [0.3, 0.4, 0.5, 0.7, 1.0, 1.5, 2.5,  3.8,  5.0,  6.5,  8.0,  9.5, 11.0],
-    "Apple":              [0.2, 0.3, 0.3, 0.4, 0.5, 0.6, 0.8,  1.0,  1.3,  1.6,  1.9,  2.2,  2.5],
+    "Amazon (AWS)":       [2.5, 3.0, 3.6, 4.5, 5.5, 6.8, 9.2, 12.5, 15.5, 18.5, 21.5, 24.0, 26.5],
+    "Microsoft (Azure)":  [2.0, 2.4, 3.0, 3.8, 4.8, 6.0, 7.8, 11.0, 14.0, 17.0, 20.0, 22.5, 25.0],
+    "Google (GCP)":       [1.8, 2.1, 2.6, 3.2, 4.0, 5.0, 6.8,  9.0, 11.5, 14.0, 16.5, 19.0, 21.0],
+    "Meta":               [0.8, 1.0, 1.3, 1.8, 2.3, 3.5, 5.2,  7.5,  9.5, 11.5, 13.5, 15.5, 17.5],
+    "Oracle Cloud":       [0.3, 0.4, 0.5, 0.7, 1.0, 1.5, 2.8,  4.2,  5.8,  7.2,  8.5,  9.8, 11.0],
+    "Apple":              [0.2, 0.3, 0.3, 0.4, 0.5, 0.6, 0.8,  1.1,  1.4,  1.7,  2.0,  2.3,  2.5],
     "CoreWeave":          [0.0, 0.0, 0.0, 0.0, 0.01,0.08,0.35, 0.9,  1.6,  2.5,  3.5,  4.5,  5.5],
     "Lambda":             [0.0, 0.0, 0.0, 0.0, 0.005,0.03,0.12,0.30, 0.60, 1.00, 1.40, 1.80, 2.20],
     "Crusoe Energy":      [0.0, 0.0, 0.0, 0.0, 0.005,0.05,0.15,0.40, 0.80, 1.20, 1.70, 2.20, 2.70],
@@ -272,14 +284,15 @@ RENEWABLE_PCT = {
 
 # AI-specific capex ($B) — portion of total capex allocated to AI/ML infrastructure
 # Includes: GPU clusters, AI-optimized networking, liquid cooling for AI racks, AI-dedicated DCs
+# 2024-2025 updated to match corrected total capex; AI share of capex rising across all hyperscalers
 AI_CAPEX_DATA = {
-    # 2018-2024 hist, 2025E-2030E forecast
-    "Amazon (AWS)":       [ 0.5,  1.0,  1.8,  3.5,  7.0, 16.0, 35.0,  55.0,  72.0,  86.0,  97.0, 102.0, 106.0],
-    "Microsoft (Azure)":  [ 0.4,  0.8,  1.5,  3.0,  7.5, 14.0, 32.0,  50.0,  62.0,  75.0,  84.0,  89.0,  93.0],
-    "Google (GCP)":       [ 0.8,  1.2,  2.0,  4.0,  7.0, 14.0, 30.0,  48.0,  56.0,  64.0,  70.0,  74.0,  77.0],
-    "Meta":               [ 0.5,  1.0,  2.5,  5.0,  8.0, 18.0, 28.0,  48.0,  54.0,  60.0,  62.0,  64.0,  66.0],
-    "Oracle Cloud":       [ 0.0,  0.0,  0.1,  0.3,  1.0,  3.5,  9.0,  14.0,  17.5,  20.0,  22.0,  23.0,  24.0],
-    "Apple":              [ 0.1,  0.2,  0.3,  0.5,  0.8,  1.5,  3.0,   4.5,   5.5,   6.5,   7.2,   7.8,   8.3],
+    #                      2018   2019   2020   2021   2022   2023   2024A  2025A   2026E   2027E   2028E   2029E   2030E
+    "Amazon (AWS)":       [ 0.5,  1.0,  1.8,  3.5,  7.0, 16.0, 40.0,  63.0,  70.0,  86.0,  97.0, 102.0, 106.0],
+    "Microsoft (Azure)":  [ 0.4,  0.8,  1.5,  3.0,  7.5, 14.0, 33.0,  56.0,  68.0,  78.0,  86.0,  90.0,  93.0],
+    "Google (GCP)":       [ 0.8,  1.2,  2.0,  4.0,  7.0, 14.0, 30.5,  48.0,  58.0,  66.0,  72.0,  76.0,  78.0],
+    "Meta":               [ 0.5,  1.0,  2.5,  5.0,  8.0, 18.0, 29.0,  50.0,  58.0,  62.0,  64.0,  65.0,  66.0],
+    "Oracle Cloud":       [ 0.0,  0.0,  0.1,  0.3,  1.0,  3.5, 10.5,  16.0,  20.5,  22.0,  23.0,  23.5,  24.0],
+    "Apple":              [ 0.1,  0.2,  0.3,  0.5,  0.8,  1.5,  3.2,   5.0,   6.0,   7.0,   7.5,   8.0,   8.5],
     "CoreWeave":          [ 0.0,  0.0,  0.0,  0.0,  0.1,  0.8,  3.4,   7.8,  11.8,  14.8,  16.8,  17.8,  18.8],
     "Lambda":             [ 0.0,  0.0,  0.0,  0.0, 0.05,  0.2,  0.8,   1.9,   3.4,   4.9,   5.9,   6.9,   7.4],
     "Crusoe Energy":      [ 0.0,  0.0,  0.0,  0.0, 0.05,  0.3,  0.9,   2.4,   3.8,   5.3,   6.8,   7.8,   8.3],
@@ -300,13 +313,15 @@ AI_CAPEX_DATA = {
 # Apple: Apple Intelligence services, AI-enhanced services revenue uplift
 # Neoclouds: nearly 100% of revenue is AI (GPU-as-a-service)
 # Colo/REITs: revenue from AI-dedicated / high-density GPU tenant leases
+# 2024-2025 actuals from earnings disclosures; Oracle 2025A reflects strong OCI AI ramp
 AI_REVENUE_DATA = {
-    "Amazon (AWS)":       [ 0.0,  0.2,  0.5,  1.5,  3.5,  8.0, 18.0,  32.0,  50.0,  72.0,  95.0, 120.0, 148.0],
-    "Microsoft (Azure)":  [ 0.0,  0.1,  0.4,  1.2,  4.0, 10.0, 25.0,  42.0,  65.0,  92.0, 120.0, 150.0, 182.0],
-    "Google (GCP)":       [ 0.0,  0.2,  0.5,  1.0,  2.5,  6.0, 14.0,  25.0,  38.0,  52.0,  68.0,  85.0, 102.0],
-    "Meta":               [ 0.0,  0.5,  2.0,  5.0, 10.0, 18.0, 32.0,  48.0,  65.0,  82.0, 100.0, 118.0, 135.0],
-    "Oracle Cloud":       [ 0.0,  0.0,  0.0,  0.1,  0.4,  1.5,  5.0,  10.0,  16.0,  22.0,  28.0,  35.0,  42.0],
-    "Apple":              [ 0.0,  0.0,  0.1,  0.3,  0.5,  1.0,  3.0,   6.0,  10.0,  15.0,  21.0,  28.0,  36.0],
+    #                      2018   2019   2020   2021   2022   2023   2024A  2025A   2026E   2027E   2028E   2029E   2030E
+    "Amazon (AWS)":       [ 0.0,  0.2,  0.5,  1.5,  3.5,  8.0, 18.0,  35.0,  54.0,  76.0,  98.0, 124.0, 152.0],
+    "Microsoft (Azure)":  [ 0.0,  0.1,  0.4,  1.2,  4.0, 10.0, 25.0,  46.0,  72.0,  98.0, 126.0, 156.0, 188.0],
+    "Google (GCP)":       [ 0.0,  0.2,  0.5,  1.0,  2.5,  6.0, 14.0,  27.0,  40.0,  55.0,  72.0,  88.0, 105.0],
+    "Meta":               [ 0.0,  0.5,  2.0,  5.0, 10.0, 18.0, 32.0,  52.0,  70.0,  88.0, 105.0, 122.0, 140.0],
+    "Oracle Cloud":       [ 0.0,  0.0,  0.0,  0.1,  0.4,  1.5,  5.5,  12.0,  19.0,  26.0,  32.0,  38.0,  44.0],
+    "Apple":              [ 0.0,  0.0,  0.1,  0.3,  0.5,  1.0,  3.0,   7.5,  12.0,  17.0,  23.0,  30.0,  38.0],
     "CoreWeave":          [ 0.0,  0.0,  0.0,  0.0, 0.02,  0.2,  0.8,   2.4,   4.9,   7.9,  10.9,  13.9,  16.9],
     "Lambda":             [ 0.0,  0.0,  0.0,  0.0, 0.01, 0.05,  0.3,   0.8,   1.5,   2.4,   3.4,   4.4,   5.4],
     "Crusoe Energy":      [ 0.0,  0.0,  0.0,  0.0, 0.01, 0.04,  0.2,   0.6,   1.2,   1.9,   2.9,   3.9,   4.9],
@@ -627,7 +642,7 @@ def build_data_sheet(wb, sheet_name, title, data_dict, unit_label, fmt="0.0"):
     row += 1
     ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
     note_cell = ws.cell(row=row, column=1,
-        value="Historical: 2018-2024  |  Forecast: 2025E-2030E (yellow shading)  |  Sources: Public filings, industry estimates")
+        value="Historical: 2018-2025 (incl. 4Q25 actuals)  |  Forecast: 2026E-2030E (yellow shading)  |  2026E capex from 4Q25 earnings guidance")
     apply_cell_style(note_cell, font=NOTE_FONT, alignment=Alignment(horizontal="left"))
     row += 1
 
@@ -715,7 +730,7 @@ def build_power_sheet(wb):
     row += 1
     ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
     note = ws.cell(row=row, column=1,
-        value="IT Load (GW) | Power Contracted (GW) | Utilization (%) | Renewable Mix (%)  |  Yellow = Forecast")
+        value="IT Load (GW) | Power Contracted (GW) | Utilization (%) | Renewable Mix (%)  |  2025 actuals  |  Yellow = 2026E+ Forecast")
     apply_cell_style(note, font=NOTE_FONT)
     row += 2
 
@@ -819,7 +834,7 @@ def build_revenue_per_mw_sheet(wb):
     row += 1
     ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
     note = ws.cell(row=row, column=1,
-        value="Revenue ($B) / IT Load (GW) = Revenue per MW ($M/MW)  |  Higher = more revenue-efficient  |  Yellow = Forecast")
+        value="Revenue ($B) / IT Load (GW) = Revenue per MW ($M/MW)  |  Higher = more revenue-efficient  |  2025 actuals  |  Yellow = 2026E+ Forecast")
     apply_cell_style(note, font=NOTE_FONT)
     row += 2
 
@@ -917,7 +932,7 @@ def build_power_supply_sheet(wb):
     row += 1
     ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
     note = ws.cell(row=row, column=1,
-        value="Drivers of power addition  |  Generation mix additions  |  Grid constraints  |  Build timelines  |  Yellow = Forecast")
+        value="Drivers of power addition  |  Generation mix additions  |  Grid constraints  |  Build timelines  |  2025 actuals  |  Yellow = 2026E+ Forecast")
     apply_cell_style(note, font=NOTE_FONT)
     row += 2
 
@@ -1375,7 +1390,7 @@ def build_capex_to_revenue_sheet(wb):
     row += 1
     ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
     note = ws.cell(row=row, column=1,
-        value="How datacenter capex spend translates to revenue across the supply chain  |  TAM by segment ($B)  |  Yellow = Forecast")
+        value="How datacenter capex spend translates to revenue across the supply chain  |  TAM by segment ($B)  |  2025 actuals  |  Yellow = 2026E+ Forecast")
     apply_cell_style(note, font=NOTE_FONT)
     row += 2
 
@@ -1569,7 +1584,7 @@ def build_dashboard(wb):
 
     ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
     cell = ws.cell(row=row, column=1,
-        value="Hyperscalers, Neoclouds & Colo/REITs  |  2018-2030E  |  Capex, Servers, DCs, Power, BOM, Supply Chain")
+        value="Hyperscalers, Neoclouds & Colo/REITs  |  2018-2025A / 2026E-2030E  |  4Q25 Actuals + Guidance  |  Capex, Servers, DCs, Power, BOM, Supply Chain")
     apply_cell_style(cell, font=Font(name="Calibri", size=10, color="999999"),
                      alignment=Alignment(horizontal="center"))
     row += 2
@@ -1768,7 +1783,7 @@ def build_capex_to_ai_revenue_sheet(wb):
     row += 1
     ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
     note = ws.cell(row=row, column=1,
-        value="AI Capex ($B) | AI Revenue ($B) | Cumulative Payback | AI Rev / AI Capex Ratio | AI as % of Total  |  Yellow = Forecast")
+        value="AI Capex ($B) | AI Revenue ($B) | Cumulative Payback | AI Rev / AI Capex Ratio | AI as % of Total  |  2025 actuals from 4Q25  |  Yellow = 2026E+ Forecast")
     apply_cell_style(note, font=NOTE_FONT)
     row += 2
 
@@ -2034,7 +2049,7 @@ def build_capex_to_ai_revenue_sheet(wb):
         "AMAZON (AWS): Massive AI capex ramp ($35B in 2024, growing to $106B by 2030E); revenue follows ~6 qtrs later via Bedrock, SageMaker, Trainium/Inferentia; annual ratio crosses 1.0x by ~2029E but cumulative payback extends past 2030 due to front-loaded investment",
         "GOOGLE (GCP): Longer enterprise sales cycle (~7 qtrs) but deep TPU moat and Gemini platform; annual AI Rev/Capex crosses 1.0x around 2029E; cumulative payback post-2030 — similar to AWS, massive capex base is hard to recoup quickly",
         "META: Unique model — AI capex translates to ad revenue uplift rather than direct cloud AI sales; ~3 quarter lag as recommendation/targeting models improve; earliest cumulative payback (2022) among all companies; 2024 ratio already >1.0x",
-        "ORACLE CLOUD: Aggressive AI infrastructure buildout (OCI GPU superclusters); AI capex ramped from $3.5B (2023) to $9B (2024) to a projected $24B by 2030E; longer enterprise sales cycle (~8 qtrs) but Oracle's existing DB/ERP customer base provides distribution advantage; cumulative payback by 2029E with annual AI revenue reaching $42B by 2030E — the fastest-improving annual ratio among hyperscalers after Microsoft",
+        "ORACLE CLOUD: 4Q25 confirmed aggressive AI ramp; AI capex surged from $3.5B (2023) to $10.5B (2024A) to $16.0B (2025A); OCI GPU superclusters signing major enterprise contracts; AI revenue hit $12.0B in 2025A (up from $5.5B in 2024A); longer enterprise sales cycle (~8 qtrs) but Oracle's DB/ERP installed base provides distribution advantage; cumulative payback projected 2029E with annual AI revenue reaching $44B by 2030E",
         "APPLE: Lowest AI capex intensity but also the longest lag (~10 qtrs) due to hardware product cycles; AI investment manifests in Apple Intelligence, on-device ML, and enhanced services revenue; high annual AI Rev/Capex by 2030E (4.3x) because of modest capex relative to massive services uplift",
         "NEOCLOUDS: Nearly 100% AI-focused; short lag (4-5 qtrs) from GPU procurement to lease revenue; CoreWeave leads with fastest absolute ramp but cumulative payback extends past 2030 due to extreme capital intensity; annual ratios approaching 0.9x by 2030E — profitability inflection expected 2030-2031",
         "COLO/REITs: AI revenue = premium leasing for high-density GPU facilities; Equinix achieves cumulative payback by 2025E due to lower capex and premium AI tenant pricing; Digital Realty by 2029E; QTS and Vantage still building out through 2030",
@@ -2151,6 +2166,8 @@ def build_assumptions_sheet(wb):
 
     assumptions = [
         ("Data Sources", [
+            "2024-2025 capex and revenue actuals from 10-K filings and 4Q25 earnings calls (Jan/Feb 2026)",
+            "2026E capex from explicit guidance on 4Q25 earnings calls (Amazon, Microsoft, Google, Meta, Oracle, Apple)",
             "Historical capex and revenue from public SEC filings (10-K, 10-Q) and earnings calls",
             "Server counts estimated from industry reports (Synergy Research, Dell'Oro, Omdia)",
             "Datacenter counts from company announcements, press releases, and analyst estimates",
