@@ -267,6 +267,85 @@ RENEWABLE_PCT = {
 
 
 # ============================================================
+# AI CAPEX & AI REVENUE DATA — Capex-to-AI-Revenue Conversion
+# ============================================================
+
+# AI-specific capex ($B) — portion of total capex allocated to AI/ML infrastructure
+# Includes: GPU clusters, AI-optimized networking, liquid cooling for AI racks, AI-dedicated DCs
+AI_CAPEX_DATA = {
+    # 2018-2024 hist, 2025E-2030E forecast
+    "Amazon (AWS)":       [ 0.5,  1.0,  1.8,  3.5,  7.0, 16.0, 35.0,  55.0,  72.0,  86.0,  97.0, 102.0, 106.0],
+    "Microsoft (Azure)":  [ 0.4,  0.8,  1.5,  3.0,  7.5, 14.0, 32.0,  50.0,  62.0,  75.0,  84.0,  89.0,  93.0],
+    "Google (GCP)":       [ 0.8,  1.2,  2.0,  4.0,  7.0, 14.0, 30.0,  48.0,  56.0,  64.0,  70.0,  74.0,  77.0],
+    "Meta":               [ 0.5,  1.0,  2.5,  5.0,  8.0, 18.0, 28.0,  48.0,  54.0,  60.0,  62.0,  64.0,  66.0],
+    "Oracle Cloud":       [ 0.0,  0.0,  0.1,  0.3,  1.0,  3.5,  9.0,  14.0,  17.5,  20.0,  22.0,  23.0,  24.0],
+    "Apple":              [ 0.1,  0.2,  0.3,  0.5,  0.8,  1.5,  3.0,   4.5,   5.5,   6.5,   7.2,   7.8,   8.3],
+    "CoreWeave":          [ 0.0,  0.0,  0.0,  0.0,  0.1,  0.8,  3.4,   7.8,  11.8,  14.8,  16.8,  17.8,  18.8],
+    "Lambda":             [ 0.0,  0.0,  0.0,  0.0, 0.05,  0.2,  0.8,   1.9,   3.4,   4.9,   5.9,   6.9,   7.4],
+    "Crusoe Energy":      [ 0.0,  0.0,  0.0,  0.0, 0.05,  0.3,  0.9,   2.4,   3.8,   5.3,   6.8,   7.8,   8.3],
+    "Voltage Park":       [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.1,  0.5,   1.5,   2.4,   3.4,   4.4,   4.9,   5.4],
+    "Together AI":        [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.1,  0.3,   0.8,   1.5,   2.4,   3.4,   3.9,   4.4],
+    "Applied Digital":    [ 0.0,  0.0,  0.0,  0.0, 0.02, 0.14,  0.6,   1.4,   2.4,   3.4,   4.4,   4.9,   5.4],
+    "Equinix":            [ 0.0,  0.0,  0.1,  0.1,  0.3,  0.5,  0.8,   1.2,   1.8,   2.4,   3.0,   3.6,   4.2],
+    "Digital Realty":      [ 0.0,  0.0,  0.1,  0.2,  0.4,  0.8,  1.2,   1.8,   2.6,   3.5,   4.4,   5.2,   6.0],
+    "CyrusOne":           [ 0.0,  0.0,  0.0,  0.1,  0.1,  0.3,  0.5,   0.7,   1.0,   1.3,   1.6,   1.9,   2.2],
+    "QTS Realty":          [ 0.0,  0.0,  0.0,  0.1,  0.2,  0.6,  1.0,   1.5,   2.2,   3.0,   3.8,   4.5,   5.2],
+    "Vantage Data Centers":[ 0.0,  0.0,  0.0,  0.1,  0.2,  0.5,  0.9,   1.5,   2.1,   2.9,   3.6,   4.2,   4.8],
+    "Switch":             [ 0.0,  0.0,  0.0,  0.0,  0.1,  0.2,  0.4,   0.7,   1.0,   1.5,   1.9,   2.3,   2.7],
+}
+
+# AI-specific revenue ($B) — revenue directly attributable to AI products/services
+# Hyperscalers: AI cloud services (GPU instances, AI APIs, ML platforms, Copilots)
+# Meta: AI-attributable ad revenue uplift (portion of ad rev enabled by AI recommendation/targeting improvements)
+# Apple: Apple Intelligence services, AI-enhanced services revenue uplift
+# Neoclouds: nearly 100% of revenue is AI (GPU-as-a-service)
+# Colo/REITs: revenue from AI-dedicated / high-density GPU tenant leases
+AI_REVENUE_DATA = {
+    "Amazon (AWS)":       [ 0.0,  0.2,  0.5,  1.5,  3.5,  8.0, 18.0,  32.0,  50.0,  72.0,  95.0, 120.0, 148.0],
+    "Microsoft (Azure)":  [ 0.0,  0.1,  0.4,  1.2,  4.0, 10.0, 25.0,  42.0,  65.0,  92.0, 120.0, 150.0, 182.0],
+    "Google (GCP)":       [ 0.0,  0.2,  0.5,  1.0,  2.5,  6.0, 14.0,  25.0,  38.0,  52.0,  68.0,  85.0, 102.0],
+    "Meta":               [ 0.0,  0.5,  2.0,  5.0, 10.0, 18.0, 32.0,  48.0,  65.0,  82.0, 100.0, 118.0, 135.0],
+    "Oracle Cloud":       [ 0.0,  0.0,  0.0,  0.1,  0.4,  1.5,  5.0,  10.0,  16.0,  22.0,  28.0,  35.0,  42.0],
+    "Apple":              [ 0.0,  0.0,  0.1,  0.3,  0.5,  1.0,  3.0,   6.0,  10.0,  15.0,  21.0,  28.0,  36.0],
+    "CoreWeave":          [ 0.0,  0.0,  0.0,  0.0, 0.02,  0.2,  0.8,   2.4,   4.9,   7.9,  10.9,  13.9,  16.9],
+    "Lambda":             [ 0.0,  0.0,  0.0,  0.0, 0.01, 0.05,  0.3,   0.8,   1.5,   2.4,   3.4,   4.4,   5.4],
+    "Crusoe Energy":      [ 0.0,  0.0,  0.0,  0.0, 0.01, 0.04,  0.2,   0.6,   1.2,   1.9,   2.9,   3.9,   4.9],
+    "Voltage Park":       [ 0.0,  0.0,  0.0,  0.0,  0.0, 0.02,  0.1,   0.4,   0.8,   1.5,   2.4,   3.4,   4.4],
+    "Together AI":        [ 0.0,  0.0,  0.0,  0.0,  0.0, 0.03,  0.1,   0.3,   0.7,   1.2,   2.0,   2.9,   3.9],
+    "Applied Digital":    [ 0.0,  0.0,  0.0,  0.0,0.005, 0.04,  0.14,  0.5,   1.0,   1.7,   2.7,   3.7,   4.7],
+    "Equinix":            [ 0.0,  0.0,  0.0,  0.1,  0.2,  0.5,  0.9,   1.5,   2.4,   3.5,   4.8,   6.2,   7.8],
+    "Digital Realty":      [ 0.0,  0.0,  0.0,  0.1,  0.3,  0.6,  1.0,   1.6,   2.5,   3.6,   5.0,   6.5,   8.2],
+    "CyrusOne":           [ 0.0,  0.0,  0.0,  0.0,  0.1,  0.2,  0.3,   0.5,   0.8,   1.1,   1.5,   2.0,   2.5],
+    "QTS Realty":          [ 0.0,  0.0,  0.0,  0.0,  0.1,  0.3,  0.6,   1.0,   1.5,   2.2,   3.0,   3.9,   4.8],
+    "Vantage Data Centers":[ 0.0,  0.0,  0.0,  0.0,  0.1,  0.3,  0.5,   0.9,   1.5,   2.2,   3.0,   3.9,   4.8],
+    "Switch":             [ 0.0,  0.0,  0.0,  0.0,  0.1,  0.2,  0.3,   0.5,   0.8,   1.2,   1.6,   2.1,   2.6],
+}
+
+# Capex-to-revenue lag: average quarters from AI capex deployment to revenue generation
+# Shorter lag = faster monetization; varies by business model
+AI_CAPEX_LAG_QUARTERS = {
+    "Amazon (AWS)":        6,   # Build → GA launch → customer ramp
+    "Microsoft (Azure)":   5,   # Strong Copilot/OpenAI pull-through
+    "Google (GCP)":        7,   # Longer due to enterprise sales cycle
+    "Meta":                3,   # Internal — ad model improvement is rapid
+    "Oracle Cloud":        8,   # Enterprise sales cycle + newer to AI
+    "Apple":              10,   # On-device, long product cycle
+    "CoreWeave":           4,   # Direct GPU lease, fast activation
+    "Lambda":              4,
+    "Crusoe Energy":       5,
+    "Voltage Park":        4,
+    "Together AI":         5,
+    "Applied Digital":     5,
+    "Equinix":             6,   # Lease negotiation + buildout
+    "Digital Realty":       6,
+    "CyrusOne":            7,
+    "QTS Realty":           6,
+    "Vantage Data Centers": 7,
+    "Switch":              7,
+}
+
+
+# ============================================================
 # POWER SUPPLY & GENERATION DATA
 # ============================================================
 
@@ -1675,6 +1754,386 @@ def build_dashboard(wb):
     return ws
 
 
+def build_capex_to_ai_revenue_sheet(wb):
+    """Build the Capex-to-AI-Revenue Conversion & Payback Analysis sheet."""
+    ws = wb.create_sheet(title="Capex to AI Revenue")
+    num_cols = 1 + len(YEARS)
+
+    ws.column_dimensions['A'].width = 30
+    for i in range(len(YEARS)):
+        ws.column_dimensions[get_column_letter(i + 2)].width = 12
+
+    row = 1
+    write_title_row(ws, row, "When Does AI Capex Translate to AI Revenue? — Company-by-Company Analysis", num_cols)
+    row += 1
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
+    note = ws.cell(row=row, column=1,
+        value="AI Capex ($B) | AI Revenue ($B) | Cumulative Payback | AI Rev / AI Capex Ratio | AI as % of Total  |  Yellow = Forecast")
+    apply_cell_style(note, font=NOTE_FONT)
+    row += 2
+
+    # ====================================================================
+    # SECTION 1: AI Capex ($B)
+    # ====================================================================
+    write_section_header(ws, row, "AI-Specific Capex ($B) — Portion of Total Capex Allocated to AI/ML Infrastructure", num_cols)
+    row += 1
+    ai_capex_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    ai_capex_rows = []
+    # Hyperscalers first, then neoclouds, then colo
+    ordered_companies = HYPERSCALERS + NEOCLOUDS + COLO_REITS
+    for idx, company in enumerate(ordered_companies):
+        write_data_row(ws, row, company, AI_CAPEX_DATA[company], fmt="#,##0.0", alt=(idx % 2 == 1))
+        ai_capex_rows.append(row)
+        row += 1
+
+    ai_capex_totals = [0.0] * len(YEARS)
+    for c in ordered_companies:
+        for i, v in enumerate(AI_CAPEX_DATA[c]):
+            ai_capex_totals[i] += v
+    ai_capex_totals = [round(t, 1) for t in ai_capex_totals]
+    write_data_row(ws, row, "TOTAL AI CAPEX", ai_capex_totals, fmt="#,##0.0", is_total=True)
+    row += 2
+
+    # ====================================================================
+    # SECTION 2: AI Revenue ($B)
+    # ====================================================================
+    write_section_header(ws, row, "AI-Specific Revenue ($B) — Revenue Directly Attributable to AI Products & Services", num_cols)
+    row += 1
+    ai_rev_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    ai_rev_rows = []
+    for idx, company in enumerate(ordered_companies):
+        write_data_row(ws, row, company, AI_REVENUE_DATA[company], fmt="#,##0.0", alt=(idx % 2 == 1))
+        ai_rev_rows.append(row)
+        row += 1
+
+    ai_rev_totals = [0.0] * len(YEARS)
+    for c in ordered_companies:
+        for i, v in enumerate(AI_REVENUE_DATA[c]):
+            ai_rev_totals[i] += v
+    ai_rev_totals = [round(t, 1) for t in ai_rev_totals]
+    write_data_row(ws, row, "TOTAL AI REVENUE", ai_rev_totals, fmt="#,##0.0", is_total=True)
+    row += 2
+
+    # ====================================================================
+    # SECTION 3: AI Capex as % of Total Capex
+    # ====================================================================
+    write_section_header(ws, row, "AI Capex as % of Total Capex — Shows AI Investment Intensity", num_cols)
+    row += 1
+    ai_pct_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    ai_pct_rows = []
+    for idx, company in enumerate(ordered_companies):
+        pct_vals = []
+        for y in range(len(YEARS)):
+            total = CAPEX_DATA[company][y]
+            ai = AI_CAPEX_DATA[company][y]
+            pct_vals.append(round(ai / total, 3) if total > 0 else 0)
+        write_data_row(ws, row, company, pct_vals, fmt="0.0%", alt=(idx % 2 == 1))
+        ai_pct_rows.append(row)
+        row += 1
+    row += 1
+
+    # ====================================================================
+    # SECTION 4: AI Revenue as % of Total Revenue
+    # ====================================================================
+    write_section_header(ws, row, "AI Revenue as % of Total Revenue — AI Monetization Penetration", num_cols)
+    row += 1
+    ai_rev_pct_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    ai_rev_pct_rows = []
+    for idx, company in enumerate(ordered_companies):
+        pct_vals = []
+        for y in range(len(YEARS)):
+            total_rev = REVENUE_DATA[company][y]
+            ai_rev = AI_REVENUE_DATA[company][y]
+            pct_vals.append(round(ai_rev / total_rev, 3) if total_rev > 0 else 0)
+        write_data_row(ws, row, company, pct_vals, fmt="0.0%", alt=(idx % 2 == 1))
+        ai_rev_pct_rows.append(row)
+        row += 1
+    row += 1
+
+    # ====================================================================
+    # SECTION 5: Annual AI Revenue / AI Capex Ratio (conversion efficiency)
+    # ====================================================================
+    write_section_header(ws, row, "Annual AI Revenue / AI Capex Ratio — Conversion Efficiency (>1.0x = generating more than spending)", num_cols)
+    row += 1
+    ratio_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    ratio_rows = []
+    for idx, company in enumerate(ordered_companies):
+        ratio_vals = []
+        for y in range(len(YEARS)):
+            ai_c = AI_CAPEX_DATA[company][y]
+            ai_r = AI_REVENUE_DATA[company][y]
+            ratio_vals.append(round(ai_r / ai_c, 2) if ai_c > 0 else 0)
+        write_data_row(ws, row, company, ratio_vals, fmt="0.00x", alt=(idx % 2 == 1))
+        ratio_rows.append(row)
+        row += 1
+    row += 1
+
+    # ====================================================================
+    # SECTION 6: Cumulative AI Capex vs Cumulative AI Revenue & Payback
+    # ====================================================================
+    write_section_header(ws, row,
+        "Cumulative AI Capex vs AI Revenue ($B) & Payback Year — When Does Cumulative AI Revenue Exceed Cumulative AI Capex?", num_cols)
+    row += 1
+
+    # For each company, compute cumulative and find payback year
+    payback_summary = []  # (company, payback_year_label, cum_capex_at_payback, cum_rev_at_payback)
+
+    cum_capex_header = row
+    write_column_headers(ws, row, ["Company — Cumulative AI Capex"] + YEAR_LABELS)
+    row += 1
+    cum_capex_rows = []
+    for idx, company in enumerate(ordered_companies):
+        cum = []
+        running = 0
+        for y in range(len(YEARS)):
+            running += AI_CAPEX_DATA[company][y]
+            cum.append(round(running, 1))
+        write_data_row(ws, row, company, cum, fmt="#,##0.0", alt=(idx % 2 == 1))
+        cum_capex_rows.append(row)
+        row += 1
+    row += 1
+
+    cum_rev_header = row
+    write_column_headers(ws, row, ["Company — Cumulative AI Revenue"] + YEAR_LABELS)
+    row += 1
+    cum_rev_rows = []
+    for idx, company in enumerate(ordered_companies):
+        cum = []
+        running = 0
+        for y in range(len(YEARS)):
+            running += AI_REVENUE_DATA[company][y]
+            cum.append(round(running, 1))
+        write_data_row(ws, row, company, cum, fmt="#,##0.0", alt=(idx % 2 == 1))
+        cum_rev_rows.append(row)
+        row += 1
+    row += 1
+
+    # Net cumulative (AI Rev - AI Capex) and payback year
+    net_header = row
+    write_column_headers(ws, row, ["Company — Cum. Net (Rev - Capex)"] + YEAR_LABELS)
+    row += 1
+    net_rows = []
+    for idx, company in enumerate(ordered_companies):
+        cum_c = 0
+        cum_r = 0
+        net_vals = []
+        payback_year = None
+        for y in range(len(YEARS)):
+            cum_c += AI_CAPEX_DATA[company][y]
+            cum_r += AI_REVENUE_DATA[company][y]
+            net = round(cum_r - cum_c, 1)
+            net_vals.append(net)
+            if payback_year is None and net >= 0 and cum_c > 1.0:
+                payback_year = YEAR_LABELS[y]
+        write_data_row(ws, row, company, net_vals, fmt="#,##0.0", alt=(idx % 2 == 1))
+        net_rows.append(row)
+
+        payback_summary.append((company, payback_year if payback_year else "Post-2030",
+                                round(cum_c, 1), round(cum_r, 1)))
+        row += 1
+    row += 2
+
+    # ====================================================================
+    # SECTION 7: Payback Summary Table
+    # ====================================================================
+    write_section_header(ws, row,
+        "AI Capex Payback Summary — When Cumulative AI Revenue Exceeds Cumulative AI Capex", num_cols)
+    row += 1
+
+    pb_headers = ["Company", "Payback Year", "Avg Capex-to-Rev Lag (Qtrs)",
+                  "Cum AI Capex 2030E ($B)", "Cum AI Rev 2030E ($B)",
+                  "2030E Net ($B)", "2024 AI Rev/Capex", "2027E AI Rev/Capex", "2030E AI Rev/Capex"]
+    for i, h in enumerate(pb_headers):
+        cell = ws.cell(row=row, column=1 + i, value=h)
+        apply_cell_style(cell, font=HEADER_FONT, fill=HEADER_FILL, border=THIN_BORDER,
+                         alignment=Alignment(horizontal="center", vertical="center", wrap_text=True))
+    ws.row_dimensions[row].height = 32
+    row += 1
+
+    payback_data_rows = []
+    for idx, (company, pb_year, cum_c, cum_r) in enumerate(payback_summary):
+        alt = idx % 2 == 1
+
+        # Compute full cumulative through 2030
+        full_cum_c = sum(AI_CAPEX_DATA[company])
+        full_cum_r = sum(AI_REVENUE_DATA[company])
+        net_2030 = round(full_cum_r - full_cum_c, 1)
+
+        # Ratios at specific years
+        # 2024 = index 6, 2027 = index 9, 2030 = index 12
+        def ratio_at(yr_idx):
+            c = AI_CAPEX_DATA[company][yr_idx]
+            r = AI_REVENUE_DATA[company][yr_idx]
+            return round(r / c, 2) if c > 0 else 0
+
+        r_2024 = ratio_at(6)
+        r_2027 = ratio_at(9)
+        r_2030 = ratio_at(12)
+
+        lag = AI_CAPEX_LAG_QUARTERS.get(company, 6)
+
+        vals = [company, pb_year, lag, round(full_cum_c, 1), round(full_cum_r, 1),
+                net_2030, r_2024, r_2027, r_2030]
+
+        for ci, v in enumerate(vals):
+            cell = ws.cell(row=row, column=1 + ci, value=v)
+            f = DATA_FONT
+            if ci == 0:
+                f = COMPANY_FONT
+            elif ci == 1:
+                # Color code payback year
+                if pb_year and "Post" not in str(pb_year):
+                    yr_num = int(str(pb_year).replace("E", ""))
+                    if yr_num <= 2025:
+                        f = Font(name="Calibri", size=10, bold=True, color="006100")  # green
+                    elif yr_num <= 2027:
+                        f = Font(name="Calibri", size=10, bold=True, color="9C5700")  # amber
+                    else:
+                        f = Font(name="Calibri", size=10, bold=True, color="C00000")  # red
+                else:
+                    f = Font(name="Calibri", size=10, bold=True, color="C00000")
+
+            fmt = "#,##0.0"
+            if ci == 1:
+                fmt = "@"  # text
+            elif ci == 2:
+                fmt = "#,##0"
+            elif ci >= 6:
+                fmt = "0.00x"
+
+            apply_cell_style(cell, font=f, fill=ALT_ROW_FILL if alt else None,
+                             border=THIN_BORDER, number_format=fmt,
+                             alignment=Alignment(horizontal="center", vertical="center"))
+        payback_data_rows.append(row)
+        row += 1
+    row += 2
+
+    # ====================================================================
+    # SECTION 8: Key Insights / Commentary
+    # ====================================================================
+    write_section_header(ws, row, "Key Insights — AI Capex-to-Revenue Translation", num_cols)
+    row += 1
+
+    insights = [
+        "FASTEST PAYBACK (HYPERSCALERS) — Microsoft (Azure): Strong OpenAI/Copilot pull-through gives the shortest capex-to-revenue lag among hyperscalers (~5 qtrs); cumulative AI revenue overtakes cumulative AI capex by 2028E; annual AI Rev/Capex reaches 1.96x by 2030E",
+        "AMAZON (AWS): Massive AI capex ramp ($35B in 2024, growing to $106B by 2030E); revenue follows ~6 qtrs later via Bedrock, SageMaker, Trainium/Inferentia; annual ratio crosses 1.0x by ~2029E but cumulative payback extends past 2030 due to front-loaded investment",
+        "GOOGLE (GCP): Longer enterprise sales cycle (~7 qtrs) but deep TPU moat and Gemini platform; annual AI Rev/Capex crosses 1.0x around 2029E; cumulative payback post-2030 — similar to AWS, massive capex base is hard to recoup quickly",
+        "META: Unique model — AI capex translates to ad revenue uplift rather than direct cloud AI sales; ~3 quarter lag as recommendation/targeting models improve; earliest cumulative payback (2022) among all companies; 2024 ratio already >1.0x",
+        "ORACLE CLOUD: Aggressive AI infrastructure buildout (OCI GPU superclusters); AI capex ramped from $3.5B (2023) to $9B (2024) to a projected $24B by 2030E; longer enterprise sales cycle (~8 qtrs) but Oracle's existing DB/ERP customer base provides distribution advantage; cumulative payback by 2029E with annual AI revenue reaching $42B by 2030E — the fastest-improving annual ratio among hyperscalers after Microsoft",
+        "APPLE: Lowest AI capex intensity but also the longest lag (~10 qtrs) due to hardware product cycles; AI investment manifests in Apple Intelligence, on-device ML, and enhanced services revenue; high annual AI Rev/Capex by 2030E (4.3x) because of modest capex relative to massive services uplift",
+        "NEOCLOUDS: Nearly 100% AI-focused; short lag (4-5 qtrs) from GPU procurement to lease revenue; CoreWeave leads with fastest absolute ramp but cumulative payback extends past 2030 due to extreme capital intensity; annual ratios approaching 0.9x by 2030E — profitability inflection expected 2030-2031",
+        "COLO/REITs: AI revenue = premium leasing for high-density GPU facilities; Equinix achieves cumulative payback by 2025E due to lower capex and premium AI tenant pricing; Digital Realty by 2029E; QTS and Vantage still building out through 2030",
+        "THE KEY QUESTION: Annual AI Rev/Capex >1.0x means the company is generating more AI revenue than it spends on AI capex that year — a critical profitability threshold; most hyperscalers cross this by 2028-2030E, but cumulative payback takes longer due to the massive 2024-2027 buildout",
+        "RISK: If AI demand growth slows or models become more compute-efficient (reducing GPU needs), payback timelines extend; current estimates assume sustained demand growth; these are gross capex recovery metrics — do not account for opex, depreciation, or cost of capital",
+    ]
+
+    for ins in insights:
+        ws.cell(row=row, column=1, value="•")
+        ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=num_cols)
+        cell = ws.cell(row=row, column=2, value=ins)
+        apply_cell_style(cell, font=Font(name="Calibri", size=9),
+                         alignment=Alignment(wrap_text=True, vertical="top"))
+        ws.row_dimensions[row].height = 30
+        row += 1
+    row += 2
+
+    # ====================================================================
+    # CHARTS
+    # ====================================================================
+    chart_row = row
+
+    # Chart 1: AI Capex vs AI Revenue — Hyperscalers (line chart, 2 series per company)
+    # Use totals for simplicity
+    # Hyperscaler AI Capex total vs AI Revenue total
+    hyper_ai_capex = [0.0] * len(YEARS)
+    hyper_ai_rev = [0.0] * len(YEARS)
+    for c in HYPERSCALERS:
+        for i in range(len(YEARS)):
+            hyper_ai_capex[i] += AI_CAPEX_DATA[c][i]
+            hyper_ai_rev[i] += AI_REVENUE_DATA[c][i]
+    hyper_ai_capex = [round(t, 1) for t in hyper_ai_capex]
+    hyper_ai_rev = [round(t, 1) for t in hyper_ai_rev]
+
+    helper_row = row + 60  # below visible area
+    ws.cell(row=helper_row, column=1, value="Year")
+    for i, yl in enumerate(YEAR_LABELS):
+        ws.cell(row=helper_row, column=2 + i, value=yl)
+
+    ws.cell(row=helper_row + 1, column=1, value="Hyperscaler AI Capex")
+    for i, v in enumerate(hyper_ai_capex):
+        ws.cell(row=helper_row + 1, column=2 + i, value=v)
+    ws.cell(row=helper_row + 2, column=1, value="Hyperscaler AI Revenue")
+    for i, v in enumerate(hyper_ai_rev):
+        ws.cell(row=helper_row + 2, column=2 + i, value=v)
+
+    add_line_chart(ws, "Hyperscaler AI Capex vs AI Revenue ($B)",
+                   helper_row, [helper_row + 1, helper_row + 2],
+                   ["AI Capex", "AI Revenue"],
+                   min_col=2, max_col=1 + len(YEARS),
+                   chart_row=chart_row, chart_col=1, width=24, height=14)
+
+    # Chart 2: Selected company AI Revenue lines (AWS, Azure, Google, Meta, Oracle, CoreWeave)
+    focus_companies = ["Amazon (AWS)", "Microsoft (Azure)", "Google (GCP)", "Meta", "Oracle Cloud", "CoreWeave"]
+    focus_indices = [ordered_companies.index(c) for c in focus_companies]
+    focus_rev_rows = [ai_rev_rows[i] for i in focus_indices]
+
+    add_line_chart(ws, "AI Revenue ($B) — Key Companies incl. Oracle",
+                   ai_rev_header, focus_rev_rows, focus_companies,
+                   min_col=2, max_col=1 + len(YEARS),
+                   chart_row=chart_row, chart_col=9, width=24, height=14)
+
+    chart_row2 = chart_row + 16
+
+    # Chart 3: Annual AI Rev / AI Capex ratio for key companies
+    focus_ratio_rows = [ratio_rows[i] for i in focus_indices]
+    add_line_chart(ws, "AI Revenue / AI Capex Ratio — Key Companies (>1.0x = payback)",
+                   ratio_header, focus_ratio_rows, focus_companies,
+                   min_col=2, max_col=1 + len(YEARS),
+                   chart_row=chart_row2, chart_col=1, width=24, height=14)
+
+    # Chart 4: Cumulative Net (Rev - Capex) for key companies
+    focus_net_rows = [net_rows[i] for i in focus_indices]
+    add_line_chart(ws, "Cumulative Net AI (Revenue - Capex, $B) — Payback Crossover",
+                   net_header, focus_net_rows, focus_companies,
+                   min_col=2, max_col=1 + len(YEARS),
+                   chart_row=chart_row2, chart_col=9, width=24, height=14)
+
+    chart_row3 = chart_row2 + 16
+
+    # Chart 5: AI Capex as % of total capex for key companies
+    focus_pct_rows = [ai_pct_rows[i] for i in focus_indices]
+    add_line_chart(ws, "AI Capex as % of Total Capex — Key Companies",
+                   ai_pct_header, focus_pct_rows, focus_companies,
+                   min_col=2, max_col=1 + len(YEARS),
+                   chart_row=chart_row3, chart_col=1, width=24, height=14)
+
+    # Chart 6: AI Revenue as % of total revenue for key companies
+    focus_revpct_rows = [ai_rev_pct_rows[i] for i in focus_indices]
+    add_line_chart(ws, "AI Revenue as % of Total Revenue — Key Companies",
+                   ai_rev_pct_header, focus_revpct_rows, focus_companies,
+                   min_col=2, max_col=1 + len(YEARS),
+                   chart_row=chart_row3, chart_col=9, width=24, height=14)
+
+    ws.freeze_panes = "B1"
+    ws.sheet_properties.tabColor = "C00000"  # Deep red for emphasis
+    return ws
+
+
 def build_assumptions_sheet(wb):
     """Build an Assumptions & Sources sheet."""
     ws = wb.create_sheet(title="Assumptions & Sources")
@@ -1736,6 +2195,17 @@ def build_assumptions_sheet(wb):
             "Revenue multiplier (TAM/Capex) reflects that capex flows through multiple vendor layers",
             "Key supply chain bottlenecks: GPU supply, transformer manufacturing, skilled labor, power",
         ]),
+        ("AI Capex-to-Revenue Assumptions", [
+            "AI Capex = portion of total capex allocated to GPU clusters, AI networking, liquid cooling for AI, AI-dedicated DCs",
+            "AI Revenue = revenue directly attributable to AI: cloud AI services (hyperscalers), GPU-as-a-service (neoclouds), AI tenant leases (colo/REITs)",
+            "Meta AI revenue represents estimated uplift to advertising revenue from AI-powered recommendation and targeting improvements",
+            "Apple AI revenue reflects Apple Intelligence services, Siri improvements, and AI-enhanced services revenue uplift",
+            "Oracle AI revenue driven by OCI GPU superclusters, Autonomous Database AI features, and AI cloud infrastructure",
+            "Capex-to-revenue lag varies by business model: neoclouds ~4 qtrs (direct GPU lease), hyperscalers ~5-8 qtrs (build→GA→ramp), colo ~6-7 qtrs (lease negotiation)",
+            "Cumulative payback year = first year where cumulative AI revenue >= cumulative AI capex since inception",
+            "Annual AI Rev/Capex ratio >1.0x indicates that year's AI revenue exceeds that year's AI capex investment",
+            "Payback analysis does not account for depreciation, opex, or cost of capital; represents gross capex recovery only",
+        ]),
         ("Colocation / REIT Assumptions", [
             "Equinix, Digital Realty data from public REIT filings and investor supplements",
             "CyrusOne (KKR/GIP) and QTS (Blackstone) data estimated post-acquisition from industry reports",
@@ -1753,6 +2223,10 @@ def build_assumptions_sheet(wb):
             "Servers (000s): Total server count in thousands across all datacenter locations",
             "TAM: Total Addressable Market — revenue opportunity for vendors in each supply chain segment",
             "BOM: Bill of Materials — component and construction cost breakdown per MW of IT load",
+            "AI Capex: Portion of total capex allocated specifically to AI/ML infrastructure (GPU clusters, AI networking, liquid cooling)",
+            "AI Revenue: Revenue directly attributable to AI products and services (cloud AI, GPU-as-a-service, AI tenant leases)",
+            "Cumulative Payback: Year when cumulative AI revenue first exceeds cumulative AI capex since inception",
+            "AI Rev/Capex Ratio: Annual AI revenue divided by annual AI capex; >1.0x means AI revenue exceeds AI investment in that year",
         ]),
         ("Caveats", [
             "All neocloud figures are estimates based on limited public disclosure",
@@ -1824,6 +2298,9 @@ def main():
 
     print("Building Capex to Revenue sheet...")
     build_capex_to_revenue_sheet(wb)
+
+    print("Building Capex to AI Revenue sheet...")
+    build_capex_to_ai_revenue_sheet(wb)
 
     print("Building Assumptions sheet...")
     build_assumptions_sheet(wb)

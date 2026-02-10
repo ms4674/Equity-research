@@ -4,7 +4,7 @@ A comprehensive Excel-based datacenter model covering hyperscalers, neocloud ven
 
 ## Files
 
-- **`Datacenter_Infrastructure_Model.xlsx`** — The main Excel workbook (12 sheets, 43 charts)
+- **`Datacenter_Infrastructure_Model.xlsx`** — The main Excel workbook (13 sheets, 49 charts)
 - **`build_datacenter_model.py`** — Python script to regenerate the model
 
 ## Model Contents
@@ -24,7 +24,8 @@ A comprehensive Excel-based datacenter model covering hyperscalers, neocloud ven
 | **Power Supply & Ramp** | Power demand vs supply, generation additions by source (gas, solar, wind, nuclear, battery, SMR), grid constraints, interconnection queues, build timelines, and demand drivers |
 | **DC Bill of Materials** | Per-MW cost breakdown across 26 line items (land, building, power, cooling, networking, IT, security, services), 100MW reference facility costs, vendor mapping, and cost trend analysis |
 | **Capex to Revenue** | How DC capex translates to supply chain revenue: TAM by segment ($B), capex flow allocation, YoY growth, revenue multipliers, and key vendor beneficiaries |
-| **Assumptions & Sources** | Data sources, methodology, definitions, power/BOM/supply chain assumptions, and caveats |
+| **Capex to AI Revenue** | **NEW** — When does AI capex translate to AI revenue? Company-by-company analysis with AI capex/revenue split, cumulative payback year, annual AI Rev/Capex ratio, AI as % of total, and 10-point insight commentary |
+| **Assumptions & Sources** | Data sources, methodology, definitions, AI capex-to-revenue, power/BOM/supply chain assumptions, and caveats |
 
 ### Companies Covered
 
@@ -49,6 +50,9 @@ A comprehensive Excel-based datacenter model covering hyperscalers, neocloud ven
 - Supply chain TAM by segment (Servers/GPUs, Networking, Power, Cooling, Construction, Real Estate, Software, Fiber)
 - Capex-to-revenue flow showing how each $1 of DC capex is allocated
 - Key vendor beneficiaries per supply chain segment
+- **AI capex-to-revenue conversion**: When cumulative AI revenue exceeds cumulative AI capex for each company
+- **Payback summary**: Payback year, capex lag (quarters), annual AI Rev/Capex ratios at 2024/2027E/2030E
+- **Oracle deep-dive**: OCI AI infrastructure ramp, enterprise sales cycle, and projected 2029E cumulative payback
 
 ## Regenerating the Model
 
@@ -63,4 +67,6 @@ python build_datacenter_model.py
 - Forecasts (2025E-2030E) represent base-case estimates
 - Forecast columns are highlighted in yellow in the spreadsheet
 - CyrusOne (KKR/GIP) and QTS (Blackstone) are now private; post-acquisition data are estimates
+- AI revenue definitions vary by company: cloud AI services (hyperscalers), GPU-as-a-service (neoclouds), AI tenant leases (colo/REITs), ad revenue uplift (Meta)
+- Payback analysis is gross capex recovery; does not account for opex, depreciation, or cost of capital
 - All figures in USD
