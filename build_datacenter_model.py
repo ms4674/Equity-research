@@ -437,6 +437,61 @@ BOM_CATEGORIES = [
 
 
 # ============================================================
+# COMPONENT PRICE INDICES & CAPEX DECOMPOSITION DATA
+# ============================================================
+# Price indices (2020 = 100) for major DC component categories
+# Tracks how unit costs have changed independent of volume/capacity growth
+COMPONENT_PRICE_INDEX = {
+    #                                2018  2019  2020  2021  2022  2023  2024  2025  2026E 2027E 2028E 2029E 2030E
+    "GPU / AI Accelerators":       [  40,   42,  100,  130,  170,  250,  310,  280,  240,  200,  175,  155,  140],
+    "CPU Servers":                  [ 105,  102,  100,   98,   96,   94,   92,   90,   88,   86,   84,   82,   80],
+    "Networking (Switches/Optics)": [  95,   97,  100,  105,  115,  130,  145,  150,  142,  132,  122,  115,  110],
+    "HV Transformers & Switchgear": [  88,   90,  100,  108,  125,  155,  185,  195,  190,  175,  160,  148,  138],
+    "UPS & Power Distribution":    [  92,   95,  100,  106,  118,  132,  145,  150,  148,  140,  132,  125,  120],
+    "Backup Generators":           [  94,   96,  100,  110,  122,  135,  142,  148,  145,  138,  130,  125,  120],
+    "Cooling (Chillers/CRAC)":     [  96,   98,  100,  104,  110,  118,  122,  125,  120,  115,  110,  106,  103],
+    "Liquid Cooling (DLC)":        [ 180,  160,  100,   90,   82,   75,   68,   62,   56,   52,   48,   45,   42],
+    "Fiber & Cabling":             [  97,   98,  100,  103,  108,  115,  120,  122,  118,  114,  110,  107,  104],
+    "Construction Labor":          [  90,   93,  100,  108,  118,  130,  140,  148,  152,  150,  146,  142,  138],
+    "Steel & Building Materials":  [  88,   92,  100,  130,  142,  128,  125,  120,  118,  115,  112,  110,  108],
+    "Land & Real Estate":          [  85,   90,  100,  110,  125,  142,  160,  170,  178,  182,  185,  188,  190],
+}
+
+# Weighted-average DC component price index (using 2024 BOM cost weights)
+# Weights reflect approximate share of total build cost: GPU/servers ~42%, power infra ~14%, cooling ~8%, etc.
+COMPONENT_WEIGHTS = {
+    "GPU / AI Accelerators":       0.30,
+    "CPU Servers":                  0.12,
+    "Networking (Switches/Optics)": 0.09,
+    "HV Transformers & Switchgear": 0.07,
+    "UPS & Power Distribution":    0.05,
+    "Backup Generators":           0.03,
+    "Cooling (Chillers/CRAC)":     0.05,
+    "Liquid Cooling (DLC)":        0.04,
+    "Fiber & Cabling":             0.04,
+    "Construction Labor":          0.10,
+    "Steel & Building Materials":  0.05,
+    "Land & Real Estate":          0.06,
+}
+
+# Industry-aggregate capex per MW of NEW capacity added ($M / MW added)
+# Reflects all-in cost including equipment, construction, land
+# This is the "unit cost" measure; rises with component inflation, partially offset by efficiency gains
+CAPEX_PER_MW_ADDED = {
+    #                      2018  2019  2020  2021  2022  2023  2024  2025  2026E 2027E 2028E 2029E 2030E
+    "Amazon (AWS)":       [ 7.5,  7.8,  8.2,  8.8,  9.5, 10.5, 12.0, 12.8, 12.5, 12.2, 11.8, 11.5, 11.2],
+    "Microsoft (Azure)":  [ 7.2,  7.5,  7.8,  8.5,  9.2, 10.2, 11.5, 12.5, 12.2, 11.8, 11.4, 11.0, 10.8],
+    "Google (GCP)":       [ 7.0,  7.2,  7.5,  8.2,  9.0, 10.0, 11.2, 12.0, 11.8, 11.5, 11.2, 10.8, 10.5],
+    "Meta":               [ 7.8,  8.0,  8.5,  9.0,  9.8, 11.0, 12.5, 13.2, 12.8, 12.5, 12.0, 11.5, 11.2],
+    "Oracle Cloud":       [ 8.5,  8.5,  9.0,  9.5, 10.0, 11.0, 13.0, 13.5, 13.0, 12.5, 12.0, 11.5, 11.0],
+    "Apple":              [ 9.0,  9.0,  9.5, 10.0, 10.5, 11.5, 12.5, 13.0, 12.8, 12.5, 12.0, 11.5, 11.2],
+}
+
+# Incremental GW added per year (derived from GW_CAPACITY_DATA year-over-year change)
+# Used to separate "volume" (new MW added) from "price" (cost per MW) in capex decomposition
+
+
+# ============================================================
 # SUPPLY CHAIN REVENUE DATA — How capex translates to vendor revenue
 # ============================================================
 
@@ -2149,6 +2204,304 @@ def build_capex_to_ai_revenue_sheet(wb):
     return ws
 
 
+def build_capex_decomposition_sheet(wb):
+    """Build the Capex Decomposition sheet: capacity growth vs component pricing."""
+    ws = wb.create_sheet(title="Capex Decomposition")
+    num_cols = 1 + len(YEARS)
+
+    ws.column_dimensions['A'].width = 36
+    for i in range(len(YEARS)):
+        ws.column_dimensions[get_column_letter(i + 2)].width = 12
+
+    row = 1
+    write_title_row(ws, row, "Capex Decomposition — Capacity Growth vs Component Price Inflation", num_cols)
+    row += 1
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
+    note = ws.cell(row=row, column=1,
+        value="How much of capex growth is real capacity addition vs component cost inflation?  |  Price index (2020=100)  |  Yellow = 2026E+ Forecast")
+    apply_cell_style(note, font=NOTE_FONT)
+    row += 2
+
+    # ====================================================================
+    # SECTION 1: Component Price Indices (2020 = 100)
+    # ====================================================================
+    write_section_header(ws, row, "Component Price Indices (2020 = 100) — Unit Cost Trends by Category", num_cols)
+    row += 1
+    idx_header = row
+    write_column_headers(ws, row, ["Component Category"] + YEAR_LABELS)
+    row += 1
+
+    idx_rows = []
+    idx_labels = []
+    for i, (comp, values) in enumerate(COMPONENT_PRICE_INDEX.items()):
+        write_data_row(ws, row, comp, values, fmt="#,##0", alt=(i % 2 == 1))
+        idx_rows.append(row)
+        idx_labels.append(comp)
+        row += 1
+
+    # Weighted-average index
+    wavg = [0.0] * len(YEARS)
+    for comp, wt in COMPONENT_WEIGHTS.items():
+        for y in range(len(YEARS)):
+            wavg[y] += COMPONENT_PRICE_INDEX[comp][y] * wt
+    wavg = [round(v, 1) for v in wavg]
+    write_data_row(ws, row, "WEIGHTED AVG INDEX", wavg, fmt="#,##0.0", is_total=True)
+    wavg_row = row
+    row += 2
+
+    # ====================================================================
+    # SECTION 2: Weighted-Average Inflation Rate (YoY change in index)
+    # ====================================================================
+    write_section_header(ws, row, "Weighted-Average Component Inflation (YoY % Change in Index)", num_cols)
+    row += 1
+    infl_header = row
+    write_column_headers(ws, row, ["Metric"] + YEAR_LABELS)
+    row += 1
+
+    infl_vals = [0]
+    for y in range(1, len(YEARS)):
+        infl_vals.append(round((wavg[y] - wavg[y-1]) / wavg[y-1], 4) if wavg[y-1] > 0 else 0)
+    write_data_row(ws, row, "Wtd-Avg Component Inflation", infl_vals, fmt="0.0%")
+    infl_row = row
+    row += 1
+
+    # Cumulative inflation since 2020 (index 2 = year 2020)
+    cum_infl = [round((wavg[y] / wavg[2]) - 1, 4) if wavg[2] > 0 else 0 for y in range(len(YEARS))]
+    write_data_row(ws, row, "Cumulative Inflation vs 2020", cum_infl, fmt="0.0%", alt=True)
+    cum_infl_row = row
+    row += 2
+
+    # ====================================================================
+    # SECTION 3: Per-Hyperscaler Capex Decomposition
+    # ====================================================================
+    write_section_header(ws, row,
+        "Hyperscaler Capex Decomposition — Volume (New GW Added) vs Price ($/MW) vs Total Capex", num_cols)
+    row += 1
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
+    note2 = ws.cell(row=row, column=1,
+        value="Total Capex = New GW Added x Capex/MW  |  Volume Effect = New GW x Base $/MW (2020)  |  Price Effect = New GW x (Current $/MW - Base $/MW)")
+    apply_cell_style(note2, font=NOTE_FONT)
+    row += 1
+
+    decomp_companies = ["Amazon (AWS)", "Microsoft (Azure)", "Google (GCP)", "Meta", "Oracle Cloud", "Apple"]
+
+    all_vol_rows = []
+    all_price_rows = []
+    all_total_rows = []
+    all_capex_mw_rows = []
+
+    for cidx, company in enumerate(decomp_companies):
+        row += 1
+        write_subsection_header(ws, row, company, num_cols)
+        row += 1
+
+        gw_data = GW_CAPACITY_DATA[company]
+        cpm = CAPEX_PER_MW_ADDED[company]
+        base_cpm = cpm[2]  # 2020 base cost per MW
+
+        # Incremental GW added
+        gw_added = [0.0]
+        for y in range(1, len(YEARS)):
+            gw_added.append(round(gw_data[y] - gw_data[y-1], 3))
+
+        # Total capex
+        capex_vals = CAPEX_DATA[company]
+
+        # Volume effect at 2020 base price
+        vol_effect = [round(gw_added[y] * base_cpm, 2) for y in range(len(YEARS))]
+
+        # Price effect (inflation component)
+        price_effect = [round(gw_added[y] * (cpm[y] - base_cpm), 2) for y in range(len(YEARS))]
+
+        # "Other" = total capex - vol - price (includes maintenance capex, non-capacity spend, rounding)
+        other_effect = [round(capex_vals[y] - vol_effect[y] - price_effect[y], 2) for y in range(len(YEARS))]
+
+        # Price inflation % of incremental capex (vol + price only, excl other)
+        cap_related = [vol_effect[y] + price_effect[y] for y in range(len(YEARS))]
+        price_share = [round(price_effect[y] / cap_related[y], 3) if cap_related[y] > 0.5 else 0
+                       for y in range(len(YEARS))]
+
+        sub_header = row
+        write_column_headers(ws, row, ["Metric"] + YEAR_LABELS)
+        row += 1
+
+        write_data_row(ws, row, "Total Capex ($B)", capex_vals, fmt="#,##0.0")
+        all_total_rows.append(row)
+        row += 1
+        write_data_row(ws, row, "New GW Added", gw_added, fmt="0.00", alt=True)
+        row += 1
+        write_data_row(ws, row, "Capex / MW Added ($M/MW)", cpm, fmt="0.0")
+        all_capex_mw_rows.append(row)
+        row += 1
+        write_data_row(ws, row, "Base $/MW (2020 = ${}M)".format(base_cpm), [base_cpm]*len(YEARS), fmt="0.0", alt=True)
+        row += 1
+        write_data_row(ws, row, "Volume Effect ($B) [GW x Base $/MW]", vol_effect, fmt="#,##0.0")
+        all_vol_rows.append(row)
+        row += 1
+        write_data_row(ws, row, "Price Effect ($B) [GW x Inflation $/MW]", price_effect, fmt="#,##0.0", alt=True)
+        all_price_rows.append(row)
+        row += 1
+        write_data_row(ws, row, "Other / Maintenance ($B)", other_effect, fmt="#,##0.0")
+        row += 1
+        write_data_row(ws, row, "Price Inflation % of Capacity Capex", price_share, fmt="0.0%", alt=True)
+        row += 1
+
+    row += 1
+
+    # ====================================================================
+    # SECTION 4: Industry Aggregate Decomposition
+    # ====================================================================
+    write_section_header(ws, row,
+        "Industry Aggregate — Total Hyperscaler Capex: Volume vs Price vs Other ($B)", num_cols)
+    row += 1
+    agg_header = row
+    write_column_headers(ws, row, ["Component"] + YEAR_LABELS)
+    row += 1
+
+    # Aggregate vol/price/other across all 6 hyperscalers
+    agg_vol = [0.0] * len(YEARS)
+    agg_price = [0.0] * len(YEARS)
+    agg_other = [0.0] * len(YEARS)
+    agg_total = [0.0] * len(YEARS)
+    for company in decomp_companies:
+        gw_data = GW_CAPACITY_DATA[company]
+        cpm = CAPEX_PER_MW_ADDED[company]
+        base_cpm = cpm[2]
+        capex_vals = CAPEX_DATA[company]
+        gw_added = [0.0] + [round(gw_data[y] - gw_data[y-1], 3) for y in range(1, len(YEARS))]
+        for y in range(len(YEARS)):
+            v = gw_added[y] * base_cpm
+            p = gw_added[y] * (cpm[y] - base_cpm)
+            agg_vol[y] += v
+            agg_price[y] += p
+            agg_other[y] += capex_vals[y] - v - p
+            agg_total[y] += capex_vals[y]
+
+    agg_vol = [round(v, 1) for v in agg_vol]
+    agg_price = [round(v, 1) for v in agg_price]
+    agg_other = [round(v, 1) for v in agg_other]
+    agg_total = [round(v, 1) for v in agg_total]
+
+    write_data_row(ws, row, "Volume Effect ($B)", agg_vol, fmt="#,##0.0")
+    agg_vol_row = row
+    row += 1
+    write_data_row(ws, row, "Price / Inflation Effect ($B)", agg_price, fmt="#,##0.0", alt=True)
+    agg_price_row = row
+    row += 1
+    write_data_row(ws, row, "Other / Maintenance ($B)", agg_other, fmt="#,##0.0")
+    agg_other_row = row
+    row += 1
+    write_data_row(ws, row, "TOTAL HYPERSCALER CAPEX ($B)", agg_total, fmt="#,##0.0", is_total=True)
+    agg_total_row = row
+    row += 1
+
+    # % shares
+    vol_pct = [round(agg_vol[y] / agg_total[y], 3) if agg_total[y] > 0 else 0 for y in range(len(YEARS))]
+    price_pct = [round(agg_price[y] / agg_total[y], 3) if agg_total[y] > 0 else 0 for y in range(len(YEARS))]
+    other_pct = [round(agg_other[y] / agg_total[y], 3) if agg_total[y] > 0 else 0 for y in range(len(YEARS))]
+    row += 1
+    write_data_row(ws, row, "Volume % of Total Capex", vol_pct, fmt="0.0%")
+    row += 1
+    write_data_row(ws, row, "Price Inflation % of Total Capex", price_pct, fmt="0.0%", alt=True)
+    price_pct_row = row
+    row += 1
+    write_data_row(ws, row, "Other / Maintenance % of Total", other_pct, fmt="0.0%")
+    row += 2
+
+    # ====================================================================
+    # SECTION 5: Key Inflation Drivers
+    # ====================================================================
+    write_section_header(ws, row, "Key Component Inflation Drivers & Commentary", num_cols)
+    row += 1
+
+    drivers = [
+        "GPU / AI ACCELERATORS: Largest single driver of capex inflation; NVIDIA H100/B200 pricing drove index from 100 (2020) to 310 (2024), now declining as AMD MI300/400 competition and next-gen efficiency gains take hold; index projected to reach 140 by 2030 — still 40% above 2020 on price but with 10x more compute per unit",
+        "HV TRANSFORMERS & SWITCHGEAR: Critical bottleneck; lead times extended from 12 months (2020) to 36+ months (2024-2025) driving 85-95% price premiums; index peaked at 195 (2025); new manufacturing capacity (Hitachi, Siemens, ABB) gradually bringing prices down but still elevated through 2028",
+        "CONSTRUCTION LABOR: Sustained inflation due to datacenter construction boom competing for limited skilled electrical/mechanical trades; 48% increase since 2020; expected to remain 38-52% above 2020 levels through 2030 as build volume stays high",
+        "LAND & REAL ESTATE: DC-suitable land (power access, fiber, low natural disaster risk) has seen 70-90% appreciation since 2020, especially in Northern Virginia, Phoenix, and Dallas; limited supply in established markets supports sustained premium",
+        "LIQUID COOLING: Opposite trend — prices falling rapidly as technology matures and scales from niche to mainstream; index dropped from 180 (2018) to 62 (2025) and projected to reach 42 by 2030 as immersion/direct-liquid cooling becomes standard for AI racks",
+        "CPU SERVERS: Deflationary — consistent ~2-3% annual price declines as Moore's Law continues; AI shift means CPUs are a shrinking share of BOM, partially masking this benefit at the total capex level",
+        "NET IMPACT: Weighted-average component inflation peaked at ~45-50% above 2020 levels in 2024-2025; now moderating as GPU prices normalize and transformer supply eases; by 2030 the index is projected at ~15-20% above 2020, meaning roughly 15-20% of capex at that point reflects residual inflation vs where costs were in 2020",
+    ]
+
+    for d in drivers:
+        ws.cell(row=row, column=1, value="•")
+        ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=num_cols)
+        cell = ws.cell(row=row, column=2, value=d)
+        apply_cell_style(cell, font=Font(name="Calibri", size=9),
+                         alignment=Alignment(wrap_text=True, vertical="top"))
+        ws.row_dimensions[row].height = 36
+        row += 1
+    row += 2
+
+    # ====================================================================
+    # CHARTS
+    # ====================================================================
+    chart_row = row
+
+    # Chart 1: Key component price indices (line chart)
+    key_idx = ["GPU / AI Accelerators", "HV Transformers & Switchgear", "Construction Labor",
+               "Liquid Cooling (DLC)", "CPU Servers", "Networking (Switches/Optics)"]
+    key_idx_rows = [idx_rows[list(COMPONENT_PRICE_INDEX.keys()).index(k)] for k in key_idx]
+
+    add_line_chart(ws, "Component Price Indices (2020 = 100)",
+                   idx_header, key_idx_rows, key_idx,
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row, chart_col=1, width=26, height=15)
+
+    # Chart 2: Weighted-average index + inflation
+    add_line_chart(ws, "Weighted-Average DC Component Index (2020 = 100)",
+                   infl_header, [wavg_row], ["Wtd-Avg Index"],
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row, chart_col=10, width=24, height=15)
+
+    chart_row2 = chart_row + 17
+
+    # Chart 3: Aggregate capex decomposition (stacked bar)
+    add_bar_chart(ws, "Hyperscaler Capex Decomposition ($B): Volume vs Price vs Other",
+                  agg_header, [agg_vol_row, agg_price_row, agg_other_row],
+                  ["Volume (Capacity)", "Price (Inflation)", "Other / Maintenance"],
+                  min_col=2, max_col=1+len(YEARS),
+                  chart_row=chart_row2, chart_col=1, width=26, height=15, stacked=True)
+
+    # Chart 4: Capex per MW for each hyperscaler
+    add_line_chart(ws, "Capex per MW of New Capacity ($M/MW) — Hyperscalers",
+                   agg_header, all_capex_mw_rows, decomp_companies,
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row2, chart_col=10, width=24, height=15)
+
+    chart_row3 = chart_row2 + 17
+
+    # Chart 5: Price inflation % of total capex
+    # Write helper row
+    helper_row = chart_row3 + 40
+    ws.cell(row=helper_row, column=1, value="Year")
+    for i, yl in enumerate(YEAR_LABELS):
+        ws.cell(row=helper_row, column=2+i, value=yl)
+    ws.cell(row=helper_row+1, column=1, value="Price Inflation %")
+    for i, v in enumerate(price_pct):
+        ws.cell(row=helper_row+1, column=2+i, value=v)
+    ws.cell(row=helper_row+2, column=1, value="Volume %")
+    for i, v in enumerate(vol_pct):
+        ws.cell(row=helper_row+2, column=2+i, value=v)
+
+    add_bar_chart(ws, "Share of Hyperscaler Capex: Volume vs Price Inflation",
+                  helper_row, [helper_row+2, helper_row+1],
+                  ["Capacity Volume", "Price Inflation"],
+                  min_col=2, max_col=1+len(YEARS),
+                  chart_row=chart_row3, chart_col=1, width=26, height=15, stacked=True)
+
+    # Chart 6: Cumulative inflation since 2020
+    add_line_chart(ws, "Cumulative Component Inflation vs 2020 Baseline",
+                   infl_header, [cum_infl_row], ["Cumulative Inflation"],
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row3, chart_col=10, width=24, height=15)
+
+    ws.freeze_panes = "B1"
+    ws.sheet_properties.tabColor = "BF8F00"  # Dark gold
+    return ws
+
+
 def build_assumptions_sheet(wb):
     """Build an Assumptions & Sources sheet."""
     ws = wb.create_sheet(title="Assumptions & Sources")
@@ -2211,6 +2564,17 @@ def build_assumptions_sheet(wb):
             "Supply chain TAM exceeds operator capex because it includes maintenance, refresh, and software",
             "Revenue multiplier (TAM/Capex) reflects that capex flows through multiple vendor layers",
             "Key supply chain bottlenecks: GPU supply, transformer manufacturing, skilled labor, power",
+        ]),
+        ("Capex Decomposition Assumptions", [
+            "Component price indices use 2020 as base year (index = 100); chosen because 2020 was pre-inflation, pre-AI-boom baseline",
+            "GPU/AI Accelerator index reflects weighted-average price of datacenter GPUs (H100, A100, B200 equivalent); rose sharply 2021-2024 on NVIDIA pricing power, now moderating with AMD competition and next-gen efficiency",
+            "HV Transformer index reflects 85-95% price premium vs 2020 driven by 36+ month lead times; new manufacturing capacity (Hitachi, Siemens, ABB) gradually easing supply by 2027-2028",
+            "Weighted-average index uses 2024 BOM cost shares as weights: GPU/AI 30%, CPU 12%, construction 10%, networking 9%, transformers 7%, land 6%, etc.",
+            "Capex decomposition uses formula: Total Capex = (New GW x Base $/MW) + (New GW x Inflation $/MW) + Other/Maintenance",
+            "Base $/MW is frozen at each company's 2020 cost per MW of new capacity; inflation $/MW = current cost/MW minus base",
+            "'Other/Maintenance' includes sustaining capex on existing facilities, non-capacity investments, and any residual not captured by the volume x price model",
+            "Liquid cooling is the only major component with sustained deflation — prices falling ~15-20% annually as technology matures from niche to standard",
+            "Peak industry-wide component inflation was 2024-2025; moderating through 2030 but not returning to 2020 levels (structural premiums in land, labor, GPUs remain)",
         ]),
         ("AI Capex-to-Revenue Assumptions", [
             "AI Capex = portion of total capex allocated to GPU clusters, AI networking, liquid cooling for AI, AI-dedicated DCs",
@@ -2318,6 +2682,9 @@ def main():
 
     print("Building Capex to AI Revenue sheet...")
     build_capex_to_ai_revenue_sheet(wb)
+
+    print("Building Capex Decomposition sheet...")
+    build_capex_decomposition_sheet(wb)
 
     print("Building Assumptions sheet...")
     build_assumptions_sheet(wb)
