@@ -132,6 +132,154 @@ SEGMENTS = {
 }
 
 
+##############################################################################
+# LLM-IMPACT SCENARIO
+# For each segment we define:
+#   "llm_impact_pct"  – dict {year: pct} additive market-size adjustment
+#                       (positive = LLM tailwind enlarges TAM,
+#                        negative = LLM replaces spend / cannibalises)
+#   "assumptions"     – list of plain-text assumption strings
+#   "winners"         – companies that gain disproportionate share from LLM
+#   "losers"          – companies that lose share
+#   "winner_boost"    – fractional revenue uplift applied to winners (on top
+#                       of the base-case)
+#   "loser_drag"      – fractional revenue drag applied to losers
+##############################################################################
+
+LLM_IMPACT = {
+    "SIEM": {
+        "llm_impact_pct": {
+            2019: 0, 2020: 0, 2021: 0, 2022: 0, 2023: 0, 2024: 0,
+            2025: 0.03, 2026: 0.06, 2027: 0.10, 2028: 0.14, 2029: 0.18, 2030: 0.22,
+        },
+        "assumptions": [
+            "LLM-based search transforms SIEM from query-driven log analysis to natural-language investigation, expanding TAM by attracting non-expert users.",
+            "Tier-1 SOC alert triage automated 40-60% by LLM copilots (Microsoft Security Copilot, Palo Alto XSIAM), reducing per-alert cost but increasing detection volume.",
+            "Vendors embed LLM features into premium tiers, driving ARPU uplift of 10-15% on new bookings from 2026+.",
+            "Legacy rule-based SIEM vendors (LogRhythm, IBM QRadar) lose share faster as LLM-native platforms (Microsoft Sentinel, XSIAM) offer superior natural-language querying.",
+            "Net effect: TAM expands because LLM raises detection efficacy, driving demand, but spend per analyst-hour drops — net positive for market overall.",
+        ],
+        "winners": ["Microsoft", "Palo Alto (XSIAM)"],
+        "losers": ["IBM", "LogRhythm", "Exabeam"],
+        "winner_boost": {2025: 0.05, 2026: 0.10, 2027: 0.15, 2028: 0.18, 2029: 0.20, 2030: 0.22},
+        "loser_drag":   {2025: -0.03, 2026: -0.06, 2027: -0.10, 2028: -0.14, 2029: -0.18, 2030: -0.22},
+    },
+    "Vulnerability Assessment": {
+        "llm_impact_pct": {
+            2019: 0, 2020: 0, 2021: 0, 2022: 0, 2023: 0, 2024: 0,
+            2025: 0.04, 2026: 0.08, 2027: 0.13, 2028: 0.18, 2029: 0.24, 2030: 0.30,
+        },
+        "assumptions": [
+            "LLM code review automates ~40% of static analysis tasks (Checkmarx, Snyk) — but simultaneously 40%+ of AI-generated code ships with vulnerabilities, dramatically expanding scan demand.",
+            "Autonomous LLM pen-testing agents (e.g., MAPTA) achieve 77% success rate at <$0.10/test, creating new low-cost VM consumption tier.",
+            "Biggest TAM expansion among all segments: more code = more vulnerabilities = more scanning, offsetting any per-scan price compression.",
+            "Platform vendors integrating LLM-driven prioritization (CrowdStrike, Microsoft Defender) gain share vs. point-solution scanners.",
+            "Tenable and Qualys defend share by embedding LLM prioritisation into exposure management; Rapid7 risks share loss without comparable LLM investment.",
+        ],
+        "winners": ["Microsoft", "CrowdStrike"],
+        "losers": ["Ivanti"],
+        "winner_boost": {2025: 0.06, 2026: 0.12, 2027: 0.18, 2028: 0.22, 2029: 0.26, 2030: 0.30},
+        "loser_drag":   {2025: -0.04, 2026: -0.08, 2027: -0.12, 2028: -0.16, 2029: -0.20, 2030: -0.24},
+    },
+    "Identity (IAM)": {
+        "llm_impact_pct": {
+            2019: 0, 2020: 0, 2021: 0, 2022: 0, 2023: 0, 2024: 0,
+            2025: 0.03, 2026: 0.07, 2027: 0.12, 2028: 0.17, 2029: 0.22, 2030: 0.28,
+        },
+        "assumptions": [
+            "AI agents require machine-to-machine identity at scale, creating a new 'agent identity' sub-segment that expands IAM TAM 15-25% by 2030.",
+            "LLMs enable natural-language policy authoring (NIST research), lowering barrier for Zero Trust adoption — accelerating IAM adoption in mid-market.",
+            "Privileged access management (CyberArk) sees uplift: LLM agents handling sensitive operations need robust secret vaulting and session recording.",
+            "Behavioral biometrics enhanced by LLM anomaly detection raise ARPU for adaptive authentication vendors.",
+            "Microsoft benefits most from Entra ID + Copilot integration; Okta and CyberArk well-positioned for workforce & privileged-agent identity.",
+        ],
+        "winners": ["Microsoft", "CyberArk", "Okta"],
+        "losers": ["IBM", "Oracle"],
+        "winner_boost": {2025: 0.04, 2026: 0.08, 2027: 0.12, 2028: 0.16, 2029: 0.19, 2030: 0.22},
+        "loser_drag":   {2025: -0.02, 2026: -0.04, 2027: -0.06, 2028: -0.08, 2029: -0.10, 2030: -0.12},
+    },
+    "Endpoint Security": {
+        "llm_impact_pct": {
+            2019: 0, 2020: 0, 2021: 0, 2022: 0, 2023: 0, 2024: 0,
+            2025: 0.02, 2026: 0.05, 2027: 0.08, 2028: 0.12, 2029: 0.15, 2030: 0.18,
+        },
+        "assumptions": [
+            "LLM-powered malware generation increases sophistication of attacks, driving demand for next-gen EDR/XDR with LLM-based behavioral analysis.",
+            "LLM copilots embedded in EDR platforms accelerate investigation (CrowdStrike Charlotte AI, Microsoft Copilot for Defender) — premium tier pricing.",
+            "Legacy signature-based products accelerate decline; LLM-native XDR platforms capture displaced share.",
+            "Moderate TAM uplift: endpoints already well-penetrated; LLM impact is more about vendor shift than market expansion.",
+            "AI-generated phishing/malware raises baseline threat level, sustaining demand growth above pre-AI trajectory.",
+        ],
+        "winners": ["CrowdStrike", "Microsoft", "Palo Alto Networks", "SentinelOne"],
+        "losers": ["Trellix (McAfee)", "Broadcom (Symantec)"],
+        "winner_boost": {2025: 0.03, 2026: 0.06, 2027: 0.10, 2028: 0.13, 2029: 0.15, 2030: 0.17},
+        "loser_drag":   {2025: -0.04, 2026: -0.08, 2027: -0.12, 2028: -0.16, 2029: -0.20, 2030: -0.24},
+    },
+    "Network Security": {
+        "llm_impact_pct": {
+            2019: 0, 2020: 0, 2021: 0, 2022: 0, 2023: 0, 2024: 0,
+            2025: 0.02, 2026: 0.04, 2027: 0.06, 2028: 0.09, 2029: 0.12, 2030: 0.15,
+        },
+        "assumptions": [
+            "LLM-based search has least direct impact on network security hardware (firewalls, IDS/IPS), which is driven by appliance refresh cycles.",
+            "AI-assisted policy management (natural-language firewall rule generation) improves operational efficiency but does not significantly change spend.",
+            "LLM-powered DDoS detection and encrypted traffic analysis create incremental software-layer revenue for cloud-native vendors (Zscaler, Cloudflare).",
+            "Traditional appliance vendors (Check Point, Juniper) see minimal LLM uplift; cloud-native vendors disproportionately benefit.",
+            "Net effect: modest TAM uplift from AI-enhanced threat detection features; market growth primarily structural (cloud migration, Zero Trust).",
+        ],
+        "winners": ["Zscaler", "Palo Alto Networks"],
+        "losers": ["Check Point", "Juniper Networks"],
+        "winner_boost": {2025: 0.03, 2026: 0.06, 2027: 0.09, 2028: 0.12, 2029: 0.14, 2030: 0.16},
+        "loser_drag":   {2025: -0.02, 2026: -0.04, 2027: -0.06, 2028: -0.08, 2029: -0.10, 2030: -0.12},
+    },
+    "SASE": {
+        "llm_impact_pct": {
+            2019: 0, 2020: 0, 2021: 0, 2022: 0, 2023: 0, 2024: 0,
+            2025: 0.04, 2026: 0.08, 2027: 0.13, 2028: 0.18, 2029: 0.24, 2030: 0.30,
+        },
+        "assumptions": [
+            "LLM-based search and AI agents massively increase API-to-API and agent-to-service traffic, driving SSE/SASE inspection volume growth.",
+            "Natural-language policy authoring simplifies SASE deployment, accelerating mid-market adoption and reducing implementation friction.",
+            "AI agent traffic requires real-time DLP and content inspection — strong tailwind for SSE components (CASB, SWG, ZTNA).",
+            "Single-vendor SASE platforms with embedded AI analytics gain share faster (Zscaler, Palo Alto Prisma).",
+            "Cloudflare benefits disproportionately: AI inference traffic traverses its edge network, creating bundled security + AI delivery revenue.",
+        ],
+        "winners": ["Zscaler", "Palo Alto Networks", "Cloudflare"],
+        "losers": ["Broadcom"],
+        "winner_boost": {2025: 0.05, 2026: 0.10, 2027: 0.15, 2028: 0.20, 2029: 0.24, 2030: 0.28},
+        "loser_drag":   {2025: -0.03, 2026: -0.06, 2027: -0.09, 2028: -0.12, 2029: -0.15, 2030: -0.18},
+    },
+}
+
+
+def compute_llm_adjusted(segment_key):
+    """Return (adjusted_market_size, adjusted_companies) dicts for a segment."""
+    base = SEGMENTS[segment_key]
+    impact = LLM_IMPACT[segment_key]
+    adj_market = {}
+    for yr in YEARS:
+        adj_market[yr] = round(base["market_size"][yr] * (1 + impact["llm_impact_pct"][yr]), 2)
+
+    adj_companies = {}
+    for company, rev in base["companies"].items():
+        adj_companies[company] = {}
+        for yr in YEARS:
+            if yr <= HISTORICAL_END:
+                adj_companies[company][yr] = rev[yr]
+                continue
+            base_rev = rev[yr]
+            if company in impact["winners"]:
+                boost = impact["winner_boost"].get(yr, 0)
+                adj_companies[company][yr] = round(base_rev * (1 + boost), 2)
+            elif company in impact["losers"]:
+                drag = impact["loser_drag"].get(yr, 0)
+                adj_companies[company][yr] = round(base_rev * (1 + drag), 2)
+            else:
+                mkt_mult = 1 + impact["llm_impact_pct"].get(yr, 0)
+                adj_companies[company][yr] = round(base_rev * mkt_mult, 2)
+    return adj_market, adj_companies
+
+
 def apply_cell_style(cell, font=None, fill=None, alignment=None, border=None, number_format=None):
     if font:
         cell.font = font
@@ -446,14 +594,483 @@ def write_summary_sheet(wb):
     ws.sheet_properties.tabColor = "1F3864"
 
 
+##############################################################################
+# LLM IMPACT — ASSUMPTIONS TAB
+##############################################################################
+
+LLM_GREEN_FILL = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
+LLM_RED_FILL = PatternFill(start_color="FCE4EC", end_color="FCE4EC", fill_type="solid")
+LLM_HEADER_FILL = PatternFill(start_color="7B2D8E", end_color="7B2D8E", fill_type="solid")
+LLM_SUBHEADER_FILL = PatternFill(start_color="9C27B0", end_color="9C27B0", fill_type="solid")
+DELTA_POS_FONT = Font(name="Calibri", color="006100", size=11)
+DELTA_NEG_FONT = Font(name="Calibri", color="9C0006", size=11)
+
+
+def write_llm_assumptions_sheet(wb):
+    ws = wb.create_sheet(title="LLM Assumptions")
+
+    ws.cell(row=1, column=1, value="How LLM-Based Search Impacts Cybersecurity Segments")
+    apply_cell_style(ws.cell(row=1, column=1), font=Font(name="Calibri", bold=True, size=16, color="7B2D8E"))
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=8)
+
+    ws.cell(row=2, column=1, value=(
+        "This tab summarises the qualitative and quantitative assumptions behind the LLM-adjusted scenario. "
+        "LLM-based search, AI copilots, and autonomous agents reshape buyer behaviour, vendor differentiation, "
+        "and total addressable market for every cybersecurity segment."
+    ))
+    apply_cell_style(ws.cell(row=2, column=1), font=Font(name="Calibri", italic=True, size=10, color="666666"))
+    ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=8)
+
+    seg_order = ["SIEM", "Vulnerability Assessment", "Identity (IAM)", "Endpoint Security", "Network Security", "SASE"]
+    row = 4
+
+    for seg_key in seg_order:
+        impact = LLM_IMPACT[seg_key]
+
+        # Segment header
+        ws.cell(row=row, column=1, value=seg_key)
+        for c in range(1, 9):
+            apply_cell_style(ws.cell(row=row, column=c), font=HEADER_FONT, fill=LLM_HEADER_FILL, border=THIN_BORDER)
+        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=8)
+        row += 1
+
+        # TAM impact multiplier row
+        ws.cell(row=row, column=1, value="TAM Impact Multiplier")
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, border=THIN_BORDER)
+        forecast_years = [yr for yr in YEARS if yr > HISTORICAL_END]
+        for i, yr in enumerate(forecast_years):
+            ws.cell(row=row, column=2 + i, value=yr)
+            apply_cell_style(ws.cell(row=row, column=2 + i), font=BOLD_FONT, fill=ACCENT_FILL, border=THIN_BORDER, alignment=Alignment(horizontal="center"))
+        row += 1
+        ws.cell(row=row, column=1, value="Market Size Adjustment")
+        apply_cell_style(ws.cell(row=row, column=1), font=NORMAL_FONT, border=THIN_BORDER)
+        for i, yr in enumerate(forecast_years):
+            val = impact["llm_impact_pct"][yr]
+            cell = ws.cell(row=row, column=2 + i, value=val)
+            apply_cell_style(cell, font=DELTA_POS_FONT if val >= 0 else DELTA_NEG_FONT,
+                             border=THIN_BORDER, number_format="+0.0%;-0.0%", alignment=Alignment(horizontal="center"))
+        row += 1
+
+        # Winners & Losers
+        ws.cell(row=row, column=1, value="Winners (Share Gainers)")
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, fill=LLM_GREEN_FILL, border=THIN_BORDER)
+        ws.cell(row=row, column=2, value=", ".join(impact["winners"]))
+        apply_cell_style(ws.cell(row=row, column=2), font=NORMAL_FONT, fill=LLM_GREEN_FILL, border=THIN_BORDER)
+        ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=8)
+        row += 1
+
+        ws.cell(row=row, column=1, value="Losers (Share Donors)")
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, fill=LLM_RED_FILL, border=THIN_BORDER)
+        ws.cell(row=row, column=2, value=", ".join(impact["losers"]))
+        apply_cell_style(ws.cell(row=row, column=2), font=NORMAL_FONT, fill=LLM_RED_FILL, border=THIN_BORDER)
+        ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=8)
+        row += 1
+
+        # Winner/Loser revenue adjustment
+        ws.cell(row=row, column=1, value="Winner Revenue Boost")
+        apply_cell_style(ws.cell(row=row, column=1), font=NORMAL_FONT, border=THIN_BORDER)
+        for i, yr in enumerate(forecast_years):
+            val = impact["winner_boost"].get(yr, 0)
+            cell = ws.cell(row=row, column=2 + i, value=val)
+            apply_cell_style(cell, font=DELTA_POS_FONT, border=THIN_BORDER, number_format="+0.0%", alignment=Alignment(horizontal="center"))
+        row += 1
+
+        ws.cell(row=row, column=1, value="Loser Revenue Drag")
+        apply_cell_style(ws.cell(row=row, column=1), font=NORMAL_FONT, border=THIN_BORDER)
+        for i, yr in enumerate(forecast_years):
+            val = impact["loser_drag"].get(yr, 0)
+            cell = ws.cell(row=row, column=2 + i, value=val)
+            apply_cell_style(cell, font=DELTA_NEG_FONT, border=THIN_BORDER, number_format="+0.0%;-0.0%", alignment=Alignment(horizontal="center"))
+        row += 1
+
+        # Assumptions text
+        ws.cell(row=row, column=1, value="Key Assumptions")
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, border=THIN_BORDER, alignment=Alignment(vertical="top"))
+        for ai, assumption in enumerate(impact["assumptions"]):
+            ws.cell(row=row + ai, column=2, value=f"{ai+1}. {assumption}")
+            apply_cell_style(ws.cell(row=row + ai, column=2), font=Font(name="Calibri", size=10), border=THIN_BORDER,
+                             alignment=Alignment(wrap_text=True, vertical="top"))
+            ws.merge_cells(start_row=row + ai, start_column=2, end_row=row + ai, end_column=8)
+        row += len(impact["assumptions"]) + 1
+
+    ws.column_dimensions["A"].width = 26
+    for c in range(2, 9):
+        ws.column_dimensions[get_column_letter(c)].width = 16
+    ws.sheet_properties.tabColor = "7B2D8E"
+
+
+##############################################################################
+# LLM IMPACT — ADJUSTED FORECAST TAB (per-segment)
+##############################################################################
+
+def write_llm_adjusted_segment_sheet(wb, segment_key):
+    data = SEGMENTS[segment_key]
+    impact = LLM_IMPACT[segment_key]
+    adj_market, adj_companies = compute_llm_adjusted(segment_key)
+
+    title = f"{segment_key} LLM"
+    if len(title) > 31:
+        title = title[:31]
+    ws = wb.create_sheet(title=title)
+
+    ws.cell(row=1, column=1, value=f"{data['full_name']} — LLM-Adjusted Scenario")
+    apply_cell_style(ws.cell(row=1, column=1), font=Font(name="Calibri", bold=True, size=14, color="7B2D8E"))
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(YEARS) + 2)
+
+    ws.cell(row=2, column=1, value="Shows base-case vs. LLM-adjusted market size and company revenue. Purple-highlighted columns are LLM-adjusted forecasts.")
+    apply_cell_style(ws.cell(row=2, column=1), font=Font(name="Calibri", italic=True, size=10, color="666666"))
+    ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=len(YEARS) + 2)
+
+    PURPLE_FILL = PatternFill(start_color="F3E5F5", end_color="F3E5F5", fill_type="solid")
+
+    # --- SECTION 1: Market Size Comparison ---
+    row = 4
+    ws.cell(row=row, column=1, value="Market Size Comparison ($B)")
+    apply_cell_style(ws.cell(row=row, column=1), font=HEADER_FONT, fill=LLM_HEADER_FILL, alignment=Alignment(horizontal="left"))
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=yr)
+        apply_cell_style(cell, font=HEADER_FONT, fill=LLM_HEADER_FILL, alignment=Alignment(horizontal="center"))
+    style_range(ws, row, 1, len(YEARS) + 1, border=THIN_BORDER)
+
+    # Base case
+    row = 5
+    ws.cell(row=row, column=1, value="Base Case")
+    apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, border=THIN_BORDER)
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=data["market_size"][yr])
+        apply_cell_style(cell, font=NORMAL_FONT, border=THIN_BORDER, number_format=USD_FORMAT, alignment=Alignment(horizontal="center"))
+
+    # LLM Adjusted
+    row = 6
+    ws.cell(row=row, column=1, value="LLM-Adjusted")
+    apply_cell_style(ws.cell(row=row, column=1), font=Font(name="Calibri", bold=True, color="7B2D8E"), border=THIN_BORDER)
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=adj_market[yr])
+        f = PURPLE_FILL if yr > HISTORICAL_END else None
+        apply_cell_style(cell, font=Font(name="Calibri", color="7B2D8E"), fill=f, border=THIN_BORDER, number_format=USD_FORMAT, alignment=Alignment(horizontal="center"))
+
+    # Delta
+    row = 7
+    ws.cell(row=row, column=1, value="Delta ($B)")
+    apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, border=THIN_BORDER)
+    for i, yr in enumerate(YEARS):
+        delta = round(adj_market[yr] - data["market_size"][yr], 2)
+        cell = ws.cell(row=row, column=i + 2, value=delta)
+        dfont = DELTA_POS_FONT if delta >= 0 else DELTA_NEG_FONT
+        apply_cell_style(cell, font=dfont, border=THIN_BORDER, number_format='+#,##0.0;-#,##0.0', alignment=Alignment(horizontal="center"))
+
+    # Delta %
+    row = 8
+    ws.cell(row=row, column=1, value="Delta (%)")
+    apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, border=THIN_BORDER)
+    for i, yr in enumerate(YEARS):
+        pct = impact["llm_impact_pct"][yr]
+        cell = ws.cell(row=row, column=i + 2, value=pct)
+        dfont = DELTA_POS_FONT if pct >= 0 else DELTA_NEG_FONT
+        apply_cell_style(cell, font=dfont, border=THIN_BORDER, number_format='+0.0%;-0.0%', alignment=Alignment(horizontal="center"))
+
+    # LLM-adjusted YoY growth
+    row = 9
+    ws.cell(row=row, column=1, value="LLM-Adj YoY Growth (%)")
+    apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, border=THIN_BORDER)
+    for i, yr in enumerate(YEARS):
+        if i == 0:
+            ws.cell(row=row, column=i + 2, value="—")
+            apply_cell_style(ws.cell(row=row, column=i + 2), font=NORMAL_FONT, border=THIN_BORDER, alignment=Alignment(horizontal="center"))
+            continue
+        prev = adj_market[YEARS[i - 1]]
+        cur = adj_market[yr]
+        g = (cur - prev) / prev
+        cell = ws.cell(row=row, column=i + 2, value=g)
+        gfont = GROWTH_POSITIVE_FONT if g >= 0 else GROWTH_NEGATIVE_FONT
+        apply_cell_style(cell, font=gfont, border=THIN_BORDER, number_format=PCT_FORMAT, alignment=Alignment(horizontal="center"))
+
+    # --- SECTION 2: Company Revenue — LLM Adjusted ---
+    row = 11
+    ws.cell(row=row, column=1, value="Company Revenue — LLM Adjusted ($B)")
+    apply_cell_style(ws.cell(row=row, column=1), font=HEADER_FONT, fill=LLM_SUBHEADER_FILL, alignment=Alignment(horizontal="left"))
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=yr)
+        apply_cell_style(cell, font=HEADER_FONT, fill=LLM_SUBHEADER_FILL, alignment=Alignment(horizontal="center"))
+    style_range(ws, row, 1, len(YEARS) + 1, border=THIN_BORDER)
+
+    company_start_row = row + 1
+    companies_list = list(data["companies"].keys())
+    for ci, company in enumerate(companies_list):
+        row = company_start_row + ci
+        is_winner = company in impact["winners"]
+        is_loser = company in impact["losers"]
+        label = company
+        if is_winner:
+            label = f"{company}  [WINNER]"
+        elif is_loser:
+            label = f"{company}  [LOSER]"
+        ws.cell(row=row, column=1, value=label)
+        if is_winner:
+            bg = LLM_GREEN_FILL
+        elif is_loser:
+            bg = LLM_RED_FILL
+        else:
+            bg = ACCENT_FILL if ci % 2 == 0 else None
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, fill=bg, border=THIN_BORDER)
+        for i, yr in enumerate(YEARS):
+            cell = ws.cell(row=row, column=i + 2, value=adj_companies[company][yr])
+            cfill = bg
+            if yr > HISTORICAL_END and not is_winner and not is_loser:
+                cfill = PURPLE_FILL
+            apply_cell_style(cell, font=NORMAL_FONT, fill=cfill, border=THIN_BORDER, number_format=USD_FORMAT, alignment=Alignment(horizontal="center"))
+
+    # --- SECTION 3: Revenue Delta vs Base (company level) ---
+    row = company_start_row + len(companies_list) + 1
+    delta_header_row = row
+    ws.cell(row=row, column=1, value="Revenue Delta vs Base ($B)")
+    apply_cell_style(ws.cell(row=row, column=1), font=HEADER_FONT, fill=LLM_HEADER_FILL, alignment=Alignment(horizontal="left"))
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=yr)
+        apply_cell_style(cell, font=HEADER_FONT, fill=LLM_HEADER_FILL, alignment=Alignment(horizontal="center"))
+    style_range(ws, row, 1, len(YEARS) + 1, border=THIN_BORDER)
+
+    for ci, company in enumerate(companies_list):
+        row = delta_header_row + 1 + ci
+        is_winner = company in impact["winners"]
+        is_loser = company in impact["losers"]
+        ws.cell(row=row, column=1, value=company)
+        if is_winner:
+            bg = LLM_GREEN_FILL
+        elif is_loser:
+            bg = LLM_RED_FILL
+        else:
+            bg = None
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, fill=bg, border=THIN_BORDER)
+        for i, yr in enumerate(YEARS):
+            delta = round(adj_companies[company][yr] - data["companies"][company][yr], 2)
+            cell = ws.cell(row=row, column=i + 2, value=delta)
+            dfont = DELTA_POS_FONT if delta >= 0 else DELTA_NEG_FONT
+            apply_cell_style(cell, font=dfont, fill=bg, border=THIN_BORDER, number_format='+#,##0.00;-#,##0.00', alignment=Alignment(horizontal="center"))
+
+    # --- SECTION 4: LLM-Adjusted Market Share ---
+    row = delta_header_row + len(companies_list) + 2
+    share_header_row = row
+    ws.cell(row=row, column=1, value="LLM-Adjusted Market Share (%)")
+    apply_cell_style(ws.cell(row=row, column=1), font=HEADER_FONT, fill=LLM_SUBHEADER_FILL, alignment=Alignment(horizontal="left"))
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=yr)
+        apply_cell_style(cell, font=HEADER_FONT, fill=LLM_SUBHEADER_FILL, alignment=Alignment(horizontal="center"))
+    style_range(ws, row, 1, len(YEARS) + 1, border=THIN_BORDER)
+
+    for ci, company in enumerate(companies_list):
+        row = share_header_row + 1 + ci
+        is_winner = company in impact["winners"]
+        is_loser = company in impact["losers"]
+        ws.cell(row=row, column=1, value=company)
+        if is_winner:
+            bg = LLM_GREEN_FILL
+        elif is_loser:
+            bg = LLM_RED_FILL
+        else:
+            bg = ACCENT_FILL if ci % 2 == 0 else None
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, fill=bg, border=THIN_BORDER)
+        for i, yr in enumerate(YEARS):
+            share = adj_companies[company][yr] / adj_market[yr] if adj_market[yr] else 0
+            cell = ws.cell(row=row, column=i + 2, value=share)
+            apply_cell_style(cell, font=NORMAL_FONT, fill=bg, border=THIN_BORDER, number_format=PCT_FORMAT, alignment=Alignment(horizontal="center"))
+
+    # Column widths
+    ws.column_dimensions["A"].width = 30
+    for i in range(len(YEARS)):
+        ws.column_dimensions[get_column_letter(i + 2)].width = 12
+    ws.sheet_properties.tabColor = "9C27B0"
+
+
+##############################################################################
+# LLM IMPACT — SUMMARY TAB
+##############################################################################
+
+def write_llm_summary_sheet(wb):
+    ws = wb.create_sheet(title="LLM Summary")
+
+    ws.cell(row=1, column=1, value="LLM-Based Search Impact — Segment-Level Summary")
+    apply_cell_style(ws.cell(row=1, column=1), font=Font(name="Calibri", bold=True, size=16, color="7B2D8E"))
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(YEARS) + 3)
+
+    ws.cell(row=2, column=1, value=(
+        "Base-case vs. LLM-adjusted total market size by segment. "
+        "Delta shows incremental TAM created (or destroyed) by LLM-based search, AI copilots, and autonomous agents."
+    ))
+    apply_cell_style(ws.cell(row=2, column=1), font=Font(name="Calibri", italic=True, size=10, color="666666"))
+    ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=len(YEARS) + 3)
+
+    seg_order = ["SIEM", "Vulnerability Assessment", "Identity (IAM)", "Endpoint Security", "Network Security", "SASE"]
+    PURPLE_FILL = PatternFill(start_color="F3E5F5", end_color="F3E5F5", fill_type="solid")
+
+    # ---- BASE CASE ----
+    row = 4
+    ws.cell(row=row, column=1, value="Base Case ($B)")
+    apply_cell_style(ws.cell(row=row, column=1), font=HEADER_FONT, fill=HEADER_FILL, alignment=Alignment(horizontal="left"))
+    cagr_col = len(YEARS) + 2
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=yr)
+        apply_cell_style(cell, font=HEADER_FONT, fill=HEADER_FILL, alignment=Alignment(horizontal="center"))
+    ws.cell(row=row, column=cagr_col, value="CAGR\n'24-'30")
+    apply_cell_style(ws.cell(row=row, column=cagr_col), font=HEADER_FONT, fill=HEADER_FILL, alignment=Alignment(horizontal="center", wrap_text=True))
+    style_range(ws, row, 1, cagr_col, border=THIN_BORDER)
+
+    base_total = {yr: 0 for yr in YEARS}
+    for si, seg in enumerate(seg_order):
+        row = 5 + si
+        d = SEGMENTS[seg]
+        f = ACCENT_FILL if si % 2 == 0 else None
+        ws.cell(row=row, column=1, value=seg)
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, fill=f, border=THIN_BORDER)
+        for i, yr in enumerate(YEARS):
+            val = d["market_size"][yr]
+            base_total[yr] += val
+            cell = ws.cell(row=row, column=i + 2, value=val)
+            apply_cell_style(cell, font=NORMAL_FONT, fill=f, border=THIN_BORDER, number_format=USD_FORMAT, alignment=Alignment(horizontal="center"))
+        cagr = (d["market_size"][2030] / d["market_size"][2024]) ** (1 / 6) - 1
+        cell = ws.cell(row=row, column=cagr_col, value=cagr)
+        apply_cell_style(cell, font=BOLD_FONT, fill=f, border=THIN_BORDER, number_format=PCT_FORMAT, alignment=Alignment(horizontal="center"))
+
+    row = 5 + len(seg_order)
+    ws.cell(row=row, column=1, value="TOTAL (Base)")
+    dark_fill = PatternFill(start_color="1F3864", end_color="1F3864", fill_type="solid")
+    white_bold = Font(name="Calibri", bold=True, size=11, color="FFFFFF")
+    apply_cell_style(ws.cell(row=row, column=1), font=white_bold, fill=dark_fill, border=THIN_BORDER)
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=round(base_total[yr], 1))
+        apply_cell_style(cell, font=white_bold, fill=dark_fill, border=THIN_BORDER, number_format=USD_FORMAT, alignment=Alignment(horizontal="center"))
+    base_cagr = (base_total[2030] / base_total[2024]) ** (1 / 6) - 1
+    cell = ws.cell(row=row, column=cagr_col, value=base_cagr)
+    apply_cell_style(cell, font=white_bold, fill=dark_fill, border=THIN_BORDER, number_format=PCT_FORMAT, alignment=Alignment(horizontal="center"))
+
+    # ---- LLM ADJUSTED ----
+    row += 2
+    adj_section_start = row
+    ws.cell(row=row, column=1, value="LLM-Adjusted ($B)")
+    apply_cell_style(ws.cell(row=row, column=1), font=HEADER_FONT, fill=LLM_HEADER_FILL, alignment=Alignment(horizontal="left"))
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=yr)
+        apply_cell_style(cell, font=HEADER_FONT, fill=LLM_HEADER_FILL, alignment=Alignment(horizontal="center"))
+    ws.cell(row=row, column=cagr_col, value="CAGR\n'24-'30")
+    apply_cell_style(ws.cell(row=row, column=cagr_col), font=HEADER_FONT, fill=LLM_HEADER_FILL, alignment=Alignment(horizontal="center", wrap_text=True))
+    style_range(ws, row, 1, cagr_col, border=THIN_BORDER)
+
+    adj_total = {yr: 0 for yr in YEARS}
+    for si, seg in enumerate(seg_order):
+        row = adj_section_start + 1 + si
+        adj_mkt, _ = compute_llm_adjusted(seg)
+        f = ACCENT_FILL if si % 2 == 0 else None
+        ws.cell(row=row, column=1, value=seg)
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, fill=f, border=THIN_BORDER)
+        for i, yr in enumerate(YEARS):
+            val = adj_mkt[yr]
+            adj_total[yr] += val
+            cfill = PURPLE_FILL if yr > HISTORICAL_END else f
+            cell = ws.cell(row=row, column=i + 2, value=val)
+            apply_cell_style(cell, font=NORMAL_FONT, fill=cfill, border=THIN_BORDER, number_format=USD_FORMAT, alignment=Alignment(horizontal="center"))
+        cagr = (adj_mkt[2030] / adj_mkt[2024]) ** (1 / 6) - 1
+        cell = ws.cell(row=row, column=cagr_col, value=cagr)
+        apply_cell_style(cell, font=BOLD_FONT, fill=f, border=THIN_BORDER, number_format=PCT_FORMAT, alignment=Alignment(horizontal="center"))
+
+    row = adj_section_start + 1 + len(seg_order)
+    purple_dark = PatternFill(start_color="4A148C", end_color="4A148C", fill_type="solid")
+    ws.cell(row=row, column=1, value="TOTAL (LLM-Adj)")
+    apply_cell_style(ws.cell(row=row, column=1), font=white_bold, fill=purple_dark, border=THIN_BORDER)
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=round(adj_total[yr], 1))
+        apply_cell_style(cell, font=white_bold, fill=purple_dark, border=THIN_BORDER, number_format=USD_FORMAT, alignment=Alignment(horizontal="center"))
+    adj_cagr = (adj_total[2030] / adj_total[2024]) ** (1 / 6) - 1
+    cell = ws.cell(row=row, column=cagr_col, value=adj_cagr)
+    apply_cell_style(cell, font=white_bold, fill=purple_dark, border=THIN_BORDER, number_format=PCT_FORMAT, alignment=Alignment(horizontal="center"))
+
+    # ---- DELTA ----
+    row += 2
+    delta_section_start = row
+    ws.cell(row=row, column=1, value="Delta: LLM Uplift ($B)")
+    apply_cell_style(ws.cell(row=row, column=1), font=HEADER_FONT, fill=LLM_SUBHEADER_FILL, alignment=Alignment(horizontal="left"))
+    for i, yr in enumerate(YEARS):
+        cell = ws.cell(row=row, column=i + 2, value=yr)
+        apply_cell_style(cell, font=HEADER_FONT, fill=LLM_SUBHEADER_FILL, alignment=Alignment(horizontal="center"))
+    ws.cell(row=row, column=cagr_col, value="2030E\nUplift %")
+    apply_cell_style(ws.cell(row=row, column=cagr_col), font=HEADER_FONT, fill=LLM_SUBHEADER_FILL, alignment=Alignment(horizontal="center", wrap_text=True))
+    style_range(ws, row, 1, cagr_col, border=THIN_BORDER)
+
+    for si, seg in enumerate(seg_order):
+        row = delta_section_start + 1 + si
+        adj_mkt, _ = compute_llm_adjusted(seg)
+        base_mkt = SEGMENTS[seg]["market_size"]
+        f = ACCENT_FILL if si % 2 == 0 else None
+        ws.cell(row=row, column=1, value=seg)
+        apply_cell_style(ws.cell(row=row, column=1), font=BOLD_FONT, fill=f, border=THIN_BORDER)
+        for i, yr in enumerate(YEARS):
+            delta = round(adj_mkt[yr] - base_mkt[yr], 2)
+            cell = ws.cell(row=row, column=i + 2, value=delta)
+            dfont = DELTA_POS_FONT if delta >= 0 else DELTA_NEG_FONT
+            apply_cell_style(cell, font=dfont, fill=f, border=THIN_BORDER, number_format='+#,##0.0;-#,##0.0', alignment=Alignment(horizontal="center"))
+        uplift_pct = (adj_mkt[2030] - base_mkt[2030]) / base_mkt[2030]
+        cell = ws.cell(row=row, column=cagr_col, value=uplift_pct)
+        apply_cell_style(cell, font=DELTA_POS_FONT if uplift_pct >= 0 else DELTA_NEG_FONT,
+                         fill=f, border=THIN_BORDER, number_format='+0.0%;-0.0%', alignment=Alignment(horizontal="center"))
+
+    row = delta_section_start + 1 + len(seg_order)
+    ws.cell(row=row, column=1, value="TOTAL Delta")
+    apply_cell_style(ws.cell(row=row, column=1), font=white_bold, fill=purple_dark, border=THIN_BORDER)
+    for i, yr in enumerate(YEARS):
+        delta = round(adj_total[yr] - base_total[yr], 1)
+        cell = ws.cell(row=row, column=i + 2, value=delta)
+        apply_cell_style(cell, font=white_bold, fill=purple_dark, border=THIN_BORDER, number_format='+#,##0.0;-#,##0.0', alignment=Alignment(horizontal="center"))
+    total_uplift = (adj_total[2030] - base_total[2030]) / base_total[2030]
+    cell = ws.cell(row=row, column=cagr_col, value=total_uplift)
+    apply_cell_style(cell, font=white_bold, fill=purple_dark, border=THIN_BORDER, number_format='+0.0%;-0.0%', alignment=Alignment(horizontal="center"))
+
+    # ---- CHART ----
+    chart_row = row + 3
+    chart = BarChart()
+    chart.type = "col"
+    chart.grouping = "clustered"
+    chart.title = "2030E Market Size: Base vs. LLM-Adjusted ($B)"
+    chart.y_axis.title = "USD Billions"
+    chart.style = 10
+    chart.width = 28
+    chart.height = 14
+
+    yr_2030_col = YEARS.index(2030) + 2
+    base_vals = Reference(ws, min_col=yr_2030_col, max_col=yr_2030_col, min_row=5, max_row=5 + len(seg_order) - 1)
+    adj_vals = Reference(ws, min_col=yr_2030_col, max_col=yr_2030_col, min_row=adj_section_start + 1, max_row=adj_section_start + len(seg_order))
+    cats = Reference(ws, min_col=1, min_row=5, max_row=5 + len(seg_order) - 1)
+
+    chart.add_data(base_vals, titles_from_data=False)
+    chart.add_data(adj_vals, titles_from_data=False)
+    chart.set_categories(cats)
+    chart.series[0].title = openpyxl.chart.series.SeriesLabel(v="Base Case 2030E")
+    chart.series[0].graphicalProperties.solidFill = "4472C4"
+    chart.series[1].title = openpyxl.chart.series.SeriesLabel(v="LLM-Adjusted 2030E")
+    chart.series[1].graphicalProperties.solidFill = "9C27B0"
+
+    ws.add_chart(chart, f"A{chart_row}")
+
+    # Column widths
+    ws.column_dimensions["A"].width = 28
+    for i in range(len(YEARS)):
+        ws.column_dimensions[get_column_letter(i + 2)].width = 12
+    ws.column_dimensions[get_column_letter(cagr_col)].width = 12
+    ws.sheet_properties.tabColor = "7B2D8E"
+
+
 def main():
     wb = openpyxl.Workbook()
     wb.remove(wb.active)
 
     write_summary_sheet(wb)
 
-    for seg_key in ["SIEM", "Vulnerability Assessment", "Identity (IAM)", "Endpoint Security", "Network Security", "SASE"]:
+    seg_order = ["SIEM", "Vulnerability Assessment", "Identity (IAM)", "Endpoint Security", "Network Security", "SASE"]
+    for seg_key in seg_order:
         write_segment_sheet(wb, seg_key, SEGMENTS[seg_key])
+
+    write_llm_assumptions_sheet(wb)
+    write_llm_summary_sheet(wb)
+    for seg_key in seg_order:
+        write_llm_adjusted_segment_sheet(wb, seg_key)
 
     output = "cybersecurity_segments_forecast.xlsx"
     wb.save(output)
