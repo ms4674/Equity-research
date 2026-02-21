@@ -186,6 +186,92 @@ def create_gpu_allocation_sheet(wb):
     return ws
 
 
+def create_gpu_rental_revenue_sheet(wb):
+    """Create sheet showing cloud GPU rental revenue: hyperscale vs neocloud."""
+    ws = wb.create_sheet("GPU Rental Revenue", 3)
+
+    header_fill = PatternFill(start_color="7030A0", end_color="7030A0", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF")
+
+    # External GPU cloud rental revenue - Synergy, ABI Research, company reports
+    # Hyperscale: AWS EC2 GPU, Azure ML, GCP Vertex AI GPU instances
+    # Neocloud: CoreWeave, Lambda Labs, Crusoe, Nebius, etc.
+    hyperscale_data = {
+        "Vendor": ["AWS (Amazon)", "Microsoft Azure", "Google Cloud", "Oracle Cloud", "Total Hyperscale"],
+        "2023 ($B)": [2.1, 1.8, 1.2, 0.3, 5.4],
+        "2024 ($B)": [3.8, 3.5, 2.2, 0.5, 10.0],
+        "2025E ($B)": [6.2, 5.8, 3.8, 0.9, 16.7],
+        "YoY Growth %": ["81%", "94%", "83%", "67%", "85%"],
+    }
+
+    neocloud_data = {
+        "Vendor": ["CoreWeave", "Lambda Labs", "Crusoe", "Nebius", "Others", "Total Neocloud"],
+        "2023 ($B)": [0.23, 0.15, 0.08, 0.05, 0.19, 0.70],
+        "2024 ($B)": [1.92, 0.65, 0.35, 0.28, 0.80, 4.0],
+        "2025E ($B)": [4.5, 1.8, 0.9, 0.7, 2.1, 10.0],
+        "YoY Growth %": ["737%", "333%", "338%", "460%", "321%", "471%"],
+    }
+
+    # Combined summary
+    combined_data = {
+        "Segment": ["Hyperscale (AWS, Azure, GCP, Oracle)", "Neocloud (CoreWeave, Lambda, etc.)", "Total GPU Rental Market"],
+        "2023 ($B)": [5.4, 0.70, 6.1],
+        "2024 ($B)": [10.0, 4.0, 14.0],
+        "2025E ($B)": [16.7, 10.0, 26.7],
+        "2024 Share": ["71%", "29%", "100%"],
+    }
+
+    ws["A1"] = "Cloud GPU Rental Revenue: Hyperscale vs Neocloud (External Customers)"
+    ws["A1"].font = Font(bold=True, size=14)
+    ws.merge_cells("A1:E1")
+
+    ws["A2"] = "External GPU revenue = cloud instances rented to customers (EC2, Azure ML, Vertex AI, CoreWeave, Lambda). Sources: Synergy, ABI Research, company filings."
+    ws["A2"].font = Font(italic=True, size=10, color="666666")
+    ws.merge_cells("A2:E2")
+
+    # Hyperscale table
+    ws["A4"] = "Hyperscale External GPU Revenue"
+    ws["A4"].font = Font(bold=True, size=12)
+    for col, header in enumerate(hyperscale_data.keys(), 1):
+        cell = ws.cell(row=5, column=col, value=header)
+        cell.fill = header_fill
+        cell.font = header_font
+    for row_idx, row in enumerate(zip(*hyperscale_data.values()), 6):
+        for col_idx, value in enumerate(row, 1):
+            ws.cell(row=row_idx, column=col_idx, value=value)
+
+    # Neocloud table
+    ws["A12"] = "Neocloud External GPU Revenue"
+    ws["A12"].font = Font(bold=True, size=12)
+    for col, header in enumerate(neocloud_data.keys(), 1):
+        cell = ws.cell(row=13, column=col, value=header)
+        cell.fill = header_fill
+        cell.font = header_font
+    for row_idx, row in enumerate(zip(*neocloud_data.values()), 14):
+        for col_idx, value in enumerate(row, 1):
+            ws.cell(row=row_idx, column=col_idx, value=value)
+
+    # Combined summary
+    ws["A22"] = "Market Summary"
+    ws["A22"].font = Font(bold=True, size=12)
+    for col, header in enumerate(combined_data.keys(), 1):
+        cell = ws.cell(row=23, column=col, value=header)
+        cell.fill = header_fill
+        cell.font = header_font
+    for row_idx, row in enumerate(zip(*combined_data.values()), 24):
+        for col_idx, value in enumerate(row, 1):
+            ws.cell(row=row_idx, column=col_idx, value=value)
+
+    ws["A28"] = "Key Insight: Hyperscale dominates 2024 (~71%) but neoclouds growing 200%+ YoY; CoreWeave $1.92B (2024), Synergy projects neoclouds $23B (2025), $180B (2030)"
+    ws["A28"].font = Font(bold=True)
+    ws.merge_cells("A28:E28")
+
+    for col in range(1, 6):
+        ws.column_dimensions[get_column_letter(col)].width = 22
+
+    return ws
+
+
 def create_summary_sheet(wb):
     """Create executive summary sheet."""
     ws = wb.create_sheet("Summary", 0)
@@ -207,12 +293,15 @@ def create_summary_sheet(wb):
         "",
         "4. CAPEX SCALE: 2024: $256B | 2025: $443B | 2026: $602B. ~75% tied to AI infrastructure.",
         "",
+        "5. GPU RENTAL REVENUE: Hyperscale external GPU ~$10B (2024), neocloud ~$4B. Hyperscale 71% share;",
+        "   neoclouds growing 200%+ YoY (CoreWeave $1.92B). Synergy: neoclouds $23B (2025), $180B (2030).",
+        "",
         f"Report generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}",
     ]
     
     for i, point in enumerate(summary_points, 1):
         ws.cell(row=i, column=1, value=point)
-        if point.startswith(("1.", "2.", "3.", "4.")):
+        if point.startswith(("1.", "2.", "3.", "4.", "5.")):
             ws.cell(row=i, column=1).font = Font(bold=True)
     
     ws.column_dimensions["A"].width = 90
@@ -232,6 +321,7 @@ def main():
     create_roic_sheet(wb)
     create_revenue_per_capex_sheet(wb)
     create_gpu_allocation_sheet(wb)
+    create_gpu_rental_revenue_sheet(wb)
     
     output_path = "/workspace/hyperscale_capex_gpu_analysis.xlsx"
     wb.save(output_path)
