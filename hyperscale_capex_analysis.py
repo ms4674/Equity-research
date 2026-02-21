@@ -134,6 +134,7 @@ def create_gpu_allocation_sheet(wb):
         "Hyperscaler": ["Amazon (AWS)", "Microsoft (Azure)", "Google (GCP)", "Meta", "Oracle"],
         "Internal %": [55, 65, 70, 85, 60],
         "External %": [45, 35, 30, 15, 40],
+        "External GPU Revenue ($B)": [3.8, 3.5, 2.2, 0.1, 0.5],
         "Internal Use Cases": [
             "Recommendation engines, fulfillment AI, Alexa",
             "Copilot, Office AI, Bing, internal ML",
@@ -150,16 +151,34 @@ def create_gpu_allocation_sheet(wb):
         ],
         "Est. GPU Count (2024)": ["~500K", "~485K", "~400K", "~600K", "~100K"],
     }
+
+    # Neoclouds: 100% external (no internal products)
+    neocloud_gpu_data = {
+        "Vendor": ["CoreWeave", "Lambda Labs", "Crusoe", "Nebius", "Total Neocloud"],
+        "Internal %": [0, 0, 0, 0, 0],
+        "External %": [100, 100, 100, 100, 100],
+        "External GPU Revenue ($B)": [1.92, 0.65, 0.35, 0.28, 4.0],
+        "Internal Use Cases": ["—", "—", "—", "—", "—"],
+        "External Use Cases": [
+            "GPU cloud for AI training, inference",
+            "GPU instances, ML training",
+            "GPU cloud, flaring mitigation compute",
+            "GPU cloud, sovereign AI",
+            "—",
+        ],
+        "Est. GPU Count (2024)": ["~50K", "~20K", "~15K", "~10K", "~95K"],
+    }
     
     df = pd.DataFrame(gpu_data)
+    df_neocloud = pd.DataFrame(neocloud_gpu_data)
     
-    ws["A1"] = "Hyperscale GPU Allocation: Internal vs External Consumption"
+    ws["A1"] = "GPU Allocation: Internal vs External Consumption"
     ws["A1"].font = Font(bold=True, size=14)
-    ws.merge_cells("A1:E1")
+    ws.merge_cells("A1:G1")
     
     ws["A2"] = "Internal = own AI products (Copilot, Gemini, Llama, recommendations). External = cloud GPU instances for customers."
     ws["A2"].font = Font(italic=True, size=10, color="666666")
-    ws.merge_cells("A2:E2")
+    ws.merge_cells("A2:G2")
     
     for col, header in enumerate(df.columns, 1):
         cell = ws.cell(row=4, column=col, value=header)
@@ -171,16 +190,28 @@ def create_gpu_allocation_sheet(wb):
         for col_idx, value in enumerate(row, 1):
             ws.cell(row=row_idx, column=col_idx, value=value)
     
+    # Neocloud section
+    ws["A12"] = "Neocloud Vendors (100% external)"
+    ws["A12"].font = Font(bold=True, size=12)
+    for col, header in enumerate(df_neocloud.columns, 1):
+        cell = ws.cell(row=13, column=col, value=header)
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = Alignment(wrap_text=True)
+    for row_idx, row in enumerate(df_neocloud.itertuples(index=False), 14):
+        for col_idx, value in enumerate(row, 1):
+            ws.cell(row=row_idx, column=col_idx, value=value)
+    
     # Add aggregate summary
-    ws["A12"] = "Aggregate: ~65% internal / 35% external across Big 5 hyperscalers"
-    ws["A12"].font = Font(bold=True)
-    ws.merge_cells("A12:E12")
+    ws["A21"] = "Hyperscale aggregate: ~65% internal / 35% external. Neoclouds: 100% external, ~$4B revenue (2024)"
+    ws["A21"].font = Font(bold=True)
+    ws.merge_cells("A21:G21")
     
-    ws["A13"] = "Source: Industry estimates; Meta/Google skew internal (ads/search); AWS/Azure/Oracle skew external (cloud revenue)"
-    ws["A13"].font = Font(italic=True, size=9, color="666666")
-    ws.merge_cells("A13:E13")
+    ws["A22"] = "Source: Industry estimates; Meta/Google skew internal (ads/search); AWS/Azure/Oracle skew external (cloud revenue)"
+    ws["A22"].font = Font(italic=True, size=9, color="666666")
+    ws.merge_cells("A22:G22")
     
-    for col in range(1, 6):
+    for col in range(1, 8):
         ws.column_dimensions[get_column_letter(col)].width = 28
     
     return ws
