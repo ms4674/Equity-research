@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harneet K. Phul – AI Resume</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: letter;
+    margin: 0.4in 0.5in;
+  }
+
+  body {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    font-size: 9.5pt;
+    line-height: 1.4;
+    color: #1a1a1a;
+    max-width: 7.5in;
+    margin: 0 auto;
+    padding: 0.4in 0.5in;
+  }
+
+  @media print {
+    body { padding: 0; }
+  }
+
+  /* ---- Header ---- */
+  .header {
+    text-align: center;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #1a56db;
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: 20pt;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #1a56db;
+    margin-bottom: 2px;
+  }
+  .header .contact {
+    font-size: 9pt;
+    color: #444;
+  }
+  .header .contact a {
+    color: #444;
+    text-decoration: none;
+  }
+
+  /* ---- Section ---- */
+  .section { margin-bottom: 8px; }
+  .section-title {
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #1a56db;
+    border-bottom: 1px solid #cbd5e1;
+    padding-bottom: 2px;
+    margin-bottom: 5px;
+  }
+
+  /* ---- Summary ---- */
+  .summary p {
+    font-size: 9pt;
+    color: #333;
+  }
+
+  /* ---- Skills ---- */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 24px;
+    font-size: 9pt;
+  }
+  .skills-grid .skill-row {
+    display: flex;
+    gap: 6px;
+  }
+  .skill-label {
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 115px;
+    color: #333;
+  }
+  .skill-value { color: #444; }
+
+  /* ---- Experience ---- */
+  .job { margin-bottom: 6px; }
+  .job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .job-title {
+    font-weight: 700;
+    font-size: 9.5pt;
+  }
+  .job-dates {
+    font-size: 8.5pt;
+    color: #555;
+    white-space: nowrap;
+  }
+  .job-company {
+    font-size: 9pt;
+    font-style: italic;
+    color: #555;
+    margin-bottom: 2px;
+  }
+  ul.bullets {
+    list-style: none;
+    padding-left: 12px;
+  }
+  ul.bullets li {
+    position: relative;
+    padding-left: 8px;
+    font-size: 9pt;
+    margin-bottom: 1px;
+    color: #333;
+  }
+  ul.bullets li::before {
+    content: "▸";
+    position: absolute;
+    left: -4px;
+    color: #1a56db;
+    font-size: 8pt;
+  }
+
+  /* ---- Certifications ---- */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px 24px;
+    font-size: 9pt;
+    color: #333;
+    padding-left: 12px;
+  }
+  .cert-grid li {
+    position: relative;
+    padding-left: 8px;
+    list-style: none;
+  }
+  .cert-grid li::before {
+    content: "▸";
+    position: absolute;
+    left: -4px;
+    color: #1a56db;
+    font-size: 8pt;
+  }
+
+  /* ---- Education ---- */
+  .edu-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9pt;
+    color: #333;
+  }
+  .edu-row .degree { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <h1>HARNEET K. PHUL</h1>
+  <div class="contact">
+    917-207-2960 &nbsp;|&nbsp;
+    <a href="mailto:harneetkaur148@gmail.com">harneetkaur148@gmail.com</a>
+  </div>
+</div>
+
+<!-- ===== SUMMARY ===== -->
+<div class="section summary">
+  <div class="section-title">Professional Summary</div>
+  <p>
+    Software engineer with 14+ years of experience in test automation, data validation, and large-scale system integration,
+    now pivoting into AI/ML engineering. Skilled in Python, TensorFlow, and NLP pipelines, with hands-on training in
+    deep learning, generative AI, and prompt engineering. Strong foundation in building automated frameworks, analyzing
+    complex datasets, and deploying quality-driven solutions in Agile environments. Azure AI Engineer Associate certified.
+  </p>
+</div>
+
+<!-- ===== TECHNICAL SKILLS ===== -->
+<div class="section">
+  <div class="section-title">Technical Skills</div>
+  <div class="skills-grid">
+    <div class="skill-row"><span class="skill-label">AI / ML:</span><span class="skill-value">TensorFlow, NLP, Deep Learning, Generative AI, Prompt Engineering, LLMs</span></div>
+    <div class="skill-row"><span class="skill-label">Languages:</span><span class="skill-value">Python, Java, SQL, XSLT</span></div>
+    <div class="skill-row"><span class="skill-label">Cloud / DevOps:</span><span class="skill-value">Azure AI Services, Google Cloud AI, Jenkins CI/CD</span></div>
+    <div class="skill-row"><span class="skill-label">Automation:</span><span class="skill-value">Selenium WebDriver, BDD/Cucumber, REST API Testing</span></div>
+    <div class="skill-row"><span class="skill-label">Data / Tools:</span><span class="skill-value">TOAD, SQL Databases, SOAP/REST, JIRA, Git</span></div>
+    <div class="skill-row"><span class="skill-label">Methodologies:</span><span class="skill-value">Agile/Scrum, Test-Driven Development, CI/CD</span></div>
+  </div>
+</div>
+
+<!-- ===== CERTIFICATIONS ===== -->
+<div class="section">
+  <div class="section-title">AI &amp; Engineering Certifications</div>
+  <ul class="cert-grid">
+    <li>Azure AI Engineer Associate (AI-102)</li>
+    <li>Machine Learning Specialization – DeepLearning.AI (Coursera)</li>
+    <li>Google Cloud – Generative AI</li>
+    <li>TensorFlow &amp; NLP Fundamentals</li>
+    <li>Generative AI Prompt Engineering</li>
+    <li>Deep Learning Essentials</li>
+    <li>Python Automation &amp; Testing</li>
+    <li>BDD – Cucumber Essentials</li>
+  </ul>
+</div>
+
+<!-- ===== EXPERIENCE ===== -->
+<div class="section">
+  <div class="section-title">Professional Experience</div>
+
+  <!-- Job 1 -->
+  <div class="job">
+    <div class="job-header">
+      <span class="job-title">QA Consultant – AI &amp; Automation Focus</span>
+      <span class="job-dates">Oct 2018 – Present</span>
+    </div>
+    <div class="job-company">First Derivatives, Mississauga ON / New York, USA</div>
+    <ul class="bullets">
+      <li>Designed and implemented automated test suites and data-driven frameworks using Python and Selenium, reducing manual test effort by 60%</li>
+      <li>Built API test strategies for complex energy-sector systems (IESO), validating data integrity across scheduling, dispatch, and contract modules</li>
+      <li>Authored automation scripts processing large datasets for regression and integration testing, establishing repeatable data pipelines</li>
+      <li>Led Agile ceremonies and cross-functional collaboration, driving quality metrics analysis and continuous process improvement</li>
+    </ul>
+  </div>
+
+  <!-- Job 2 -->
+  <div class="job">
+    <div class="job-header">
+      <span class="job-title">Sr. Software Quality Engineer</span>
+      <span class="job-dates">Dec 2013 – Sep 2018</span>
+    </div>
+    <div class="job-company">Rogers Communications, Toronto, ON</div>
+    <ul class="bullets">
+      <li>Engineered automated testing solutions with Selenium-Java and HP QTP, executing data validation across multi-tier e-commerce platforms</li>
+      <li>Built test data repositories and SQL-based validation pipelines for system and integration testing across web applications</li>
+      <li>Performed web service testing (SOAP/REST APIs) and root-cause analysis using log/trace file extraction and pattern recognition</li>
+      <li>Led a team of 6 onsite/offshore engineers, coordinating technical assessments and effort estimation for delivery</li>
+    </ul>
+  </div>
+
+  <!-- Job 3 -->
+  <div class="job">
+    <div class="job-header">
+      <span class="job-title">Software QA Engineer</span>
+      <span class="job-dates">Jun 2013 – Dec 2013</span>
+    </div>
+    <div class="job-company">Xenex Enterprises Inc., Toronto, ON</div>
+    <ul class="bullets">
+      <li>Developed complex automated test suites using Selenium WebDriver for web and mobile apps, including cross-browser compatibility</li>
+      <li>Designed data-driven test scenarios for validation of business-critical workflows in integrated environments</li>
+    </ul>
+  </div>
+
+  <!-- Job 4 -->
+  <div class="job">
+    <div class="job-header">
+      <span class="job-title">Jr. Software Engineer</span>
+      <span class="job-dates">Jan 2011 – Feb 2013</span>
+    </div>
+    <div class="job-company">Information Mosaic / Miri Infotech, India</div>
+    <ul class="bullets">
+      <li>Wrote SQL queries for backend data validation and created XSLT transformations for structured data processing</li>
+      <li>Executed functional and regression testing, collaborating with development teams for rapid defect resolution</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== EDUCATION ===== -->
+<div class="section">
+  <div class="section-title">Education</div>
+  <div class="edu-row">
+    <span class="degree">B.E. – Computer Science &amp; Engineering</span>
+    <span>Punjab Technical University, 2006–2010</span>
+  </div>
+</div>
+
+</body>
+</html>
