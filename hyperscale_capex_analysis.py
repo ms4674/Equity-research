@@ -121,20 +121,33 @@ def create_revenue_per_capex_sheet(wb):
 
 
 def create_gpu_allocation_sheet(wb):
-    """Create sheet showing GPU allocation: internal vs external consumption."""
+    """Create sheet showing GPU allocation: internal vs external consumption with calculations."""
     ws = wb.create_sheet("GPU Allocation", 2)
-    
+
     header_fill = PatternFill(start_color="548235", end_color="548235", fill_type="solid")
     header_font = Font(bold=True, color="FFFFFF")
-    
-    # Based on industry research: hyperscalers consume majority of GPUs internally
-    # Internal: AI training, recommendation engines, GenAI products (ChatGPT, Copilot, etc.)
-    # External: Cloud GPU instances (AWS, Azure, GCP)
+    calc_fill = PatternFill(start_color="E2EFDA", end_color="E2EFDA", fill_type="solid")
+
+    # Assumptions for revenue calculation
+    RENTAL_RATE_PER_HR = 3.50  # $/GPU-hour blended (H100 ~$2.50-4, A100 ~$1-2)
+    UTILIZATION_PCT = 0.45  # 45% - cloud GPU utilization (industry ~40-50%)
+    HOURS_PER_YEAR = 8760
+
+    # Data: GPU count (numeric for calc), External GPU Revenue ($B) from market, Internal % from industry
+    # External % = Revenue / (GPU_count * 8760 * utilization * rate) -- derived from revenue
+    gpu_count = [500000, 485000, 400000, 600000, 100000]  # AWS, Azure, GCP, Meta, Oracle
+    ext_revenue_b = [3.8, 3.5, 2.2, 0.1, 0.5]
+    # External % = Revenue_B * 1e9 / (gpu_count * HOURS_PER_YEAR * UTILIZATION_PCT * RENTAL_RATE_PER_HR)
+    ext_pct_calc = [
+        round(100 * (r * 1e9) / (g * HOURS_PER_YEAR * UTILIZATION_PCT * RENTAL_RATE_PER_HR), 1)
+        for g, r in zip(gpu_count, ext_revenue_b)
+    ]
+    internal_pct = [100 - e for e in ext_pct_calc]
+
     gpu_data = {
         "Hyperscaler": ["Amazon (AWS)", "Microsoft (Azure)", "Google (GCP)", "Meta", "Oracle"],
-        "Internal %": [55, 65, 70, 85, 60],
-        "External %": [45, 35, 30, 15, 40],
-        "External GPU Revenue ($B)": [3.8, 3.5, 2.2, 0.1, 0.5],
+        "Internal %": internal_pct,
+        "External %": ext_pct_calc,
         "Internal Use Cases": [
             "Recommendation engines, fulfillment AI, Alexa",
             "Copilot, Office AI, Bing, internal ML",
@@ -152,68 +165,76 @@ def create_gpu_allocation_sheet(wb):
         "Est. GPU Count (2024)": ["~500K", "~485K", "~400K", "~600K", "~100K"],
     }
 
-    # Neoclouds: 100% external (no internal products)
-    neocloud_gpu_data = {
-        "Vendor": ["CoreWeave", "Lambda Labs", "Crusoe", "Nebius", "Total Neocloud"],
-        "Internal %": [0, 0, 0, 0, 0],
-        "External %": [100, 100, 100, 100, 100],
-        "External GPU Revenue ($B)": [1.92, 0.65, 0.35, 0.28, 4.0],
-        "Internal Use Cases": ["—", "—", "—", "—", "—"],
-        "External Use Cases": [
-            "GPU cloud for AI training, inference",
-            "GPU instances, ML training",
-            "GPU cloud, flaring mitigation compute",
-            "GPU cloud, sovereign AI",
-            "—",
-        ],
-        "Est. GPU Count (2024)": ["~50K", "~20K", "~15K", "~10K", "~95K"],
-    }
-    
-    df = pd.DataFrame(gpu_data)
-    df_neocloud = pd.DataFrame(neocloud_gpu_data)
-    
-    ws["A1"] = "GPU Allocation: Internal vs External Consumption"
+    ws["A1"] = "Hyperscale GPU Allocation: Internal vs External Consumption"
     ws["A1"].font = Font(bold=True, size=14)
-    ws.merge_cells("A1:G1")
-    
-    ws["A2"] = "Internal = own AI products (Copilot, Gemini, Llama, recommendations). External = cloud GPU instances for customers."
+    ws.merge_cells("A1:E1")
+
+    ws["A2"] = "Internal = own AI products. External = cloud GPU instances for customers. External % derived from revenue & assumptions below."
     ws["A2"].font = Font(italic=True, size=10, color="666666")
-    ws.merge_cells("A2:G2")
-    
-    for col, header in enumerate(df.columns, 1):
+    ws.merge_cells("A2:E2")
+
+    for col, header in enumerate(gpu_data.keys(), 1):
         cell = ws.cell(row=4, column=col, value=header)
         cell.fill = header_fill
         cell.font = header_font
         cell.alignment = Alignment(wrap_text=True)
-    
-    for row_idx, row in enumerate(df.itertuples(index=False), 5):
+
+    for row_idx, row in enumerate(zip(*gpu_data.values()), 5):
         for col_idx, value in enumerate(row, 1):
             ws.cell(row=row_idx, column=col_idx, value=value)
-    
-    # Neocloud section
-    ws["A12"] = "Neocloud Vendors (100% external)"
+
+    # --- Assumptions & Calculations section ---
+    ws["A12"] = "Assumptions (Rental Revenue Model)"
     ws["A12"].font = Font(bold=True, size=12)
-    for col, header in enumerate(df_neocloud.columns, 1):
-        cell = ws.cell(row=13, column=col, value=header)
+    ws["A13"] = "Rental rate per GPU-hour:"
+    ws["B13"] = f"${RENTAL_RATE_PER_HR:.2f}"
+    ws["A14"] = "Utilization (billable hours / available hours):"
+    ws["B14"] = f"{UTILIZATION_PCT*100:.0f}%"
+    ws["A15"] = "Hours per year:"
+    ws["B15"] = f"{HOURS_PER_YEAR:,}"
+    ws["A16"] = "Source: Blended H100/A100 rates (Atlas, Vast.ai, cloud providers); industry utilization ~40-50%"
+
+    ws["A18"] = "External % Calculation"
+    ws["A18"].font = Font(bold=True, size=12)
+    ws["A19"] = "Formula: External % = External GPU Revenue / (GPU Count × Hours/Year × Utilization × Rate)"
+    ws["A19"].font = Font(italic=True, size=10)
+    ws.merge_cells("A19:E19")
+    ws["A20"] = "Rearranged: External GPU Revenue = GPU Count × External % × 8,760 × Utilization × Rate"
+
+    # Calculation table
+    calc_headers = ["Hyperscaler", "GPU Count", "External % (calc)", "Revenue ($B) (calc)", "Revenue ($B) (reported)"]
+    for col, h in enumerate(calc_headers, 1):
+        cell = ws.cell(row=22, column=col, value=h)
         cell.fill = header_fill
         cell.font = header_font
-        cell.alignment = Alignment(wrap_text=True)
-    for row_idx, row in enumerate(df_neocloud.itertuples(index=False), 14):
-        for col_idx, value in enumerate(row, 1):
-            ws.cell(row=row_idx, column=col_idx, value=value)
-    
-    # Add aggregate summary
-    ws["A21"] = "Hyperscale aggregate: ~65% internal / 35% external. Neoclouds: 100% external, ~$4B revenue (2024)"
-    ws["A21"].font = Font(bold=True)
-    ws.merge_cells("A21:G21")
-    
-    ws["A22"] = "Source: Industry estimates; Meta/Google skew internal (ads/search); AWS/Azure/Oracle skew external (cloud revenue)"
-    ws["A22"].font = Font(italic=True, size=9, color="666666")
-    ws.merge_cells("A22:G22")
-    
-    for col in range(1, 8):
-        ws.column_dimensions[get_column_letter(col)].width = 28
-    
+    for i, (name, gpu, ext_pct, rev_b) in enumerate(zip(
+        ["Amazon (AWS)", "Microsoft (Azure)", "Google (GCP)", "Meta", "Oracle"],
+        gpu_count, ext_pct_calc, ext_revenue_b
+    ), 23):
+        rev_calc_b = gpu * (ext_pct / 100) * HOURS_PER_YEAR * UTILIZATION_PCT * RENTAL_RATE_PER_HR / 1e9
+        ws.cell(row=i, column=1, value=name)
+        ws.cell(row=i, column=2, value=gpu)
+        ws.cell(row=i, column=2).number_format = "#,##0"
+        ws.cell(row=i, column=3, value=ext_pct)
+        ws.cell(row=i, column=3).number_format = "0.0"
+        ws.cell(row=i, column=4, value=round(rev_calc_b, 2))
+        ws.cell(row=i, column=4).number_format = "0.00"
+        ws.cell(row=i, column=5, value=rev_b)
+        ws.cell(row=i, column=5).number_format = "0.00"
+        for c in range(1, 6):
+            ws.cell(row=i, column=c).fill = calc_fill
+
+    ws["A30"] = "Aggregate: ~65% internal / 35% external across Big 5 hyperscalers"
+    ws["A30"].font = Font(bold=True)
+    ws.merge_cells("A30:E30")
+
+    ws["A31"] = "Source: External % derived from reported GPU rental revenue; GPU counts from industry estimates"
+    ws["A31"].font = Font(italic=True, size=9, color="666666")
+    ws.merge_cells("A31:E31")
+
+    for col in range(1, 6):
+        ws.column_dimensions[get_column_letter(col)].width = 26
+
     return ws
 
 
