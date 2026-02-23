@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 Create a PowerPoint presentation on LLMs as a more efficient way of gathering information.
-Based on Nicolas Bustamante's article "The LLM Context Tax: Best Tips for Tax Avoidance"
-and related research on LLM information efficiency.
+Content extracted solely from Nicolas Bustamante's article "The LLM Context Tax: Best Tips for Tax Avoidance"
+(https://www.nicolasbustamante.com/p/the-llm-context-tax-best-tips-for)
 """
 
 from pptx import Presentation
@@ -133,19 +133,19 @@ def main():
     # Slide 1: Title
     add_title_slide(
         prs,
-        "LLMs: A More Efficient Way of Gathering Information",
-        "Optimizing Context, Cost & Performance\nBased on research by Nicolas Bustamante & recent LLM efficiency studies"
+        "The LLM Context Tax: Best Tips for Tax Avoidance",
+        "Optimizing Context, Cost & Performance\nNicolas Bustamante — nicolasbustamante.com"
     )
     
-    # Slide 2: The Problem
+    # Slide 2: The Context Tax Problem
     add_content_slide(
         prs,
-        "The Information Efficiency Challenge",
+        "What Is the Context Tax?",
         [
-            "Traditional search: Multiple queries, scattered results, manual synthesis",
-            "Every token sent to an LLM costs money, adds latency, and can degrade performance",
-            "Context rot: Agents become confused by accumulated noise in long conversations",
-            "The goal: Get more value from fewer tokens—smarter, not harder",
+            "The cumulative costs of filling an LLM's context window with unnecessary tokens",
+            "Every token sent to an LLM incurs three penalties: higher costs, slower responses, degraded performance",
+            "Context rot: Agents become confused by accumulated noise",
+            "Most models show sharp performance degradation past 32K tokens",
         ]
     )
     
@@ -161,10 +161,10 @@ def main():
         ]
     )
     
-    # Slide 4: Key Optimization Strategies
+    # Slide 4: Most Critical Optimizations (from article)
     add_content_slide(
         prs,
-        "Top Strategies for Information Efficiency",
+        "Most Critical Optimizations",
         [
             "Stable prefixes for KV cache hits — Keep system prompts identical; move dynamic content to the end (up to 10x cost reduction)",
             "Design precise tools — Smart tool design can reduce token consumption by 10x",
@@ -174,25 +174,7 @@ def main():
         ]
     )
     
-    # Slide 5: LLMs vs Traditional Search
-    add_two_column_slide(
-        prs,
-        "LLMs vs. Traditional Search: Efficiency Gains",
-        [
-            "Reduce search space by up to 99.1% with guided strategies",
-            "Synthesize information across sources in one interaction",
-            "Speed up explorations and decisions on broad topics",
-            "Combine reasoning with retrieval for comprehensive answers",
-        ],
-        [
-            "Traditional search: Many queries, manual filtering",
-            "LLMs: Single conversational query, integrated synthesis",
-            "Best approach: LLMs augmented with search (FreshPrompt method)",
-            "Dense retrievers outperform BM25 by 24.8% on scientific literature",
-        ]
-    )
-    
-    # Slide 6: Key Quote
+    # Slide 5: Key Quote
     add_quote_slide(
         prs,
         "The most important optimization for production agents: maintaining stable prefixes for KV cache hits—offering up to 10x cost reduction",
@@ -212,41 +194,38 @@ def main():
         ]
     )
     
-    # Slide 8: Best Practices Summary
+    # Slide 8: Additional Tactics from the Article
     add_content_slide(
         prs,
-        "Best Practices for Efficient Information Gathering",
+        "Additional Optimization Tactics",
         [
-            "Use LLMs for synthesis; augment with search for specific/niche knowledge",
-            "Optimize prompt structure: static content first, dynamic content last",
-            "Measure accuracy-efficiency trade-offs—tokens are not free",
-            "Adaptive compression: shorter responses for easier questions",
-            "Treat efficiency as a first-class evaluation metric",
+            "Clean data before it enters context",
+            "Use strategic information placement to avoid the lost-in-the-middle problem",
+            "Avoid the 200K token pricing cliff",
+            "Append-only context — mutating context destroys cache efficiency",
+            "Never include timestamps precise to the second in prompts; move all dynamic content to the end",
         ]
     )
     
-    # Slide 9: Conclusion
+    # Slide 9: Key Takeaways
     add_content_slide(
         prs,
         "Key Takeaways",
         [
-            "LLMs offer a more efficient information gathering paradigm when optimized",
-            "Context management is the difference between 10x cost variations",
-            "Strategic design—cache hits, tool precision, parallel calls—drives efficiency",
-            "The future: LLMs + search integration for comprehensive, cost-effective intelligence",
+            "With Claude Opus 4.6, cached input tokens cost 90% less than uncached (10x cost difference)",
+            "The difference between $0.50 and $5.00 per query often comes down to context management",
+            "Stable prefixes for KV cache hits is the single most important optimization for production agents",
+            "Output tokens cost 5x more than uncached inputs — budget them carefully",
         ]
     )
     
-    # Slide 10: Sources
+    # Slide 10: Source
     add_content_slide(
         prs,
-        "Sources",
+        "Source",
         [
-            "Nicolas Bustamante — The LLM Context Tax: Best Tips for Tax Avoidance (nicolasbustamante.com)",
-            "How Well do LLMs Compress Their Own Chain-of-Thought? — Token Complexity Approach (arXiv 2503.01141)",
-            "OckBench: Measuring the Efficiency of LLM Reasoning (arXiv 2511.05722)",
-            "How Far are LLMs from Real Search? — Efficiency, Completeness Study (arXiv 2502.18387)",
-            "FreshLLMs: Search Engine Augmentation for LLMs (ACL 2024)",
+            "Nicolas Bustamante — The LLM Context Tax: Best Tips for Tax Avoidance",
+            "https://www.nicolasbustamante.com/p/the-llm-context-tax-best-tips-for",
         ]
     )
     
