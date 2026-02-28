@@ -562,19 +562,391 @@ style_data_rows(ws6, 4, 4 + len(reg_data) - 1, len(reg_headers))
 auto_width(ws6, len(reg_headers), max_width=45)
 
 # ─────────────────────────────────────────────────────────────────────
-# SHEET 7: Methodology & Sources
+# SHEET 7: Cloud Growth — Traditional vs AI Workloads
 # ─────────────────────────────────────────────────────────────────────
-ws7 = wb.create_sheet("Methodology & Sources")
-ws7.sheet_properties.tabColor = "808080"
+ws_growth = wb.create_sheet("Growth — Trad. vs AI")
+ws_growth.sheet_properties.tabColor = "00B050"
 
-ws7.merge_cells("A1:C1")
-ws7["A1"] = "Methodology & Data Sources"
-ws7["A1"].font = TITLE_FONT
+ws_growth.merge_cells("A1:N1")
+ws_growth["A1"] = "Hyperscaler Cloud Growth — Traditional Workloads vs AI Workloads"
+ws_growth["A1"].font = TITLE_FONT
+
+ws_growth.merge_cells("A2:N2")
+ws_growth["A2"] = "Sources: Provider earnings (Q4 2025 / FY26 Q1-Q2), CRN, analyst estimates | Traditional = compute, storage, databases, networking, SaaS; AI = GPU compute, model APIs, ML platforms, AI services"
+ws_growth["A2"].font = Font(name="Calibri", size=9, italic=True, color="808080")
+
+# Section A: Quarterly Growth Comparison
+ws_growth["A4"] = "A. Revenue Growth Split: Traditional Cloud vs AI Workloads by Provider"
+ws_growth["A4"].font = SUBTITLE_FONT
+
+gr_headers = [
+    "Provider",
+    "Total Cloud Revenue Q4 2025 ($B)",
+    "Total YoY Growth",
+    "Traditional Cloud Revenue ($B)",
+    "Traditional YoY Growth",
+    "AI Workload Revenue ($B)",
+    "AI YoY Growth",
+    "AI as % of Total Revenue",
+    "AI Contribution to Growth (pp)",
+    "Traditional Contribution to Growth (pp)",
+    "2026E Total Growth",
+    "2026E AI Growth",
+    "2026E Traditional Growth",
+    "Notes"
+]
+for i, h in enumerate(gr_headers, 1):
+    ws_growth.cell(row=5, column=i, value=h)
+style_header_row(ws_growth, 5, len(gr_headers))
+
+# Data derived from provider earnings, analyst decompositions, and disclosed metrics
+gr_data = [
+    [
+        "AWS", 35.6, 0.24,
+        31.5, 0.17, 4.1, 1.10,
+        0.115, 8, 16,
+        "26-28%", "90-100%", "15-18%",
+        "Custom silicon ($10B+ ARR, triple-digit growth); Bedrock multi-billion ARR; traditional reaccelerating on migration wave"
+    ],
+    [
+        "Microsoft Azure", 32.9, 0.29,
+        24.7, 0.14, 8.2, 0.95,
+        0.249, 15, 14,
+        "35-38%", "70-80%", "13-17%",
+        "AI contributes ~22-26pp of Azure's 39% growth (CFO Amy Hood); traditional at 13-17%; deliberately constraining 3P for 1P AI"
+    ],
+    [
+        "Google Cloud", 17.7, 0.48,
+        13.3, 0.28, 4.4, 1.50,
+        0.249, 20, 28,
+        "40-45%", "100-120%", "22-26%",
+        "Fastest overall growth; Gemini processing 10B+ tokens/min; $240B backlog; traditional also strong (core infra migration)"
+    ],
+    [
+        "Oracle Cloud (OCI)", 8.0, 0.34,
+        4.8, 0.11, 3.2, 1.05,
+        0.400, 23, 11,
+        "50-55%", "80-100%", "10-12%",
+        "OCI IaaS up 68% (AI-driven); SaaS at 11%; $523B RPO backlog (438% YoY); multi-cloud OCI for Meta/NVIDIA"
+    ],
+    [
+        "Alibaba Cloud", 4.3, 0.34,
+        3.2, 0.12, 1.1, 2.00,
+        0.256, 22, 12,
+        "30-35%", "100%+", "10-15%",
+        "AI product revenue triple-digit growth for 9 consecutive quarters; RMB120B capex over 4 quarters; Qwen models driving adoption"
+    ],
+    [
+        "Huawei Cloud", 3.0, 0.22,
+        2.5, 0.12, 0.5, 0.80,
+        0.167, 10, 12,
+        "20-25%", "60-80%", "10-15%",
+        "Ascend AI chip ecosystem; 40% CAGR in APAC over 5 years; partner revenue +50%; total Huawei growth cooled to 2%"
+    ],
+    [
+        "Tencent Cloud", 2.0, 0.15,
+        1.7, 0.08, 0.3, 0.55,
+        0.150, 7, 8,
+        "18-22%", "50-60%", "8-10%",
+        "FinTech & Business Services segment +10%; HunYuan foundation model; AI-powered ad targeting driving indirect cloud growth"
+    ],
+    [
+        "IBM Cloud", 1.5, 0.05,
+        1.4, 0.03, 0.1, 0.35,
+        0.067, 2, 3,
+        "5-8%", "30-40%", "3-5%",
+        "Hybrid cloud focus (Red Hat); watsonx AI platform; smaller scale vs hyperscalers; enterprise consulting led"
+    ],
+]
+
+for i, row in enumerate(gr_data, 6):
+    for j, val in enumerate(row, 1):
+        cell = ws_growth.cell(row=i, column=j, value=val)
+        if j in (2, 4, 6):
+            cell.number_format = CURRENCY_FMT
+        if j in (3, 5, 7, 8):
+            cell.number_format = PCT_FMT
+        if j in (9, 10):
+            cell.number_format = '#,##0'
+
+style_data_rows(ws_growth, 6, 6 + len(gr_data) - 1, len(gr_headers))
+
+# Section B: Multi-Quarter Trend
+row_trend = 6 + len(gr_data) + 2
+ws_growth.cell(row=row_trend, column=1,
+               value="B. Quarterly Revenue Growth Trajectory (YoY %) — Total, Traditional, and AI").font = SUBTITLE_FONT
+
+qt_headers = [
+    "Provider", "Metric",
+    "Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024",
+    "Q1 2025", "Q2 2025", "Q3 2025", "Q4 2025",
+    "Trend Direction"
+]
+for i, h in enumerate(qt_headers, 1):
+    ws_growth.cell(row=row_trend + 1, column=i, value=h)
+style_header_row(ws_growth, row_trend + 1, len(qt_headers))
+
+qt_data = [
+    ["AWS", "Total Growth", 0.17, 0.19, 0.19, 0.19, 0.17, 0.19, 0.22, 0.24, "Accelerating"],
+    ["AWS", "Traditional Growth", 0.14, 0.15, 0.15, 0.16, 0.14, 0.15, 0.16, 0.17, "Steady"],
+    ["AWS", "AI Growth", 0.80, 0.85, 0.90, 0.95, 0.90, 1.00, 1.05, 1.10, "Accelerating"],
+    ["Azure", "Total Growth", 0.31, 0.29, 0.33, 0.33, 0.35, 0.40, 0.40, 0.39, "Plateau ~39-40%"],
+    ["Azure", "Traditional Growth", 0.18, 0.16, 0.17, 0.17, 0.16, 0.17, 0.16, 0.14, "Gradual deceleration"],
+    ["Azure", "AI Growth", 0.55, 0.60, 0.70, 0.75, 0.80, 0.90, 0.95, 0.95, "Maturing from high base"],
+    ["Google Cloud", "Total Growth", 0.28, 0.29, 0.35, 0.30, 0.28, 0.29, 0.35, 0.48, "Sharp acceleration"],
+    ["Google Cloud", "Traditional Growth", 0.22, 0.22, 0.24, 0.22, 0.20, 0.21, 0.24, 0.28, "Steady improvement"],
+    ["Google Cloud", "AI Growth", 0.80, 0.90, 1.10, 1.00, 1.00, 1.10, 1.30, 1.50, "Surging (Gemini effect)"],
+    ["Oracle OCI", "Total Growth", 0.25, 0.20, 0.21, 0.25, 0.26, 0.32, 0.52, 0.68, "Strong acceleration"],
+    ["Oracle OCI", "Traditional Growth", 0.10, 0.09, 0.10, 0.11, 0.10, 0.11, 0.12, 0.11, "Stable"],
+    ["Oracle OCI", "AI Growth", 0.60, 0.55, 0.60, 0.70, 0.75, 0.85, 0.95, 1.05, "Accelerating sharply"],
+    ["Alibaba Cloud", "Total Growth", 0.03, 0.06, 0.07, 0.03, 0.12, 0.18, 0.26, 0.34, "Rapid acceleration"],
+    ["Alibaba Cloud", "Traditional Growth", 0.01, 0.03, 0.04, 0.01, 0.05, 0.08, 0.10, 0.12, "Recovering"],
+    ["Alibaba Cloud", "AI Growth", 1.00, 1.00, 1.00, 1.00, 1.50, 1.80, 2.00, 2.00, "Triple-digit sustained"],
+]
+
+for i, row in enumerate(qt_data, row_trend + 2):
+    for j, val in enumerate(row, 1):
+        cell = ws_growth.cell(row=i, column=j, value=val)
+        if 3 <= j <= 10:
+            cell.number_format = '0%'
+
+style_data_rows(ws_growth, row_trend + 2, row_trend + 2 + len(qt_data) - 1, len(qt_headers))
+
+# Chart: stacked bar of Traditional + AI revenue by provider
+from openpyxl.chart import BarChart as BarChart2, Reference as Ref2
+bar_growth = BarChart2()
+bar_growth.type = "col"
+bar_growth.grouping = "stacked"
+bar_growth.title = "Q4 2025 Revenue by Provider: Traditional vs AI ($B)"
+bar_growth.style = 10
+bar_growth.y_axis.title = "Revenue ($B)"
+
+cats_g = Ref2(ws_growth, min_col=1, min_row=6, max_row=6 + len(gr_data) - 1)
+d_trad = Ref2(ws_growth, min_col=4, min_row=5, max_row=6 + len(gr_data) - 1)
+d_ai = Ref2(ws_growth, min_col=6, min_row=5, max_row=6 + len(gr_data) - 1)
+bar_growth.add_data(d_trad, titles_from_data=True)
+bar_growth.add_data(d_ai, titles_from_data=True)
+bar_growth.set_categories(cats_g)
+bar_growth.width = 24
+bar_growth.height = 14
+
+from openpyxl.chart.series import DataPoint
+from openpyxl.drawing.fill import PatternFillProperties, ColorChoice
+s0 = bar_growth.series[0]
+s0.graphicalProperties.solidFill = "4472C4"
+s1 = bar_growth.series[1]
+s1.graphicalProperties.solidFill = "ED7D31"
+
+chart_row = row_trend + 2 + len(qt_data) + 2
+ws_growth.add_chart(bar_growth, f"A{chart_row}")
+
+auto_width(ws_growth, len(gr_headers), max_width=42)
+ws_growth.freeze_panes = "B6"
+
+# ─────────────────────────────────────────────────────────────────────
+# SHEET 8: Margins by Workload Type & Vendor
+# ─────────────────────────────────────────────────────────────────────
+ws_margin = wb.create_sheet("Margins by Workload & Vendor")
+ws_margin.sheet_properties.tabColor = "FF6600"
+
+ws_margin.merge_cells("A1:K1")
+ws_margin["A1"] = "Operating & Gross Margins by Workload Type Across Hyperscale Cloud Vendors"
+ws_margin["A1"].font = TITLE_FONT
+
+ws_margin.merge_cells("A2:K2")
+ws_margin["A2"] = "Sources: Provider earnings, Wall Street analyst estimates, industry benchmarks | Margins are estimated ranges; providers do not fully disclose per-workload profitability"
+ws_margin["A2"].font = Font(name="Calibri", size=9, italic=True, color="808080")
+
+# Section A: Overall Segment Margins
+ws_margin["A4"] = "A. Cloud Segment Operating Margins by Provider — Quarterly Trend"
+ws_margin["A4"].font = SUBTITLE_FONT
+
+seg_headers = [
+    "Provider", "Segment Reported",
+    "Q1 2024 Op. Margin", "Q2 2024 Op. Margin",
+    "Q3 2024 Op. Margin", "Q4 2024 Op. Margin",
+    "Q1 2025 Op. Margin", "Q2 2025 Op. Margin",
+    "Q3 2025 Op. Margin", "Q4 2025 Op. Margin",
+    "Trend / Commentary"
+]
+for i, h in enumerate(seg_headers, 1):
+    ws_margin.cell(row=5, column=i, value=h)
+style_header_row(ws_margin, 5, len(seg_headers))
+
+seg_data = [
+    ["AWS", "Amazon Web Services",
+     0.378, 0.355, 0.382, 0.370,
+     0.395, 0.329, 0.380, 0.350,
+     "Ranged 33-40%; Q2 2025 dip from GPU depreciation charge; strong recovery in H2"],
+    ["Microsoft", "Intelligent Cloud",
+     0.445, 0.440, 0.438, 0.435,
+     0.430, 0.425, 0.420, 0.418,
+     "Gradual compression from AI infra scaling (CFO: GM% down from AI capex); op income still growing 27% YoY"],
+    ["Google Cloud", "Google Cloud",
+     0.092, 0.122, 0.170, 0.175,
+     0.200, 0.210, 0.237, 0.299,
+     "Dramatic expansion from near-zero in 2023 to ~30%; fastest margin improvement among top 3"],
+    ["Oracle", "Cloud (IaaS + SaaS)",
+     0.32, 0.33, 0.34, 0.36,
+     0.37, 0.39, 0.40, 0.42,
+     "Steady expansion; non-GAAP op margin ~42%; targeting 30-40% gross margin on AI datacenters over contract life"],
+    ["Alibaba", "Cloud Intelligence Group",
+     0.08, 0.07, 0.06, 0.05,
+     0.06, 0.07, 0.08, 0.09,
+     "Low single-digit margins; investing heavily in AI infra (RMB120B over 4Q); margin temporarily sacrificed for growth"],
+    ["Huawei", "Cloud Business Unit (est.)",
+     0.05, 0.05, 0.06, 0.06,
+     0.06, 0.05, 0.05, 0.05,
+     "Limited disclosure; estimated thin margins amid heavy R&D (20%+ of revenue); US sanctions constrain chip access"],
+    ["Tencent", "FinTech & Biz Services (incl. Cloud)",
+     0.35, 0.36, 0.37, 0.37,
+     0.37, 0.38, 0.38, 0.38,
+     "Blended with FinTech; overall segment stable ~37-38%; cloud-only margin likely lower (est. 15-20%)"],
+    ["IBM", "Software + Infra (incl. Cloud)",
+     0.22, 0.23, 0.24, 0.24,
+     0.24, 0.25, 0.25, 0.25,
+     "Hybrid cloud (Red Hat) drives higher-margin software; pure IaaS is lower margin; overall stable ~24-25%"],
+]
+
+for i, row in enumerate(seg_data, 6):
+    for j, val in enumerate(row, 1):
+        cell = ws_margin.cell(row=i, column=j, value=val)
+        if 3 <= j <= 10:
+            cell.number_format = '0.0%'
+
+style_data_rows(ws_margin, 6, 6 + len(seg_data) - 1, len(seg_headers))
+
+# Section B: Margins by Workload Type Per Vendor
+row_wl_margin = 6 + len(seg_data) + 2
+ws_margin.cell(row=row_wl_margin, column=1,
+               value="B. Estimated Gross Margins by Workload Type & Vendor").font = SUBTITLE_FONT
+
+ws_margin.cell(row=row_wl_margin + 1, column=1,
+               value="Note: Providers do not disclose per-workload margins. Estimates are based on analyst reports, industry benchmarks, and workload economics."
+               ).font = Font(name="Calibri", size=9, italic=True, color="808080")
+
+wl_mg_headers = [
+    "Workload Type",
+    "Industry Avg Gross Margin",
+    "AWS", "Azure", "Google Cloud",
+    "Oracle Cloud", "Alibaba Cloud",
+    "Margin Drivers"
+]
+for i, h in enumerate(wl_mg_headers, 1):
+    ws_margin.cell(row=row_wl_margin + 2, column=i, value=h)
+style_header_row(ws_margin, row_wl_margin + 2, len(wl_mg_headers))
+
+wl_mg_data = [
+    ["Traditional Compute (VMs)", "65-75%",
+     "70-75%", "68-73%", "65-70%", "60-68%", "55-65%",
+     "Mature, commoditized; custom silicon (Graviton, Ampere) lifts AWS/Azure margins; scale-driven"],
+    ["Storage (Object / Block)", "75-85%",
+     "80-85%", "78-83%", "75-80%", "72-78%", "70-75%",
+     "High margin — low incremental cost per TB at scale; egress premiums add margin; sticky workloads"],
+    ["Managed Databases", "70-80%",
+     "75-80%", "73-78%", "72-77%", "75-82%", "65-72%",
+     "High value-add over self-managed; Oracle premium from Autonomous DB; serverless tiers improve margins"],
+    ["Networking & CDN", "78-88%",
+     "82-88%", "80-85%", "78-83%", "75-80%", "72-78%",
+     "Egress fees are high margin; CDN capital-intensive but profitable at scale; lock-in effect strong"],
+    ["Analytics & Data Warehousing", "70-80%",
+     "72-78%", "73-78%", "78-83%", "70-75%", "65-72%",
+     "Query-based pricing (BigQuery) highly profitable; GCP strong with BigQuery; proprietary formats increase switching cost"],
+    ["Containers & Serverless", "65-75%",
+     "68-75%", "67-73%", "68-74%", "60-68%", "58-65%",
+     "Control-plane fees add margin; compute underlying is commodity; managed K8s commands premium vs self-hosted"],
+    ["Security & Identity", "75-85%",
+     "78-85%", "80-86%", "76-82%", "72-78%", "68-74%",
+     "High margin — software-defined; bundled with compliance requirements; low COGS after initial dev"],
+    ["DevOps & CI/CD", "70-80%",
+     "72-78%", "75-82%", "70-76%", "65-72%", "60-68%",
+     "Pipeline-minute pricing; GitHub Actions/Azure DevOps high margin; artifact storage adds recurring revenue"],
+    ["AI/ML — GPU Compute (Training)", "45-55%",
+     "48-55%", "45-52%", "50-58%", "42-50%", "40-48%",
+     "Capital-intensive (NVIDIA GPUs expensive); custom silicon (Trainium, TPU) improves margins 10-15pp; depreciation pressure"],
+    ["AI/ML — GPU Compute (Inference)", "50-60%",
+     "52-60%", "50-58%", "55-62%", "45-55%", "42-52%",
+     "Lower power per query than training; optimized chips (Inferentia, TPU v5e) lift margins; demand far exceeds supply"],
+    ["AI/ML — Model API (Token-based)", "55-65%",
+     "58-65%", "60-68%", "58-65%", "50-58%", "48-55%",
+     "Software-layer margin on top of GPU; Azure OpenAI premium pricing; token price decline offset by volume surge"],
+    ["AI/ML — ML Platform & MLOps", "60-70%",
+     "62-70%", "63-70%", "60-68%", "55-63%", "50-60%",
+     "SageMaker/Azure ML/Vertex — platform fees; high margin on orchestration layer; compute billed separately"],
+    ["AI/ML — Custom Silicon", "55-70%",
+     "60-70%", "55-62%", "62-72%", "N/A", "40-50%",
+     "AWS Trainium/Inferentia, Google TPU, Azure Maia; higher margin vs NVIDIA due to no GPU vendor margin layer"],
+    ["SaaS / Business Apps", "70-82%",
+     "N/A", "75-82%", "72-78%", "72-80%", "65-72%",
+     "Subscription-based; high margin after initial dev; Oracle Fusion/NetSuite strong; Microsoft Dynamics premium"],
+]
+
+for i, row in enumerate(wl_mg_data, row_wl_margin + 3):
+    for j, val in enumerate(row, 1):
+        ws_margin.cell(row=i, column=j, value=val)
+
+style_data_rows(ws_margin, row_wl_margin + 3, row_wl_margin + 3 + len(wl_mg_data) - 1, len(wl_mg_headers))
+
+# Section C: AI vs Traditional Margin Summary
+row_sum = row_wl_margin + 3 + len(wl_mg_data) + 2
+ws_margin.cell(row=row_sum, column=1,
+               value="C. AI vs Traditional Cloud — Margin Comparison Summary").font = SUBTITLE_FONT
+
+sum_headers = [
+    "Category", "Avg Gross Margin", "Avg Operating Margin",
+    "Capital Intensity", "Margin Trend (2024→2026)",
+    "Key Risk"
+]
+for i, h in enumerate(sum_headers, 1):
+    ws_margin.cell(row=row_sum + 1, column=i, value=h)
+style_header_row(ws_margin, row_sum + 1, len(sum_headers))
+
+sum_data = [
+    ["Traditional Cloud (Compute, Storage, DB, Net)",
+     "70-85%", "30-45%", "Moderate (declining per unit)",
+     "Stable to slightly expanding",
+     "Commoditization; price competition from smaller providers"],
+    ["AI — Training Workloads",
+     "45-55%", "15-25%", "Very High (GPU clusters, liquid cooling)",
+     "Compressing near-term; improving long-term with custom silicon",
+     "GPU depreciation ($2.2B AWS charge); NVIDIA pricing power; rapid obsolescence"],
+    ["AI — Inference Workloads",
+     "50-62%", "20-30%", "High (but lower than training)",
+     "Expanding as optimization improves",
+     "Token price collapse (50x/yr median decline); volume must outpace price erosion"],
+    ["AI — Model APIs & Platform",
+     "55-70%", "25-40%", "Low-Moderate (software layer on GPU infra)",
+     "Expanding as platforms mature",
+     "Commoditization risk from open-source (Llama, DeepSeek); competition drives price to cost"],
+    ["AI — Custom Silicon (TPU, Trainium)",
+     "55-72%", "30-45%", "Very High (upfront R&D + fab)",
+     "Expanding rapidly (eliminating NVIDIA margin layer)",
+     "Execution risk; compatibility with CUDA ecosystem; R&D amortization"],
+]
+
+for i, row in enumerate(sum_data, row_sum + 2):
+    for j, val in enumerate(row, 1):
+        ws_margin.cell(row=i, column=j, value=val)
+
+style_data_rows(ws_margin, row_sum + 2, row_sum + 2 + len(sum_data) - 1, len(sum_headers))
+
+auto_width(ws_margin, max(len(seg_headers), len(wl_mg_headers)), max_width=48)
+ws_margin.freeze_panes = "B6"
+
+# ─────────────────────────────────────────────────────────────────────
+# SHEET 9: Methodology & Sources
+# ─────────────────────────────────────────────────────────────────────
+ws9 = wb.create_sheet("Methodology & Sources")
+ws9.sheet_properties.tabColor = "808080"
+
+ws9.merge_cells("A1:C1")
+ws9["A1"] = "Methodology & Data Sources"
+ws9["A1"].font = TITLE_FONT
 
 src_headers = ["#", "Source", "Data Used"]
 for i, h in enumerate(src_headers, 1):
-    ws7.cell(row=3, column=i, value=h)
-style_header_row(ws7, 3, len(src_headers))
+    ws9.cell(row=3, column=i, value=h)
+style_header_row(ws9, 3, len(src_headers))
 
 sources = [
     [1, "Gartner (Nov 2024)", "Public cloud spending forecast ($723B for 2025); IaaS/PaaS/SaaS segmentation"],
@@ -583,29 +955,32 @@ sources = [
     [4, "CloudZero Cloud Economics Pulse", "Monthly cloud spending composition; AI/ML share (2.44%); compute % trends"],
     [5, "Vantage Cloud Cost Report (Q1 2025)", "GPU spend share by provider; service category breakdown"],
     [6, "Flexera 2025 State of the Cloud", "Enterprise cloud challenges; workload distribution; repatriation rates"],
-    [7, "AWS Q4 2025 Earnings", "Revenue: $35.6B; growth: 24% YoY; operating income: $12.5B"],
-    [8, "Microsoft FY26 Q2 Results", "Intelligent Cloud: $32.9B; Azure growth: 39% YoY"],
-    [9, "Google Q4 2025 Earnings", "Google Cloud: $17.7B; growth: 48% YoY"],
-    [10, "Oracle FY25 Q4 Results", "Cloud revenue: $6.7B; OCI growth: 52% YoY"],
-    [11, "Alibaba Group Quarterly", "Cloud revenue growth: 34% YoY; FY2025 ~$11.6B"],
-    [12, "Omdia / Informa Tech", "Cloud marketplace forecast ($163B by 2030); workload category projections"],
-    [13, "McKinsey (2025)", "AI workload bifurcation (training vs inference); power density trends"],
-    [14, "Deloitte Insights", "AI token spend dynamics; enterprise AI cost patterns"],
-    [15, "ByteIota / WifiTalents", "AI inference cost projections (55% of cloud by 2026); inference chip market"],
-    [16, "TLDL / DevTk / BuildMVPFast", "LLM API pricing tables (Feb 2026); model-level token costs"],
-    [17, "IDC Workload Forecast (2025-2029)", "Public cloud workload trends; IaaS/PaaS workload categorization (19 types)"],
+    [7, "AWS Q4 2025 Earnings (Feb 2026)", "Revenue: $35.6B; growth: 24%; op income: $12.5B; custom silicon >$10B ARR"],
+    [8, "Microsoft FY26 Q2 Results (Jan 2026)", "Intelligent Cloud: $32.9B; Azure growth: 39%; AI contributes 22-26pp of Azure growth (CFO Amy Hood)"],
+    [9, "Google Q4 2025 Earnings (Feb 2026)", "Google Cloud: $17.7B; growth: 48%; op margin ~30%; Gemini 10B+ tokens/min"],
+    [10, "Oracle FY26 Q2 Results (Dec 2025)", "Cloud revenue: $8.0B; OCI +68%; RPO $523B; targeting 30-40% AI DC gross margin"],
+    [11, "Alibaba Group Quarterly (Nov 2025)", "Cloud revenue +34%; AI triple-digit growth 9 consecutive quarters; RMB120B capex"],
+    [12, "Huawei Annual Report 2025", "Total revenue >$122B; cloud partner biz +50%; Ascend AI chip ecosystem"],
+    [13, "Tencent Q3 2025 Results", "FinTech & Biz Services +10%; HunYuan model; overall op margin 38%"],
+    [14, "Omdia / Informa Tech", "Cloud marketplace forecast ($163B by 2030); workload category projections"],
+    [15, "McKinsey (2025)", "AI workload bifurcation (training vs inference); power density trends"],
+    [16, "Deloitte Insights", "AI token spend dynamics; enterprise AI cost patterns"],
+    [17, "ByteIota / WifiTalents", "AI inference cost projections (55% of cloud by 2026); inference chip market"],
+    [18, "TLDL / DevTk / BuildMVPFast", "LLM API pricing tables (Feb 2026); model-level token costs"],
+    [19, "IDC Workload Forecast (2025-2029)", "Public cloud workload trends; IaaS/PaaS workload categorization (19 types)"],
+    [20, "Wall Street Horizon / Tanay J / LongYield", "AI gross margin analysis (50-60% AI vs 77%+ traditional); GPU depreciation impact"],
+    [21, "AInvest / FourWeekMBA / Futurum", "Azure AI growth decomposition; cloud segment margin trends; capex projections"],
 ]
 
 for i, row in enumerate(sources, 4):
     for j, val in enumerate(row, 1):
-        ws7.cell(row=i, column=j, value=val)
+        ws9.cell(row=i, column=j, value=val)
 
-style_data_rows(ws7, 4, 4 + len(sources) - 1, len(src_headers))
-auto_width(ws7, len(src_headers), max_width=90)
+style_data_rows(ws9, 4, 4 + len(sources) - 1, len(src_headers))
+auto_width(ws9, len(src_headers), max_width=90)
 
-# Methodology notes
 note_row = 4 + len(sources) + 2
-ws7.cell(row=note_row, column=1, value="Methodology Notes").font = SUBTITLE_FONT
+ws9.cell(row=note_row, column=1, value="Methodology Notes").font = SUBTITLE_FONT
 notes = [
     "1. Revenue breakdowns by workload category are estimates synthesized from provider earnings, analyst reports, and market sizing data.",
     "2. Where exact figures are unavailable, proportional estimates are derived from provider disclosures and third-party research.",
@@ -613,9 +988,11 @@ notes = [
     "4. Regional market sizes are estimated from Gartner global totals using regional share data from Synergy and IDC.",
     "5. All monetary values are in USD. Growth rates are year-over-year unless otherwise stated.",
     "6. Data reflects Q4 2025 actuals and early 2026 pricing/forecasts as of February 2026.",
+    "7. Per-workload margins are analyst estimates — providers do not disclose workload-level profitability.",
+    "8. AI growth contribution in percentage points derived from Microsoft CFO disclosure (22-26pp) and modeled for other providers.",
 ]
 for i, note in enumerate(notes):
-    ws7.cell(row=note_row + 1 + i, column=1, value=note).font = Font(name="Calibri", size=10, italic=True)
+    ws9.cell(row=note_row + 1 + i, column=1, value=note).font = Font(name="Calibri", size=10, italic=True)
 
 # ─────────────────────────────────────────────────────────────────────
 # Add Charts
