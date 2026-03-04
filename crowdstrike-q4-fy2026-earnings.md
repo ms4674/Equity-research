@@ -101,6 +101,59 @@ Flex is a critical mechanism because it transforms the expansion motion: instead
 
 ---
 
+## GAAP Profitability: Inflection Quarter
+
+Q4 FY2026 marked a milestone: CrowdStrike posted its first quarter of GAAP net income at $38.7M, swinging from a GAAP net loss of $92.3M in Q4 FY2025 — a $131M improvement year-over-year. This is a meaningful signal for a company that has historically operated at a GAAP loss despite strong non-GAAP profitability.
+
+### Quarterly GAAP vs. Non-GAAP Trend
+
+| Period | GAAP Net Income (Loss) | Non-GAAP Net Income | Gap (SBC + Other) |
+|--------|----------------------:|--------------------|-------------------:|
+| Q3 FY2025 | ($16.8M) | — | — |
+| Q4 FY2025 | ($92.3M) | $260.9M | ~$353M |
+| Q3 FY2026 | ($34.0M) | $245.4M | ~$279M |
+| Q4 FY2026 | **$38.7M** | $289.1M | ~$250M |
+
+| Period | GAAP Operating Income (Loss) | Non-GAAP Operating Income |
+|--------|----------------------------:|-------------------------:|
+| Q3 FY2025 | ($55.7M) | $200.7M |
+| Q3 FY2026 | ($69.4M) | $264.6M |
+| Q4 FY2025 | ($85.3M) | — |
+| Q4 FY2026 | Positive (implied by NI) | — |
+
+For the full year, non-GAAP net income reached $956.6M ($3.73 per diluted share), up significantly from FY2025. The full-year GAAP figures will be disclosed in the 10-K, but given Q4's positive print, FY2026 GAAP net loss should be materially narrower than FY2025.
+
+### The SBC Question
+
+The dominant driver of the GAAP-to-non-GAAP gap remains stock-based compensation. In Q4, the gap of ~$250M implies an annualized SBC run-rate of roughly $1B, or approximately 21% of revenue. This is elevated relative to mature software companies but has been compressing as revenue scales:
+
+- SBC intensity has been declining as a percentage of revenue as the top line grows 22-23% while SBC grows more slowly. This operating leverage is what enabled the Q4 GAAP crossover.
+- The Q4 FY2025 gap was ~$353M, narrowing to ~$250M in Q4 FY2026 — a ~$100M compression in four quarters. If this pace continues, GAAP profitability should become the norm rather than the exception by FY2027.
+
+Beyond SBC, the non-GAAP reconciliation also excludes amortization of acquired intangibles, acquisition-related expenses, and residual July 2024 Incident costs. CrowdStrike adopted a 21.0% long-term non-GAAP tax rate in FY2026 (down from 22.5%), and beginning in FY2026, employer payroll taxes on stock-based awards are also excluded from non-GAAP figures.
+
+### Cash Flow vs. GAAP Earnings
+
+The real profitability story may be better told through cash flow. FY2026 operating cash flow of $1.61B and free cash flow of $1.24B represent OCF and FCF margins of 33% and 26%, respectively. These are among the best in enterprise software and demonstrate that the underlying economic model is highly profitable regardless of GAAP accounting treatment of SBC.
+
+| Metric | Q4 FY2026 | FY2026 |
+|--------|----------:|-------:|
+| Operating Cash Flow | $497.9M | $1.61B |
+| Free Cash Flow | $376.4M | $1.24B |
+| OCF Margin | ~38% | ~33% |
+| FCF Margin | ~29% | ~26% |
+
+The gap between FCF and GAAP net income is expected to narrow as SBC intensity continues to decline, which should make CrowdStrike increasingly attractive to investors who screen on GAAP profitability or who weight SBC as a real economic cost.
+
+### Implications
+
+1. **Index/benchmark eligibility:** Sustained GAAP profitability could improve CrowdStrike's eligibility or weighting in certain indices that screen on GAAP earnings, potentially creating a passive flow tailwind.
+2. **Investor base broadening:** The GAAP crossover should attract traditional value-oriented and GARP investors who have historically avoided GAAP-unprofitable software names.
+3. **SBC trajectory is the key variable:** If SBC as a percentage of revenue continues to compress by 2-3 points annually, CrowdStrike could sustain consistent GAAP profitability by FY2027-2028 even without any acceleration in top-line growth.
+4. **Cash flow remains king:** With FCF margins already at ~26%, the business generates substantial real cash regardless of GAAP optics. The GAAP crossover is important for narrative and eligibility purposes but does not change the fundamental cash economics.
+
+---
+
 ## FY2027 Guidance
 
 | Metric | FY2027 Guidance | Consensus | Comment |
