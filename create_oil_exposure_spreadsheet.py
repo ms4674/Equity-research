@@ -96,6 +96,9 @@ findings = [
     ("Sales Cycle Slowdown", "Enterprise IT budgets face scrutiny during oil shocks; IDC projects global IT spending growth may fall from 10% to 9%."),
     ("Sector Rotation", "50+ percentage-point performance gap between energy and software stocks in early 2026 (Benzinga)."),
     ("Energy AI Spending", "Oil & gas AI spend projected to grow from $4B (2025) to $13.4B (2029), creating a tailwind for exposed vendors."),
+    ("Ride-Hailing Impact", "Uber/Lyft fares rose 9.6% in 2025; 60% of riders cutting back. Fuel is the largest driver variable cost."),
+    ("Travel Platforms", "Booking Holdings ($26.9B rev), Expedia ($14.7B), Airbnb ($12.2B) face indirect oil exposure via airline fuel surcharges and travel demand elasticity."),
+    ("E-commerce/Marketplace", "Shopify ($378B GMV), MercadoLibre (+39% rev), eBay, Etsy exposed through shipping cost inflation passed to merchants and buyers."),
 ]
 
 for topic, detail in findings:
@@ -117,6 +120,9 @@ channels = [
     ("Enterprise Budget Cuts", "Companies enter cost-control mode; discretionary software spend deferred", "Mid-market SaaS, consulting firms", "Medium"),
     ("Supply Chain Disruption", "Strait of Hormuz risk; shipping costs rise; component availability affected", "Semis (NVDA, TSM, MU), hardware", "High"),
     ("Consumer Spending Drag", "Goldman: 0.2% drag on consumer spend; lower-income hit hardest", "Ad-driven (Alphabet, Meta), e-commerce", "Medium"),
+    ("Ride-Hail / Delivery Fuel", "Fuel is largest variable cost for drivers; surcharges passed to riders reduce demand", "Uber, Lyft, DoorDash — fares rose 9.6% in 2025", "High"),
+    ("Travel Demand Erosion", "Airline fuel surcharges raise travel costs; consumers defer discretionary travel", "Booking, Expedia, Airbnb — elastic demand", "Medium-High"),
+    ("Marketplace Shipping", "Higher fuel raises shipping/logistics; sellers pass costs to buyers, compressing GMV", "Shopify, eBay, Etsy, MercadoLibre", "Medium"),
 ]
 
 for i, (c1, c2, c3, c4) in enumerate(channels):
@@ -205,6 +211,32 @@ companies = [
      "Medium", "Google Cloud $71B ARR (+48%). Ad revenue sensitive to macro/consumer spend shifts."),
     ("Meta Platforms", "META", "Internet / Social", 164.5, 0.5, "~0.3%", None, "N/A", "Low",
      "Low-Medium", "Minimal direct O&G revenue. Exposed via data center energy costs ($115-135B capex in 2026)."),
+
+    # --- Internet & Marketplace Companies ---
+    ("Uber", "UBER", "Ride-Hailing / Delivery", 57.4, None, "Indirect", None, "N/A", "Very High",
+     "High", "Fares rose 9.6% in 2025 (fuel + platform fees). 60% of riders cutting back. $193B gross bookings. $10B FCF."),
+    ("DoorDash", "DASH", "Delivery Marketplace", 13.7, None, "Indirect", None, "N/A", "High",
+     "High", "Delivery logistics directly tied to fuel costs. $101B marketplace GOV. GAAP net income $935M in FY25."),
+    ("Lyft", "LYFT", "Ride-Hailing", 5.8, None, "Indirect", None, "N/A", "Very High",
+     "High", "$18.2B gross bookings. Driver costs rise with fuel; fares passed to consumers. $1.1B FCF in FY25."),
+    ("Booking Holdings", "BKNG", "Online Travel", 26.9, None, "Indirect", None, "N/A", "High",
+     "Medium-High", "$41.9B gross bookings Q4. Airline fuel surcharges raise travel costs, dampening demand. Flight bookings +38% YoY."),
+    ("Airbnb", "ABNB", "Online Travel", 12.2, None, "Indirect", None, "N/A", "Moderate",
+     "Medium", "$12.2B revenue (+10.3% YoY). Less fuel-exposed than airlines/hotels but travel demand elastic to macro shocks."),
+    ("Expedia", "EXPE", "Online Travel", 14.7, None, "Indirect", None, "N/A", "High",
+     "Medium-High", "Cautious 2026 guidance citing 'uneven' consumer spend. U.S. pricing softness. Airline fuel surcharges pass through."),
+    ("Shopify", "SHOP", "E-commerce Platform", 11.6, None, "Indirect", None, "N/A", "Moderate",
+     "Medium", "$378.4B GMV (+29%). Merchants' shipping costs rise with oil. $2B FCF. 30% revenue growth in FY25."),
+    ("eBay", "EBAY", "Online Marketplace", 10.8, None, "Indirect", None, "N/A", "Moderate",
+     "Medium", "$21.2B GMV in Q4 (+10%). Shipping costs borne by sellers/buyers. 26.1% non-GAAP operating margin."),
+    ("Etsy", "ETSY", "Online Marketplace", 2.8, None, "Indirect", None, "N/A", "Moderate",
+     "Medium", "$3.6B marketplace GMS. Expanded 3P shipping in 5 EU markets. De minimis exemption risk. 25.2% adj. EBITDA margin."),
+    ("MercadoLibre", "MELI", "LatAm E-commerce", 25.6, None, "Indirect", None, "N/A", "High",
+     "Medium-High", "Revenue +39% YoY. Fulfillment network delivers 75% shipments in <48h. Brazil unit shipping costs fell 8% QoQ."),
+    ("Pinterest", "PINS", "Social / Discovery", 4.2, None, "Indirect", None, "N/A", "Low",
+     "Low", "619M MAUs. Ad-driven model; oil impact via consumer spend drag and advertiser budget sensitivity. 30% adj. EBITDA margin."),
+    ("Snap", "SNAP", "Social Media", 5.9, None, "Indirect", None, "N/A", "Low",
+     "Low", "Revenue +11% YoY. Ad-driven; exposed to macro-driven ad budget cuts. Net loss narrowed to $460M."),
 
     # --- Semiconductors (for context) ---
     ("NVIDIA", "NVDA", "Semiconductors", 130.5, 5.2, "~4%", 8.0, "~5%", "Moderate",
@@ -407,9 +439,21 @@ ranked = [
     (16, "Salesforce", "~5%", "~5%", "Low", "Enterprise Software"),
     (17, "NVIDIA", "~4%", "~5%", "Medium", "Semiconductors"),
     (18, "Taiwan Semiconductor", "~3%", "~3%", "Medium", "Semiconductors"),
-    (19, "Amazon (AWS)", "~2%", "~3%", "Medium", "Cloud / E-commerce"),
-    (20, "Alphabet (Google Cloud)", "~1.4%", "~2%", "Medium", "Cloud / Internet"),
-    (21, "Meta Platforms", "~0.3%", "N/A", "Low-Medium", "Internet / Social"),
+    (19, "Uber", "Indirect", "N/A", "High", "Ride-Hailing / Delivery"),
+    (20, "DoorDash", "Indirect", "N/A", "High", "Delivery Marketplace"),
+    (21, "Lyft", "Indirect", "N/A", "High", "Ride-Hailing"),
+    (22, "Booking Holdings", "Indirect", "N/A", "Medium-High", "Online Travel"),
+    (23, "Expedia", "Indirect", "N/A", "Medium-High", "Online Travel"),
+    (24, "MercadoLibre", "Indirect", "N/A", "Medium-High", "LatAm E-commerce"),
+    (25, "Shopify", "Indirect", "N/A", "Medium", "E-commerce Platform"),
+    (26, "eBay", "Indirect", "N/A", "Medium", "Online Marketplace"),
+    (27, "Airbnb", "Indirect", "N/A", "Medium", "Online Travel"),
+    (28, "Etsy", "Indirect", "N/A", "Medium", "Online Marketplace"),
+    (29, "Amazon (AWS + E-commerce)", "~2%", "~3%", "Medium", "Cloud / E-commerce"),
+    (30, "Alphabet (Google Cloud)", "~1.4%", "~2%", "Medium", "Cloud / Internet"),
+    (31, "Pinterest", "Indirect", "N/A", "Low", "Social / Discovery"),
+    (32, "Snap", "Indirect", "N/A", "Low", "Social Media"),
+    (33, "Meta Platforms", "~0.3%", "N/A", "Low-Medium", "Internet / Social"),
 ]
 
 for i, d in enumerate(ranked):
@@ -450,6 +494,19 @@ sources = [
     ("IDC", "Global IT spending impact analysis - conflict scenario may reduce growth from 10% to 9%"),
     ("Deloitte", "Energy sector AI spending: $4B (2025) to $13.4B (2029) projection"),
     ("Goldman Sachs", "Electricity inflation forecast: +6% in 2026-2027; 0.2% consumer spending drag"),
+    ("Uber", "FY2025 Earnings - $57.4B revenue, $193B gross bookings, $10B FCF. Fares +9.6% YoY."),
+    ("DoorDash", "FY2025 Earnings - $13.7B revenue, $101B marketplace GOV, $935M GAAP net income"),
+    ("Lyft", "FY2025 Earnings - $18.2B gross bookings, $1.1B FCF, $528.8M adj. EBITDA"),
+    ("Booking Holdings", "FY2025 10-K - $26.9B revenue, $41.9B Q4 gross bookings, flight bookings +38%"),
+    ("Airbnb", "FY2025 Earnings - $12.2B revenue (+10.3% YoY), $72.9B gross booking value"),
+    ("Expedia", "FY2025 Earnings - $14.7B revenue (+8% YoY), cautious 2026 guidance"),
+    ("Shopify", "FY2025 Earnings - $11.6B revenue (+30%), $378.4B GMV, $2B FCF"),
+    ("eBay", "Q4 2025 Earnings - $3.0B quarterly revenue (+15%), $21.2B GMV (+10%)"),
+    ("Etsy", "FY2025 Earnings - $881.6M revenue (+6.6% ex-Reverb), $3.6B marketplace GMS"),
+    ("MercadoLibre", "FY2025 Earnings - Revenue +39% YoY, $19.9B Q4 GMV. Brazil shipping costs -8% QoQ"),
+    ("Pinterest", "FY2025 Earnings - $4.2B revenue (+16%), 619M MAUs, 30% adj. EBITDA margin"),
+    ("Snap", "FY2025 Earnings - $5.9B revenue (+11%), $689M adj. EBITDA, net loss $460M"),
+    ("Benzinga / Business Insider", "Uber & Lyft fare analysis: 9.6% increase in 2025; 60.4% of riders cutting back"),
     ("", ""),
     ("Methodology Notes", ""),
     ("Revenue Exposure", "Where companies do not break out oil/gas specifically, estimates are based on industry segment "
@@ -460,6 +517,10 @@ sources = [
      "obligations and deal pipeline disclosures."),
     ("Exposure Rating", "Composite rating considering: (1) energy revenue as % of total, (2) backlog concentration, "
      "(3) direct oil price sensitivity of business model, (4) ability to pass through costs."),
+    ("Indirect Exposure", "Internet and marketplace companies have 'Indirect' oil exposure — they do not sell to the "
+     "oil/gas sector but are affected through fuel/shipping costs (ride-hailing, delivery, e-commerce), "
+     "travel demand elasticity (OTAs), consumer spending drag (ad-driven), and data center energy costs. "
+     "Ratings reflect the magnitude of these indirect transmission channels."),
 ]
 
 row7 = 3
