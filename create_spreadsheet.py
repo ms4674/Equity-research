@@ -979,6 +979,169 @@ for row in as_hotspots:
 auto_width(ws_as, NUM_COLS_REGIONAL)
 
 
+# ── TAB 10: Agentic AI & OpenClaw Ecosystem ───────────────────────────────────
+ws_ag = wb.create_sheet("Agentic AI & OpenClaw")
+NUM_COLS_AG = 8
+r = 1
+
+add_section_header(ws_ag, r, "OPENCLAW & OPEN-SOURCE AI AGENT RUNTIMES", NUM_COLS_AG); r += 1
+oc_h = ["#", "Project / Company", "Type", "HQ / Origin", "GitHub Stars / Adoption", "Key Capabilities", "Funding / Business Model", "Status (Mar 2026)"]
+add_sub_header(ws_ag, r, oc_h); r += 1
+openclaw_data = [
+    ["1", "OpenClaw", "Open-Source AI Agent Runtime", "Austria (founder); now OpenAI-affiliated",
+     "234K+ GitHub stars; 1.5M+ agents running; #1 GitHub repo (early 2026)",
+     "Autonomous agent execution via LLMs (GPT, Claude); shell commands, file management, email, messaging (WhatsApp/Slack/Telegram/Discord); web browsing; persistent memory; heartbeat daemon for continuous operation; 7,400+ MCP skills",
+     "Free & open-source (MIT); LLM API costs ~$10-50/mo; founder Peter Steinberger joined OpenAI Feb 2026; project transitioned to independent foundation",
+     "Fastest-growing open-source AI project; security vulnerability CVE-2026-25253 patched; foundation governance established"],
+    ["2", "LangChain / LangGraph", "Open-Source Agent Framework", "San Francisco, CA (USA)",
+     "90K+ GitHub stars (LangChain); wide enterprise adoption",
+     "Agent orchestration with explicit state management; human-in-the-loop controls; 1,000+ integrations; durable runtime; streaming & memory persistence; best for complex pipelines with branching logic",
+     "VC-backed (Sequoia-led $25M Series A); LangSmith commercial SaaS for observability/monitoring",
+     "Preferred framework for production-grade agent complexity; Daytona ($24M) partnership"],
+    ["3", "CrewAI", "Open-Source Multi-Agent Framework", "USA",
+     "100K+ certified developers; fast-growing community",
+     "Autonomous collaborative agents (Crews) + event-driven production workflows (Flows); lightweight Python framework; simple high-level abstractions for multi-agent teams",
+     "VC-backed; CrewAI Enterprise for commercial use",
+     "Standard for enterprise AI team automation; simpler alternative to LangGraph"],
+    ["4", "AutoGen", "Open-Source Agent Framework", "Microsoft Research",
+     "Strong adoption in research & enterprise",
+     "Chat-based multi-agent conversations; best for two-agent dialogue patterns; Microsoft ecosystem integration",
+     "Microsoft-backed open-source project",
+     "Solid for chat-based agent patterns; less ideal for complex branching pipelines"],
+    ["5", "n8n", "Open-Source Workflow Automation", "Berlin, Germany",
+     "60K+ GitHub stars; 1,700+ community templates",
+     "Visual node-based workflow builder; 400+ pre-built integrations; deterministic trigger-based pipelines; complements OpenClaw for structured workflows",
+     "Free self-host; cloud from €24/mo; VC-backed",
+     "Complementary to OpenClaw; used together for hybrid AI+deterministic automation"],
+]
+for row in openclaw_data:
+    add_data_row(ws_ag, r, row, NUM_COLS_AG); r += 1
+r += 1
+
+add_section_header(ws_ag, r, "AGENTIC AI STARTUPS (VENTURE-BACKED)", NUM_COLS_AG); r += 1
+ag_h = ["#", "Company", "Focus Area", "HQ", "Valuation / Funding", "Key Product / Capability", "Notable Customers / Metrics", "Momentum"]
+add_sub_header(ws_ag, r, ag_h); r += 1
+agentic_startups = [
+    ["1", "Cognition (Devin)", "Autonomous Coding Agent", "San Francisco, CA",
+     "$10.2B valuation; $400M raised (Sep 2025, Founders Fund-led)",
+     "Devin: autonomous AI software engineer that plans, codes, debugs, and deploys; acquired Windsurf IDE (Jul 2025)",
+     "Goldman Sachs, Citi, Dell, Cisco, Ramp, Palantir, Nubank; $73M ARR (Jun 2025, up from $1M in Sep 2024)",
+     "140x ARR multiple; net burn under $20M since founding; combined ARR grew 30%+ in 7 weeks post-Windsurf acquisition"],
+    ["2", "Temporal", "Durable Execution for AI Agents", "San Francisco, CA",
+     "$5B valuation; $300M Series D (Feb 2026, a16z-led)",
+     "Durable execution infrastructure for long-running AI agents; ensures reliability and fault tolerance at production scale",
+     "20M+ monthly installs; 380% YoY revenue growth; 350% increase in weekly active usage",
+     "Critical infrastructure layer for production agentic AI; addressing reliability bottleneck"],
+    ["3", "Gumloop", "No-Code AI Agent Builder", "San Francisco, CA",
+     "$50M Series B (Benchmark-led); Y Combinator, First Round, Shopify Ventures",
+     "Platform enabling non-technical employees to build AI agents and automations",
+     "Shopify, Ramp, Instacart",
+     "Democratizing agent creation; enterprise adoption growing"],
+    ["4", "Adept", "Enterprise Agentic AI", "San Francisco, CA",
+     "~$1B+ valuation",
+     "Enterprise agents that execute complex workflows across websites and software; proprietary models trained on web UI data",
+     "Enterprise customers across multiple verticals",
+     "Pioneered 'action model' approach; focused on workforce automation"],
+    ["5", "Simular", "OS-Level Computer Use Agent", "USA",
+     "$21.5M Series A (Felicis-led)",
+     "Neuro-symbolic agents that control Mac/PC at OS level (mouse, keyboard, apps); not just browser-based",
+     "Mac 1.0 released; Windows version via Microsoft Windows 365 for Agents program",
+     "Going beyond browser to full OS control; Microsoft partnership"],
+    ["6", "Relevance AI", "AI Agent Operating System", "Sydney, Australia",
+     "$24M Series B (May 2025)",
+     "Visual multi-agent system builder (Workforce); text-to-agent generator; enables non-technical users to build agents",
+     "40,000 AI agents created on platform (Jan 2025)",
+     "Bridging technical and non-technical agent creation"],
+    ["7", "Daytona", "Agent Compute Infrastructure", "USA / Europe",
+     "$24M Series A (Feb 2026)",
+     "Programmatic, composable computers for AI agents that launch in milliseconds",
+     "LangChain, Turing, Writer, SambaNova; $1M FRR in <3 months, doubled in 6 weeks",
+     "Solving the 'where do agents run?' problem; rapid revenue growth"],
+    ["8", "Sapiom", "Agent Financial Infrastructure", "USA",
+     "$15M Seed (Accel-led)",
+     "Financial infrastructure enabling agents to pay, authenticate, and audit their own API/cloud usage autonomously",
+     "Early-stage; solving agent payment and identity",
+     "Novel category: financial autonomy for AI agents"],
+    ["9", "Lindy AI", "Personal AI Assistant / Phone Agent", "San Francisco, CA",
+     "VC-backed (undisclosed)",
+     "AI assistant for scheduling, email, meeting summaries; Gaia: fastest AI phone agent (<500ms response)",
+     "Growing consumer and business user base",
+     "Competing in personal AI assistant space; phone agent innovation"],
+    ["10", "Genspark Claw", "Secure Cloud AI Agent", "USA",
+     "Part of Genspark (VC-backed)",
+     "Cloud-based alternative to OpenClaw addressing enterprise security and setup complexity",
+     "Targeting enterprises wary of self-hosted agent security risks",
+     "Launched Mar 2026 as direct response to OpenClaw security concerns"],
+]
+for row in agentic_startups:
+    add_data_row(ws_ag, r, row, NUM_COLS_AG); r += 1
+r += 1
+
+add_section_header(ws_ag, r, "BIG TECH AGENTIC AI PRODUCTS", NUM_COLS_AG); r += 1
+bt_h2 = ["#", "Company", "Product / Initiative", "Launch Date", "Key Capability", "Target Market", "How It Compares to OpenClaw", "Status"]
+add_sub_header(ws_ag, r, bt_h2); r += 1
+bigtech_agents = [
+    ["1", "OpenAI", "GPT-5.4 Computer Use / Operator", "Mar 2026",
+     "Native computer-use capabilities; autonomous agent workflows; keyboard/mouse commands across applications",
+     "Enterprise & consumer",
+     "Proprietary; cloud-based; integrated into ChatGPT; less customizable than OpenClaw but more polished",
+     "Just launched; acquired OpenClaw founder Peter Steinberger"],
+    ["2", "Anthropic", "Claude Computer Use / Claude Code", "2025-2026",
+     "Claude can interact with computer interfaces; Claude Code autonomous coding ($2.5B+ run-rate); 4% of GitHub public commits",
+     "Enterprise developers",
+     "API-based; enterprise-focused; Claude Code is biggest revenue-generating agent product",
+     "Claude Code is #1 revenue-generating AI agent product globally"],
+    ["3", "Google", "Gemini Agents / Project Mariner", "2025-2026",
+     "Gemini 3.1 Pro agentic workflows; browser/computer use capabilities",
+     "Enterprise & consumer",
+     "Cloud-based; integrated into Google ecosystem; Workspace, Search, Chrome",
+     "Expanding agentic capabilities across Google product suite"],
+    ["4", "Microsoft", "Copilot Agents / AutoGen", "2025-2026",
+     "Microsoft 365 Copilot agents; AutoGen framework; Windows 365 for Agents",
+     "Enterprise (M365 ecosystem)",
+     "Deep enterprise integration; combines AutoGen open-source with proprietary Copilot",
+     "Largest enterprise agent deployment via M365 Copilot"],
+]
+for row in bigtech_agents:
+    add_data_row(ws_ag, r, row, NUM_COLS_AG); r += 1
+r += 1
+
+add_section_header(ws_ag, r, "AGENTIC AI MARKET LANDSCAPE SUMMARY", NUM_COLS_AG); r += 1
+sum_h = ["Category", "Leader", "Runner-Up", "Key Metric", "Trend", "", "", ""]
+add_sub_header(ws_ag, r, sum_h); r += 1
+agent_summary = [
+    ["Open-Source Agent Runtime", "OpenClaw",
+     "LangChain / LangGraph",
+     "234K GitHub stars; 1.5M+ agents running",
+     "Open-source agentic AI is the fastest-growing category; security & governance are top concerns",
+     "", "", ""],
+    ["Venture-Backed Agent Startup", "Cognition (Devin)",
+     "Temporal",
+     "Cognition: $10.2B at $73M ARR; Temporal: $5B at 380% rev growth",
+     "Autonomous coding and durable execution are the two hottest agentic sub-categories",
+     "", "", ""],
+    ["Enterprise Agent Platform", "Microsoft Copilot Agents",
+     "Anthropic Claude Code",
+     "Copilot: largest enterprise deployment; Claude Code: $2.5B+ run-rate",
+     "Enterprise agentic AI is moving from pilot to production across Fortune 500",
+     "", "", ""],
+    ["Agent Infrastructure", "Temporal (durable execution)",
+     "Daytona (compute)",
+     "Temporal: $300M raise; Daytona: $1M FRR in 3 months",
+     "Infrastructure for where and how agents run is an emerging critical layer",
+     "", "", ""],
+    ["Fastest-Growing Category", "AI Coding Agents",
+     "AI Personal Assistants",
+     "Devin $1M→$73M ARR in 9 months; Cursor $2B ARR in 18 months",
+     "Developer tools are the highest-velocity segment of the agentic AI market",
+     "", "", ""],
+]
+for row in agent_summary:
+    add_data_row(ws_ag, r, row, NUM_COLS_AG); r += 1
+
+auto_width(ws_ag, NUM_COLS_AG)
+
+
 # Freeze panes for all sheets
 for ws in wb.worksheets:
     ws.freeze_panes = "A2"
