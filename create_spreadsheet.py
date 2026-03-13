@@ -1142,6 +1142,159 @@ for row in agent_summary:
 auto_width(ws_ag, NUM_COLS_AG)
 
 
+# ── TAB 11: AI Memory Ecosystem ────────────────────────────────────────────────
+ws_mem = wb.create_sheet("AI Memory")
+NUM_COLS_MEM = 8
+r = 1
+
+add_section_header(ws_mem, r, "DEDICATED AI MEMORY PLATFORMS", NUM_COLS_MEM); r += 1
+mem_h = ["#", "Company / Project", "Type", "HQ / Origin", "Funding / Valuation", "Core Technology", "Key Metrics / Traction", "Differentiator"]
+add_sub_header(ws_mem, r, mem_h); r += 1
+memory_platforms = [
+    ["1", "Mem0", "AI Memory Layer (Cloud + Self-Host)", "San Francisco, CA (YC S24)",
+     "$24M (Seed + Series A, Oct 2025); Basis Set Ventures-led; backed by Y Combinator, Peak XV, GitHub Fund",
+     "Production-ready memory infrastructure for AI agents; integrates in 3 lines of code; graph relationships in paid tier ($249/mo); exclusive memory provider for AWS Agent SDK",
+     "41K+ GitHub stars; 14M+ Python downloads; API calls grew from 35M (Q1 2025) to 186M (Q3 2025) — ~30% MoM growth; 80K+ developers on managed cloud",
+     "Best-funded dedicated memory startup; production focus; AWS partnership; strong angel backing (Dharmesh Shah, Scott Belsky, Datadog CEO, ex-GitHub CEO)"],
+    ["2", "Zep AI", "Agent Memory Layer (Knowledge Graph)", "San Francisco, CA (YC W24)",
+     "~$2.3-3.3M total (pre-seed via YC W24); $1M revenue by Jun 2024",
+     "Temporal knowledge graph that auto-constructs from user interactions; Neo4j-backed; semantic + episodic + procedural memory types",
+     "94.8% DMR benchmark accuracy (outperforms MemGPT); 18.5% accuracy improvement on LongMemEval; 98% cost reduction vs full-context; 90% latency reduction",
+     "Research-backed performance leadership; named CB Insights 'Outperformer'; knowledge graph approach captures temporal relationships"],
+    ["3", "Letta (formerly MemGPT)", "Stateful Agent Framework", "UC Berkeley spinout, San Francisco, CA",
+     "$10M Seed (Sep 2024); Felicis Ventures-led; angels incl. Jeff Dean (Google DeepMind), Clem Delangue (Hugging Face)",
+     "Stateful memory enabling agents to retain info across sessions; MemGPT architecture; Agent Development Environment (ADE) for debugging memory; Context Repositories (git-based memory for coding agents); Conversations API",
+     "Open-source community-driven; Desktop UI + CLI; model-agnostic; Letta Code terminal agent",
+     "Academic pedigree (Berkeley); open-source community-first approach; strongest developer tooling for inspecting/editing agent memory"],
+    ["4", "OMEGA", "Open-Source Local Memory System", "Open Source",
+     "Free & open-source (Apache-2.0); no external funding",
+     "Local-first persistent memory for AI coding agents; SQLite + AES-256 encryption; semantic search via ONNX embeddings (bge-small-en-v1.5); 12 MCP tools for Claude Code/Cursor/Windsurf; intelligent forgetting with contradiction detection",
+     "#1 on LongMemEval benchmark: 95.4% (500 questions); production-ready v1.2.0; 36 GitHub stars",
+     "Highest benchmark score; fully local (no cloud dependency); zero API keys needed; privacy-first; designed specifically for AI coding agents"],
+    ["5", "ReMemora", "Persistent Memory Infrastructure", "USA (early-stage)",
+     "Early-stage (undisclosed)",
+     "Captures and organizes insights in real-time for human-AI teams; classified memory storage; designed for autonomous agent collaboration",
+     "Early-stage; positioning for human-AI teaming use case",
+     "Unique focus on human-AI team memory — not just agent memory"],
+    ["6", "Mnexium", "Persistent Memory for LLMs", "USA (early-stage)",
+     "Early-stage (undisclosed)",
+     "Provider-agnostic persistent memory (works with OpenAI, Claude, Gemini); chat history, agent state, records management, observability; 2-line integration",
+     "Early-stage; developer-focused",
+     "Simplest integration (2 lines); provider-agnostic design"],
+    ["7", "ContextStream", "Persistent Memory for Coding Tools", "USA (early-stage)",
+     "Early-stage (undisclosed)",
+     "Persistent memory with semantic code search for AI coding tools; deduplication and progressive compression to reduce token costs",
+     "Early-stage; targeting developer tools market",
+     "Specialized for code context; token cost optimization via compression"],
+]
+for row in memory_platforms:
+    add_data_row(ws_mem, r, row, NUM_COLS_MEM); r += 1
+r += 1
+
+add_section_header(ws_mem, r, "VECTOR DATABASES (MEMORY INFRASTRUCTURE LAYER)", NUM_COLS_MEM); r += 1
+vdb_h = ["#", "Company", "Type", "HQ", "Funding / Valuation", "Core Technology", "Key Metrics", "Role in AI Memory"]
+add_sub_header(ws_mem, r, vdb_h); r += 1
+vector_dbs = [
+    ["1", "Pinecone", "Managed Vector Database", "San Francisco, CA",
+     "$138M total; $100M Series B (Apr 2023, a16z-led); $750M valuation",
+     "Serverless vector database; sub-33ms p99 latency at scale; Dedicated Read Nodes (Dec 2025); BYOC for enterprise; Pinecone Assistant with Claude integration",
+     "128 employees; critical infrastructure for RAG and AI memory pipelines",
+     "Most widely adopted managed vector DB; foundational layer for Mem0, Zep, and other memory platforms"],
+    ["2", "Weaviate", "Open-Source Vector Database", "Amsterdam, Netherlands",
+     "$50M Series B (Apr 2023, Index Ventures); $200M-$500M+ valuation",
+     "AI-native vector search; hybrid search (vector + keyword); AI Agents for autonomous DB operations; self-hosted + cloud; v1.35 (Dec 2025) with Object TTL and zstd compression",
+     "99-100+ employees; growing enterprise adoption",
+     "Open-source alternative to Pinecone; strong European presence; self-hosted option for data sovereignty"],
+    ["3", "Chroma", "Open-Source Embedding Database", "San Francisco, CA",
+     "~$18M raised; ~$75M+ valuation (est.)",
+     "Developer-friendly embedding database; 20ms p50 latency; full-text + vector hybrid search; now GA cloud platform",
+     "Large open-source community; lowest barrier to entry",
+     "Most developer-friendly vector DB; popular for prototyping and small-to-mid-scale AI memory"],
+    ["4", "SochDB", "LLM-Native Database", "Early-stage",
+     "Early-stage (undisclosed)",
+     "Combined vector search + SQL + token-aware context budgeting in single embedded system; replaces separate vector DB + relational DB + prompt packing stacks",
+     "Early-stage; novel architecture",
+     "Next-gen: purpose-built for LLM memory, not retrofitted from vector search"],
+]
+for row in vector_dbs:
+    add_data_row(ws_mem, r, row, NUM_COLS_MEM); r += 1
+r += 1
+
+add_section_header(ws_mem, r, "BIG TECH AI MEMORY INITIATIVES", NUM_COLS_MEM); r += 1
+bt_mem_h = ["#", "Company", "Product / Initiative", "Launch", "Description", "Approach", "Status", "Significance"]
+add_sub_header(ws_mem, r, bt_mem_h); r += 1
+bigtech_memory = [
+    ["1", "Google", "Always On Memory Agent (open-sourced)", "Mar 2026",
+     "Open-source persistent memory agent built with Google Agent Development Kit + Gemini 3.1 Flash-Lite",
+     "Ditches vector databases entirely; uses LLM-driven structured memory stored in SQLite",
+     "Open-sourced; community adoption growing",
+     "Signals potential shift away from vector DBs toward LLM-native memory management"],
+    ["2", "OpenAI", "ChatGPT Memory / Custom Instructions", "2024-2026",
+     "Persistent memory across ChatGPT conversations; remembers user preferences, facts, and context",
+     "Proprietary cloud-based memory integrated into ChatGPT consumer and enterprise products",
+     "Rolled out to all ChatGPT users; continuously improving",
+     "Largest-scale deployment of persistent AI memory (800-900M weekly users)"],
+    ["3", "Anthropic", "Claude Project Knowledge / Memory", "2025-2026",
+     "Project-level context and memory for Claude; persistent knowledge across conversations within projects",
+     "Cloud-based; tied to Claude Projects feature; complements Claude Code's session persistence",
+     "Active development; growing enterprise adoption",
+     "Enterprise-grade memory for business workflows"],
+    ["4", "Tabnine", "Enterprise Context Engine", "Feb 2026",
+     "Continuously evolving model of organizational software systems, docs, and engineering practices",
+     "Not RAG-based; builds structural understanding of codebases; supports air-gapped environments",
+     "Launched; targeting enterprise development teams",
+     "Enterprise code memory that understands system architecture, not just text"],
+    ["5", "Memori Labs", "Enterprise Memory Fabric", "2025-2026",
+     "Classified memory storage (facts, preferences, rules, summaries) for enterprise AI",
+     "Tokenless recall; targeted context retrieval; claims 98% cost reduction",
+     "Early-stage; enterprise-focused",
+     "Enterprise-specific memory optimization; cost reduction focus"],
+]
+for row in bigtech_memory:
+    add_data_row(ws_mem, r, row, NUM_COLS_MEM); r += 1
+r += 1
+
+add_section_header(ws_mem, r, "AI MEMORY MARKET LANDSCAPE SUMMARY", NUM_COLS_MEM); r += 1
+sum_mem_h = ["Category", "Leader", "Runner-Up", "Key Metric", "Trend", "", "", ""]
+add_sub_header(ws_mem, r, sum_mem_h); r += 1
+memory_summary = [
+    ["Best-Funded Memory Startup", "Mem0 ($24M)",
+     "Letta ($10M)",
+     "Mem0: 186M API calls/quarter, 80K developers, AWS partnership",
+     "Dedicated AI memory is emerging as a distinct infrastructure category, separate from vector DBs",
+     "", "", ""],
+    ["Highest Benchmark Performance", "OMEGA (95.4% LongMemEval)",
+     "Zep (94.8% DMR / 71.2% LongMemEval)",
+     "OMEGA: #1 on LongMemEval; Zep: #1 on DMR; both outperform MemGPT",
+     "Memory benchmarks (LongMemEval, DMR) are becoming standardized evaluation criteria",
+     "", "", ""],
+    ["Most Production-Ready", "Mem0",
+     "Zep",
+     "Mem0: exclusive AWS Agent SDK provider; Zep: 98% cost reduction, 90% latency reduction",
+     "Production deployment and cost efficiency are key differentiators, not just benchmark scores",
+     "", "", ""],
+    ["Best Open-Source / Local", "OMEGA",
+     "Letta / MemGPT",
+     "OMEGA: fully local, zero dependencies, AES-256 encrypted; Letta: strong dev tooling",
+     "Privacy-first local memory is growing; developers want memory without cloud lock-in",
+     "", "", ""],
+    ["Vector DB Infrastructure", "Pinecone ($750M, a16z-backed)",
+     "Weaviate ($200-500M+)",
+     "Pinecone: sub-33ms latency; Weaviate: open-source + self-hosted; Chroma: dev-friendly",
+     "Vector DBs remain foundational but purpose-built memory layers (Mem0, Zep, OMEGA) are emerging on top",
+     "", "", ""],
+    ["Biggest Paradigm Shift", "Google Always On Memory Agent",
+     "SochDB (LLM-Native DB)",
+     "Google ditching vector DBs for LLM-driven SQLite memory; SochDB combining vector + SQL + token budgeting",
+     "The industry may be moving beyond vector databases toward LLM-native and hybrid memory architectures",
+     "", "", ""],
+]
+for row in memory_summary:
+    add_data_row(ws_mem, r, row, NUM_COLS_MEM); r += 1
+
+auto_width(ws_mem, NUM_COLS_MEM)
+
+
 # Freeze panes for all sheets
 for ws in wb.worksheets:
     ws.freeze_panes = "A2"
