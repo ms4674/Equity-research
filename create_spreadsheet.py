@@ -389,6 +389,596 @@ for i, row in enumerate(summary_data, start=2):
 
 auto_width(ws6, len(headers6))
 
+
+# ── REGIONAL TABS ──────────────────────────────────────────────────────────────
+
+SECTION_FILL = PatternFill(start_color="2E75B6", end_color="2E75B6", fill_type="solid")
+SECTION_FONT = Font(bold=True, color="FFFFFF", size=12)
+
+def add_section_header(ws, row_num, label, num_cols):
+    ws.cell(row=row_num, column=1, value=label)
+    for col in range(1, num_cols + 1):
+        cell = ws.cell(row=row_num, column=col)
+        cell.font = SECTION_FONT
+        cell.fill = SECTION_FILL
+        cell.border = THIN_BORDER
+        cell.alignment = Alignment(vertical="center")
+    ws.merge_cells(start_row=row_num, start_column=1, end_row=row_num, end_column=num_cols)
+
+def add_sub_header(ws, row_num, headers):
+    for col_idx, h in enumerate(headers, start=1):
+        cell = ws.cell(row=row_num, column=col_idx, value=h)
+        cell.font = SUBHEADER_FONT
+        cell.fill = SUBHEADER_FILL
+        cell.alignment = Alignment(wrap_text=True, vertical="center", horizontal="center")
+        cell.border = THIN_BORDER
+
+def add_data_row(ws, row_num, data, num_cols):
+    for col_idx, val in enumerate(data, start=1):
+        ws.cell(row=row_num, column=col_idx, value=val)
+    style_row(ws, row_num, num_cols)
+
+NUM_COLS_REGIONAL = 7
+
+
+# ── TAB 7: Americas ───────────────────────────────────────────────────────────
+ws_am = wb.create_sheet("Americas")
+r = 1
+
+add_section_header(ws_am, r, "LEADERS", NUM_COLS_REGIONAL); r += 1
+ldr_h = ["#", "Leader", "Title / Company", "HQ", "Key Achievements (Past 12 Months)", "Why They Stand Out", "Recognition"]
+add_sub_header(ws_am, r, ldr_h); r += 1
+am_leaders = [
+    ["1", "Sam Altman", "CEO, OpenAI", "San Francisco, CA",
+     "$110B funding at $840B valuation; GPT-5.4 agentic launch; 800-900M weekly users; preparing IPO",
+     "Built the fastest-growing business platform in history; AGI research leader",
+     "TIME 100 AI 2025"],
+    ["2", "Jensen Huang", "CEO, NVIDIA", "Santa Clara, CA",
+     "NVIDIA at $4T market cap; Nemotron 3 Super; GPUs power virtually all frontier AI",
+     "Indispensable AI infrastructure — every major model trains on NVIDIA hardware",
+     "TIME 100 AI 2025"],
+    ["3", "Dario Amodei", "CEO, Anthropic", "San Francisco, CA",
+     "$30B Series G at $380B; $14B revenue; 10x annual growth 3 yrs; Claude 5 GPQA record",
+     "Safety-first frontier AI; Claude Code at $2.5B+ run-rate; 4% of GitHub public commits",
+     "TIME 100 AI 2025"],
+    ["4", "Satya Nadella", "Chairman & CEO, Microsoft", "Redmond, WA",
+     "Lead investor in OpenAI $110B; Azure AI expansion; Microsoft 365 Copilot at scale",
+     "Enterprise AI adoption at unprecedented scale",
+     "TIME 100 AI 2025"],
+    ["5", "Elon Musk", "CEO, xAI / Tesla / SpaceX", "Austin, TX",
+     "xAI at ~$3.8B revenue (38x YoY); $20B Series E at $230B; merged with X platform",
+     "Massive compute investment; Grok models; ambitious AGI timeline",
+     "TIME 100 AI 2025"],
+    ["6", "Mustafa Suleyman", "CEO, Microsoft AI", "Redmond, WA",
+     "Leading Microsoft's AI product strategy; AI integration across consumer & enterprise",
+     "DeepMind co-founder experience brought to Microsoft",
+     "TIME 100 AI 2025"],
+    ["7", "Sundar Pichai", "CEO, Google / Alphabet", "Mountain View, CA",
+     "Gemini 3.1 Pro launch; AI integration across Search, Cloud, enterprise",
+     "Multi-model strategy across Google's massive product surface",
+     "TIME 100 AI 2025"],
+]
+for row in am_leaders:
+    add_data_row(ws_am, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_am, r, "COMPANIES WITH MOST MOMENTUM", NUM_COLS_REGIONAL); r += 1
+co_h = ["#", "Company", "HQ", "Valuation", "Revenue / Growth", "Key Momentum Indicators", "Category"]
+add_sub_header(ws_am, r, co_h); r += 1
+am_companies = [
+    ["1", "OpenAI", "San Francisco, CA", "$840B",
+     "800-900M weekly users; 2B daily prompts; 1M+ business customers",
+     "$110B funding round — largest private round in history; GPT-5.4 agentic launch",
+     "Foundation Model / Consumer + Enterprise"],
+    ["2", "Anthropic", "San Francisco, CA", "$380B",
+     "$14B annualized revenue; 10x growth 3 yrs; 300K+ business customers",
+     "Claude Code $2.5B+ run-rate; Claude 5 GPQA record; 8 of Fortune 10",
+     "Foundation Model / Enterprise AI"],
+    ["3", "xAI", "Austin, TX", "$230B",
+     "~$3.8B annualized revenue; 38x YoY",
+     "$20B Series E; merged with X platform; SuperGrok products",
+     "Foundation Model / Consumer AI"],
+    ["4", "Cursor (Anysphere)", "San Francisco, CA", "N/A (private)",
+     "$2B ARR in 18 months",
+     "Fastest revenue ramp in enterprise software history",
+     "AI-Native Developer Tool"],
+    ["5", "Perplexity", "San Francisco, CA", "$20B",
+     "$148M ARR; 800% YoY; targeting $656M by end-2026",
+     "30M monthly users; expanding into advertising & commerce",
+     "AI Search / Consumer AI"],
+    ["6", "Scale AI", "San Francisco, CA", "$14.3B+",
+     "Leading AI training data provider",
+     "$14.3B Meta-led round; critical infrastructure for frontier models",
+     "AI Infrastructure / Data"],
+    ["7", "Cohere", "Toronto, Canada", "~$5.5B",
+     "Growing enterprise customer base across financial services, healthcare",
+     "Enterprise AI with private deployment; strong Canadian AI ecosystem",
+     "Enterprise AI / NLP"],
+    ["8", "Adept", "San Francisco, CA", "~$1B+",
+     "Agentic AI for workforce automation",
+     "Building enterprise agents for complex workflows across applications",
+     "Agentic AI"],
+]
+for row in am_companies:
+    add_data_row(ws_am, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_am, r, "BIGGEST BREAKTHROUGHS", NUM_COLS_REGIONAL); r += 1
+bt_h = ["#", "Breakthrough", "Company", "Date", "Description", "Impact", "Technical Details"]
+add_sub_header(ws_am, r, bt_h); r += 1
+am_breakthroughs = [
+    ["1", "GPT-5.4 Autonomous Agents", "OpenAI", "Mar 2026",
+     "Native computer-use for autonomous agent workflows",
+     "Major step toward fully autonomous AI agents; 33% fewer false claims",
+     "Multi-source info gathering; agentic computer use; enterprise workflows"],
+    ["2", "Claude 5 GPQA Diamond Record", "Anthropic", "Mar 2026",
+     "87.3% GPQA Diamond — first AI system to exceed 85%",
+     "8.1pp improvement; new frontier in scientific reasoning",
+     "Inference-time reasoning optimization; Extended Thinking mode (+15pp)"],
+    ["3", "NVIDIA Nemotron 3 Super", "NVIDIA", "2025-2026",
+     "120B-param open model; 5x throughput for agentic AI; 1M-token context",
+     "Prevents goal drift in multi-agent systems; major efficiency gain",
+     "Hybrid MoE; multi-token prediction; 3x faster inference"],
+    ["4", "Gemini 3.1 Pro", "Google DeepMind", "Feb 2026",
+     "Advanced reasoning model for complex problem-solving & agentic workflows",
+     "Keeps Google competitive in frontier model race",
+     "Multi-modal reasoning; improved tool use and planning"],
+]
+for row in am_breakthroughs:
+    add_data_row(ws_am, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_am, r, "TOP INVESTORS", NUM_COLS_REGIONAL); r += 1
+inv_h = ["#", "Investor / Firm", "Type", "HQ", "Notable Gen AI Investments", "Investment Thesis", "Standout Metric"]
+add_sub_header(ws_am, r, inv_h); r += 1
+am_investors = [
+    ["1", "Amazon", "Strategic / Corporate", "Seattle, WA",
+     "OpenAI ($50B in Feb 2026 round); AWS AI infrastructure",
+     "AI compute/infrastructure dominance via AWS",
+     "Largest single investor in OpenAI's $110B round"],
+    ["2", "NVIDIA", "Strategic / Corporate", "Santa Clara, CA",
+     "OpenAI ($30B); AMI Labs; broad AI ecosystem investments",
+     "Investing in companies that drive GPU demand",
+     "Co-lead of OpenAI $110B round"],
+    ["3", "Sequoia Capital", "VC", "Menlo Park, CA",
+     "OpenAI; Anthropic; broad AI portfolio",
+     "Early-stage to growth; identifying AI platform winners",
+     "Consistently backing winners across AI waves"],
+    ["4", "Andreessen Horowitz (a16z)", "VC", "Menlo Park, CA",
+     "Broad AI portfolio: infrastructure, apps, AGI",
+     "AGI infrastructure thesis; AI-native application layer",
+     "Dedicated AI fund; prolific deal flow"],
+    ["5", "Founders Fund (Brian Singerman)", "VC", "San Francisco, CA",
+     "OpenAI (2016), Anduril, Scale AI, Applied Intuition",
+     "Contrarian deep-tech bets; early conviction in frontier AI",
+     "18.3x avg returns — 3x industry average"],
+    ["6", "Coatue Management", "Hedge Fund / VC", "New York, NY",
+     "Hugging Face, Runway, Notion, Weights & Biases",
+     "AI-native software & developer infra; AI-augmented deal sourcing",
+     "$70B AUM; $45M/yr on proprietary AI data infra"],
+    ["7", "Iconiq Capital", "Growth", "San Francisco, CA",
+     "Anthropic ($13B round lead, Sep 2025)",
+     "Late-stage growth in proven AI platforms",
+     "Led one of the largest AI deals of 2025"],
+    ["8", "Elad Gil", "Angel / Individual", "San Francisco, CA",
+     "Perplexity, Cognition, Scale AI — 36 AI deals since Jan 2024",
+     "High-volume seed investing; application layer focus",
+     "#1 ranked AI angel investor by deal count"],
+    ["9", "Vinod Khosla / Khosla Ventures", "VC / Angel", "Menlo Park, CA",
+     "OpenAI ($50M early, 2019); robotics, medtech, AI startups",
+     "Early conviction; patient capital through hype cycles",
+     "TIME 100 Most Influential in AI 2024"],
+]
+for row in am_investors:
+    add_data_row(ws_am, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_am, r, "HOTSPOTS", NUM_COLS_REGIONAL); r += 1
+hs_h = ["#", "City / Region", "Country", "AI Funding Concentration", "Key Strengths", "Notable Companies", "Recent Developments"]
+add_sub_header(ws_am, r, hs_h); r += 1
+am_hotspots = [
+    ["1", "San Francisco / Silicon Valley", "United States",
+     "62-65% of global AI-native funding",
+     "Foundation models, VC density, talent pool, compute infrastructure",
+     "OpenAI, Anthropic, xAI, Scale AI, Cursor, Perplexity, NVIDIA",
+     "Epicenter of $110B OpenAI & $30B Anthropic rounds"],
+    ["2", "Seattle", "United States",
+     "Major North American AI center",
+     "Cloud infrastructure (AWS, Azure); enterprise AI; UW research",
+     "Microsoft, Amazon/AWS, Allen Institute for AI",
+     "Microsoft AI division expansion; AWS as backbone of AI compute"],
+    ["3", "New York", "United States",
+     "Major North American AI center",
+     "AI in finance, media, advertising; enterprise applications",
+     "Bloomberg AI, Coatue, financial services AI startups",
+     "Growing AI startup ecosystem; financial services AI acceleration"],
+    ["4", "Toronto-Waterloo Corridor", "Canada",
+     "50.3% AI funding concentration",
+     "Pioneer research (Hinton, U of T); strong talent; affordable vs SF",
+     "Cohere, Vector Institute, U of Toronto",
+     "Growing alternative to SF for AI talent; Cohere enterprise traction"],
+    ["5", "Austin, TX", "United States",
+     "Growing AI hub",
+     "xAI/Tesla AI presence; lower cost of living; tech migration from SF",
+     "xAI, Tesla AI, growing startup ecosystem",
+     "xAI HQ; emerging as secondary AI hub"],
+    ["6", "Boston / Cambridge", "United States",
+     "Major AI research center",
+     "MIT, Harvard AI research; biotech AI; strong academic pipeline",
+     "MIT CSAIL, Harvard AI, biotech AI startups",
+     "AI-biotech convergence; strong research-to-startup pipeline"],
+]
+for row in am_hotspots:
+    add_data_row(ws_am, r, row, NUM_COLS_REGIONAL); r += 1
+
+auto_width(ws_am, NUM_COLS_REGIONAL)
+
+
+# ── TAB 8: Europe ─────────────────────────────────────────────────────────────
+ws_eu = wb.create_sheet("Europe")
+r = 1
+
+add_section_header(ws_eu, r, "LEADERS", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_eu, r, ldr_h); r += 1
+eu_leaders = [
+    ["1", "Arthur Mensch", "CEO & Co-Founder, Mistral AI", "Paris, France",
+     "Grew Mistral to ~$7B+ valuation; 1.1B+ monthly queries; 6.2M active developers; 40% of EU Fortune 500 deploying/piloting",
+     "Leading European sovereign AI champion; open-source model leadership; €50M+ government contracts",
+     "Top EMEA CEO"],
+    ["2", "Yann LeCun", "VP & Chief AI Scientist, Meta; Founder, AMI Labs", "Paris, France",
+     "Founded AMI Labs; raised $1B seed (Europe's largest-ever) at $3.5B valuation",
+     "Turing Award winner; open-science AI research pioneer; bridging US tech & European innovation",
+     "Turing Award; TIME 100 AI"],
+    ["3", "Timothée Lacroix", "CTO & Co-Founder, Mistral AI", "Paris, France",
+     "Led technical development of Mistral models incl. Mixtral MoE architecture",
+     "Former Meta FAIR researcher; driving European model innovation",
+     "Top EMEA CTO 2025"],
+    ["4", "Jonas Andrulis", "CEO & Founder, Aleph Alpha", "Heidelberg, Germany",
+     "Raised $500M Series B; built Alpha ONE (Europe's fastest commercial AI data center); ISO 27001 + EU AI Act alignment",
+     "Leading sovereign, compliant AI for European governments & enterprise",
+     "German AI leader"],
+    ["5", "Demis Hassabis", "CEO, Google DeepMind", "London, UK",
+     "Nobel Prize in Chemistry 2024; leads DeepMind's frontier research; AlphaFold impact continues",
+     "World's most decorated AI researcher; bridging scientific discovery and AI",
+     "Nobel Prize; TIME 100 AI"],
+    ["6", "Clem Delangue", "CEO & Co-Founder, Hugging Face", "Paris, France",
+     "Hugging Face as the GitHub of ML; millions of models hosted; critical open-source AI infrastructure",
+     "Democratizing AI through open-source model sharing & collaboration",
+     "Forbes 30 Under 30 alum"],
+]
+for row in eu_leaders:
+    add_data_row(ws_eu, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_eu, r, "COMPANIES WITH MOST MOMENTUM", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_eu, r, co_h); r += 1
+eu_companies = [
+    ["1", "Mistral AI", "Paris, France", "~$7B+ (est.)",
+     "$50M+ government AI contracts; 1.1B+ monthly queries; 6.2M developers (up from 1.5M)",
+     "40% of Europe's Fortune 500 deploying/piloting; sovereign AI leader; avg enterprise deal $1.2M/yr",
+     "Foundation Model / Sovereign AI"],
+    ["2", "AMI Labs", "Paris, France", "$3.5B (pre-money)",
+     "Just founded; targeting next-gen foundation models",
+     "$1B seed — Europe's largest-ever; backed by NVIDIA, Bezos Expeditions, Temasek, Eric Schmidt",
+     "Foundation Model / Open Science"],
+    ["3", "Aleph Alpha", "Heidelberg, Germany", "~$2B+ (est.)",
+     "$500M Series B; Luminous & PhariaAI models",
+     "Alpha ONE data center (512 NVIDIA A100s); EU AI Act compliant; sovereign AI for governments",
+     "Sovereign AI / Enterprise"],
+    ["4", "Hugging Face", "Paris, France", "~$4.5B",
+     "Millions of models hosted; critical open-source infrastructure",
+     "GitHub of ML; growing enterprise tier; community of millions of developers",
+     "AI Infrastructure / Open Source"],
+    ["5", "Stability AI", "London, UK", "~$1B (restructured)",
+     "Stable Diffusion models; restructuring under new leadership",
+     "Pioneered open-source image generation; expanding into video & 3D",
+     "Generative Media / Open Source"],
+    ["6", "DeepL", "Cologne, Germany", "~$2B",
+     "AI translation leader; expanding enterprise customer base",
+     "Superior translation quality vs. Google Translate; strong enterprise moat",
+     "AI Translation / Enterprise NLP"],
+]
+for row in eu_companies:
+    add_data_row(ws_eu, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_eu, r, "BIGGEST BREAKTHROUGHS", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_eu, r, bt_h); r += 1
+eu_breakthroughs = [
+    ["1", "AMI Labs $1B Seed Round", "AMI Labs (Yann LeCun)", "Mar 2026",
+     "Europe's largest-ever seed round at $3.5B valuation for next-gen foundation models",
+     "Signals growing European competitiveness in frontier AI; open-science approach",
+     "Backed by Cathay Innovation, Bezos Expeditions, NVIDIA, Eric Schmidt, Temasek"],
+    ["2", "Mistral Sovereign AI Adoption", "Mistral AI", "2025-2026",
+     "40% of Europe's Fortune 500 deploying or piloting Mistral models; €50M+ government contracts",
+     "Established European sovereign AI as a viable category; EU compliance leadership",
+     "Open-source multilingual models; EU AI Act aligned; enterprise deals avg $1.2M/yr"],
+    ["3", "Aleph Alpha PhariaAI Stack", "Aleph Alpha", "2025",
+     "Enterprise-ready generative AI stack with transparency, compliance, and data sovereignty",
+     "Proved sovereign AI can compete on quality; ISO 27001 + EU AI Act compliance",
+     "Alpha ONE: Europe's fastest commercial AI data center (512 A100s)"],
+    ["4", "Demis Hassabis Nobel Prize", "Google DeepMind (London)", "Oct 2024",
+     "Nobel Prize in Chemistry for protein structure prediction (AlphaFold)",
+     "AI's biggest scientific validation; demonstrates AI's potential for scientific discovery",
+     "AlphaFold has been used by 2M+ researchers worldwide"],
+]
+for row in eu_breakthroughs:
+    add_data_row(ws_eu, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_eu, r, "TOP INVESTORS", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_eu, r, inv_h); r += 1
+eu_investors = [
+    ["1", "Bpifrance", "State Investment Bank", "Paris, France",
+     "54 AI investments; €500K-€20M tickets; broad French AI ecosystem",
+     "Government-backed AI development; sovereign AI support",
+     "Most active European AI investor by deal count"],
+    ["2", "Cathay Innovation", "VC", "Paris, France",
+     "AMI Labs (co-led $1B seed); broad AI portfolio",
+     "Co-led Europe's largest-ever seed round; deep tech focus",
+     "€1B+ AI-focused fund"],
+    ["3", "LocalGlobe", "VC", "London, UK",
+     "43 AI investments; early-stage focus",
+     "Seed to Series A; London-centric AI ecosystem development",
+     "2nd most active European AI VC"],
+    ["4", "Index Ventures", "VC", "London / SF",
+     "Broad AI portfolio across Europe and US",
+     "Cross-Atlantic AI investing; growth-stage focus",
+     "Major European VC with global reach"],
+    ["5", "Speedinvest", "VC", "Vienna, Austria",
+     "40 AI investments; €200K-€3M tickets",
+     "Pan-European early-stage AI; DACH region strength",
+     "4th most active European AI VC"],
+    ["6", "HTGF (High-Tech Gründerfonds)", "VC", "Bonn, Germany",
+     "39 AI investments; €100K-€1M tickets",
+     "Deep-tech seed investing; German AI ecosystem builder",
+     "5th most active European AI VC"],
+    ["7", "IQ Capital", "VC", "Cambridge / London, UK",
+     "39 AI investments; £500K-£10M tickets",
+     "Deep-tech AI and hard science; Oxbridge pipeline",
+     "Strong research-to-startup pipeline"],
+    ["8", "Balderton Capital", "VC", "London, UK",
+     "Broad AI portfolio; growth-stage European AI",
+     "Series A-B focused; European AI scaling",
+     "Top-tier London VC"],
+]
+for row in eu_investors:
+    add_data_row(ws_eu, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_eu, r, "HOTSPOTS", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_eu, r, hs_h); r += 1
+eu_hotspots = [
+    ["1", "Paris", "France",
+     "4.3% of global AI-native funding",
+     "Foundation models (Mistral, AMI Labs); strong academia (INRIA, ENS); EU sovereign AI",
+     "Mistral AI, AMI Labs, Hugging Face",
+     "AMI Labs $1B seed; Mistral in 40% EU Fortune 500; EU sovereign AI contracts"],
+    ["2", "London", "United Kingdom",
+     "Major and growing AI hub",
+     "World-class research (DeepMind); regulatory leadership; top universities",
+     "Google DeepMind, Stability AI, Faculty AI",
+     "OpenAI named London its largest research hub outside SF (Feb 2026)"],
+    ["3", "Zurich", "Switzerland",
+     "Specialized AI hub",
+     "Smart city apps; fintech AI; ETH Zurich research; Google research presence",
+     "ETH Zurich, Google Brain Zurich, fintech AI startups",
+     "Leading in financial services AI; strong European research output"],
+    ["4", "Berlin", "Germany",
+     "Growing AI startup hub",
+     "Strong startup ecosystem; enterprise AI; government support",
+     "AI startups, enterprise SaaS with AI, research institutes",
+     "Growing pool of AI talent; lower cost than London/Paris"],
+    ["5", "Heidelberg", "Germany",
+     "Sovereign AI hub",
+     "Aleph Alpha HQ; research university strength",
+     "Aleph Alpha, Heidelberg University, EMBL",
+     "Alpha ONE data center; sovereign AI for German/EU government"],
+    ["6", "Amsterdam-Delta", "Netherlands",
+     "Emerging AI hub",
+     "AI in logistics, fintech, agriculture; strong tech talent",
+     "Various AI startups; Booking.com AI; Philips AI",
+     "Growing AI investment; strategic location in Europe"],
+]
+for row in eu_hotspots:
+    add_data_row(ws_eu, r, row, NUM_COLS_REGIONAL); r += 1
+
+auto_width(ws_eu, NUM_COLS_REGIONAL)
+
+
+# ── TAB 9: Asia ───────────────────────────────────────────────────────────────
+ws_as = wb.create_sheet("Asia")
+r = 1
+
+add_section_header(ws_as, r, "LEADERS", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_as, r, ldr_h); r += 1
+as_leaders = [
+    ["1", "Liang Wenfeng", "CEO, DeepSeek", "Hangzhou, China",
+     "DeepSeek-V3.2 & V3.2-Speciale matched/exceeded GPT-5; R1 demonstrated RL-only reasoning; all open-sourced MIT",
+     "Frontier AI at 1/30th US cost; gold-medal results in IMO, IOI, ICPC; reshaped global AI cost economics",
+     "N/A"],
+    ["2", "Robin Li (Li Yanhong)", "CEO, Baidu", "Beijing, China",
+     "Leading Baidu's ERNIE Bot and enterprise AI platform in China",
+     "China's leading search company pivoting to AI-first; massive Chinese language data advantage",
+     "China AI leader"],
+    ["3", "Masayoshi Son", "CEO, SoftBank Group", "Tokyo, Japan",
+     "Led $40B OpenAI investment (Mar 2025); $30B follow-on (Feb 2026); cumulative $64.6B in OpenAI (~13% ownership)",
+     "All-in bet on AI infrastructure; largest individual AI investor globally; Stargate data center initiative",
+     "TIME 100 AI"],
+    ["4", "Ravi Kumar S", "CEO, Cognizant", "Teaneck, NJ (HQ) / India ops",
+     "Bet $1B on Gen AI; Agent Foundry for enterprise AI; Synapse to train 2M people in Gen AI",
+     "Driving large-scale enterprise AI transformation with major India-based workforce",
+     "TIME 100 AI 2025"],
+    ["5", "Zhang Peng", "CEO, Zhipu AI", "Beijing, China",
+     "GLM-5 reached top spot among open-source models on Artificial Analysis (Feb 2026); raised prices 30% on surging demand",
+     "Leading China's open-source AI model race; shares rose 34%",
+     "China AI leader"],
+    ["6", "Yang Zhilin", "CEO & Founder, Moonshot AI", "Beijing, China",
+     "Kimi K2 model launch (Jul 2025); briefly held top benchmarks before being surpassed",
+     "China's fast-moving AI startup leader; $2.5B valuation; aggressive model iteration",
+     "Forbes China 30 Under 30"],
+    ["7", "Pratyush Kumar", "CEO & Co-Founder, Sarvam AI", "Bengaluru, India",
+     "Sarvam Vision OCR at 84.3% accuracy (outperforming Gemini 3 Pro & ChatGPT); Bulbul V3 TTS in 11 Indian languages",
+     "Building sovereign AI for Indian languages; democratizing AI for 1.4B people",
+     "India AI pioneer"],
+    ["8", "Ankush Sabharwal", "CEO & Founder, CoRover.ai", "India",
+     "BharatGPT — India's first LLM-based Gen AI platform; 1B+ users served",
+     "India's homegrown Gen AI leader; conversational AI at scale",
+     "Top 10 global tech entrepreneur"],
+]
+for row in as_leaders:
+    add_data_row(ws_as, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_as, r, "COMPANIES WITH MOST MOMENTUM", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_as, r, co_h); r += 1
+as_companies = [
+    ["1", "DeepSeek", "Hangzhou, China", "Private (self-funded)",
+     "Rapidly growing user base and API adoption globally",
+     "V3.2 matched/exceeded GPT-5 at dramatically lower cost; open-source MIT; gold-medal competition results",
+     "Foundation Model / Open Source"],
+    ["2", "Zhipu AI", "Beijing, China", "~$5B+ (est.)",
+     "GLM-5 topped open-source benchmarks (Feb 2026); raised prices 30% on demand surge",
+     "Top open-source model globally; shares up 34%; intense competitive pace",
+     "Foundation Model / Open Source"],
+    ["3", "ByteDance (Doubao/Seedance)", "Beijing, China", "Part of $220B+ parent",
+     "Seedance 2.0 video model competing with OpenAI Sora; massive user base",
+     "Video generation breakthrough; leveraging TikTok/Douyin distribution",
+     "Generative Media / Video"],
+    ["4", "Moonshot AI (Kimi)", "Beijing, China", "$2.5B+",
+     "Kimi K2 model launch; aggressive model iteration cycle",
+     "Fast-moving Chinese AI startup; briefly held top benchmarks",
+     "Foundation Model / Consumer AI"],
+    ["5", "Sarvam AI", "Bengaluru, India", "~$200M+ (est.)",
+     "Industry-leading OCR (84.3%); TTS in 11 Indian languages",
+     "Sovereign AI for India; outperforming Gemini & ChatGPT on Indian language tasks",
+     "Sovereign AI / Indian Languages"],
+    ["6", "CoRover.ai (BharatGPT)", "India", "~$100M+ (est.)",
+     "1B+ users served; India's first LLM-based Gen AI platform",
+     "Conversational AI at massive scale for Indian market",
+     "Conversational AI / Indian Market"],
+    ["7", "Alibaba (Qwen)", "Hangzhou, China", "Part of $200B+ parent",
+     "Qwen models; Qwen-3.5 debut expected soon",
+     "Leveraging Alibaba Cloud for AI distribution; open-source models",
+     "Foundation Model / Cloud AI"],
+    ["8", "Saltlux (LUXIA)", "Seoul, South Korea", "~$500M (est.)",
+     "LUXIA 2.5 model; virtual human video generation (Plunit Studio)",
+     "Korean AI leader competing with Chinese models; NLP specialist",
+     "Foundation Model / NLP"],
+]
+for row in as_companies:
+    add_data_row(ws_as, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_as, r, "BIGGEST BREAKTHROUGHS", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_as, r, bt_h); r += 1
+as_breakthroughs = [
+    ["1", "DeepSeek-R1: RL-Only Reasoning", "DeepSeek (China)", "Jan 2025",
+     "First demonstration of reasoning from pure reinforcement learning without supervised fine-tuning",
+     "Paradigm shift; frontier AI at 1/30th US cost; open-sourced under MIT",
+     "R1-Zero via pure RL; R1 matches OpenAI o1; distilled 32B outperforms o1-mini"],
+    ["2", "DeepSeek-V3.2-Speciale", "DeepSeek (China)", "Dec 2025",
+     "Open-source model matching/surpassing GPT-5; 'Thinking in Tool-Use' innovation",
+     "Gold-medal results IMO, IOI, ICPC, CMO; frontier model under MIT License",
+     "685B params, ~37B active (MoE); Sparse Attention O(L^2)→O(L); 85K+ training tasks"],
+    ["3", "Zhipu GLM-5 Open-Source Top Rank", "Zhipu AI (China)", "Feb 2026",
+     "GLM-5 claimed #1 open-source model on Artificial Analysis benchmarking",
+     "Intensified China's AI model race; shares surged 34%",
+     "Advanced model architecture; pricing raised 30% on demand"],
+    ["4", "ByteDance Seedance 2.0", "ByteDance (China)", "Feb 2026",
+     "Video generation model competing with OpenAI Sora; praised during testing",
+     "China competitive in generative video; leverages massive distribution",
+     "Advanced video generation; competing with Sora quality"],
+    ["5", "Sarvam Vision OCR", "Sarvam AI (India)", "2025",
+     "84.3% accuracy on OCR benchmarks — outperforming Gemini 3 Pro and ChatGPT",
+     "Proved Indian-built AI can beat global leaders on specific tasks",
+     "Specialized for Indian scripts; Bulbul V3 TTS in 11 Indian languages"],
+]
+for row in as_breakthroughs:
+    add_data_row(ws_as, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_as, r, "TOP INVESTORS", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_as, r, inv_h); r += 1
+as_investors = [
+    ["1", "SoftBank Group / Vision Fund", "VC / Growth", "Tokyo, Japan",
+     "OpenAI ($64.6B cumulative ~13% ownership); xAI; Stargate initiative",
+     "All-in bet on AI infrastructure; largest individual AI investor globally",
+     "Led two largest private funding rounds in history"],
+    ["2", "Temasek", "Sovereign Wealth Fund", "Singapore",
+     "AMI Labs; Upscale AI ($200M round); bullish on China AI (B2B focus)",
+     "AI infrastructure and B2B applications; True Light Capital for China innovation",
+     "Invested across US, EU, and Asian AI ecosystems"],
+    ["3", "Premji Invest", "Family Office", "Bengaluru, India",
+     "Upscale AI ($200M Series A); Indian AI ecosystem investments",
+     "Indian AI infrastructure and enterprise applications",
+     "Co-investor in major Indian AI rounds"],
+    ["4", "Alibaba Group", "Strategic / Corporate", "Hangzhou, China",
+     "Qwen models; Alibaba Cloud AI; internal AI investments",
+     "Cloud AI infrastructure; open-source model ecosystem",
+     "Major corporate AI investor in China"],
+    ["5", "Tencent", "Strategic / Corporate", "Shenzhen, China",
+     "AI Lab investments; gaming AI; WeChat AI integrations",
+     "Consumer AI via social/gaming platforms; enterprise AI emerging",
+     "One of China's largest AI corporate investors"],
+    ["6", "Shorooq Partners", "VC", "UAE / Middle East",
+     "AMI Labs ($1B seed participant); MENA AI ecosystem",
+     "Bridging Middle East capital with global AI ventures",
+     "Expanding into frontier AI investments globally"],
+    ["7", "Xora Innovation (Temasek-backed)", "VC", "Singapore",
+     "Upscale AI ($200M Series A); Southeast Asian AI ecosystem",
+     "AI infrastructure and B2B applications in Asia",
+     "Active participant in large Asian AI rounds"],
+]
+for row in as_investors:
+    add_data_row(ws_as, r, row, NUM_COLS_REGIONAL); r += 1
+r += 1
+
+add_section_header(ws_as, r, "HOTSPOTS", NUM_COLS_REGIONAL); r += 1
+add_sub_header(ws_as, r, hs_h); r += 1
+as_hotspots = [
+    ["1", "Beijing", "China",
+     "66.2% of local startup funding goes to AI — highest globally",
+     "Foundation models at 1/30th US cost; massive government support; large talent pool",
+     "DeepSeek, Baidu, ByteDance, Zhipu AI, Moonshot AI",
+     "DeepSeek breakthroughs reshaped global AI cost economics"],
+    ["2", "Shanghai / Greater Bay Area", "China",
+     "Emerging AI powerhouse",
+     "Hardware manufacturing ecosystem; application-layer AI; massive consumer market",
+     "Alibaba AI, Tencent AI Lab, semiconductor ecosystem",
+     "Growing AI applications; connection to hardware supply chain (Shenzhen)"],
+    ["3", "Singapore", "Singapore",
+     "Growing AI investment hub",
+     "World's best AI readiness; government-wide implementation; governance leadership",
+     "AI Singapore, Temasek AI investments, SEA hub",
+     "Leading AI governance frameworks; attracting global AI companies"],
+    ["4", "Bengaluru", "India",
+     "India's #1 AI hub",
+     "Massive talent pool; growing startup ecosystem; enterprise AI services",
+     "Sarvam AI, CoRover.ai, Infosys AI, Wipro AI",
+     "Indian sovereign AI movement; language-specific AI innovation"],
+    ["5", "Tokyo", "Japan",
+     "Rising AI investment center",
+     "Robotics AI; industrial automation; SoftBank HQ; strong R&D culture",
+     "SoftBank, NEC, Preferred Networks, Sakana AI",
+     "SoftBank's massive AI investment strategy; growing AI startup scene"],
+    ["6", "Seoul", "South Korea",
+     "Specialized AI hub",
+     "NLP and conversational AI; Samsung/LG AI divisions; gaming AI",
+     "Saltlux, Samsung AI, Naver, Kakao",
+     "LUXIA 2.5 model; growing Korean AI ecosystem"],
+    ["7", "Hangzhou", "China",
+     "DeepSeek's home city",
+     "Alibaba ecosystem; DeepSeek research lab; e-commerce AI",
+     "DeepSeek, Alibaba, e-commerce AI startups",
+     "DeepSeek's breakthroughs put Hangzhou on the global AI map"],
+]
+for row in as_hotspots:
+    add_data_row(ws_as, r, row, NUM_COLS_REGIONAL); r += 1
+
+auto_width(ws_as, NUM_COLS_REGIONAL)
+
+
 # Freeze panes for all sheets
 for ws in wb.worksheets:
     ws.freeze_panes = "A2"
