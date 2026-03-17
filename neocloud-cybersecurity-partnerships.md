@@ -22,6 +22,7 @@ Neoclouds are specialized cloud providers that offer bare-metal GPU access optim
 | **Nebius** (NASDAQ: NBIS) | Amsterdam, Netherlands | Public; $2B NVIDIA investment | Large data centers in Finland; Missouri expansion underway |
 | **Lambda Labs** | San Francisco, USA | >$2.4B (Series D) | "AI developer cloud"; multibillion-dollar Microsoft partnership |
 | **Crusoe** | San Francisco, USA | $600M Series D | Sustainability-first; stranded natural gas and renewable-powered data centers |
+| **Iren** (NASDAQ: IREN) | Sydney, Australia | Public | $9.7B Microsoft contract; 150,000 GPU target; sustainability-focused with owned infrastructure |
 | **Qubrid AI** | — | Private | NeoCloud platform with whitelabel and reseller programs |
 | **Digi Power X** | — | Private | NeoCloudz GPU-as-a-Service; $20M NVIDIA B300 GPU purchase from Supermicro |
 
@@ -36,9 +37,68 @@ Neoclouds are specialized cloud providers that offer bare-metal GPU access optim
 
 ---
 
-## 2. Why Cybersecurity Partnerships Are Critical
+## 2. Infrastructure Lease Matrix
 
-### 2.1 The Security Imperative
+The following matrix summarizes the data center lease commitments, power capacity, and infrastructure obligations for CoreWeave, Nebius, and Iren — three key neocloud providers with distinct infrastructure strategies.
+
+### 2.1 Capacity and Power Summary
+
+| Metric | CoreWeave (CRWV) | Nebius (NBIS) | Iren (IREN) |
+|--------|:-:|:-:|:-:|
+| **Active Power (end-2025)** | ~590 MW (Q3 2025) | ~170 MW | ~460 MW |
+| **Gross Power (current footprint)** | ~1.3 GW | ~170 MW active; 800 MW-1 GW target end-2026 | 460 MW operational; 2,910 MW grid-connected secured |
+| **Contracted / Planned Power** | 2.9 GW + ~1 GW (Core Scientific acquisition) | >3 GW contracted; targeting 3+ GW end-2026 | 4.5 GW total secured (incl. 1.6 GW Oklahoma campus) |
+| **Number of Sites** | 43 data centers | 7 sites (end-2024); 16 planned by end-2026 | 7 facilities across 2 markets |
+| **GPU Fleet** | Not separately disclosed | Not separately disclosed | 150,000 GPUs target by end-2026 |
+
+### 2.2 Key Lease and Infrastructure Commitments
+
+| Commitment | CoreWeave | Nebius | Iren |
+|-----------|-----------|-------|------|
+| **Largest Lease** | Applied Digital (Ellendale, ND): ~$11B over 15 years, 400 MW across 3 phases | Kansas City (MO): 800 MW campus, 2.5M sq ft, up to 10 buildings on 400 acres | Childress (TX): 750 MW owned campus, 420 acres freehold, 200 MW critical IT load |
+| **Lease Duration** | 10-15 year terms typical | Multi-year colocation and build-to-suit | Owned land (Childress); multi-year leases elsewhere |
+| **Scheduled Lease Payments** | ~$34B total | ~$204.5M operating lease liabilities (June 2025) | Not separately disclosed |
+| **Remaining Performance Obligations (RPO)** | $60.7B (Dec 2025) | Not disclosed | $9.7B (Microsoft contract through 2031) |
+| **Anchor Customer / Guarantor** | NVIDIA ($2B equity investment + $6.3B capacity backstop) | Meta ($3B agreement, Nov 2025); NVIDIA ($2B strategic investment) | Microsoft ($9.7B, 5-year contract; 20% prepayment) |
+
+### 2.3 Data Center Locations
+
+| Region | CoreWeave | Nebius | Iren |
+|--------|-----------|-------|------|
+| **US East** | New Jersey, Virginia, Ohio, Michigan, Pennsylvania, Massachusetts, Georgia | New Jersey (300 MW) | — |
+| **US Central** | Illinois, Indiana | Kansas City, MO (800 MW campus); Oklahoma; Alabama; Minnesota | Oklahoma (1.6 GW campus, ramping 2028) |
+| **US South / West** | Texas (Plano, Austin), Nevada, Arizona, Oregon, Washington, Colorado, California | — | Childress, TX (750 MW campus) |
+| **Canada** | Ontario | — | British Columbia (Mackenzie, Canal Flats, Prince George) |
+| **Europe** | UK (London, Crawley), Spain (Barcelona, Alava), Sweden (Falun) | Finland, Iceland (Keflavik), UK, France | — |
+
+### 2.4 Financial Profile
+
+| Metric | CoreWeave | Nebius | Iren |
+|--------|:-:|:-:|:-:|
+| **Revenue (2025)** | $5.1B | ~$220M (FY 2025, est. from quarterly run-rate) | Ramping; $1.9B annualized target at full Microsoft deployment |
+| **Net Income (2025)** | -$1.2B | Not yet profitable | Not yet profitable |
+| **Total Debt** | ~$11B | ~$986M (June 2025) | Funded via $9.3B raised (prepayments, convertible notes, GPU leasing, financing) |
+| **Cash Position** | ~$1.4B (post-IPO) | $3.7B (end-2025) | Funded by Microsoft 20% prepayment (~$1.94B) |
+| **Capex (2025)** | $20-23B guidance | $4.1B | Implied >$5.8B (Dell purchase agreement for NVIDIA GB300 systems) |
+| **Key Equipment Supplier** | NVIDIA (direct + via partners) | NVIDIA (direct, with early access to future platforms) | Dell Technologies ($5.8B for NVIDIA GB300 systems) |
+
+### 2.5 Lease Matrix Observations
+
+1. **CoreWeave has the largest lease footprint** by a wide margin, with ~$34 billion in scheduled lease payments and $60.7 billion in RPO. Its infrastructure strategy relies heavily on long-term third-party leases (Applied Digital, colocation providers), backstopped by NVIDIA's equity and capacity guarantees. This creates significant operating leverage but also substantial fixed-cost risk if AI demand softens.
+
+2. **Nebius favors an asset-light model** relative to CoreWeave, with operating lease liabilities of only ~$205 million against $3.7 billion in cash. Its strategy combines colocation (Finland, Iceland, France) with build-to-suit facilities (New Jersey, Kansas City). The $2 billion NVIDIA investment and $3 billion Meta agreement provide demand visibility, while the strong cash position limits near-term financing risk.
+
+3. **Iren uniquely owns its primary site** (Childress, TX — 420 acres freehold), reducing lease exposure and providing long-term cost advantages. Its infrastructure model is anchored by the $9.7 billion Microsoft contract with a 20% prepayment that de-risks capex. The Dell equipment procurement agreement ($5.8B) is the largest disclosed GPU hardware commitment among the three providers.
+
+4. **Power strategy divergence**: CoreWeave is the most geographically diversified (43 sites, US + Europe + Canada). Nebius is expanding fastest internationally (Finland, Iceland, UK, France) with a sustainability angle (geothermal in Iceland). Iren has the largest single-site power capacity (750 MW in Childress) and is planning a massive 1.6 GW Oklahoma campus for 2028.
+
+5. **Cybersecurity implications**: Larger and more distributed lease footprints create expanded attack surfaces. CoreWeave's 43-site footprint and Nebius's 16-site target by end-2026 make their CrowdStrike partnerships operationally critical for unified visibility. Iren's concentrated footprint (primarily 2 markets) presents a different risk profile — less distributed surface area but higher single-site concentration risk.
+
+---
+
+## 3. Why Cybersecurity Partnerships Are Critical
+
+### 3.1 The Security Imperative
 
 Neoclouds face a unique security challenge: they must protect some of the most valuable and sensitive digital assets in the world — AI models worth millions in training compute, proprietary training datasets, and enterprise inference pipelines — while operating at a scale and speed that traditional security tooling was not designed for.
 
@@ -50,7 +110,7 @@ Key risk vectors include:
 - **Credential exposure**: 65% of organizations possess unused or unrotated cloud credentials, with 17% tied to critical administrative privileges.
 - **AI-as-insider-threat**: 61% of organizations now identify AI as their top data security risk, with AI systems increasingly granted broad automated access that is rarely audited for least-privilege alignment.
 
-### 2.2 Strategic Rationale for Partnerships vs. Build
+### 3.2 Strategic Rationale for Partnerships vs. Build
 
 Neoclouds are partnering with established cybersecurity vendors rather than building security in-house for several reasons:
 
@@ -61,9 +121,9 @@ Neoclouds are partnering with established cybersecurity vendors rather than buil
 
 ---
 
-## 3. Partnership Landscape
+## 4. Partnership Landscape
 
-### 3.1 CrowdStrike: The Dominant Neocloud Security Partner
+### 4.1 CrowdStrike: The Dominant Neocloud Security Partner
 
 CrowdStrike (NASDAQ: CRWD) has emerged as the primary cybersecurity partner for the neocloud ecosystem, securing partnerships with the two largest neocloud providers.
 
@@ -95,7 +155,7 @@ CrowdStrike (NASDAQ: CRWD) has emerged as the primary cybersecurity partner for 
 - CrowdStrike's Charlotte AI delivers 2x faster detection triage with 50% less compute when running on NVIDIA NIM microservices
 - NVIDIA integration serves as a common thread across the neocloud partnership ecosystem, with CrowdStrike leveraging GPU-accelerated inference for security operations
 
-### 3.2 Wiz: AI Security Posture Management
+### 4.2 Wiz: AI Security Posture Management
 
 Wiz, acquired by Google for $32 billion (completed March 2026), has positioned itself as the leading cloud-native application protection platform (CNAPP) for AI workloads.
 
@@ -105,7 +165,7 @@ Wiz, acquired by Google for $32 billion (completed March 2026), has positioned i
 - **Google Cloud integration**: Now embedded into Google's Unified Security platform alongside Palo Alto Networks, CrowdStrike, and Fortinet
 - **Wiz Integration Network (WIN)**: Launched expanded AI security partnerships and developer tools in 2026, including WIN MCP for ecosystem partner integration
 
-### 3.3 Palo Alto Networks: Network and Platform Security
+### 4.3 Palo Alto Networks: Network and Platform Security
 
 Palo Alto Networks (NASDAQ: PANW) has focused its neocloud-adjacent strategy through hyperscaler partnerships:
 
@@ -113,7 +173,7 @@ Palo Alto Networks (NASDAQ: PANW) has focused its neocloud-adjacent strategy thr
 - **Google Unified Security Recommended program**: Member alongside CrowdStrike, Wiz, and Fortinet (December 2025)
 - **AI workload protection**: Prisma Cloud provides container security, runtime protection, and compliance monitoring applicable to GPU cloud deployments
 
-### 3.4 Compliance and Certification Landscape
+### 4.4 Compliance and Certification Landscape
 
 Beyond vendor partnerships, neoclouds are investing in compliance certifications to meet enterprise requirements:
 
@@ -126,9 +186,9 @@ Beyond vendor partnerships, neoclouds are investing in compliance certifications
 
 ---
 
-## 4. Cybersecurity Vendor Analysis
+## 5. Cybersecurity Vendor Analysis
 
-### 4.1 CrowdStrike (NASDAQ: CRWD)
+### 5.1 CrowdStrike (NASDAQ: CRWD)
 
 **Neocloud exposure**: Highest among cybersecurity vendors. Partnerships with CoreWeave, Nebius, and VAST Data position CrowdStrike as the de facto security layer for GPU cloud infrastructure.
 
@@ -139,7 +199,7 @@ Beyond vendor partnerships, neoclouds are investing in compliance certifications
 
 **Revenue opportunity**: If neocloud security spend represents 3-5% of total neocloud infrastructure revenue, the addressable market grows from ~$1.1-1.8 billion (2026) to $7-12 billion (2031). CrowdStrike's first-mover position in the two largest neoclouds provides a significant share capture opportunity.
 
-### 4.2 Wiz (Google / Alphabet)
+### 5.2 Wiz (Google / Alphabet)
 
 **Neocloud exposure**: Indirect but growing. Wiz's AI-SPM capabilities are platform-agnostic and relevant to any organization running AI workloads, whether on hyperscaler or neocloud infrastructure.
 
@@ -150,7 +210,7 @@ Beyond vendor partnerships, neoclouds are investing in compliance certifications
 
 **Considerations**: Post-acquisition integration risk. Google may prioritize Wiz for GCP-native workloads, potentially limiting its role in neocloud environments that compete with Google Cloud.
 
-### 4.3 Palo Alto Networks (NASDAQ: PANW)
+### 5.3 Palo Alto Networks (NASDAQ: PANW)
 
 **Neocloud exposure**: Limited direct partnerships. Palo Alto's strategy has focused on hyperscaler alliances (Google, AWS) rather than neocloud-specific deals.
 
@@ -158,21 +218,21 @@ Beyond vendor partnerships, neoclouds are investing in compliance certifications
 
 ---
 
-## 5. Investment Implications
+## 6. Investment Implications
 
-### 5.1 For Neocloud Investors
+### 6.1 For Neocloud Investors
 
 - **Security as competitive moat**: Neoclouds with established cybersecurity partnerships (CoreWeave, Nebius, Crusoe) are better positioned to win enterprise contracts that require SOC 2 / ISO 27001 compliance and recognized security tooling
 - **Cost structure impact**: Cybersecurity partnerships add operating expense (licensing, integration, compliance auditing) but enable higher-value enterprise contracts with longer durations and lower churn
 - **Differentiation risk**: As CrowdStrike partners with multiple neoclouds, security becomes table stakes rather than a differentiator — neoclouds must find other dimensions (price, performance, sustainability, geography) for competitive advantage
 
-### 5.2 For Cybersecurity Investors
+### 6.2 For Cybersecurity Investors
 
 - **CrowdStrike is the clear winner** in the neocloud security category. Its partnerships with CoreWeave and Nebius establish a dominant position in a rapidly growing infrastructure segment. The neocloud channel is incremental to CrowdStrike's existing enterprise and hyperscaler business.
 - **Wiz/Alphabet** benefits from AI-native security capabilities but faces integration and prioritization questions post-acquisition. The AI-SPM category is nascent and could become a significant growth driver if AI governance regulation accelerates.
 - **Palo Alto Networks** has limited direct neocloud exposure but retains optionality given its platform breadth and existing hyperscaler partnerships.
 
-### 5.3 Key Risks
+### 6.3 Key Risks
 
 - **Neocloud concentration risk**: The sector is still nascent, with heavy dependence on NVIDIA GPU supply and a small number of large customers. A slowdown in AI infrastructure spending would reduce cybersecurity spend proportionally.
 - **Hyperscaler response**: AWS, Azure, and GCP could undercut neoclouds on pricing and offer integrated native security, reducing demand for third-party cybersecurity partnerships.
@@ -181,7 +241,7 @@ Beyond vendor partnerships, neoclouds are investing in compliance certifications
 
 ---
 
-## 6. Conclusion
+## 7. Conclusion
 
 The neocloud-cybersecurity partnership landscape is consolidating rapidly around CrowdStrike as the dominant platform security vendor, with Wiz (via Google) emerging as the leading AI-specific security posture tool. This dynamic creates a clear investment thesis:
 
