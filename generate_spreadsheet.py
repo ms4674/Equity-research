@@ -1193,12 +1193,325 @@ for r_idx, row_data in enumerate(gtc_rows, start=1):
 ws7.column_dimensions["A"].width = 32
 ws7.column_dimensions["B"].width = 110
 
+# ═══════════════════════════════════════════════════════════════
+# SHEET 8 — OpenClaw Skills & Agent Orchestration
+# ═══════════════════════════════════════════════════════════════
+ws8 = wb.create_sheet("Skills & Orchestration")
+
+skills_fill = PatternFill(start_color="DAEEF3", end_color="DAEEF3", fill_type="solid")
+
+sk_headers = ["Topic", "Details"]
+
+sk_rows = [
+    sk_headers,
+    # ── What Are Skills ──
+    ["— WHAT ARE SKILLS —", ""],
+    [
+        "Definition",
+        "Self-contained extensions that give OpenClaw agents new capabilities.\n"
+        "Each skill is a directory containing a SKILL.md file with YAML frontmatter + markdown instructions.\n"
+        "Skills teach AI how to think about tasks and use tools autonomously — they encode reusable behavior, prompts, workflows, and tool usage.\n"
+        "Built on the AgentSkills open specification (adopted by Claude Code, Cursor, GitHub Copilot).",
+    ],
+    [
+        "Skills vs MCP vs Plugins",
+        "SKILLS = 'Expertise' — Markdown-based instructions that teach agents how to reason through tasks and use tools.\n"
+        "MCP = 'Plumbing' — Model Context Protocol connections to external tools/APIs via structured interfaces.\n"
+        "PLUGINS = Packaged bundles of skills + commands + tool connections for specific roles (Sales, Legal, Finance).\n\n"
+        "Skills and MCP are complementary: MCP provides tool access; skills provide the knowledge to use those tools effectively.",
+    ],
+    [
+        "SKILL.md Format",
+        "Each skill directory must contain a SKILL.md file:\n\n"
+        "Required frontmatter fields:\n"
+        "  • name: 1-64 chars, lowercase alphanumeric + hyphens\n"
+        "  • description: 1-1024 chars, describes purpose and trigger conditions\n\n"
+        "Optional fields:\n"
+        "  • license: License reference\n"
+        "  • compatibility: Environment requirements (max 500 chars)\n"
+        "  • metadata: Key-value pairs (author, version, etc.)\n"
+        "  • allowed-tools: Space-delimited list of pre-approved tools\n\n"
+        "Markdown body provides detailed instructions, examples, and tool usage patterns.",
+    ],
+    [
+        "Skill Loading Precedence",
+        "Skills are loaded from three locations (highest priority first):\n"
+        "  1. Workspace skills: /skills (project-specific)\n"
+        "  2. Managed/local skills: ~/.openclaw/skills (user-wide)\n"
+        "  3. Bundled skills: shipped with the install (defaults)\n\n"
+        "Hot-reloading supported — no agent restart required when skills change.\n"
+        "Plugin skills loaded via openclaw.plugin.json.",
+    ],
+    # ── ClawHub Ecosystem ──
+    ["— CLAWHUB SKILL ECOSYSTEM —", ""],
+    [
+        "ClawHub Overview",
+        "OpenClaw's skill marketplace hosting 5,700+ community-built skills.\n"
+        "1.5M+ total downloads across all skills.\n"
+        "All skills undergo VirusTotal security scanning before distribution.\n"
+        "Install via: /skills install @author/skill-name",
+    ],
+    [
+        "Skill Categories\n(11 categories, 3,286+ skills)",
+        "Category                    | Skills  | Share\n"
+        "AI/ML (model integration,   | 1,588   | 48.3%\n"
+        "  NLP, embeddings, RAG)     |         |\n"
+        "Utility (file ops, storage, | 1,520   | 46.3%\n"
+        "  system utilities)         |         |\n"
+        "Development (coding, git,   |   976   | 29.7%\n"
+        "  debugging, DevOps)        |         |\n"
+        "Productivity (docs, tasks,  |   822   | 25.0%\n"
+        "  workflow optimization)    |         |\n"
+        "Web (browser automation,    |   637   | 19.4%\n"
+        "  web scraping)             |         |\n"
+        "Science (data analysis,     |   598   | 18.2%\n"
+        "  scientific computing)     |         |\n"
+        "Media (audio/video          |   365   | 11.1%\n"
+        "  processing)               |         |\n"
+        "Social (Twitter, Discord,   |   364   | 11.1%\n"
+        "  Slack, Telegram)          |         |\n"
+        "Finance (stock analysis,    |   311   |  9.5%\n"
+        "  crypto, trading)          |         |\n"
+        "Location (maps, weather,    |   153   |  4.7%\n"
+        "  geolocation)              |         |\n"
+        "Notes: Categories overlap; a skill can belong to multiple categories.",
+    ],
+    [
+        "Top Downloaded Skills",
+        "Rank | Skill               | Downloads | Description\n"
+        "  1  | Capability Evolver  |  35,581   | AI self-evolution engine\n"
+        "  2  | Wacli               |  16,415   | Versatile CLI tool\n"
+        "  3  | ByteRover           |  16,004   | Multi-purpose task handler\n"
+        "  4  | Self-Improving Agent|  15,962   | Self-improvement (132 stars, highest-rated)\n"
+        "  5  | ATXP                |  14,453   | Advanced utility tool\n"
+        "  6  | Gog                 |  14,313   | Google Workspace integration",
+    ],
+    [
+        "Core Skill Examples\n(commonly used)",
+        "Web & Search: web-search, news-search, url-reader, browser\n"
+        "Code & Dev: code-runner, git, npm-search, code-review\n"
+        "File Management: file-manager, pdf-reader, csv-analyzer, text-extractor\n"
+        "Productivity: todo-list, note-taker, reminder, calendar, email-drafter\n"
+        "Automation: json-transformer, webhook-trigger, cron-scheduler, http-request\n"
+        "DevOps: 212+ skills | Image & Video: 60+ | Smart Home: 56+\n\n"
+        "Bundled skills (ship with install): gemini (coding + search), nano-banana-pro (image gen), peekaboo",
+    ],
+    [
+        "Security Concerns",
+        "January 2026 audit found 1,184 malicious skills on ClawHub.\n"
+        "All skills now undergo VirusTotal scanning before distribution.\n"
+        "NVIDIA OpenShell adds kernel-level policy enforcement for skill execution.\n"
+        "Cryptographic MCP signing (ECDSA P-256) added to transport layer.",
+    ],
+    # ── Agent Orchestration ──
+    ["— WHAT ARE AGENT ORCHESTRATORS —", ""],
+    [
+        "Definition",
+        "Agent orchestration in OpenClaw refers to the systems and patterns for coordinating multiple AI agents "
+        "to work together on complex workflows.\n\n"
+        "OpenClaw manages orchestration through a session-based model where every conversation context (DMs, group chats, "
+        "cron jobs, sub-agents) gets its own isolated session with dedicated state, transcript, model overrides, and send policy.\n\n"
+        "Session keys use hierarchical colon-delimited namespaces (e.g., agent:{agentId}:subagent:{uuid}) "
+        "encoding routing context — channel, chat type, and thread parentage derived directly from parsed segments.",
+    ],
+    [
+        "Core Orchestration Tools",
+        "OpenClaw provides four session tools for agent-to-agent coordination:\n\n"
+        "1. sessions_list — Situational awareness: shows all active sessions with metadata (model, status, last messages), "
+        "labels, and session keys.\n\n"
+        "2. sessions_history — Context sharing: allows agents to read another session's full transcript. "
+        "Enables context isolation while sharing deep research.\n\n"
+        "3. sessions_send — Action trigger: sends messages into other sessions. Supports 'ping-pong' "
+        "(wait for response) or fire-and-forget patterns.\n\n"
+        "4. sessions_spawn — Sub-agent creation: spawns background agent runs with configurable model, "
+        "thinking mode, and timeout. Non-blocking (returns run ID immediately).",
+    ],
+    [
+        "Sub-Agent Architecture",
+        "Sub-agents are background agent runs spawned from existing runs, operating in isolated sessions.\n\n"
+        "Key mechanics:\n"
+        "  • Non-blocking: spawn returns a run ID immediately\n"
+        "  • Isolated by default with optional sandboxing\n"
+        "  • Sub-agents do NOT receive session tools by default (prevents misuse)\n"
+        "  • On completion, results announced back to requester chat channel\n"
+        "  • Delivery: direct agent delivery first → queue routing fallback → exponential backoff\n\n"
+        "Configuration parameters:\n"
+        "  • maxSpawnDepth: Sub-agents spawning children (default: 1)\n"
+        "  • maxChildrenPerAgent: Max active children per session (default: 5)\n"
+        "  • maxConcurrent: Global concurrency cap (default: 8)\n"
+        "  • allowAgents: Whitelist for spawn permissions\n"
+        "  • Tool access: allow/deny lists (deny takes precedence)",
+    ],
+    # ── Proactive Execution ──
+    ["— PROACTIVE / AUTONOMOUS EXECUTION —", ""],
+    [
+        "Heartbeat System",
+        "A recurring 'pulse' running at fixed intervals (default: 30 minutes, configurable) within the main conversation session.\n\n"
+        "How it works:\n"
+        "  • Agent checks a HEARTBEAT.md checklist: 'Anything need attention right now?'\n"
+        "  • Batches multiple lightweight checks efficiently in one turn\n"
+        "  • Context-aware: uses full chat history for intelligent decisions\n"
+        "  • Briefly blocks new user messages while running\n\n"
+        "Best for: Short, context-aware periodic checks (seconds to ~1 minute) — monitoring, status updates, proactive alerts.\n\n"
+        "Cost: $0.10-0.27 per heartbeat with expensive models; $0-90/month depending on interval and model.",
+    ],
+    [
+        "Cron Scheduler",
+        "Flexible scheduler supporting Unix cron-style expressions, manageable via CLI or chat.\n\n"
+        "Capabilities:\n"
+        "  • Precise timing: 'every day at 9 AM', intervals, or one-time triggers\n"
+        "  • Isolated mode: separate sub-agent session (non-blocking)\n"
+        "  • Main session mode: queues to next heartbeat\n"
+        "  • Can use different/cheaper models per job\n"
+        "  • Per-job webhook delivery\n"
+        "  • Deterministic auto-stagger: prevents simultaneous LLM provider hits\n"
+        "  • Token usage telemetry per cron run\n\n"
+        "Best for: Long-running tasks (reports, analysis, file processing), precise scheduling, standalone automations.",
+    ],
+    [
+        "Heartbeat vs Cron\nDecision Matrix",
+        "Use HEARTBEAT when:\n"
+        "  • Task needs recent conversation context\n"
+        "  • Quick periodic checks (< 1 minute)\n"
+        "  • Monitoring that benefits from chat awareness\n"
+        "  • Batching multiple small checks\n\n"
+        "Use CRON when:\n"
+        "  • Task is long-running (won't freeze conversations)\n"
+        "  • Need exact, drift-free timing\n"
+        "  • Want to use cheaper models for background work\n"
+        "  • One-shot reminders or standalone jobs\n"
+        "  • Task doesn't need conversation context",
+    ],
+    # ── Orchestration Patterns ──
+    ["— DEPLOYMENT & ORCHESTRATION PATTERNS —", ""],
+    [
+        "Pattern 1:\nOne Agent Per Person",
+        "Individual persistent AI assistants for each person (typically executives).\n\n"
+        "Cost: $300-500/month per agent in API fees.\n"
+        "100-person company: $30,000-50,000/month before governance.\n\n"
+        "Best for: Small executive teams (10-20 people) with dedicated IT support.\n\n"
+        "Risk: HIGHEST security exposure — each agent holds persistent credentials for email, files, tools.\n"
+        "135,000+ exposed instances found as of Feb 2026.",
+    ],
+    [
+        "Pattern 2:\nOne Agent Per Function",
+        "8-12 specialized agents serving specific business functions.\n\n"
+        "Cost: $500-2,000/month total (order of magnitude cheaper than per-person).\n"
+        "Example: Single WhatsApp customer support agent = $10/month.\n\n"
+        "Best for: Most businesses — 'where the economics actually work.'\n\n"
+        "Advantage: Central control of scope, permissions, credentials.\n"
+        "Agents isolated in containers with no credential sharing.",
+    ],
+    [
+        "Pattern 3:\nAgent Teams",
+        "Coordinated multi-agent crews on complex workflows.\n\n"
+        "Cost: $200-3,000+/month depending on complexity.\n"
+        "Example: 5-agent content pipeline ~$200/month.\n\n"
+        "WARNING: 3 overlapping agents cost $287/mo vs. $45/mo for one optimized agent (3.5× overhead).\n"
+        "Most people don't need multi-agent architectures.\n\n"
+        "Roles: Researcher → Writer → Reviewer → Publisher.\n"
+        "Risk: Compromised agents can poison downstream agents.",
+    ],
+    [
+        "Pattern 4:\nHierarchical\n(Chief-of-Staff)",
+        "A coordinator agent synthesizes outputs from specialist agents.\n\n"
+        "Real deployment example:\n"
+        "  • Night shift (4-7:30 AM): 6 autonomous specialists run independently\n"
+        "    — Argus (research), Spark (marketing), Pulse (fitness),\n"
+        "      Helix (health), Ferret (biz scouting), Atlas (product roadmap)\n"
+        "  • Morning (8 AM): Chief-of-Staff reads all outputs, synthesizes morning brief\n"
+        "  • Structure mimics small company with departments + central decision-maker\n\n"
+        "Real cost: 7-agent setup running under $15/month total (Telegram-based).",
+    ],
+    [
+        "Pattern 5:\nEvent-Driven (Reactive)",
+        "Agents subscribe to event streams and act on triggers.\n\n"
+        "Best for: CI/CD pipelines, monitoring, alert response.\n"
+        "Agents react to webhooks, cron events, or inter-agent messages.\n"
+        "No central coordinator — agents self-organize around events.",
+    ],
+    # ── Real-World Deployments ──
+    ["— REAL-WORLD DEPLOYMENT DATA —", ""],
+    [
+        "7-Agent Personal Setup",
+        "Platform: Telegram groups.\n"
+        "Agents: Research, Marketing, Health, Business Scouting, Product Roadmap, Fitness, Chief-of-Staff.\n"
+        "Total cost: Under $15/month.\n"
+        "Architecture: Hierarchical with night-shift autonomous specialists + morning synthesis.\n"
+        "Source: Real production deployment documented on Medium (2026).",
+    ],
+    [
+        "10-Agent Team Template",
+        "Open-source template: raulvidis/openclaw-multi-agent-kit.\n"
+        "Platform: Telegram supergroup with topic channels for team organization.\n"
+        "Structure: Lead agent → 3 specialized teams (Research, Build, Market).\n"
+        "Features: Structured escalation chains, shared context via markdown files.\n"
+        "Communication: Topic-based Telegram channels.",
+    ],
+    [
+        "Customer Support Bot",
+        "Platform: WhatsApp.\n"
+        "Cost: $10/month API fees.\n"
+        "Self-hosted: 12-month TCO = $3,740 (including 4-8 hrs setup, maintenance, incident response).\n"
+        "Managed hosting: 12-month TCO = $708.\n"
+        "Managed hosting = 5.3× cheaper than self-hosted when accounting for all costs.",
+    ],
+    [
+        "Enterprise Per-Function\nDeployment",
+        "8-12 functional agents covering: customer support, sales, content, code review, etc.\n"
+        "Cost: $500-2,000/month total.\n"
+        "Agents isolated in Docker containers.\n"
+        "Centralized permission and credential management.\n"
+        "One order of magnitude cheaper than per-person model.",
+    ],
+    # ── Cost & Usage Data ──
+    ["— COST & USAGE SUMMARY —", ""],
+    [
+        "Single Optimized Agent",
+        "Cost: ~$45/month.\n"
+        "Covers most individual automation needs.\n"
+        "Recommended before considering multi-agent setup.",
+    ],
+    [
+        "Three Poorly Coordinated\nAgents",
+        "Cost: ~$287/month (3.5× a single optimized agent).\n"
+        "Overhead from: duplicated work, inter-agent communication, context window redundancy.\n"
+        "Lesson: Multi-agent only worthwhile for truly parallel, simultaneous workflows.",
+    ],
+    [
+        "Ecosystem Metrics\n(March 2026)",
+        "ClawHub Skills: 5,700+ (3,286+ indexed across 11 categories)\n"
+        "Total Skill Downloads: 1.5M+\n"
+        "GitHub Stars: 322K+ (250K in 60 days)\n"
+        "npm Downloads: 2.2M/week\n"
+        "Contributors: 360+\n"
+        "Releases: 68\n"
+        "Enterprise Users: 65% of total user base\n"
+        "Global Users: 300,000-400,000",
+    ],
+]
+
+for r_idx, row_data in enumerate(sk_rows, start=1):
+    for c_idx, value in enumerate(row_data, start=1):
+        ws8.cell(row=r_idx, column=c_idx, value=value)
+    if r_idx == 1:
+        style_header(ws8, r_idx, len(sk_headers))
+    elif row_data[0].startswith("—"):
+        style_row(ws8, r_idx, len(sk_headers), fill=category_fill, font=category_font)
+    else:
+        style_row(ws8, r_idx, len(sk_headers))
+
+ws8.column_dimensions["A"].width = 32
+ws8.column_dimensions["B"].width = 110
+
 # Move sheets into desired order:
 # 1. OpenClaw vs Claude Cowork
-# 2. NVIDIA GTC – OpenClaw  (new)
-# 3-6. Original sheets
-wb.move_sheet(ws6, offset=-5)  # OpenClaw vs Claude Cowork → first
-wb.move_sheet(ws7, offset=-4)  # NVIDIA GTC → second
+# 2. NVIDIA GTC – OpenClaw
+# 3. Skills & Orchestration (new)
+# 4-8. Original sheets
+wb.move_sheet(ws6, offset=-6)  # OpenClaw vs Claude Cowork → first
+wb.move_sheet(ws7, offset=-5)  # NVIDIA GTC → second
+wb.move_sheet(ws8, offset=-4)  # Skills & Orchestration → third
 
 # ── Save ──
 output_path = "/workspace/OpenClaw_Architecture_Comparison.xlsx"
