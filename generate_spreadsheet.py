@@ -633,6 +633,13 @@ deep_rows = [
     ["Enterprise (100 people)", "$30,000-50,000/month (per-person model with Claude Opus)."],
     ["Hidden Costs", "System prompt token burn: $5-30/mo | Heartbeat checks: $0-90/mo | Maintenance: 2-5 hrs/mo"],
     ["Free Option", "Oracle Cloud Always Free tier (24 GB RAM)."],
+    ["— NVIDIA GTC 2026 VALIDATION —", ""],
+    ["NVIDIA Partnership", "Jensen Huang (GTC 2026): \"Every single company in the world today has to have an OpenClaw strategy.\" Positioned as \"the operating system for personal AI.\""],
+    ["NemoClaw Stack", "NVIDIA's enterprise wrapper: OpenClaw + Nemotron models + OpenShell sandboxed runtime. Apache 2.0 license. Single-command install. Production-ready in <1 hour."],
+    ["Nemotron 3 Super 120B", "Top open model on PinchBench (85.6%), only 1.3% behind Claude Sonnet 4.6 (86.9%). 12B active params (MoE). 1M token context. 42,855 tok/s on DGX Spark."],
+    ["Hardware Ecosystem", "DGX Spark (128 GB, 1 PFLOP, desktop form) → DGX Station (748 GB, enterprise) → RTX PCs (Nemotron Nano 4B). Full upgrade path for local OpenClaw inference."],
+    ["Enterprise Partners", "Adobe, Salesforce, SAP, ServiceNow, Siemens, CrowdStrike, Atlassian, Palantir — all building with NVIDIA Agent Toolkit / NemoClaw."],
+    ["Adoption (GTC Data)", "250K+ GitHub stars in 60 days. 2.2M weekly npm downloads. 65% of users in enterprise sectors. Surpassed Linux adoption speed (3 weeks vs. 30 years)."],
     ["— KEY DISTINCTION —", ""],
     ["Not a Coding Agent", "OpenClaw is a general-purpose personal assistant, NOT a coding agent like Devin or Claude Code. It automates tasks like email, calendar, smart home, and workflows across messaging platforms."],
 ]
@@ -956,8 +963,242 @@ ws6.column_dimensions["B"].width = 44
 ws6.column_dimensions["C"].width = 44
 ws6.column_dimensions["D"].width = 44
 
-# Move the new sheet to be the first sheet
-wb.move_sheet(ws6, offset=-5)
+# ═══════════════════════════════════════════════════════════════
+# SHEET 7 — NVIDIA GTC 2026: OpenClaw & NemoClaw
+# ═══════════════════════════════════════════════════════════════
+ws7 = wb.create_sheet("NVIDIA GTC – OpenClaw")
+
+nvidia_fill = PatternFill(start_color="76B900", end_color="76B900", fill_type="solid")
+nvidia_header_font = Font(name="Calibri", bold=True, size=11, color="FFFFFF")
+
+gtc_headers = ["Topic", "Details"]
+
+gtc_rows = [
+    gtc_headers,
+    # ── Jensen Huang Keynote ──
+    ["— JENSEN HUANG KEYNOTE HIGHLIGHTS —", ""],
+    [
+        "Strategic Positioning",
+        "Jensen Huang declared: \"Every single company in the world today has to have an OpenClaw strategy.\"\n"
+        "Positioned OpenClaw as \"the operating system for personal AI\" — comparable to Windows, Linux, and HTML.\n"
+        "NVIDIA views OpenClaw as a foundational layer for the emerging AI agent ecosystem.",
+    ],
+    [
+        "Adoption Trajectory",
+        "OpenClaw surpassed Linux's adoption curve — reaching equivalent milestones in 3 weeks vs. Linux's 30-year trajectory.\n"
+        "250,000+ GitHub stars in 60 days (surpassing React's 10-year record).\n"
+        "2.2 million weekly npm downloads.\n"
+        "Described by Huang as \"the most popular open source project in the history of humanity.\"",
+    ],
+    [
+        "Enterprise Penetration",
+        "65% of OpenClaw users are in enterprise sectors.\n"
+        "Gartner projects 40% of enterprise applications will embed task-specific AI agents by end of 2026 (up from <5% in 2025).\n"
+        "Global agentic AI market: $7.6B (2025) → projected $199B by 2034.",
+    ],
+    # ── NemoClaw Stack ──
+    ["— NEMOCLAW: NVIDIA'S OPENCLAW STACK —", ""],
+    [
+        "What Is NemoClaw",
+        "An enterprise-grade, open-source (Apache 2.0) software stack that layers security, privacy, and runtime controls on top of OpenClaw.\n"
+        "Pre-packaged: OpenClaw + NVIDIA Nemotron models + NVIDIA OpenShell runtime — installable with a single command.\n"
+        "Enables production-ready agent deployment in under 1 hour.\n"
+        "GitHub: github.com/NVIDIA/NemoClaw (alpha status as of March 2026).",
+    ],
+    [
+        "NemoClaw Components",
+        "1. OpenClaw: Core AI agent framework (task execution, messaging, MCP skills).\n"
+        "2. NVIDIA OpenShell: Secure sandboxed runtime with kernel-level isolation (Landlock LSM, seccomp, bubblewrap).\n"
+        "3. Nemotron Models: Open models optimized for agentic workloads (see below).\n"
+        "4. Inference Routing: Intercepts all model calls to enforce privacy & cost constraints. Supports local vLLM, NIM, or NVIDIA cloud.",
+    ],
+    [
+        "NemoClaw Inference Profiles",
+        "Three profiles available:\n"
+        "• default: NVIDIA cloud via integrate.api.nvidia.com (Nemotron-3-Super-120B)\n"
+        "• nim-local: Local NVIDIA NIM service deployment\n"
+        "• vllm: Local vLLM development option\n"
+        "All profiles support policy-based cost and privacy constraints.",
+    ],
+    # ── OpenShell Security ──
+    ["— NVIDIA OPENSHELL SECURITY RUNTIME —", ""],
+    [
+        "Architecture",
+        "Open-sourced March 2026 under Apache 2.0.\n"
+        "Provides sandboxed execution between AI agents and the host OS.\n"
+        "Agents (OpenClaw, Claude Code, Codex) run unmodified inside OpenShell — zero code changes required.",
+    ],
+    [
+        "Static Policies\n(locked at sandbox creation)",
+        "• Filesystem: Read-only / read-write directory lists enforced via Landlock LSM kernel-level isolation.\n"
+        "• Process: Agent runs as unprivileged user (defaults to 'sandbox'); rejects root. Seccomp filters block dangerous syscalls.\n"
+        "• Landlock compatibility modes: 'best_effort' or 'hard_requirement'.",
+    ],
+    [
+        "Dynamic Policies\n(hot-reloadable at runtime)",
+        "• Network: Per-binary control (which executables can reach which endpoints). Protocol inspection for REST with TLS termination.\n"
+        "• Per-method control: Governs specific API calls or shell functions.\n"
+        "• Per-endpoint control: Limits traffic to specific IPs/domains.\n"
+        "• Per-binary control: Restricts which executables (git, curl, python) agents can invoke.",
+    ],
+    [
+        "Audit & Compliance",
+        "All agent actions logged in audit trails for compliance and debugging.\n"
+        "Developed in response to documented OpenClaw vulnerabilities (indirect prompt injection, malicious payloads in customization hub).\n"
+        "Declarative YAML policy configuration.",
+    ],
+    # ── Nemotron Models ──
+    ["— NEMOTRON MODEL FAMILY FOR OPENCLAW —", ""],
+    [
+        "Nemotron 3 Super 120B",
+        "Parameters: 120B total, only 12B active (MoE architecture).\n"
+        "Architecture: Hybrid Mamba-Transformer Mixture-of-Experts.\n"
+        "Context Window: 1M tokens native.\n"
+        "PinchBench Score: 85.6% (top open model; competitive with Claude Sonnet 4.6 at 86.9%).\n"
+        "Throughput: 5× higher than predecessor; 42,855 tok/s prompt processing on DGX Spark.\n"
+        "Generation: 18 tok/s on DGX Spark (128K input tokens).\n"
+        "End-to-end latency: 99.4s for 128K token input on DGX Spark.\n"
+        "License: Fully open (weights, datasets, recipes).",
+    ],
+    [
+        "Nemotron 3 Nano 4B",
+        "Parameters: 4B.\n"
+        "Target: Resource-constrained RTX AI PCs, games, and apps.\n"
+        "Strong instruction-following and tool use with minimal VRAM.\n"
+        "Context Window: 131,072 tokens.\n"
+        "Designed for local agents on consumer hardware.",
+    ],
+    [
+        "Nemotron Ultra 253B",
+        "Parameters: 253B.\n"
+        "Context Window: 131,072 tokens; 4,096 max output.\n"
+        "For enterprise-grade deep reasoning and complex multi-agent tasks.",
+    ],
+    [
+        "Nemotron Super 49B v1.5",
+        "Parameters: 49B.\n"
+        "Context Window: 131,072 tokens; 4,096 max output.\n"
+        "Mid-tier option balancing performance and resource needs.",
+    ],
+    # ── PinchBench ──
+    ["— PINCHBENCH: OPENCLAW AGENT BENCHMARK —", ""],
+    [
+        "What Is PinchBench",
+        "The first benchmarking system specifically designed for OpenClaw agents.\n"
+        "23 tasks across 8 categories: long-term memory retrieval, inbox triage, spreadsheet processing, scheduling, and more.\n"
+        "Tests real-world agentic task completion, not just code generation.",
+    ],
+    [
+        "Leaderboard\n(Success Rate, 2026)",
+        "1. Claude Sonnet 4.6:           86.9%\n"
+        "2. GPT-5.4:                     86.4%\n"
+        "3. Claude Opus 4.6:             86.3%\n"
+        "4. Nemotron-3-Super-120B:       85.6%  ← Top open model\n"
+        "5. Claude Opus 4.5:             85.4%\n"
+        "(Gemini 3 Flash Preview reported at 95.1% in earlier runs)",
+    ],
+    [
+        "Key Insight",
+        "NVIDIA's open Nemotron-3-Super-120B trails the best proprietary model (Claude Sonnet 4.6) by only 1.3 percentage points.\n"
+        "This near-parity enables fully local, private OpenClaw deployments without significant quality loss.\n"
+        "Cost: $0 ongoing API fees vs. $5-420/mo for cloud models.",
+    ],
+    # ── Hardware Platforms ──
+    ["— NVIDIA HARDWARE FOR OPENCLAW —", ""],
+    [
+        "DGX Spark\n(Desktop AI Supercomputer)",
+        "GPU: NVIDIA Blackwell (5th gen Tensor Cores, 4th gen RT Cores).\n"
+        "CPU: 20-core Arm (10× Cortex-X925 + 10× Cortex-A725).\n"
+        "Memory: 128 GB LPDDR5x unified (273 GB/s bandwidth).\n"
+        "Storage: 1 TB or 4 TB NVMe M.2.\n"
+        "AI Compute: Up to 1,000 TOPS; 1 PFLOP at FP4 with sparsity.\n"
+        "CUDA Cores: 6,144.\n"
+        "Form Factor: 150mm × 150mm × 50.5mm, 1.2 kg.\n"
+        "Power: 240W external (140W GPU TDP).\n"
+        "Model Support: Up to 200B parameters (405B in dual-Spark config).\n"
+        "Concurrency: 4 simultaneous subagents with ~3× throughput increase at 2.6× time.",
+    ],
+    [
+        "DGX Station\n(Enterprise AI Supercomputer)",
+        "GB300 variant: 748 GB coherent memory.\n"
+        "Targets enterprise multi-agent workloads.\n"
+        "Supports the full Nemotron model family including Ultra 253B.\n"
+        "Designed for always-on, server-class OpenClaw deployments.",
+    ],
+    [
+        "RTX PRO Workstations\n& GeForce RTX PCs",
+        "Nemotron 3 Nano 4B runs on consumer RTX hardware.\n"
+        "Dell Pro Max systems with GB10 (128 GB unified memory) available.\n"
+        "Entry point for local OpenClaw agents without enterprise hardware.",
+    ],
+    # ── Enterprise Partners ──
+    ["— ENTERPRISE PARTNERS (AGENT TOOLKIT) —", ""],
+    [
+        "Tier-1 Partners",
+        "Adobe, Salesforce, SAP, ServiceNow, Siemens, CrowdStrike, Atlassian, Palantir.\n"
+        "All building with the NVIDIA Agent Toolkit which includes NemoClaw.\n"
+        "Focus: secure, enterprise-grade agentic AI deployments.",
+    ],
+    # ── Cost Impact ──
+    ["— COST IMPACT —", ""],
+    [
+        "Vera Rubin Platform",
+        "NVIDIA's next-gen inference platform delivers 40% lower cost-per-token vs. Blackwell deployments.\n"
+        "Directly reduces OpenClaw operational costs for cloud-inference users.",
+    ],
+    [
+        "Nemotron Cost Advantage",
+        "Nemotron models reduce query costs by >50% vs. comparable proprietary models (per NVIDIA).\n"
+        "Local inference: $0 ongoing API costs (hardware amortization only).\n"
+        "Cloud Nemotron via NVIDIA API: significantly cheaper than Claude/GPT equivalents.",
+    ],
+    [
+        "TCO Comparison:\nLocal NemoClaw on DGX Spark\nvs. Cloud OpenClaw",
+        "Cloud OpenClaw (Claude Opus): $300-500/mo per agent in API fees.\n"
+        "Local NemoClaw (DGX Spark): Hardware one-time cost; $0/mo API fees.\n"
+        "Break-even: DGX Spark investment pays back in months for heavy users.\n"
+        "Quality gap: Only 1.3% PinchBench difference (85.6% vs. 86.9%).",
+    ],
+    # ── Summary ──
+    ["— SUMMARY: GTC 2026 SIGNIFICANCE FOR OPENCLAW —", ""],
+    [
+        "Strategic Takeaway",
+        "NVIDIA's GTC 2026 announcements fundamentally elevate OpenClaw from a community project to an enterprise-grade platform:\n\n"
+        "1. VALIDATION: Jensen Huang positioning OpenClaw as essential as Windows/Linux legitimizes it for enterprise.\n"
+        "2. SECURITY: OpenShell/NemoClaw solves the #1 enterprise blocker (security concerns) with kernel-level sandboxing.\n"
+        "3. LOCAL INFERENCE: Nemotron 3 Super 120B achieves near-parity with Claude/GPT at zero API cost.\n"
+        "4. HARDWARE ECOSYSTEM: DGX Spark ($3K-$5K est.) to DGX Station creates a clear hardware upgrade path.\n"
+        "5. ENTERPRISE PARTNERS: Adobe, Salesforce, SAP, ServiceNow adoption signals mainstream enterprise readiness.\n"
+        "6. COST REDUCTION: Vera Rubin platform + Nemotron models compress costs by 40-50%+.\n\n"
+        "Net effect: OpenClaw is now positioned as the default AI agent runtime with NVIDIA's full-stack backing, "
+        "comparable to how Linux became the default server OS with Red Hat/IBM enterprise support.",
+    ],
+]
+
+for r_idx, row_data in enumerate(gtc_rows, start=1):
+    for c_idx, value in enumerate(row_data, start=1):
+        ws7.cell(row=r_idx, column=c_idx, value=value)
+    if r_idx == 1:
+        for c in range(1, len(gtc_headers) + 1):
+            cell = ws7.cell(row=r_idx, column=c)
+            cell.font = nvidia_header_font
+            cell.fill = nvidia_fill
+            cell.alignment = center_alignment
+            cell.border = thin_border
+    elif row_data[0].startswith("—"):
+        style_row(ws7, r_idx, len(gtc_headers), fill=category_fill, font=category_font)
+    else:
+        style_row(ws7, r_idx, len(gtc_headers))
+
+ws7.column_dimensions["A"].width = 32
+ws7.column_dimensions["B"].width = 110
+
+# Move sheets into desired order:
+# 1. OpenClaw vs Claude Cowork
+# 2. NVIDIA GTC – OpenClaw  (new)
+# 3-6. Original sheets
+wb.move_sheet(ws6, offset=-5)  # OpenClaw vs Claude Cowork → first
+wb.move_sheet(ws7, offset=-4)  # NVIDIA GTC → second
 
 # ── Save ──
 output_path = "/workspace/OpenClaw_Architecture_Comparison.xlsx"
