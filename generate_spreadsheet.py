@@ -1504,14 +1504,443 @@ for r_idx, row_data in enumerate(sk_rows, start=1):
 ws8.column_dimensions["A"].width = 32
 ws8.column_dimensions["B"].width = 110
 
-# Move sheets into desired order:
-# 1. OpenClaw vs Claude Cowork
-# 2. NVIDIA GTC – OpenClaw
-# 3. Skills & Orchestration (new)
-# 4-8. Original sheets
-wb.move_sheet(ws6, offset=-6)  # OpenClaw vs Claude Cowork → first
-wb.move_sheet(ws7, offset=-5)  # NVIDIA GTC → second
-wb.move_sheet(ws8, offset=-4)  # Skills & Orchestration → third
+# ═══════════════════════════════════════════════════════════════
+# SHEET 9 — Harnesses: OpenClaw vs Claude Cowork
+# ═══════════════════════════════════════════════════════════════
+ws9 = wb.create_sheet("Harnesses Comparison")
+
+harness_headers = ["Attribute", "OpenClaw Harness", "Claude Cowork Harness", "Verdict / Edge"]
+
+harness_rows = [
+    harness_headers,
+    # ── What Is a Harness ──
+    ["— WHAT IS AN AGENT HARNESS —", "", "", ""],
+    [
+        "Definition",
+        "The harness is every piece of code,\nconfiguration, and execution logic\nthat ISN'T the model itself.\n\n"
+        "Agent = Model + Harness.\n\n"
+        "The model (\"brain\") decides what and why.\n"
+        "The harness (\"body\") handles how, where,\nsafety, persistence, and recovery.\n\n"
+        "LLMs are stateless by default; the harness\ntransforms them into capable, long-running\nagents.",
+        "Same conceptual framework.\nAnthropic calls their harness\n\"Agent Harness\" — the core agentic\narchitecture powering Claude Code\nand Claude Cowork.\n\n"
+        "Agent Harness solves long-running\nagent reliability by enabling multiple\nagents to share context across sessions\nand context windows.",
+        "Both platforms use the same\nfundamental concept:\nharness = infrastructure around\nthe model.\n\n"
+        "Key industry finding:\nLangChain improved from 52.8% → 66.5%\non Terminal Bench 2.0 by changing\nonly the harness (same model).",
+    ],
+    # ── Architecture Layers ──
+    ["— HARNESS ARCHITECTURE LAYERS —", "", "", ""],
+    [
+        "Layer Model",
+        "Six-layer architecture:\n\n"
+        "1. Channel Adapter\n"
+        "   Normalizes messages from Telegram,\n"
+        "   Discord, WhatsApp, Slack, etc.\n\n"
+        "2. Gateway Server\n"
+        "   Routes sessions, orchestrates core.\n\n"
+        "3. Agent Runner (pi-mono)\n"
+        "   Assembles system prompts,\n"
+        "   loads memory, manages skills.\n\n"
+        "4. LLM API\n"
+        "   Calls model with streaming.\n\n"
+        "5. Agentic Loop\n"
+        "   Tool-calling cycles until done.\n\n"
+        "6. Response Path\n"
+        "   Streams back, persists transcripts.",
+        "Layered runtime stack:\n\n"
+        "1. User Intent\n"
+        "   High-level task requests.\n\n"
+        "2. Claude Desktop UI\n"
+        "   Progress tracking, approvals.\n\n"
+        "3. Cowork Coordinator\n"
+        "   Task decomposition,\n"
+        "   sub-agent assignment.\n\n"
+        "4. Sandboxed Workspace (VM)\n"
+        "   Isolated execution.\n\n"
+        "5. Resource Mounts\n"
+        "   Folder-scoped permissions.\n\n"
+        "6. Connectors & Plugins\n"
+        "   MCP servers, role-specific skills.\n\n"
+        "7. Interactive UI Surfaces\n"
+        "   Sandboxed iframes via MCP Apps.",
+        "OpenClaw: Gateway-centric, multi-channel.\n"
+        "Cowork: Coordinator-centric, desktop-focused.\n\n"
+        "OpenClaw's Channel Adapter layer has\nno equivalent in Cowork (single UI).\n"
+        "Cowork's Resource Mounts and UI Surfaces\nhave no direct OpenClaw equivalent.",
+    ],
+    [
+        "Core Harness Design\nPhilosophy",
+        "Gateway-first design.\n"
+        "Treats the system as a persistent\nmulti-channel message router.\n"
+        "The gateway IS the harness — it manages\nall state, routing, and lifecycle.\n\n"
+        "Philosophy: \"Agent-colleague\" —\n"
+        "persistent identity, accumulated memory,\nalways-on awareness.",
+        "Coordinator-first design.\n"
+        "Treats the system as a task\ndecomposition and execution engine.\n"
+        "The Coordinator IS the harness — it plans,\nassigns, and tracks work.\n\n"
+        "Philosophy: \"Desktop assistant\" —\n"
+        "session-based, polished UX,\nsafety by construction.",
+        "OpenClaw: Persistence-oriented.\n"
+        "Cowork: Task-oriented.\n\n"
+        "Both are valid designs for\ntheir respective use cases.",
+    ],
+    # ── Agentic Loop ──
+    ["— AGENTIC LOOP (REASONING ENGINE) —", "", "", ""],
+    [
+        "Loop Architecture",
+        "Cyclical process:\n"
+        "Load context (memory + history)\n"
+        "→ Pass to LLM with tools list\n"
+        "→ LLM responds (text or tool call)\n"
+        "→ If tool call: execute, add result\n"
+        "→ Loop until final response.\n\n"
+        "Each iteration accumulates context,\nenabling multi-step reasoning.\n"
+        "Tools defined in TOOLS.md + skills.",
+        "ReAct-style loop:\n"
+        "Parse task → Plan steps\n"
+        "→ Execute via sub-agents in VM\n"
+        "→ Observe results\n"
+        "→ Adjust plan or respond.\n\n"
+        "Coordinator decomposes complex\ntasks and assigns subtasks.\n"
+        "Progress surfaced to user in real-time.",
+        "Both use iterative reasoning loops.\n\n"
+        "OpenClaw: Explicit tool-call cycle\nwith context accumulation.\n\n"
+        "Cowork: Task decomposition\nwith progress visibility.\n\n"
+        "Cowork provides better UX via\nreal-time plan surfacing.",
+    ],
+    [
+        "Tool Execution",
+        "LLM produces structured tool requests\n"
+        "(e.g., search_web(\"weather Tokyo\")).\n"
+        "Runtime validates, sandboxes, executes.\n"
+        "Tools defined in TOOLS.md + skills.\n"
+        "Results injected back into context.\n\n"
+        "~20 core built-in tools + 5,700+ skills.",
+        "Tools executed within VM sandbox.\n"
+        "File operations on mounted folders.\n"
+        "Shell commands in sandboxed Linux.\n"
+        "Browser automation via Chrome ext.\n"
+        "Connectors for external services.\n\n"
+        "37+ native connectors + MCP servers.",
+        "OpenClaw: Broader tool ecosystem\n(5,700+ skills vs 37+ connectors).\n\n"
+        "Cowork: Stronger isolation\n(VM-level tool execution).",
+    ],
+    # ── Context Management ──
+    ["— CONTEXT MANAGEMENT —", "", "", ""],
+    [
+        "Context Compaction",
+        "Auto-compaction when approaching\ncontext window limits.\n\n"
+        "Post-compaction recovery:\n"
+        "• System injects turn prompting agent\n"
+        "  to read saved memory files\n"
+        "  (memory/YYYY-MM-DD.md)\n"
+        "• Configured via memory.postCompaction\n\n"
+        "Timeout handling:\n"
+        "• 300s initial safety timeout\n"
+        "• On failure: truncates oversized tool\n"
+        "  results (DOM, web-search)\n"
+        "• Retries with 120s budget\n\n"
+        "Feature request: agent-triggered\nself-compaction via session_status tool.",
+        "Auto-compaction frees 60-70% of\ncontext space when window fills.\n\n"
+        "Preserves code by recency,\nrelevance, and frequency.\n\n"
+        "Known limitation: often drops\nproject rules and scope details\nafter compaction.\n\n"
+        "Pre/PostCompact hooks allow\ninjecting context, enforcing rules,\nor logging at compaction boundaries.\n\n"
+        "Quality degrades past 70%\ncontext utilization.",
+        "OpenClaw: Memory-file recovery\nafter compaction (more resilient).\n\n"
+        "Cowork: Hook-based compaction\ncontrol (more customizable).\n\n"
+        "Both face the fundamental\nchallenge of context loss.\n"
+        "OpenClaw's file-based memory\nprovides more durable recovery.",
+    ],
+    [
+        "Memory / Persistence",
+        "Human-readable Markdown files\nstored locally (MEMORY.md).\n\n"
+        "Current state: Community workaround\nusing cron-maintained memory files.\n\"Second most-cited complaint:\nagent forgets context between sessions.\"\n\n"
+        "Planned first-class persistence:\n"
+        "• User-controlled save/delete/list\n"
+        "• Per-agent memory boundaries\n"
+        "• Semantic search (Ollama provider)\n"
+        "• Nightly summarization (>50KB)\n\n"
+        "Memory survives restarts and\nsession changes.",
+        "Session-scoped context.\n"
+        "No cross-session persistence\nby default.\n\n"
+        "Plugins stored locally\n(org distribution planned).\n\n"
+        "Agent Skills can encode\nworkflow knowledge.\n\n"
+        "No equivalent of OpenClaw's\nfile-based memory system.\n\n"
+        "Sessions terminate on sleep\n(no persistence guarantee).",
+        "OpenClaw: Stronger persistence.\n"
+        "File-based memory survives\nrestarts and power cycles.\n\n"
+        "Cowork: Weaker persistence.\n"
+        "Session-scoped; no durable\nmemory across sessions.\n\n"
+        "OpenClaw wins decisively\non long-term memory.",
+    ],
+    # ── Session Management ──
+    ["— SESSION & CONCURRENCY MANAGEMENT —", "", "", ""],
+    [
+        "Session Model",
+        "Every conversation context gets its own\nisolated session with:\n"
+        "• Dedicated state and transcript\n"
+        "• Model overrides and send policy\n"
+        "• Hierarchical colon-delimited keys\n"
+        "  (agent:{id}:subagent:{uuid})\n\n"
+        "Key encodes routing context:\n"
+        "channel, chat type, thread parentage.\n"
+        "No additional lookups needed.",
+        "Conversations within Claude app.\n"
+        "Multiple conversations share one VM.\n"
+        "Each gets isolated bubblewrap session.\n\n"
+        "No hierarchical key system.\n"
+        "Sessions tied to desktop app lifecycle.\n"
+        "Terminate when computer sleeps.",
+        "OpenClaw: Production-grade session\nmanagement with routing-aware keys.\n\n"
+        "Cowork: Simpler but less durable\n(desktop-lifecycle dependent).\n\n"
+        "OpenClaw wins on session reliability.",
+    ],
+    [
+        "Concurrency Control\n(Lane Queue System)",
+        "Lane-aware FIFO queue without threads:\n"
+        "• Session-scoped task queuing\n"
+        "• Global lane cap (default: 8)\n"
+        "• Post-restart recovery mechanisms\n\n"
+        "Known reliability issues (2026):\n"
+        "• Delivery queue only processes on restart\n"
+        "  (multi-hour message delays documented)\n"
+        "• Silent message loss in subagent flows\n"
+        "  (207 stuck deliveries over 3 days)\n"
+        "• Self-healing cron hook added (March 2026)\n"
+        "  to auto-recover degraded lanes.",
+        "Managed by Claude app.\n"
+        "No exposed concurrency primitives.\n"
+        "Rate limits reset every 5 hours.\n\n"
+        "Parallel sub-agents within VM.\n"
+        "No queue system — tasks execute\ndirectly within coordinator.\n\n"
+        "No known delivery/queue issues\n(simpler architecture).",
+        "OpenClaw: More powerful but less\nreliable (documented queue bugs).\n\n"
+        "Cowork: Simpler and more reliable\n(less can go wrong).\n\n"
+        "Trade-off: sophistication vs.\noperational simplicity.",
+    ],
+    # ── Hooks & Middleware ──
+    ["— HOOKS & MIDDLEWARE —", "", "", ""],
+    [
+        "Hook System",
+        "Event-driven hooks for automating\nactions at lifecycle boundaries.\n\n"
+        "Auto-discovered from:\n"
+        "• Bundled hooks (shipped with install)\n"
+        "• Managed (~/.openclaw/hooks/)\n"
+        "• Workspace-level\n\n"
+        "Bundled hooks:\n"
+        "• boot-md: Runs BOOT.md on start\n"
+        "• command-logger: Logs all commands\n"
+        "• bootstrap-extra-files: Injects files\n"
+        "• session-memory: Saves context on /new\n\n"
+        "Recent additions:\n"
+        "• sessionSaveRedirectPath for write\n"
+        "  redirection (quarantine directories)\n"
+        "• Path canonicalization/containment\n"
+        "• Proposed: onBeforeReset, onSessionStart\n"
+        "  lifecycle hooks.",
+        "17+ hook events spanning:\n"
+        "• Session lifecycle (SessionStart,\n"
+        "  SessionEnd)\n"
+        "• Tool execution (PreToolUse,\n"
+        "  PostToolUse, PostToolUseFailure)\n"
+        "• Compaction (PreCompact, PostCompact)\n"
+        "• Notifications (Notification)\n"
+        "• Sub-agents (SubagentStart,\n"
+        "  SubagentStop)\n"
+        "• Task completion (TaskCompleted)\n\n"
+        "Hook types:\n"
+        "• Command hooks (shell)\n"
+        "• HTTP endpoint hooks\n"
+        "• Prompt-based hooks (LLM)\n"
+        "• Agent-based hooks\n\n"
+        "Use cases: auto-format on save,\nblock dangerous commands, run tests\nafter changes, enforce standards.",
+        "Cowork: More mature hook system.\n"
+        "17+ events vs. 4 bundled hooks.\n"
+        "Multiple hook types (command, HTTP,\nprompt, agent-based).\n\n"
+        "OpenClaw: Evolving rapidly.\n"
+        "Simpler hook model with\nauto-discovery from filesystem.\n\n"
+        "Cowork wins on hook breadth\nand flexibility.",
+    ],
+    # ── Sandboxing & Safety ──
+    ["— SANDBOXING & SAFETY LAYER —", "", "", ""],
+    [
+        "Isolation Model",
+        "Process-level isolation (default).\n"
+        "Docker containers for multi-agent.\n"
+        "Kubernetes network policies for prod.\n\n"
+        "Full system access by default\n(user must configure restrictions).\n\n"
+        "NVIDIA OpenShell adds:\n"
+        "• Landlock LSM kernel-level FS isolation\n"
+        "• Seccomp syscall filtering\n"
+        "• Per-binary network policies\n"
+        "• YAML-based policy configuration\n\n"
+        "Without OpenShell: advisory workspace\nisolation only (not enforced).",
+        "VM-level isolation (strongest default):\n"
+        "• Full Ubuntu 22.04 VM via Apple\n"
+        "  Virtualization.framework\n"
+        "• Bubblewrap sandbox per session\n"
+        "• Seccomp filtering\n"
+        "• Folder-scoped permissions\n"
+        "  (explicit read/write/create approval)\n"
+        "• Strict network allowlist\n\n"
+        "Least-privilege enforced at\narchitectural level, not model level.\n\n"
+        "Known: Prompt injection vulnerability\n(file exfiltration, unpatched Jan 2026).",
+        "Cowork: Stronger default isolation.\n"
+        "VM + bubblewrap + seccomp\nout of the box.\n\n"
+        "OpenClaw: Weaker defaults, but\nOpenShell brings parity.\n\n"
+        "Both have documented\nvulnerabilities.\n\n"
+        "Cowork wins for default safety.\n"
+        "OpenClaw + OpenShell matches\nfor hardened deployments.",
+    ],
+    [
+        "Guardrails",
+        "No built-in guardrails by default.\n"
+        "Relies on:\n"
+        "• Model-level safety (varies by model)\n"
+        "• User-configured restrictions\n"
+        "• OpenShell policy enforcement (optional)\n"
+        "• MCP signing (ECDSA P-256)\n\n"
+        "Security audit (Jan 2026):\n"
+        "512 vulnerabilities (8 critical).\n"
+        "1,184 malicious skills on ClawHub.\n"
+        "Plaintext credential storage.",
+        "Guardrails by construction:\n"
+        "• VM-first sandboxing\n"
+        "• Folder-scoped permissions\n"
+        "• Network allowlists\n"
+        "• Tool result size limits (25K tokens)\n"
+        "• 300s tool timeout\n"
+        "• Human approval for critical actions\n"
+        "• PreToolUse hooks for command blocking\n\n"
+        "Built-in rather than optional.",
+        "Cowork: Safety built into architecture.\n\n"
+        "OpenClaw: Safety is opt-in\n(via OpenShell or manual config).\n\n"
+        "Cowork wins on default safety.\n"
+        "OpenClaw more flexible but\nriskier out of the box.",
+    ],
+    # ── Error Recovery ──
+    ["— ERROR RECOVERY & RELIABILITY —", "", "", ""],
+    [
+        "Error Handling",
+        "Multi-step error recovery:\n"
+        "• Agent sees errors in context, can\n"
+        "  retry with different params\n"
+        "• Alternative tool fallback\n"
+        "• Compaction timeout retry (300s→120s)\n"
+        "• Lane self-healing cron (March 2026)\n\n"
+        "Known reliability gaps:\n"
+        "• Delivery queue only runs on restart\n"
+        "• Silent message loss in subagent flows\n"
+        "• 207 stuck deliveries over 3 days\n"
+        "• Gateway config desync errors",
+        "Error handling within VM:\n"
+        "• PostToolUseFailure hooks\n"
+        "• Agent can observe and retry\n"
+        "• Coordinator can re-plan on failure\n"
+        "• VM restart for catastrophic errors\n\n"
+        "Simpler failure modes:\n"
+        "• Session-scoped (no cross-session\n"
+        "  delivery issues)\n"
+        "• No queue system to fail\n"
+        "• Desktop app handles crashes",
+        "OpenClaw: More failure modes\nbut also more recovery mechanisms.\n\n"
+        "Cowork: Fewer failure modes\n(simpler architecture = less to break).\n\n"
+        "Cowork wins on reliability.\n"
+        "OpenClaw has more power\nbut more operational risk.",
+    ],
+    [
+        "Self-Healing",
+        "Self-healing cron hook (March 2026):\n"
+        "• Detects degraded isolated runner lanes\n"
+        "• Recognizes timeout/overload patterns\n"
+        "• Auto-triggers lane resets\n"
+        "• No manual gateway restart needed\n\n"
+        "Post-restart recovery:\n"
+        "• Pending delivery queue processing\n"
+        "• Session state reconstruction",
+        "No documented self-healing.\n"
+        "VM can be restarted for recovery.\n"
+        "Desktop app manages lifecycle.\n\n"
+        "Simpler system requires less\nself-healing — fewer failure modes.",
+        "OpenClaw: Needs self-healing\n(complex persistent system).\n\n"
+        "Cowork: Doesn't need it\n(simpler session-based system).\n\n"
+        "Different requirements reflecting\ndifferent architectural choices.",
+    ],
+    # ── Model Routing ──
+    ["— MODEL ROUTING —", "", "", ""],
+    [
+        "Model Selection",
+        "Model-agnostic with runtime routing:\n"
+        "• Per-session model overrides\n"
+        "• Per-cron-job model selection\n"
+        "• Fallback chains on failure\n"
+        "• Any provider: Anthropic, OpenAI,\n"
+        "  Google, local (Ollama, vLLM)\n"
+        "• NemoClaw inference routing for\n"
+        "  privacy/cost enforcement",
+        "Claude-only:\n"
+        "• Opus 4.5/4.6, Sonnet 4.6, Haiku 4.5\n"
+        "• Model selection within Claude family\n"
+        "• Extended thinking (Max plans only)\n"
+        "• No third-party model support\n"
+        "• No local model option",
+        "OpenClaw: Maximum flexibility.\n"
+        "Route different tasks to different\nmodels and providers.\n\n"
+        "Cowork: Locked to Claude.\n"
+        "Best-in-class quality but\nno cost/model optimization.",
+    ],
+    # ── Summary ──
+    ["— HARNESS COMPARISON SUMMARY —", "", "", ""],
+    [
+        "Harness Maturity",
+        "Mature, production-tested harness with\nknown reliability gaps being actively\naddressed. 68 releases, 360 contributors.\n\n"
+        "Strongest in: persistence, multi-channel\nrouting, model flexibility, extensibility.\n\n"
+        "Weakest in: default safety, queue\nreliability, out-of-box simplicity.",
+        "Newer harness (launched Jan 2026)\nbuilt rapidly (~1.5 weeks by Claude Code).\nWell-designed but less battle-tested.\n\n"
+        "Strongest in: default safety, UX,\nhook system breadth, zero-config setup.\n\n"
+        "Weakest in: persistence, session\ndurability, model flexibility, scaling.",
+        "Both harnesses are competent but\noptimized for different contexts.\n\n"
+        "OpenClaw: Production infrastructure\nfor always-on, multi-channel agents.\n\n"
+        "Cowork: Polished desktop harness\nfor interactive knowledge work.",
+    ],
+    [
+        "Key Takeaway",
+        "OpenClaw's harness is a gateway —\na persistent message router that\nmanages agent lifecycle 24/7 across\nmultiple channels and models.\n\n"
+        "It prioritizes: persistence, flexibility,\nscale, and extensibility over simplicity.\n\n"
+        "The harness IS the product — OpenClaw\nis fundamentally an orchestration layer.",
+        "Cowork's harness is a coordinator —\na task decomposition engine that\nbreaks work into sub-tasks and\nexecutes them safely in a sandbox.\n\n"
+        "It prioritizes: safety, UX, simplicity,\nand quality over flexibility.\n\n"
+        "The harness IS invisible — Cowork\nabstracts all infrastructure away.",
+        "NOT a direct competition.\n\n"
+        "OpenClaw harness = visible, configurable,\npersistent infrastructure.\n\n"
+        "Cowork harness = invisible, managed,\nsession-scoped orchestration.\n\n"
+        "Different design choices for\nfundamentally different use cases.",
+    ],
+]
+
+for r_idx, row_data in enumerate(harness_rows, start=1):
+    for c_idx, value in enumerate(row_data, start=1):
+        ws9.cell(row=r_idx, column=c_idx, value=value)
+    if r_idx == 1:
+        style_header(ws9, r_idx, len(harness_headers))
+    elif row_data[0].startswith("—"):
+        style_row(ws9, r_idx, len(harness_headers), fill=category_fill, font=category_font)
+    else:
+        style_row(ws9, r_idx, len(harness_headers))
+        ws9.cell(row=r_idx, column=2).fill = openclaw_fill
+        ws9.cell(row=r_idx, column=3).fill = cowork_fill
+        ws9.cell(row=r_idx, column=4).fill = verdict_fill
+        ws9.cell(row=r_idx, column=4).font = verdict_font
+
+ws9.column_dimensions["A"].width = 28
+ws9.column_dimensions["B"].width = 44
+ws9.column_dimensions["C"].width = 44
+ws9.column_dimensions["D"].width = 44
+
+# Move sheets into desired order
+wb.move_sheet(ws6, offset=-7)  # OpenClaw vs Claude Cowork → first
+wb.move_sheet(ws9, offset=-6)  # Harnesses Comparison → second
+wb.move_sheet(ws7, offset=-5)  # NVIDIA GTC → third
+wb.move_sheet(ws8, offset=-4)  # Skills & Orchestration → fourth
 
 # ── Save ──
 output_path = "/workspace/OpenClaw_Architecture_Comparison.xlsx"
