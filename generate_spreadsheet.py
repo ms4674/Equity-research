@@ -650,6 +650,315 @@ for r_idx, row_data in enumerate(deep_rows, start=1):
 ws5.column_dimensions["A"].width = 30
 ws5.column_dimensions["B"].width = 100
 
+# ═══════════════════════════════════════════════════════════════
+# SHEET 6 — OpenClaw vs Claude Cowork Head-to-Head
+# ═══════════════════════════════════════════════════════════════
+ws6 = wb.create_sheet("OpenClaw vs Claude Cowork")
+
+cowork_fill = PatternFill(start_color="E2D9F3", end_color="E2D9F3", fill_type="solid")
+verdict_fill = PatternFill(start_color="FCE4D6", end_color="FCE4D6", fill_type="solid")
+verdict_font = Font(name="Calibri", bold=True, size=10)
+
+cw_headers = ["Attribute", "OpenClaw", "Claude Cowork", "Verdict / Edge"]
+
+cw_rows = [
+    cw_headers,
+    # ── Identity & Positioning ──
+    ["— IDENTITY & POSITIONING —", "", "", ""],
+    [
+        "Category",
+        "Open-source, self-hosted personal AI assistant.\nGeneral-purpose task automation across\nmessaging channels.",
+        "Anthropic's desktop AI knowledge-work agent.\nBuilt into the Claude app for\nmacOS (Windows planned).",
+        "Both are general-purpose AI assistants (NOT coding agents).\nOpenClaw: messaging-first. Cowork: desktop-first.",
+    ],
+    [
+        "Launch / Maturity",
+        "Open-source since 2025.\n68 releases as of March 2026.\nMature community-driven project.",
+        "Launched Jan 12, 2026 as research preview.\nBuilt in ~1.5 weeks (by Claude Code itself).\nStill early-stage.",
+        "OpenClaw: More mature with larger ecosystem.\nCowork: Newer but backed by Anthropic.",
+    ],
+    [
+        "Open Source",
+        "YES – MIT License.\n322K+ GitHub stars, 62K forks, 360 contributors.",
+        "NO – Proprietary.\nIntegrated into Claude app.\nAgent Skills spec is open.",
+        "OpenClaw wins for transparency & community.\nCowork wins for polish & managed experience.",
+    ],
+    [
+        "Primary Use Cases",
+        "Multi-channel messaging automation.\nEmail/calendar management.\nSmart home control.\nWorkflow automation via cron.\nBrowser automation.\n24/7 persistent daemon.",
+        "File management & organization.\nDocument processing (XLSX, PPTX, DOCX, PDF).\nResearch synthesis & report generation.\nData extraction (images → spreadsheets).\nBrowser automation via Chrome extension.",
+        "OpenClaw: Best for persistent, always-on automation across channels.\nCowork: Best for desktop knowledge work & document tasks.",
+    ],
+    # ── Architecture ──
+    ["— ARCHITECTURE —", "", "", ""],
+    [
+        "Core Runtime",
+        "Node.js long-running daemon (Gateway).\nMessage routing, session persistence,\ncron jobs, tool execution.\nRuns 24/7 on user's infrastructure.",
+        "Full Ubuntu 22.04 Linux VM\nrunning locally on macOS via\nApple Virtualization.framework.\nClaude Code CLI inside bubblewrap sandbox.",
+        "OpenClaw: Lightweight Node.js process.\nCowork: Heavier (full Linux VM on macOS).\nOpenClaw is more resource-efficient at idle.",
+    ],
+    [
+        "Execution Model",
+        "Gateway-first, channel-native architecture.\nPersistent daemon running 24/7.\nCron-scheduled autonomous tasks.\nHeartbeat monitoring (15-60 min intervals).",
+        "Session-based desktop agent.\nRuns within Claude app.\nTerminates if computer sleeps.\nNo persistent background execution.",
+        "OpenClaw: Always-on, autonomous.\nCowork: Session-dependent, interactive.\nOpenClaw wins for unattended automation.",
+    ],
+    [
+        "Sandboxing / Isolation",
+        "Process-level isolation.\nDocker containers for multi-agent (ClawPod).\nKubernetes network policies for production.\nFull system access by default.",
+        "VM-level isolation (Apple Virtualization.framework).\nBubblewrap sandbox + seccomp filtering.\nFolder-specific read/write/create permissions.\nStronger default isolation.",
+        "Cowork: Stronger sandbox by default (VM + seccomp).\nOpenClaw: Full system access (power but risk).\nCowork wins on security posture.",
+    ],
+    [
+        "Parallel Execution",
+        "Multi-agent via Kubernetes (ClawPod).\n1-100+ agents with per-agent isolation.\nRequires Kubernetes infrastructure.",
+        "Sub-agent coordination.\nMultiple concurrent Claude instances.\nParallel independent subtasks.\nNative to the app, no infra needed.",
+        "Cowork: Easier parallel execution (built-in).\nOpenClaw: More scalable (Kubernetes-based).\nTrade-off: simplicity vs. scale.",
+    ],
+    # ── Models & Intelligence ──
+    ["— MODELS & INTELLIGENCE —", "", "", ""],
+    [
+        "Model Support",
+        "Model-agnostic: OpenAI, Anthropic, Google,\nDeepSeek, local models (Ollama, vLLM,\nTensorRT-LLM). Any model via API.",
+        "Claude family ONLY:\nClaude Opus 4.5/4.6, Sonnet 4.6, Haiku 4.5.\n1M token extended context (Max plans).\nNo third-party model support.",
+        "OpenClaw: Maximum flexibility (any model).\nCowork: Locked to Claude (but highest quality).\nOpenClaw wins on choice; Cowork wins on depth.",
+    ],
+    [
+        "Context Window",
+        "Depends on chosen model.\nTypically 128K-200K tokens.\nNo built-in extended context.",
+        "Up to 1M tokens (Max plans).\nExtended thinking mode (Max only).\nProgressive disclosure for large files.",
+        "Cowork wins: 1M token context + extended thinking\nis significantly larger than typical model defaults.",
+    ],
+    [
+        "Intelligence Quality",
+        "Varies by model selected.\nCan use best-in-class models (Claude Opus)\nor budget models (DeepSeek, Gemini Flash).\nUser controls quality-cost trade-off.",
+        "Always Claude (Anthropic's top models).\nConsistently high quality.\nNo ability to trade down for cost savings.",
+        "Cowork: Consistently top-tier quality.\nOpenClaw: Flexible quality (user's choice).\nDifferent philosophies, not directly comparable.",
+    ],
+    # ── Compute & Hardware ──
+    ["— COMPUTE & HARDWARE —", "", "", ""],
+    [
+        "Minimum CPU",
+        "1-2 vCPU",
+        "Any modern processor (1-2 cores).\nRecommended: 2+ cores.",
+        "Comparable minimum requirements.\nBoth lightweight for cloud LLM usage.",
+    ],
+    [
+        "Minimum RAM",
+        "2 GB (hard floor; crashes below).",
+        "2 GB minimum; 4-8 GB recommended.\nVM bundle alone consumes significant memory.",
+        "Similar floor, but Cowork's VM overhead\nmakes 4-8 GB more realistic in practice.",
+    ],
+    [
+        "Storage",
+        "20 GB minimum.\n40-80+ GB recommended.",
+        "1 GB installation + 10 GB VM bundle.\n~11 GB minimum; 20+ GB recommended.\nVM image regenerates after sessions.",
+        "OpenClaw needs more disk for persistent data.\nCowork's VM bundle is temporary but large (10 GB).",
+    ],
+    [
+        "GPU Required?",
+        "NO for cloud LLM.\nYES for local LLM inference.\n(RTX 3060 → A100/H100 depending on model)",
+        "NO – cloud inference only.\nNo local model support.\nGPU never needed.",
+        "OpenClaw: Optional GPU for local models.\nCowork: No GPU ever needed.\nCowork simpler; OpenClaw more capable with GPU.",
+    ],
+    [
+        "Platform Support",
+        "Linux, macOS, Windows.\nDocker, Kubernetes, VPS, bare metal.\nAny platform with Node.js.",
+        "macOS ONLY (currently).\nWindows support planned.\nRequires Apple Virtualization.framework.",
+        "OpenClaw: Runs anywhere.\nCowork: macOS only (major limitation).\nOpenClaw wins decisively on platform support.",
+    ],
+    [
+        "Idle Resource Consumption",
+        "Node.js Gateway: 300-500 MB RAM, 1-3% CPU.\nLightweight persistent process.",
+        "VM process: reported 24-55% CPU idle on some systems.\nMemory leaks reported over time.\n1.9 GB RAM during VM startup.",
+        "OpenClaw: Much lighter at idle (300-500 MB).\nCowork: Heavier, with reported idle CPU issues.\nOpenClaw wins on resource efficiency.",
+    ],
+    [
+        "Browser Automation",
+        "Playwright-based.\n8 GB RAM hard requirement.\n3 nodes: 75-90% CPU.\nFull browser control.",
+        "Chrome extension-based.\nLighter weight than Playwright.\nRequires Claude for Chrome extension.\nLess programmatic control.",
+        "OpenClaw: More powerful (Playwright, full control).\nCowork: Lighter weight (Chrome extension).\nTrade-off: power vs. simplicity.",
+    ],
+    # ── Pricing ──
+    ["— PRICING & COST —", "", "", ""],
+    [
+        "Software License",
+        "FREE (MIT open source).",
+        "Included in Claude subscription:\nPro: $20/mo | Max 5x: $100/mo |\nMax 20x: $200/mo | Team: $30/user/mo.",
+        "OpenClaw: Free software.\nCowork: $20-200/mo subscription required.",
+    ],
+    [
+        "Infrastructure Cost",
+        "Self-hosted VPS: $4-24/mo.\nFree: Oracle Cloud Always Free.\nUser pays hosting.",
+        "None – runs on user's Mac.\nNo separate infrastructure needed.",
+        "OpenClaw: Requires separate hosting ($4-24/mo).\nCowork: Runs on existing Mac (no extra cost).",
+    ],
+    [
+        "LLM / API Cost",
+        "Variable: $5-200+/mo.\nDepends on model and usage.\nCheap models: $5-10/mo.\nClaude Opus heavy: ~$420/mo.",
+        "Included in subscription.\nNo separate API charges.\nUsage limited by plan tier\n(resets every 5 hours).",
+        "OpenClaw: Unbounded variable costs.\nCowork: Predictable fixed pricing.\nCowork wins on cost predictability.",
+    ],
+    [
+        "TCO: Light Use",
+        "$10-22/month\n(VPS + budget model APIs).",
+        "$20/month (Pro plan).",
+        "Comparable at light usage.\nOpenClaw slightly cheaper with budget models.",
+    ],
+    [
+        "TCO: Moderate Use",
+        "$27-72/month\n(VPS + moderate API usage).",
+        "$100/month (Max 5x).",
+        "OpenClaw cheaper at moderate use.\nCowork more predictable.",
+    ],
+    [
+        "TCO: Heavy Use",
+        "$62-224+/month per instance.\nEnterprise (100 people): $30-50K/mo.",
+        "$200/month (Max 20x).\nTeam: $30/user/mo.\nEnterprise: custom.",
+        "Cowork cheaper for individual heavy use ($200 flat).\nOpenClaw cheaper at team scale with budget models.",
+    ],
+    [
+        "Hidden Costs",
+        "System prompt token burn: $5-30/mo.\nHeartbeat checks: $0-90/mo.\nMaintenance: 2-5 hrs/mo.\nModel switching overhead.",
+        "Cowork sessions burn quota faster\nthan regular chat (multi-step reasoning).\nRate limits reset every 5 hours.\nNo overage purchase option.",
+        "OpenClaw: Unpredictable API spikes.\nCowork: Hard rate limits (can't buy more).\nDifferent risk profiles.",
+    ],
+    # ── Extensibility ──
+    ["— EXTENSIBILITY & INTEGRATIONS —", "", "", ""],
+    [
+        "Plugin / Skill Ecosystem",
+        "3,200+ MCP skills on ClawHub.\nCommunity-built, hot-reloading.\nCryptographic MCP signing (ECDSA P-256).",
+        "11 open-source starter plugins.\nAgent Skills (markdown-based workflow templates).\nCommands (slash-shortcuts).\nPlugins stored locally (org distribution planned).",
+        "OpenClaw: Massive existing ecosystem (3,200+).\nCowork: Early-stage but well-designed.\nOpenClaw wins on ecosystem size today.",
+    ],
+    [
+        "Connectors / Integrations",
+        "WhatsApp, Telegram, Slack, Discord,\nSignal, iMessage, email, calendar.\nAny MCP server.",
+        "37+ native app connectors + Zapier.\nGitHub, Slack, Notion, Google Drive,\nJira, Salesforce pre-built.\nMost first-party connectors are read-only.",
+        "OpenClaw: Messaging-channel focused.\nCowork: Enterprise SaaS app focused.\nDifferent integration philosophies.",
+    ],
+    [
+        "MCP Support",
+        "Full MCP support.\nEvery ClawHub skill is an MCP server.\nmcporter CLI for management.\nHot-reloading, no restart.",
+        "Full MCP support.\nPre-built connectors are MCP-based.\nOAuth authentication flow.\nConnectors maintained by Anthropic + partners.",
+        "Both fully MCP-compatible.\nOpenClaw: Community-driven MCP.\nCowork: Vendor-curated MCP.",
+    ],
+    [
+        "Office File Handling",
+        "Via community MCP skills.\nLess native office integration.\nPrimarily focused on messaging/automation.",
+        "Native XLSX, PPTX, DOCX, PDF handling.\nDirect Excel and PowerPoint editing.\nProgressive disclosure for context management.\nAgent Skills spec for office formats.",
+        "Cowork wins decisively for document/office work.\nOpenClaw is not designed for file processing.",
+    ],
+    # ── Data & Security ──
+    ["— DATA SOVEREIGNTY & SECURITY —", "", "", ""],
+    [
+        "Data Location",
+        "FULL sovereignty.\nAll data stays on user's infrastructure.\nNo data sent to third parties\n(except chosen LLM API calls).",
+        "Partial sovereignty.\nFiles processed locally in VM.\nPrompts/responses go to Anthropic's cloud.\nTeam/Enterprise: not used for training.",
+        "OpenClaw: Full data control.\nCowork: Files local, but prompts go to Anthropic.\nOpenClaw wins for data sovereignty.",
+    ],
+    [
+        "Security Model",
+        "Full system access by default.\nUser configures restrictions.\nNetwork policies via Kubernetes.\nCryptographic MCP signing.",
+        "VM sandbox + bubblewrap + seccomp.\nFolder-specific permissions (read/write/create).\nExplicit directory approval required.\nKNOWN: Prompt injection vulnerability\n(file exfiltration via whitelisted APIs, unpatched Jan 2026).",
+        "Cowork: Better default sandboxing.\nOpenClaw: Better production security (K8s).\nCowork has known unpatched vulnerability.",
+    ],
+    [
+        "Enterprise Compliance",
+        "No built-in compliance features.\nUser implements own controls.\nNo SSO/SCIM/audit logs natively.",
+        "SSO/SCIM (Enterprise plan).\nAudit logs planned.\nConnector-level access controls.\nService account support.",
+        "Cowork: Better enterprise compliance features.\nOpenClaw: Requires DIY compliance setup.",
+    ],
+    # ── Operational ──
+    ["— OPERATIONAL CHARACTERISTICS —", "", "", ""],
+    [
+        "Always-On Availability",
+        "YES – runs as persistent daemon 24/7.\nCron-scheduled autonomous tasks.\nHeartbeat monitoring.\nSurvives user disconnection.",
+        "NO – session-based.\nTerminates if computer sleeps.\nRequires active Mac session.\nNo background persistence.",
+        "OpenClaw wins decisively.\nAlways-on is OpenClaw's core strength.\nCowork requires active desktop session.",
+    ],
+    [
+        "Multi-Channel Communication",
+        "Native multi-channel:\nWhatsApp, Telegram, Slack, Discord,\nSignal, iMessage simultaneously.\nChannel-agnostic agent.",
+        "Single interface (Claude app).\nConnectors for reading from external apps.\nNo native messaging channel support.",
+        "OpenClaw wins decisively.\nMulti-channel messaging is its raison d'être.\nCowork is desktop-app only.",
+    ],
+    [
+        "Collaboration Features",
+        "Multi-agent coordination.\nHierarchical agent patterns.\nShared workspace via Kubernetes.",
+        "No sharing or collaboration features.\nSingle-user desktop experience.\nTeam distribution planned (future).",
+        "OpenClaw: Better for team/multi-agent use.\nCowork: Single-user only (for now).",
+    ],
+    [
+        "Setup Complexity",
+        "Moderate-High.\nRequires VPS provisioning, Docker/K8s,\nAPI key configuration, channel setup.\n2-5 hrs/mo maintenance.",
+        "Low.\nBuilt into Claude app.\nOne-click folder permissions.\nNo infrastructure to manage.",
+        "Cowork wins on ease of setup.\nOpenClaw requires technical expertise.\nCowork: minutes to start. OpenClaw: hours.",
+    ],
+    [
+        "Maintenance Burden",
+        "2-5 hours/month.\nUpdates, troubleshooting, config.\nAPI key rotation, model switching.\nInfra monitoring.",
+        "Zero maintenance.\nManaged by Anthropic.\nAutomatic updates via Claude app.",
+        "Cowork wins: zero maintenance.\nOpenClaw: ongoing operational overhead.",
+    ],
+    # ── Performance ──
+    ["— PERFORMANCE —", "", "", ""],
+    [
+        "Task Completion Speed",
+        "Depends on chosen model and infrastructure.\nNo published benchmarks.\nVariable based on API latency.",
+        "92% reduction in task time vs. manual work\n(3.1 hrs → ~15 min, per Anthropic data).\nParallel execution reduces multi-task time\nto duration of longest single task.",
+        "Cowork: Published performance data.\nOpenClaw: No comparable benchmarks.\nCowork has better documented productivity gains.",
+    ],
+    [
+        "Scaling Ceiling",
+        "Kubernetes: 1 to 100+ agents.\nPer-agent resource isolation.\nNetwork policies.\nProduction-grade multi-tenancy.",
+        "Single Mac desktop.\nMultiple conversations share one VM.\nNo horizontal scaling.\nCapped by Mac hardware.",
+        "OpenClaw wins on scaling.\nCowork is fundamentally single-machine.\nOpenClaw designed for enterprise scale.",
+    ],
+    # ── Summary ──
+    ["— SUMMARY VERDICT —", "", "", ""],
+    [
+        "Best For",
+        "Always-on automation.\nMulti-channel messaging agents.\nPrivacy-first deployments.\nBudget-conscious users.\nTeams wanting full control.",
+        "Desktop knowledge work.\nDocument processing & organization.\nPolished single-user experience.\nUsers wanting zero-maintenance.\nmacOS-native workflows.",
+        "NOT direct competitors.\nOpenClaw = persistent messaging automation platform.\nCowork = desktop productivity agent.\nComplementary tools for different workflows.",
+    ],
+    [
+        "Biggest Advantage",
+        "Open source, model-agnostic,\nalways-on, full data sovereignty,\nmassive plugin ecosystem,\nlowest possible TCO.",
+        "Zero setup, polished UX,\nenterprise-grade Claude models,\nstrong sandboxing,\npredictable fixed pricing,\nnative document handling.",
+        "OpenClaw: Control & flexibility.\nCowork: Simplicity & polish.",
+    ],
+    [
+        "Biggest Weakness",
+        "Operational overhead.\nSelf-hosting maintenance burden.\nNot designed for document/office work.\nNo native enterprise compliance.",
+        "macOS only.\nSession-dependent (no 24/7 operation).\nClaude-only (vendor lock-in).\nKnown security vulnerability.\nNo multi-channel messaging.",
+        "OpenClaw: Complexity.\nCowork: Limited platform & model choice.",
+    ],
+]
+
+for r_idx, row_data in enumerate(cw_rows, start=1):
+    for c_idx, value in enumerate(row_data, start=1):
+        ws6.cell(row=r_idx, column=c_idx, value=value)
+    if r_idx == 1:
+        style_header(ws6, r_idx, len(cw_headers))
+    elif row_data[0].startswith("—"):
+        style_row(ws6, r_idx, len(cw_headers), fill=category_fill, font=category_font)
+    else:
+        style_row(ws6, r_idx, len(cw_headers))
+        ws6.cell(row=r_idx, column=2).fill = openclaw_fill
+        ws6.cell(row=r_idx, column=3).fill = cowork_fill
+        ws6.cell(row=r_idx, column=4).fill = verdict_fill
+        ws6.cell(row=r_idx, column=4).font = verdict_font
+
+ws6.column_dimensions["A"].width = 28
+ws6.column_dimensions["B"].width = 44
+ws6.column_dimensions["C"].width = 44
+ws6.column_dimensions["D"].width = 44
+
+# Move the new sheet to be the first sheet
+wb.move_sheet(ws6, offset=-5)
+
 # ── Save ──
 output_path = "/workspace/OpenClaw_Architecture_Comparison.xlsx"
 wb.save(output_path)
