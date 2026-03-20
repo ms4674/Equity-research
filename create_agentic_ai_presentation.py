@@ -1,6 +1,7 @@
 """
 Generate a PowerPoint presentation on Agentic AI using content from
-Databricks Data + AI Summit events (2024, 2025, 2026).
+Databricks Data + AI Summit events (2024, 2025, 2026), company filings,
+and competitive analysis.
 Dark theme with accent colors matching the Databricks visual identity.
 """
 
@@ -146,26 +147,29 @@ agenda_items = [
     ("03", "Summit Sessions Across Three Years",
      "Key agentic AI presentations from 2024, 2025, and 2026 summits",
      ACCENT_GREEN),
-    ("04", "Enterprise Case Studies",
-     "adidas, Walmart, AstraZeneca, 7-Eleven, Zillow, Royal Bank of Canada",
+    ("04", "Enterprise Case Studies & State of AI Agents",
+     "adidas, Walmart, AstraZeneca, 7-Eleven, Zillow, RBC + governance metrics",
      ACCENT_PURPLE),
-    ("05", "State of AI Agents Report (2026)",
-     "Multi-agent growth, governance impact, production readiness metrics",
+    ("05", "AI Agent Usage in Company Filings",
+     "Revenue, adoption, and agent metrics from SEC filings and earnings calls",
      ACCENT_TEAL),
-    ("06", "Token Economics, Architecture & Takeaways",
-     "Cost optimization, production patterns, and strategic implications",
+    ("06", "Competitive Landscape & Databricks Positioning",
+     "Databricks vs. Snowflake, cloud hyperscalers, and enterprise SaaS platforms",
      ACCENT_RED),
+    ("07", "Token Economics, Architecture & Takeaways",
+     "Cost optimization, production patterns, and strategic implications",
+     RGBColor(0xF5, 0xA6, 0x23)),
 ]
 
 for i, (num, title, desc, color) in enumerate(agenda_items):
-    y = Inches(1.6) + i * Inches(0.9)
-    add_accent_bar(slide, Inches(0.8), y, Pt(4), Inches(0.7), color)
-    add_text_box(slide, Inches(1.1), y, Inches(0.6), Inches(0.7), num,
-                 font_size=24, color=color, bold=True)
-    add_text_box(slide, Inches(1.8), y - Inches(0.02), Inches(5), Inches(0.4), title,
-                 font_size=20, color=WHITE, bold=True)
-    add_text_box(slide, Inches(1.8), y + Inches(0.35), Inches(8), Inches(0.4), desc,
-                 font_size=14, color=LIGHT_GRAY)
+    y = Inches(1.55) + i * Inches(0.8)
+    add_accent_bar(slide, Inches(0.8), y, Pt(4), Inches(0.65), color)
+    add_text_box(slide, Inches(1.1), y, Inches(0.6), Inches(0.65), num,
+                 font_size=22, color=color, bold=True)
+    add_text_box(slide, Inches(1.8), y - Inches(0.02), Inches(5), Inches(0.35), title,
+                 font_size=18, color=WHITE, bold=True)
+    add_text_box(slide, Inches(1.8), y + Inches(0.3), Inches(8), Inches(0.35), desc,
+                 font_size=13, color=LIGHT_GRAY)
 
 
 # ── SLIDE 3: WHAT IS AGENTIC AI? ──────────────────────────────────────────────
@@ -800,7 +804,276 @@ add_multi_text(slide, Inches(6.9), Inches(4.9), Inches(5), Inches(1.7), [
 ])
 
 
-# ── SLIDE 13: MARKET CONTEXT ──────────────────────────────────────────────────
+# ── SLIDE 13: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION ───────────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+slide_header(slide, "AI Agent Usage in Company Filings (Part 1)",
+             bar_color=ACCENT_TEAL, bar_width=Inches(3))
+add_text_box(slide, Inches(0.8), Inches(1.3), Inches(10), Inches(0.4),
+             "Metrics from SEC filings, 10-K reports, and public earnings calls (2025–2026)",
+             font_size=13, color=LIGHT_GRAY)
+
+filing_companies_1 = [
+    ("Salesforce — Agentforce", "Q4 FY2026 Earnings (Feb 2026)",
+     [("$800M", "Agentforce ARR\n(+169% YoY)", ACCENT_ORANGE),
+      ("29,000+", "Deals Closed\n(+50% QoQ)", ACCENT_BLUE),
+      ("2.4B", "Agentic Work\nUnits Delivered", ACCENT_GREEN)],
+     ["FY26 revenue $41.5B (+10% YoY); Agentforce + Data 360 ARR >$2.9B (+200% YoY)",
+      "Introduced 'Agentic Work Units' (AWUs) as new metric — 2.4B delivered, +57% QoQ",
+      "Processed 19T+ tokens (+5x YoY); agents in production +50% QoQ",
+      'CEO Benioff: "Agentforce just became an $800 million business"',
+      "Digital labor model: agents billed per conversation, not per seat"],
+     ACCENT_ORANGE),
+    ("Microsoft — Copilot & Agent 365", "FY2025 Annual Report / 10-K",
+     [("90%+", "Fortune 500 Use\nM365 Copilot", ACCENT_BLUE),
+      ("$281.7B", "Total Revenue\n(+15% YoY)", ACCENT_PURPLE),
+      ("400+", "New Copilot\nFeatures Shipped", ACCENT_GREEN)],
+     ['CEO Nadella: "Every customer I talk to is looking to reshape processes with AI agents"',
+      '"Frontier Firm" concept: human-led, agent-operated organizations',
+      "Agent 365 control plane for managing and securing agents at enterprise scale",
+      "Multi-agent orchestration: agents collaborating on complex work together",
+      "Copilot Studio Tuning: low-code model training with company data"],
+     ACCENT_BLUE),
+]
+
+y_offset = Inches(1.8)
+for comp_name, filing_ref, stat_cards, bullets, color in filing_companies_1:
+    card = add_card(slide, Inches(0.8), y_offset, Inches(11.5), Inches(2.6))
+    add_accent_bar(slide, Inches(0.8), y_offset, Pt(5), Inches(2.6), color)
+    add_text_box(slide, Inches(1.2), y_offset + Inches(0.08), Inches(5), Inches(0.35),
+                 comp_name, font_size=18, color=color, bold=True)
+    add_text_box(slide, Inches(7.0), y_offset + Inches(0.08), Inches(5), Inches(0.35),
+                 filing_ref, font_size=12, color=MUTED, bold=False,
+                 alignment=PP_ALIGN.RIGHT)
+
+    for j, (sv, sl_label, sc) in enumerate(stat_cards):
+        sx = Inches(1.2) + j * Inches(1.85)
+        add_stat_card(slide, sx, y_offset + Inches(0.45), Inches(1.7), Inches(0.9),
+                      sv, sl_label, sc)
+
+    bullet_lines = [{"text": f"•  {b}", "size": 10, "color": LIGHT_GRAY,
+                     "space_after": 2} for b in bullets]
+    add_multi_text(slide, Inches(6.9), y_offset + Inches(0.45), Inches(5.2),
+                   Inches(2.0), bullet_lines)
+    y_offset += Inches(2.75)
+
+
+# ── SLIDE 14: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION (Part 2) ─────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+slide_header(slide, "AI Agent Usage in Company Filings (Part 2)",
+             bar_color=ACCENT_TEAL, bar_width=Inches(3))
+add_text_box(slide, Inches(0.8), Inches(1.3), Inches(10), Inches(0.4),
+             "Metrics from SEC filings, 10-K reports, and public earnings calls (2025–2026)",
+             font_size=13, color=LIGHT_GRAY)
+
+filing_companies_2 = [
+    ("ServiceNow — Now Assist Agents", "Q4 2025 Earnings / 10-K",
+     [("$600M+", "Now Assist ACV", ACCENT_GREEN),
+      ("2x", "Net New ACV\nYoY Growth", ACCENT_BLUE),
+      ("35", "Deals >$1M\nin Q4", ACCENT_PURPLE)],
+     ["Q4 2025 subscription revenue $3.47B (+21% YoY); total revenue $3.57B (+20.5%)",
+      "603 customers with >$5M ACV (+20% YoY); 244 deals >$1M net new ACV (+40% YoY)",
+      "Launched thousands of pre-built AI agents + AI Agent Studio (no-code)",
+      "AI Agent Orchestrator to manage agent fleets across the enterprise"],
+     ACCENT_GREEN),
+    ("AWS — Bedrock Agents", "Q4 2025 Earnings (Amazon)",
+     [("$128.7B", "AWS Full-Year\nRevenue", ACCENT_ORANGE),
+      ("100K+", "Bedrock\nOrganizations", ACCENT_TEAL),
+      ("60%", "Customer Spend\nGrowth QoQ", ACCENT_BLUE)],
+     ["AWS revenue $35.6B in Q4 (+24% YoY) — fastest growth in 13 quarters",
+      "Bedrock: multi-billion dollar run-rate; customer spend +60% quarter-over-quarter",
+      "Bedrock AgentCore launched: secure deployment, governance, monitoring at scale",
+      "CEO Jassy: ~$200B planned capex for 2026, largely in AWS AI infrastructure"],
+     ACCENT_TEAL),
+    ("Palantir — AIP Agents", "Q4 2025 Earnings / 10-K",
+     [("$4.5B", "Total Revenue\n(+56% YoY)", ACCENT_PURPLE),
+      ("137%", "US Commercial\nQ4 Growth YoY", ACCENT_RED),
+      ("50%", "Adjusted Op.\nMargin", ACCENT_ORANGE)],
+     ["U.S. commercial revenue $1.47B (+109% YoY); Q4 alone $507M (+137% YoY)",
+      "Record $4.26B total contract value (+138% YoY); Rule of 40 score: 127%",
+      "Q4: 180 deals >$1M, 84 >$5M, 61 >$10M — AIP platform driving expansion",
+      'CEO Karp: AI "has just put gasoline on all the tribal knowledge in our products"'],
+     ACCENT_PURPLE),
+]
+
+y_offset = Inches(1.7)
+for comp_name, filing_ref, stat_cards, bullets, color in filing_companies_2:
+    ch = Inches(1.75)
+    card = add_card(slide, Inches(0.8), y_offset, Inches(11.5), ch)
+    add_accent_bar(slide, Inches(0.8), y_offset, Pt(5), ch, color)
+    add_text_box(slide, Inches(1.2), y_offset + Inches(0.06), Inches(4.5), Inches(0.3),
+                 comp_name, font_size=16, color=color, bold=True)
+    add_text_box(slide, Inches(7.0), y_offset + Inches(0.06), Inches(5), Inches(0.3),
+                 filing_ref, font_size=11, color=MUTED, alignment=PP_ALIGN.RIGHT)
+
+    for j, (sv, sl_label, sc) in enumerate(stat_cards):
+        sx = Inches(1.2) + j * Inches(1.75)
+        add_stat_card(slide, sx, y_offset + Inches(0.38), Inches(1.6), Inches(0.75),
+                      sv, sl_label, sc)
+
+    bullet_lines = [{"text": f"•  {b}", "size": 9, "color": LIGHT_GRAY,
+                     "space_after": 1} for b in bullets]
+    add_multi_text(slide, Inches(6.6), y_offset + Inches(0.35), Inches(5.5),
+                   Inches(1.3), bullet_lines)
+    y_offset += Inches(1.85)
+
+add_multi_text(slide, Inches(0.8), Inches(7.0), Inches(11), Inches(0.4), [
+    {"text": "Additional filings: Google Cloud $70B+ run rate (+48% YoY in Q4 '25); "
+             "NVIDIA $130.5B revenue (+114% YoY); Snowflake AI revenue $100M run rate",
+     "size": 10, "color": MUTED},
+])
+
+
+# ── SLIDE 15: COMPETITIVE LANDSCAPE ──────────────────────────────────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+slide_header(slide, "Competitive Landscape: Databricks vs. Peers",
+             bar_color=ACCENT_RED, bar_width=Inches(3))
+add_text_box(slide, Inches(0.8), Inches(1.3), Inches(10), Inches(0.4),
+             "Where Databricks positions in the agentic AI platform market "
+             "(data from filings & earnings)",
+             font_size=13, color=LIGHT_GRAY)
+
+card = add_card(slide, Inches(0.8), Inches(1.8), Inches(11.5), Inches(2.4))
+add_accent_bar(slide, Inches(0.8), Inches(1.8), Inches(11.5), Pt(4), ACCENT_ORANGE)
+add_text_box(slide, Inches(1.1), Inches(1.95), Inches(5), Inches(0.35),
+             "Data Platform Rivals: Databricks vs. Snowflake", font_size=16,
+             color=ACCENT_ORANGE, bold=True)
+
+col_data = [
+    ("Dimension", "Databricks", "Snowflake"),
+    ("Revenue Run Rate", "$5.4B ARR (~65% YoY growth)", "$4.47B product rev (29% growth)"),
+    ("AI-Specific Revenue", "$1.4B AI ARR", "~$100M AI run rate"),
+    ("Agent Capabilities", "Mosaic AI, Agent Bricks, MCP", "Cortex AI, Snowflake Intelligence"),
+    ("Agent Customers", "2,500+ in Intelligence (3 mo)"),
+    ("Valuation / Market Cap", "$134B (private)", "~$59B (NYSE: SNOW)"),
+    ("Differentiation", "Lakehouse, ML/AI-native, open formats", "SQL warehouse, BI-optimized"),
+]
+
+txBox = slide.shapes.add_textbox(Inches(1.1), Inches(2.35), Inches(10.8), Inches(1.7))
+tf = txBox.text_frame
+tf.word_wrap = True
+comp_rows = [
+    {"text": "Revenue          Databricks $5.4B ARR (~65% YoY)   vs   "
+             "Snowflake $4.47B (29% YoY)", "size": 12, "color": WHITE, "space_after": 4},
+    {"text": "AI Revenue      Databricks $1.4B AI ARR   vs   "
+             "Snowflake ~$100M AI run rate", "size": 12, "color": WHITE, "space_after": 4},
+    {"text": "Agent Tools      Mosaic AI + Agent Bricks + MCP   vs   "
+             "Cortex AI + Snowflake Intelligence", "size": 12, "color": WHITE,
+     "space_after": 4},
+    {"text": "Agent Traction  20,000+ customers, 327% multi-agent growth   vs   "
+             "2,500+ Intelligence customers (3 months)", "size": 12, "color": WHITE,
+     "space_after": 4},
+    {"text": "Valuation         $134B (private)   vs   ~$59B (NYSE: SNOW)",
+     "size": 12, "color": WHITE, "space_after": 4},
+    {"text": "Note: 74% of consulting firms work with both platforms in hybrid "
+             "deployments", "size": 11, "color": ACCENT_ORANGE, "bold": True},
+]
+add_multi_text(slide, Inches(1.1), Inches(2.35), Inches(10.8), Inches(1.7), comp_rows)
+
+# Cloud Hyperscalers
+card = add_card(slide, Inches(0.8), Inches(4.4), Inches(5.5), Inches(2.8))
+add_accent_bar(slide, Inches(0.8), Inches(4.4), Inches(5.5), Pt(4), ACCENT_BLUE)
+add_text_box(slide, Inches(1.1), Inches(4.55), Inches(5), Inches(0.35),
+             "Cloud Hyperscaler Agent Platforms", font_size=16, color=ACCENT_BLUE,
+             bold=True)
+add_multi_text(slide, Inches(1.1), Inches(4.95), Inches(5), Inches(2.1), [
+    {"text": "AWS Bedrock Agents", "size": 13, "color": ACCENT_ORANGE, "bold": True,
+     "space_after": 2},
+    {"text": "  100K+ orgs; multi-B$ run rate; AgentCore for governance",
+     "size": 11, "color": LIGHT_GRAY, "space_after": 6},
+    {"text": "Google Cloud Vertex AI", "size": 13, "color": ACCENT_GREEN, "bold": True,
+     "space_after": 2},
+    {"text": "  $70B+ run rate (+48% YoY); 8M+ paid Gemini Enterprise seats",
+     "size": 11, "color": LIGHT_GRAY, "space_after": 6},
+    {"text": "Microsoft Azure AI / Copilot", "size": 13, "color": ACCENT_PURPLE,
+     "bold": True, "space_after": 2},
+    {"text": "  Azure >$75B rev; 90%+ Fortune 500 on M365 Copilot; Agent 365",
+     "size": 11, "color": LIGHT_GRAY, "space_after": 6},
+    {"text": "Databricks runs on all three clouds — complementary, not competing",
+     "size": 11, "color": ACCENT_TEAL, "bold": True},
+])
+
+# Enterprise SaaS / Infra Agent Platforms
+card = add_card(slide, Inches(6.6), Inches(4.4), Inches(5.5), Inches(2.8))
+add_accent_bar(slide, Inches(6.6), Inches(4.4), Inches(5.5), Pt(4), ACCENT_PURPLE)
+add_text_box(slide, Inches(6.9), Inches(4.55), Inches(5), Inches(0.35),
+             "Enterprise SaaS & Infra Agents", font_size=16, color=ACCENT_PURPLE,
+             bold=True)
+add_multi_text(slide, Inches(6.9), Inches(4.95), Inches(5), Inches(2.1), [
+    {"text": "Salesforce Agentforce", "size": 13, "color": ACCENT_ORANGE, "bold": True,
+     "space_after": 2},
+    {"text": "  $800M ARR (+169% YoY); 29K deals; digital labor model",
+     "size": 11, "color": LIGHT_GRAY, "space_after": 6},
+    {"text": "ServiceNow Now Assist", "size": 13, "color": ACCENT_GREEN, "bold": True,
+     "space_after": 2},
+    {"text": "  $600M+ ACV; 2x net new ACV growth; agent fleet orchestration",
+     "size": 11, "color": LIGHT_GRAY, "space_after": 6},
+    {"text": "Palantir AIP", "size": 13, "color": ACCENT_PURPLE, "bold": True,
+     "space_after": 2},
+    {"text": "  $4.5B revenue (+56% YoY); US comm +109%; enterprise AI agents",
+     "size": 11, "color": LIGHT_GRAY, "space_after": 6},
+    {"text": "NVIDIA Inference Infrastructure", "size": 13, "color": ACCENT_TEAL,
+     "bold": True, "space_after": 2},
+    {"text": "  $130.5B rev (+114%); Dynamo 40x token throughput; AI factories",
+     "size": 11, "color": LIGHT_GRAY},
+])
+
+add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
+    {"text": "Sources: Public SEC filings (10-K), earnings call transcripts, and "
+             "investor presentations (2025–2026)", "size": 10, "color": MUTED},
+])
+
+
+# ── SLIDE 16: CEO QUOTES ON AGENTIC AI ──────────────────────────────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+slide_header(slide, "CEO Quotes on Agentic AI — From Filings & Earnings",
+             bar_color=ACCENT_ORANGE, bar_width=Inches(3))
+
+ceo_quotes = [
+    ("Ali Ghodsi", "Databricks CEO", "Fortune Brainstorm AI, Dec 2025",
+     '"It\'s very elusive to get AI that really works and understands that proprietary '
+     'data that\'s inside enterprise... this could maybe get all the way to a trillion."',
+     ACCENT_ORANGE),
+    ("Marc Benioff", "Salesforce CEO", "Q4 FY2026 Earnings, Feb 2026",
+     '"Agentforce just became an $800 million business. '
+     'Agentic AI is a tailwind for our business... this is the third wave of AI."',
+     ACCENT_BLUE),
+    ("Satya Nadella", "Microsoft CEO", "FY2025 Annual Report / Ignite 2025",
+     '"Every customer I talk to is looking to reshape their business processes '
+     'with AI agents. We are building the Frontier Firm — human-led, agent-operated."',
+     ACCENT_PURPLE),
+    ("Jensen Huang", "NVIDIA CEO", "GTC 2025 Keynote",
+     '"The amount of compute we need for AI inference is easily 100x more than we '
+     'thought we needed this time last year. Agents reason, plan, and act."',
+     ACCENT_GREEN),
+    ("Alex Karp", "Palantir CEO", "Q4 2025 Earnings, Feb 2026",
+     '"AI has just put gasoline on all the tribal knowledge we have in our products. '
+     'The demand for AI agents that can do things in the real world is unlike '
+     'anything we\'ve seen."',
+     ACCENT_RED),
+    ("Sridhar Ramaswamy", "Snowflake CEO", "Q4 FY2026 Earnings, Feb 2026",
+     '"Winners will be platforms that combine trusted data with secure execution. '
+     'We are the control plane for the agentic era."',
+     ACCENT_TEAL),
+]
+
+for i, (name, role, source, quote, color) in enumerate(ceo_quotes):
+    y = Inches(1.5) + i * Inches(0.95)
+    card = add_card(slide, Inches(0.8), y, Inches(11.5), Inches(0.85))
+    add_accent_bar(slide, Inches(0.8), y, Pt(5), Inches(0.85), color)
+    add_text_box(slide, Inches(1.2), y + Inches(0.05), Inches(2.2), Inches(0.3),
+                 f"{name}, {role}", font_size=12, color=color, bold=True)
+    add_text_box(slide, Inches(1.2), y + Inches(0.3), Inches(2.2), Inches(0.5),
+                 source, font_size=9, color=MUTED)
+    add_text_box(slide, Inches(3.7), y + Inches(0.08), Inches(8.3), Inches(0.7),
+                 quote, font_size=12, color=LIGHT_GRAY)
+
+add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
+    {"text": "Sources: Public earnings call transcripts, SEC filings, and conference "
+             "keynotes (2025–2026)", "size": 10, "color": MUTED},
+])
+
+
+# ── SLIDE 17: MARKET CONTEXT ──────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Enterprise AI Agent Market Context",
              bar_color=ACCENT_ORANGE)
@@ -840,7 +1113,7 @@ add_multi_text(slide, Inches(1.3), Inches(5.6), Inches(10.5), Inches(1.3), [
 ])
 
 
-# ── SLIDE 14: KEY TAKEAWAYS ───────────────────────────────────────────────────
+# ── SLIDE 18: KEY TAKEAWAYS ───────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Key Takeaways", bar_color=ACCENT_ORANGE, bar_width=Inches(1.5))
 
@@ -882,7 +1155,7 @@ for i, (title, desc, color) in enumerate(takeaways):
                  desc, font_size=12, color=LIGHT_GRAY)
 
 
-# ── SLIDE 15: SOURCES & REFERENCES ────────────────────────────────────────────
+# ── SLIDE 19: SOURCES & REFERENCES ────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Sources & References", bar_color=ACCENT_ORANGE,
              bar_width=Inches(1.8))
@@ -893,17 +1166,17 @@ sources = [
     "Databricks Data + AI Summit 2026 — Agent Sessions (June 15–18, San Francisco)",
     "Databricks State of Data + AI Report 2024 (10,000+ customers, 300+ Fortune 500)",
     "Databricks State of AI Agents Report 2026 (20,000+ global customers)",
-    "Databricks Blog: Enterprise AI Agent Trends — Use Cases, Governance & Evaluations",
-    "Databricks Blog: Mosaic AI Announcements at Data + AI Summit 2025",
-    "Databricks Blog: Managed MCP Servers with Unity Catalog and Mosaic AI Integration",
-    "adidas: Beyond the Trace — Agent Digital Twin (Summit 2026)",
-    "Walmart: Autonomous AI Agents in AI Infrastructure (Summit 2025)",
-    "AstraZeneca: Clinical Trial Document Processing via Agent Bricks",
-    "7-Eleven: AI Agents for the Frontline — GenAI Maintenance Assistant (Summit 2026)",
-    "Zillow: Scaling Agentic AI and Enterprise Data Mesh with Lakebase (Summit 2026)",
-    "Royal Bank of Canada: AI Agents for Equity Research (CEO Keynote Reference)",
-    "Ali Ghodsi (Databricks CEO): Fortune Brainstorm AI Interview, December 2025",
-    "Ali Ghodsi (Databricks CEO): CNBC — Under the Hood of the AI Economy, Feb 2026",
+    "Databricks Blog: Enterprise AI Agent Trends, Mosaic AI Announcements, MCP Integration",
+    "Ali Ghodsi (Databricks CEO): Fortune Brainstorm AI (Dec 2025) & CNBC (Feb 2026)",
+    "Salesforce Q4 FY2026 Earnings / SEC Filing — Agentforce Metrics (Feb 2026)",
+    "Microsoft FY2025 Annual Report / 10-K — Copilot & Agent 365 (sec.gov)",
+    "ServiceNow Q4 2025 Earnings / 10-K — Now Assist Agent Metrics (sec.gov)",
+    "Amazon Q4 2025 Earnings — AWS Bedrock Agents Revenue (sec.gov)",
+    "Palantir Q4 2025 Earnings / 10-K — AIP Platform Metrics (sec.gov)",
+    "Snowflake Q4 FY2026 Earnings — Cortex AI & Intelligence Metrics (sec.gov)",
+    "NVIDIA FY2025 Annual Report / GTC 2025 — Token Economics & Inference (sec.gov)",
+    "Google / Alphabet Q4 2025 Earnings / 10-K — Cloud & AI Metrics (sec.gov)",
+    "adidas Summit 2026 / Walmart Summit 2025 / AstraZeneca / 7-Eleven / Zillow / RBC",
     "Getmonetizely: Production-Grade AI Agents on Databricks Mosaic — Cost Analysis",
     "Databricks Docs: AI Gateway Usage Tracking (system.ai_gateway.usage tables)",
 ]
