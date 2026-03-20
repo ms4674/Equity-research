@@ -585,7 +585,107 @@ On March 19, 2026 — just days before this analysis — the DOJ unsealed a crim
 
 ---
 
-## 12. Financial Snapshot
+## 12. SMCI & Dell AI Server Growth Trajectory
+
+### SMCI Quarterly Revenue Trajectory
+
+| Quarter | Revenue | QoQ | YoY | Context |
+|---|---|---|---|---|
+| Q1 FY2024 (Sep 2023) | $2.1B | — | — | Pre-AI ramp baseline |
+| Q2 FY2024 (Dec 2023) | $3.7B | +73% | +103% | AI demand inflection; guidance raised to $14.3–14.7B |
+| Q3 FY2024 (Mar 2024) | $3.9B | +4% | — | Continued ramp |
+| Q4 FY2024 (Jun 2024) | $5.3B | +38% | — | FY2024 total: $14.9B (+110% YoY) |
+| Q1 FY2025 (Sep 2024) | $6.0B | +12% | +183% | Strong but audit overhang begins |
+| Q2 FY2025 (Dec 2024) | $5.7B | -5% | +54% | EY resignation; Blackwell queue delays |
+| Q3 FY2025 (Mar 2025) | $4.6B | -19% | +19% | Trough quarter; GPU supply constraints |
+| Q4 FY2025 (Jun 2025) | $5.8B | +26% | +9% | FY2025 total: $22.0B (+47% YoY) |
+| Q1 FY2026 (Sep 2025) | $5.0B | -14% | -17% | Blackwell ramp timing gap |
+| Q2 FY2026 (Dec 2025) | $12.7B | +153% | +123% | Record; Blackwell supply arrives; xAI mega-order |
+| Q3 FY2026 (Mar 2026) | ≥$12.3B (guided) | — | — | Sustained Blackwell volume expected |
+| FY2026 Full Year | ≥$40B (guided) | — | +82% | Raised from initial $33B target |
+
+**Key pattern**: SMCI's revenue is extremely lumpy — it swung from $4.6B (Q3 FY25) to $12.7B (Q2 FY26) in three quarters, a near-3x increase driven almost entirely by the timing of NVIDIA GPU supply releases and one mega-customer's ordering cadence. This volatility makes forward projections unusually uncertain.
+
+### Dell AI Server Revenue Trajectory
+
+| Period | AI Server Revenue | AI Server Orders | AI Backlog | Context |
+|---|---|---|---|---|
+| FY2024 (ended Jan 2024) | ~$2.6B | — | — | AI server category still nascent |
+| FY2025 Full Year | ~$10B | — | — | Initial ramp; still <15% of ISG revenue |
+| Q1 FY2026 (May 2025) | ~$1.8B (est.) | — | — | Early Blackwell transition |
+| Q2 FY2026 (Aug 2025) | $8.2B | — | $11.7B | Massive acceleration; H1 total ($10B) exceeded all FY2025 |
+| Q3 FY2026 (Oct 2025) | ~$7.0B (est.) | $12.3B | — | YTD AI orders: $30B |
+| Q4 FY2026 (Jan 2026) | $9.0B | $34.1B | $43B (record) | +342% YoY; AI dominates ISG |
+| FY2026 Full Year | ~$25B (shipped) | $64.1B (closed) | $43B entering FY27 | +150% YoY |
+| FY2027 (guided) | ~$50B | — | — | +100% YoY; $138–142B total company revenue |
+
+### Side-by-Side Growth Comparison
+
+| Metric | SMCI | Dell |
+|---|---|---|
+| **FY ending** | June 30 | Late January |
+| **Latest FY revenue** | $22.0B (FY25) | $113.5B (FY26) |
+| **Current FY revenue guide** | ≥$40B (FY26) | $138–142B (FY27) |
+| **AI server revenue (latest FY)** | ~$20B+ (>90% of $22B) | ~$25B (FY26) |
+| **AI server revenue (next FY)** | ~$36B+ (est. >90% of $40B) | ~$50B (FY27 guide) |
+| **YoY AI server growth** | ~80%+ | ~100% |
+| **AI server backlog** | >$13B (Blackwell Ultra) | $43B (record) |
+| **Revenue CAGR (2-year)** | ~64% (FY24: $14.9B → FY26E: $40B) | ~27% (FY25: $95.6B → FY27E: $140B) |
+| **AI server CAGR (2-year)** | N/A (nearly all AI) | ~120% (FY25: $10B → FY27E: $50B) |
+
+### Growth Trajectory: Key Observations
+
+**1. SMCI is growing faster but from a smaller base — and it's all AI**
+
+SMCI's 2-year revenue CAGR of ~64% dramatically outpaces Dell's ~27%, but this reflects the fact that SMCI is effectively a one-product company (AI GPU servers = >90% of revenue). Dell's AI server growth (~120% 2-year CAGR) is actually faster than SMCI's overall growth, but it's diluted within a much larger diversified business.
+
+**2. Dell's backlog is 3x larger, suggesting more durable forward visibility**
+
+Dell's $43B AI server backlog vs. SMCI's >$13B provides significantly more revenue visibility. Dell also closed $64B in AI orders during FY2026 — approximately 2.5x what it shipped — meaning demand continues to outpace supply conversion. SMCI's order-to-shipment ratio is less transparent due to its single-customer concentration.
+
+**3. SMCI's revenue lumpiness creates both opportunity and risk**
+
+SMCI's Q2 FY2026 ($12.7B) was nearly 3x its Q3 FY2025 ($4.6B), driven by the simultaneous arrival of Blackwell GPU supply and a mega-customer's ordering surge. Dell's trajectory is smoother: $1.8B → $8.2B → $7.0B → $9.0B across FY2026 quarters. For investors, SMCI's lumpiness means any single quarter can dramatically beat or miss expectations.
+
+**4. SMCI has a head start in Blackwell, but Dell is scaling faster on an absolute basis**
+
+SMCI began shipping Blackwell systems earlier due to its speed-to-market advantage and captured ~25% of initial GB200 supply. However, Dell's Q4 FY2026 AI server orders of $34.1B in a single quarter suggest Dell is now capturing a larger share of incremental demand as Blackwell supply normalizes.
+
+**5. The orders-to-shipments gap implies multi-quarter tailwinds for both**
+
+| Metric | SMCI | Dell |
+|---|---|---|
+| AI orders booked (latest FY) | Not fully disclosed | $64.1B |
+| AI revenue shipped (latest FY) | ~$20B+ | ~$25B |
+| Orders/shipments ratio | Unknown | 2.6x |
+| Backlog entering next FY | >$13B | $43B |
+
+Dell's 2.6x book-to-ship ratio means it has already sold roughly two years of AI server revenue at current run rates. This provides a substantial floor under forward estimates. SMCI's backlog visibility is weaker but management's confidence in $40B FY2026 revenue suggests strong order coverage.
+
+**6. FY2027+ consensus expectations**
+
+| Company | FY2027 Revenue Estimate | Growth | Basis |
+|---|---|---|---|
+| SMCI (FY ending Jun 2027) | ~$48–50B (consensus) | ~20–25% YoY | ~18.7% analyst consensus growth rate; some estimates range to 30% |
+| Dell (FY ending Jan 2028) | $138–142B (company guide) | ~23% YoY | Driven by $50B AI server revenue target |
+
+Analyst consensus for SMCI implies meaningful growth deceleration from ~82% (FY2026) to ~20–25% (FY2027) — a normalization as the Blackwell ramp matures and customer diversification has yet to prove out. Dell's guidance is more aggressive, implying AI servers become ~35% of total company revenue.
+
+### Total Addressable Market Context
+
+| Metric | Value |
+|---|---|
+| Global server market (2025 actual) | $444B (IDC); up 80% YoY |
+| Global server market (2026E) | $566B (IDC); +24% YoY |
+| AI infrastructure spend (2029E) | $758B (IDC) |
+| Server market CAGR through 2029 | 28.7% |
+| SMCI + Dell combined AI server share (2026E) | ~$45–50B / ~$200B+ AI server TAM = ~22–25% |
+
+The AI server TAM is growing fast enough to support both SMCI and Dell at their guided growth rates, but the question is whether both can maintain share against ODMs (Quanta, Wiwynn, Foxconn) and hyperscaler insourcing. The market is expanding rapidly, but so is the competitive field.
+
+---
+
+## 13. Financial Snapshot
 
 | Metric | FY2025 (Actual) | FY2026 (Guided/Est.) |
 |---|---|---|
