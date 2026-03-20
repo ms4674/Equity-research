@@ -153,11 +153,11 @@ agenda_items = [
     ("05", "AI Agent Usage in Company Filings",
      "Revenue, adoption, and agent metrics from SEC filings and earnings calls",
      ACCENT_TEAL),
-    ("06", "Competitive Landscape & Databricks Positioning",
-     "Databricks vs. Snowflake, cloud hyperscalers, and enterprise SaaS platforms",
+    ("06", "Private AI Companies & Agents",
+     "OpenAI, Anthropic, Cursor, Perplexity, xAI, Mistral, Cohere, Cognition (Devin)",
      ACCENT_RED),
-    ("07", "Token Economics, Architecture & Takeaways",
-     "Cost optimization, production patterns, and strategic implications",
+    ("07", "Competitive Landscape & Takeaways",
+     "Databricks positioning, token economics, architecture, and strategic implications",
      RGBColor(0xF5, 0xA6, 0x23)),
 ]
 
@@ -1023,7 +1023,273 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 16: CEO QUOTES ON AGENTIC AI ──────────────────────────────────────
+# ── SLIDE 16: PRIVATE AI COMPANIES — FOUNDATION MODEL PROVIDERS ───────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+slide_header(slide, "Private AI Companies: Foundation Model Providers",
+             bar_color=ACCENT_RED, bar_width=Inches(3))
+add_text_box(slide, Inches(0.8), Inches(1.3), Inches(10), Inches(0.4),
+             "Privately held companies building agentic AI products and infrastructure",
+             font_size=13, color=LIGHT_GRAY)
+
+private_fm = [
+    ("OpenAI", "$500B → $1T",
+     "$25B ARR (Mar '26)", "Agents SDK, Operator, Swarm",
+     [("$25B", "Annualized\nRevenue", ACCENT_ORANGE),
+      ("$500B", "Valuation\n(Oct 2025)", ACCENT_BLUE),
+      ("$175B", "Total\nFunding", ACCENT_GREEN)],
+     ["ARR tripled from $6B (2024) to $20B (2025); hit $25B run rate by Mar 2026",
+      "Agents SDK (Mar 2025): tool calls, handoffs, guardrails, built-in tracing",
+      "Operator (Jan 2025): autonomous web browser agent with safety controls",
+      "Swarm (Oct 2024): multi-agent handoff architecture for orchestration",
+      "Compute: 0.2 GW (2023) → 0.6 GW (2024) → 1.9 GW (2025); targeting $600B by 2030"],
+     ACCENT_ORANGE),
+    ("Anthropic", "$380B",
+     "$14B ARR (Feb '26)", "Claude Code, MCP, Computer Use",
+     [("$14B", "Revenue\nRun Rate", ACCENT_PURPLE),
+      ("$380B", "Valuation\n(Feb 2026)", ACCENT_RED),
+      ("$30B", "Series G\nFunding", ACCENT_BLUE)],
+     ["Three consecutive years of 10x growth; 80% revenue from enterprise customers",
+      "Claude Code: $2.5B ARR, doubled since Jan 2026; 50%+ from enterprise accounts",
+      "Created Model Context Protocol (MCP) — now adopted across industry (inc. Databricks)",
+      "Computer Use: Claude agents that interact with desktop applications autonomously",
+      "300,000+ business and enterprise customers; targeting $20–26B revenue in 2026"],
+     ACCENT_PURPLE),
+]
+
+y_offset = Inches(1.7)
+for comp_name, valuation, rev_label, products, stat_cards, bullets, color in private_fm:
+    ch = Inches(2.7)
+    card = add_card(slide, Inches(0.8), y_offset, Inches(11.5), ch)
+    add_accent_bar(slide, Inches(0.8), y_offset, Pt(5), ch, color)
+    add_text_box(slide, Inches(1.2), y_offset + Inches(0.08), Inches(3), Inches(0.3),
+                 comp_name, font_size=20, color=color, bold=True)
+    add_text_box(slide, Inches(4.5), y_offset + Inches(0.08), Inches(4), Inches(0.3),
+                 products, font_size=11, color=WHITE, bold=True)
+    add_text_box(slide, Inches(9.5), y_offset + Inches(0.08), Inches(2.5), Inches(0.3),
+                 f"Valuation: {valuation}", font_size=11, color=MUTED,
+                 alignment=PP_ALIGN.RIGHT)
+
+    for j, (sv, sl_label, sc) in enumerate(stat_cards):
+        sx = Inches(1.2) + j * Inches(1.85)
+        add_stat_card(slide, sx, y_offset + Inches(0.42), Inches(1.7), Inches(0.85),
+                      sv, sl_label, sc)
+
+    bullet_lines = [{"text": f"•  {b}", "size": 10, "color": LIGHT_GRAY,
+                     "space_after": 2} for b in bullets]
+    add_multi_text(slide, Inches(6.9), y_offset + Inches(0.42), Inches(5.2),
+                   Inches(2.1), bullet_lines)
+    y_offset += Inches(2.85)
+
+
+# ── SLIDE 17: PRIVATE AI COMPANIES — AGENT-NATIVE PRODUCTS ───────────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+slide_header(slide, "Private AI Companies: Agent-Native Products",
+             bar_color=ACCENT_BLUE, bar_width=Inches(3))
+add_text_box(slide, Inches(0.8), Inches(1.3), Inches(10), Inches(0.4),
+             "Companies building agentic AI products for coding, search, and enterprise",
+             font_size=13, color=LIGHT_GRAY)
+
+agent_native = [
+    ("Cursor", "$29.3B valuation", "AI Coding Agent",
+     [("$2B+", "ARR\n(Feb 2026)", ACCENT_ORANGE),
+      ("1M+", "Daily Active\nUsers", ACCENT_BLUE),
+      ("50%+", "Fortune 500\nAdoption", ACCENT_GREEN)],
+     ["Fastest B2B company to $1B ARR (24 months); doubled to $2B in 3 more months",
+      "Background agents, multi-file editing, autonomous coding workflows",
+      "$2.3B Series D (Nov 2025) led by Accel/Coatue; NVIDIA & Google participated",
+      "Enterprise 45-60% of revenue; ~100% of revenue spent on AI infrastructure"],
+     ACCENT_ORANGE),
+    ("Perplexity", "$20B valuation", "AI Search Agent",
+     [("$148M", "ARR\n(Jun 2025)", ACCENT_PURPLE),
+      ("45M", "Monthly Active\nUsers", ACCENT_TEAL),
+      ("780M", "Monthly\nQueries", ACCENT_RED)],
+     ["700% ARR growth in 2024; targeting $656M revenue by end of 2026",
+      "Agentic search: multi-step research, source verification, and synthesis",
+      "$1.5B+ total funding; investors include NVIDIA, Jeff Bezos, SoftBank",
+      "60-70M daily queries globally; 50M+ mobile app downloads"],
+     ACCENT_PURPLE),
+    ("Cognition (Devin)", "$10.2B valuation", "Autonomous Coding Agent",
+     [("$150M+", "Combined ARR\n(post-Windsurf)", ACCENT_BLUE),
+      ("67%", "PR Merge\nRate", ACCENT_GREEN),
+      ("$500", "Per Seat\n/ Month", ACCENT_ORANGE)],
+     ["ARR grew from $1M (Sep 2024) to $73M (Jun 2025); 73x in 9 months",
+      "Merged hundreds of thousands of PRs; Goldman Sachs, Citi, Dell, Palantir",
+      "$400M raised (Sep 2025) at $10.2B; total net burn under $20M across history",
+      "67% PR merge rate (+33pp YoY); 4x faster, 2x more efficient than prior year"],
+     ACCENT_BLUE),
+]
+
+y_offset = Inches(1.7)
+for comp_name, val_label, product, stat_cards, bullets, color in agent_native:
+    ch = Inches(1.7)
+    card = add_card(slide, Inches(0.8), y_offset, Inches(11.5), ch)
+    add_accent_bar(slide, Inches(0.8), y_offset, Pt(5), ch, color)
+    add_text_box(slide, Inches(1.2), y_offset + Inches(0.06), Inches(2.5), Inches(0.28),
+                 comp_name, font_size=17, color=color, bold=True)
+    add_text_box(slide, Inches(3.8), y_offset + Inches(0.06), Inches(2.5), Inches(0.28),
+                 product, font_size=11, color=WHITE, bold=True)
+    add_text_box(slide, Inches(9.5), y_offset + Inches(0.06), Inches(2.5), Inches(0.28),
+                 val_label, font_size=11, color=MUTED, alignment=PP_ALIGN.RIGHT)
+
+    for j, (sv, sl_label, sc) in enumerate(stat_cards):
+        sx = Inches(1.2) + j * Inches(1.75)
+        add_stat_card(slide, sx, y_offset + Inches(0.36), Inches(1.6), Inches(0.75),
+                      sv, sl_label, sc)
+
+    bullet_lines = [{"text": f"•  {b}", "size": 9, "color": LIGHT_GRAY,
+                     "space_after": 1} for b in bullets]
+    add_multi_text(slide, Inches(6.6), y_offset + Inches(0.33), Inches(5.5),
+                   Inches(1.3), bullet_lines)
+    y_offset += Inches(1.82)
+
+
+# ── SLIDE 18: PRIVATE AI COMPANIES — ENTERPRISE & INFRASTRUCTURE ─────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+slide_header(slide, "Private AI Companies: Enterprise & Infrastructure",
+             bar_color=ACCENT_GREEN, bar_width=Inches(3))
+add_text_box(slide, Inches(0.8), Inches(1.3), Inches(10), Inches(0.4),
+             "Enterprise-focused and infrastructure private AI companies "
+             "building the agentic stack",
+             font_size=13, color=LIGHT_GRAY)
+
+enterprise_private = [
+    ("xAI (Grok)", "$250B valuation", "Grok Models & Enterprise API",
+     [("$3.8B", "Annualized Rev.\n(incl. X, 2025)", ACCENT_ORANGE),
+      ("600M", "Monthly Active\nUsers (X+Grok)", ACCENT_RED),
+      ("$20B", "Series E\n(Jan 2026)", ACCENT_BLUE)],
+     ["Standalone xAI ~$500M ARR run rate; 38x YoY growth (incl. X merger)",
+      "500+ enterprise API clients; 30M Grok monthly active users (app)",
+      "SpaceX acquired xAI at $250B (Feb 2026); burning ~$1B/month, target profit by 2027",
+      "Investors: Valor, Fidelity, QIA, NVIDIA, Cisco; $175B+ total funding"],
+     ACCENT_RED),
+    ("Mistral AI", "$14B valuation", "Le Chat, Mistral Large, Enterprise API",
+     [("€60M", "2025 Revenue\n(5x from '23)", ACCENT_GREEN),
+      ("€1B", "2026 Revenue\nTarget", ACCENT_TEAL),
+      ("20K+", "Companies\nUsing API", ACCENT_PURPLE)],
+     ["Europe's largest AI company; €2B funding round at $14B valuation (Sep 2025)",
+      "Clients: BNP Paribas, Airbus, Schneider Electric; targeting €1B revenue in 2026",
+      "Le Chat hit 1M users within a month; Vibe 2.0 for enterprise agent workflows",
+      "650 employees; building tiered professional and team agentic features"],
+     ACCENT_GREEN),
+    ("Cohere", "$7B valuation", "North Agent Platform, Command R",
+     [("$240M", "ARR\n(2025)", ACCENT_BLUE),
+      ("287%", "YoY ARR\nGrowth", ACCENT_ORANGE),
+      ("70%", "Gross\nMargins", ACCENT_GREEN)],
+     ["85% revenue from private deployments; enterprise clients: Oracle, RBC, LG, Notion",
+      "'North' AI agent platform for knowledge workers — multi-step business processes",
+      "$970M total funding; backed by NVIDIA, Salesforce Ventures, AMD Ventures",
+      "Positioning for IPO; 50%+ quarter-over-quarter growth throughout 2025"],
+     ACCENT_BLUE),
+    ("Databricks (Private)", "$134B valuation", "Mosaic AI, Agent Bricks, Lakebase",
+     [("$5.4B", "ARR\n(~65% YoY)", ACCENT_ORANGE),
+      ("$1.4B", "AI-Specific\nARR", ACCENT_PURPLE),
+      ("20K+", "Global\nCustomers", ACCENT_TEAL)],
+     ["Largest private data AI company; 60%+ Fortune 500 on platform",
+      "$7B equity + debt raise at $134B; approaching IPO readiness (FCF positive)",
+      "80% of databases created by AI agents; 327% multi-agent workflow growth",
+      "Open-source stack: MLflow, Unity Catalog; runs on AWS, GCP, Azure"],
+     ACCENT_ORANGE),
+]
+
+y_offset = Inches(1.65)
+for comp_name, val_label, product, stat_cards, bullets, color in enterprise_private:
+    ch = Inches(1.32)
+    card = add_card(slide, Inches(0.8), y_offset, Inches(11.5), ch)
+    add_accent_bar(slide, Inches(0.8), y_offset, Pt(5), ch, color)
+    add_text_box(slide, Inches(1.2), y_offset + Inches(0.04), Inches(2.3), Inches(0.25),
+                 comp_name, font_size=14, color=color, bold=True)
+    add_text_box(slide, Inches(3.6), y_offset + Inches(0.04), Inches(3.5), Inches(0.25),
+                 product, font_size=10, color=WHITE, bold=True)
+    add_text_box(slide, Inches(9.5), y_offset + Inches(0.04), Inches(2.5), Inches(0.25),
+                 val_label, font_size=10, color=MUTED, alignment=PP_ALIGN.RIGHT)
+
+    for j, (sv, sl_label, sc) in enumerate(stat_cards):
+        sx = Inches(1.2) + j * Inches(1.65)
+        add_stat_card(slide, sx, y_offset + Inches(0.3), Inches(1.5), Inches(0.65),
+                      sv, sl_label, sc)
+
+    bullet_lines = [{"text": f"•  {b}", "size": 8, "color": LIGHT_GRAY,
+                     "space_after": 0} for b in bullets]
+    add_multi_text(slide, Inches(6.4), y_offset + Inches(0.28), Inches(5.7),
+                   Inches(1.0), bullet_lines)
+    y_offset += Inches(1.4)
+
+add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
+    {"text": "Sources: Press releases, funding announcements, investor disclosures, "
+             "and media reports (2025–2026). Private company revenue figures are "
+             "estimates from public reporting.",
+     "size": 9, "color": MUTED},
+])
+
+
+# ── SLIDE 19: PRIVATE AI VALUATION LANDSCAPE ─────────────────────────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+slide_header(slide, "Private AI Valuation Landscape",
+             bar_color=ACCENT_PURPLE, bar_width=Inches(2.5))
+add_text_box(slide, Inches(0.8), Inches(1.3), Inches(10), Inches(0.4),
+             "Valuations and ARR of privately held agentic AI companies (2025–2026)",
+             font_size=13, color=LIGHT_GRAY)
+
+val_tiers = [
+    ("$250B+", [
+        ("OpenAI", "$500B", "$25B ARR", "GPT, Agents SDK, Operator", ACCENT_ORANGE),
+        ("Anthropic", "$380B", "$14B ARR", "Claude, MCP, Computer Use", ACCENT_PURPLE),
+        ("xAI", "$250B", "~$500M standalone", "Grok, Enterprise API", ACCENT_RED),
+    ], ACCENT_ORANGE),
+    ("$10B – $134B", [
+        ("Databricks", "$134B", "$5.4B ARR", "Mosaic AI, Agent Bricks, Lakebase",
+         ACCENT_BLUE),
+        ("Cursor", "$29.3B", "$2B+ ARR", "AI coding agent, background agents",
+         ACCENT_GREEN),
+        ("Perplexity", "$20B", "$148M ARR", "AI search agent, research",
+         ACCENT_TEAL),
+        ("Mistral AI", "$14B", "€60M rev", "Le Chat, enterprise models",
+         ACCENT_ORANGE),
+        ("Cognition", "$10.2B", "$150M+ ARR", "Devin autonomous coding agent",
+         ACCENT_PURPLE),
+    ], ACCENT_BLUE),
+    ("$5B – $10B", [
+        ("Cohere", "$7B", "$240M ARR", "North agent platform, Command R",
+         ACCENT_GREEN),
+    ], ACCENT_GREEN),
+]
+
+y_offset = Inches(1.75)
+for tier_label, companies, tier_color in val_tiers:
+    add_accent_bar(slide, Inches(0.8), y_offset, Inches(11.5), Pt(3), tier_color)
+    add_text_box(slide, Inches(0.8), y_offset + Inches(0.05), Inches(1.8), Inches(0.3),
+                 tier_label, font_size=14, color=tier_color, bold=True)
+    for j, (name, val, rev, prod, color) in enumerate(companies):
+        x_start = Inches(0.8) + (j % 3) * Inches(3.9)
+        row_y = y_offset + Inches(0.35) + (j // 3) * Inches(0.7)
+        card = add_card(slide, x_start, row_y, Inches(3.7), Inches(0.6))
+        add_accent_bar(slide, x_start, row_y, Pt(4), Inches(0.6), color)
+        add_text_box(slide, x_start + Inches(0.15), row_y + Inches(0.02),
+                     Inches(1.5), Inches(0.25), name, font_size=13, color=color,
+                     bold=True)
+        add_text_box(slide, x_start + Inches(1.7), row_y + Inches(0.02),
+                     Inches(1.8), Inches(0.25), f"{val}  |  {rev}", font_size=10,
+                     color=WHITE)
+        add_text_box(slide, x_start + Inches(0.15), row_y + Inches(0.28),
+                     Inches(3.4), Inches(0.25), prod, font_size=9, color=LIGHT_GRAY)
+    n_rows = (len(companies) + 2) // 3
+    y_offset += Inches(0.4) + n_rows * Inches(0.7) + Inches(0.1)
+
+add_multi_text(slide, Inches(0.8), y_offset + Inches(0.1), Inches(11), Inches(1.0), [
+    {"text": "Key Trend: Combined private AI company valuations exceed $1.3 trillion. "
+             "Agentic AI capabilities are the primary growth driver across all tiers.",
+     "size": 13, "color": ACCENT_ORANGE, "bold": True, "space_after": 6},
+    {"text": "Databricks ($134B) sits at the center of this landscape — providing "
+             "the enterprise data platform that both foundation model providers and "
+             "agent-native companies rely on for production deployments.",
+     "size": 12, "color": LIGHT_GRAY, "space_after": 4},
+    {"text": "Sources: Press releases, funding announcements, and media reports. "
+             "Private valuations and revenue figures are estimates from public reporting.",
+     "size": 10, "color": MUTED},
+])
+
+
+# ── SLIDE 20: CEO QUOTES ON AGENTIC AI ──────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "CEO Quotes on Agentic AI — From Filings & Earnings",
              bar_color=ACCENT_ORANGE, bar_width=Inches(3))
@@ -1073,7 +1339,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 17: MARKET CONTEXT ──────────────────────────────────────────────────
+# ── SLIDE 21: MARKET CONTEXT ──────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Enterprise AI Agent Market Context",
              bar_color=ACCENT_ORANGE)
@@ -1113,7 +1379,7 @@ add_multi_text(slide, Inches(1.3), Inches(5.6), Inches(10.5), Inches(1.3), [
 ])
 
 
-# ── SLIDE 18: KEY TAKEAWAYS ───────────────────────────────────────────────────
+# ── SLIDE 22: KEY TAKEAWAYS ───────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Key Takeaways", bar_color=ACCENT_ORANGE, bar_width=Inches(1.5))
 
@@ -1155,30 +1421,33 @@ for i, (title, desc, color) in enumerate(takeaways):
                  desc, font_size=12, color=LIGHT_GRAY)
 
 
-# ── SLIDE 19: SOURCES & REFERENCES ────────────────────────────────────────────
+# ── SLIDE 23: SOURCES & REFERENCES ────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Sources & References", bar_color=ACCENT_ORANGE,
              bar_width=Inches(1.8))
 
 sources = [
-    "Databricks Data + AI Summit 2024 — Mosaic AI Compound Systems Keynote & Sessions",
-    "Databricks Data + AI Summit 2025 — Agent Sessions (June 9–12, San Francisco)",
-    "Databricks Data + AI Summit 2026 — Agent Sessions (June 15–18, San Francisco)",
-    "Databricks State of Data + AI Report 2024 (10,000+ customers, 300+ Fortune 500)",
-    "Databricks State of AI Agents Report 2026 (20,000+ global customers)",
-    "Databricks Blog: Enterprise AI Agent Trends, Mosaic AI Announcements, MCP Integration",
-    "Ali Ghodsi (Databricks CEO): Fortune Brainstorm AI (Dec 2025) & CNBC (Feb 2026)",
-    "Salesforce Q4 FY2026 Earnings / SEC Filing — Agentforce Metrics (Feb 2026)",
-    "Microsoft FY2025 Annual Report / 10-K — Copilot & Agent 365 (sec.gov)",
-    "ServiceNow Q4 2025 Earnings / 10-K — Now Assist Agent Metrics (sec.gov)",
-    "Amazon Q4 2025 Earnings — AWS Bedrock Agents Revenue (sec.gov)",
-    "Palantir Q4 2025 Earnings / 10-K — AIP Platform Metrics (sec.gov)",
-    "Snowflake Q4 FY2026 Earnings — Cortex AI & Intelligence Metrics (sec.gov)",
-    "NVIDIA FY2025 Annual Report / GTC 2025 — Token Economics & Inference (sec.gov)",
-    "Google / Alphabet Q4 2025 Earnings / 10-K — Cloud & AI Metrics (sec.gov)",
-    "adidas Summit 2026 / Walmart Summit 2025 / AstraZeneca / 7-Eleven / Zillow / RBC",
-    "Getmonetizely: Production-Grade AI Agents on Databricks Mosaic — Cost Analysis",
-    "Databricks Docs: AI Gateway Usage Tracking (system.ai_gateway.usage tables)",
+    "Databricks Data + AI Summit 2024, 2025, 2026 — Keynotes & Agent Sessions",
+    "Databricks State of AI Agents Report 2026 / State of Data + AI Report 2024",
+    "Databricks Blog: AI Agent Trends, Mosaic AI, MCP Integration",
+    "Ali Ghodsi (Databricks CEO): Fortune Brainstorm AI (Dec '25) & CNBC (Feb '26)",
+    "Salesforce Q4 FY2026 Earnings — Agentforce $800M ARR (salesforce.com, Feb '26)",
+    "Microsoft FY2025 10-K — Copilot & Agent 365 (sec.gov)",
+    "ServiceNow Q4 2025 / 10-K — Now Assist $600M+ ACV (sec.gov)",
+    "Amazon Q4 2025 — AWS Bedrock multi-B$ run rate (sec.gov)",
+    "Palantir Q4 2025 / 10-K — AIP $4.5B revenue (sec.gov)",
+    "Snowflake Q4 FY2026 — Cortex AI $100M run rate (sec.gov)",
+    "NVIDIA FY2025 / GTC 2025 — $130.5B revenue, token economics (sec.gov)",
+    "Google / Alphabet Q4 2025 / 10-K — Cloud $70B+ run rate (sec.gov)",
+    "OpenAI — $25B ARR, $500B valuation (Reuters, Jan–Mar 2026)",
+    "Anthropic — $14B ARR, $380B valuation, Series G (Reuters, Feb 2026)",
+    "Cursor — $2B+ ARR, $29.3B valuation (Series D, Nov 2025)",
+    "Perplexity — $148M ARR, $20B valuation (Sacra, Sep 2025)",
+    "xAI / Grok — $250B valuation, $20B Series E (TechCrunch, Jan 2026)",
+    "Mistral AI — $14B valuation, €1B 2026 target (Davos, Jan 2026)",
+    "Cohere — $240M ARR, $7B valuation (Reuters, Aug 2025)",
+    "Cognition / Devin — $150M+ ARR, $10.2B valuation (Sep 2025)",
+    "adidas / Walmart / AstraZeneca / 7-Eleven / Zillow / RBC — Summit presentations",
 ]
 
 source_lines = [{"text": f"{i+1}.  {s}", "size": 11, "color": LIGHT_GRAY,
