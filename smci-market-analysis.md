@@ -195,7 +195,104 @@ The overall server market reached a **record $444.1 billion in 2025** (up 80.4% 
 
 ---
 
-## 6. Market Share vs. White Box / ODM Server Makers
+## 6. Dell AI Server Margins — Two-Year Trend & Memory Price Impact
+
+### ISG Operating Margin Trajectory
+
+Dell's Infrastructure Solutions Group (ISG) margin story over the past two years is one of **rising revenue and falling margin rates**, as the mix has shifted from higher-margin traditional servers and storage toward lower-margin AI-optimized servers.
+
+| Period | ISG Revenue | ISG Operating Income | ISG Operating Margin | Key Context |
+|---|---|---|---|---|
+| FY2024 Full Year | $33.9B | $4.3B | ~12.7% | Pre-AI-boom baseline; revenue down 12% YoY |
+| Q4 FY2024 | $9.3B | $1.4B | ~15.1% | AI server ramp begins; strong storage quarter |
+| Q1 FY2025 | $9.2B | $0.74B | ~8.0% | AI mix ramp begins compressing margins |
+| Q3 FY2025 | — | — | ~13.3% | Partial recovery from storage profitability |
+| Q4 FY2025 | $11.4B | $2.1B | ~18.4% | Storage rebound; favorable product mix |
+| FY2025 Full Year | $43.6B | $5.6B | ~12.8% | Revenue up 29% YoY; operating income up 30% |
+| Q1 FY2026 | $10.3B | $1.0B | ~9.7% | AI server ramp accelerates; margin compresses |
+| Q4 FY2026 | $19.6B | $2.9B | ~14.8% | Record revenue; storage mix supports margin |
+| FY2026 Full Year | — | — | ~100 bps decline guided | Company guided gross margin down ~100 bps YoY |
+
+### AI Server Margins vs. Traditional Server Margins
+
+Dell has consistently disclosed that AI-optimized servers carry **mid-single-digit operating margins (5–7%)**, far below the ISG blended average:
+
+| Product Category | Operating Margin (Approx.) | Notes |
+|---|---|---|
+| Traditional servers | ~15–18% | Mature, software-attached, services-rich |
+| Storage (Dell IP) | ~20–25%+ | High proprietary software content (PowerStore, etc.) |
+| AI-optimized servers | ~5–7% | NVIDIA captures most of the value; Dell is primarily assembly/delivery |
+| ISG blended | ~12–15% | Weighted by mix; AI mix is dilutive |
+
+The core dynamic: NVIDIA performs most of the engineering work on complex AI server nodes (DGX, HGX). Dell is essentially assembling, validating, and delivering NVIDIA-designed systems with a modest markup. This is structurally different from traditional servers, where Dell controls the design, firmware, management software, and services stack — all of which carry higher margins.
+
+### Why ISG Margins Swing Quarter to Quarter
+
+ISG margins show significant quarterly volatility (8.0% to 18.4% over the past two years) driven by:
+
+1. **AI vs. storage mix**: Quarters with heavy AI server shipments compress margins; quarters with strong storage (especially Dell-IP storage like PowerStore) lift margins
+2. **Technology transitions**: Major GPU transitions (Hopper to Blackwell) create temporarily lower margins as Dell works through inventory and re-validates platforms
+3. **Component cost timing**: DRAM and flash cost increases hit margins in the quarter they are absorbed, while price increases to customers lag
+4. **Backlog conversion timing**: Dell's AI server backlog ($43B exiting FY2026) converts in lumpy patterns tied to GPU supply
+
+### Impact of Memory Prices
+
+Memory cost inflation is a **material headwind** for Dell's server margins, with effects intensifying through 2025–2026:
+
+#### DRAM / DDR5 Price Trajectory
+
+| Period | Server DRAM Price Move | Driver |
+|---|---|---|
+| 2024 | Relatively stable; modest increases | AI demand building but supply adequate |
+| Q4 2025 | +45–50% QoQ | HBM production diverts capacity from conventional DRAM |
+| Q1 2026 | +88–93% QoQ (record) | SK Hynix, Samsung, Micron shifted fabs to HBM; structural shortage |
+| 2026 outlook | DDR5 RDIMMs expected to ~2x YoY by late 2026 | No meaningful relief before 2027 |
+
+#### HBM (High Bandwidth Memory) for AI Servers
+
+| Metric | Value |
+|---|---|
+| HBM3E cost per stack | ~$300 per 36GB stack ($8.33/GB) |
+| HBM3E as % of AI accelerator cost | 30–40% of total manufacturing cost |
+| Per-GPU HBM cost (B200 example) | ~$2,400 (8 stacks), exceeding the logic die cost |
+| 2026 price move | +20% YoY (Samsung, SK Hynix price hikes) |
+| Supply lead time | 20–26 weeks |
+
+#### How Memory Costs Flow Through Dell's P&L
+
+1. **Direct BOM impact**: DDR5 and HBM costs are the largest variable cost components in AI servers. When DDR5 prices jump 88–93% in a quarter, Dell absorbs the cost increase immediately but can only pass it through to customers with a lag.
+
+2. **Pricing response**: Dell announced **15–20% server price increases** in December 2025 (vs. only 5% for PCs), specifically to offset the 70% YoY DDR5 cost increase. This partially mitigates margin impact but does not fully offset it — the price increase is smaller than the cost increase.
+
+3. **Pass-through economics**: For AI servers where NVIDIA GPUs and HBM dominate the BOM, Dell's margin is applied to a much larger revenue base but on a percentage basis is thinner. As HBM3E costs rise, revenue inflates but margins compress mechanically.
+
+4. **Competitive constraint**: Dell cannot pass through 100% of memory cost increases because SMCI and ODMs operate at lower margins and may absorb more cost to maintain volume. The competitive pricing environment limits Dell's pricing power despite its brand premium.
+
+5. **Q4 FY2026 resilience**: Despite what Dell CFO described as "crazy price increases for DRAM main memory and enterprise flash storage," ISG managed to keep systems operating income relatively stable in Q4 FY2026 — suggesting Dell is finding ways to partially offset through mix management and operational efficiency.
+
+### Dell's Margin Recovery Strategy
+
+Dell's path to sustaining or improving ISG margins rests on:
+
+- **Storage attach**: Driving Dell IP storage (PowerStore, PowerFlex) attach rates alongside AI server sales; 8 consecutive quarters of double-digit PowerStore growth
+- **Services layer**: Wrapping AI server deployments with Dell services (deployment, monitoring, support) to add margin on top of hardware
+- **AI factory concept**: Selling full-stack "AI factory" solutions (compute + storage + networking + services) at higher blended margins vs. bare GPU servers
+- **Scale economics**: As AI server volumes increase, assembly and logistics costs decline per unit
+- **FY2027 guidance**: $50B in AI server revenue expected (~100% YoY growth); total revenue $138–142B; operating income up ~18% — implies margin stabilization rather than expansion
+
+### Key Takeaway: Dell vs. SMCI Margin Comparison
+
+| Metric | Dell (ISG) | SMCI |
+|---|---|---|
+| AI server operating margin | 5–7% | ~3–5% (estimated from 6.3% gross margin) |
+| Blended operating margin | 12–15% (ISG) | ~4–5% (company-wide) |
+| Margin direction | Compressing from AI mix but supported by storage | Compressing and at risk of further decline |
+| Memory price exposure | Material but partially offset by price increases and mix | Material; less pricing power due to concentration |
+| Structural advantage | Services + storage software provide margin floor | Liquid cooling premium, but diminishing |
+
+---
+
+## 7. Market Share vs. White Box / ODM Server Makers
 
 ### White Box Server Market Overview
 
@@ -242,7 +339,7 @@ The competitive landscape has shifted from **"scarcity to scale"** in 2025–202
 
 ---
 
-## 7. Earnings Estimate Revisions — Why Have They Come Down?
+## 8. Earnings Estimate Revisions — Why Have They Come Down?
 
 ### Consensus Trajectory
 
@@ -305,7 +402,7 @@ Management is guiding for sequential margin improvement in Q3 FY2026 (~30 bps im
 
 ---
 
-## 8. Gross Margin Decline — Deep Dive
+## 9. Gross Margin Decline — Deep Dive
 
 ### Margin Compression Timeline
 
@@ -355,7 +452,7 @@ The bull case for margins rests on DCBBS becoming a meaningful revenue contribut
 
 ---
 
-## 9. Audit & Governance Issues — Full Timeline
+## 10. Audit & Governance Issues — Full Timeline
 
 ### Episode 1: SEC Enforcement Action (2020) — Prior History
 
@@ -455,7 +552,7 @@ On March 19, 2026 — just days before this analysis — the DOJ unsealed a crim
 
 ---
 
-## 10. Key Risks & Considerations
+## 11. Key Risks & Considerations
 
 ### Bull Case
 - AI infrastructure spend continues to accelerate; SMCI rides the wave as a top-2 AI server supplier
@@ -488,7 +585,7 @@ On March 19, 2026 — just days before this analysis — the DOJ unsealed a crim
 
 ---
 
-## 11. Financial Snapshot
+## 12. Financial Snapshot
 
 | Metric | FY2025 (Actual) | FY2026 (Guided/Est.) |
 |---|---|---|
