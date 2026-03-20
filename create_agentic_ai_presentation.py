@@ -824,7 +824,123 @@ add_text_box(slide, Inches(0.8), Inches(6.6), Inches(11), Inches(0.5),
              font_size=10, color=MUTED)
 
 
-# ── SLIDE 13: AGENTIC AI ARCHITECTURE PATTERNS ────────────────────────────────
+# ── SLIDE 13: TOKEN USAGE — OPENCLAW vs REASONING vs SINGLE-SHOT ─────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+set_slide_bg(slide, DARK_BG)
+add_accent_bar(slide, Inches(0), Inches(0), SLIDE_W, Inches(0.08), ACCENT_ORANGE)
+
+add_text_box(slide, Inches(0.8), Inches(0.3), Inches(11), Inches(0.8),
+             "Token Usage: OpenClaw vs Reasoning Model vs Single-Shot",
+             font_size=34, color=WHITE, bold=True)
+add_accent_bar(slide, Inches(0.8), Inches(1.05), Inches(3.5), Pt(4), ACCENT_ORANGE)
+add_text_box(slide, Inches(0.8), Inches(1.15), Inches(11), Inches(0.4),
+             "Per-task token consumption and cost for a typical coding task "
+             "(~500-token visible output)",
+             font_size=13, color=LIGHT_GRAY)
+
+BAR_BG = RGBColor(0x30, 0x35, 0x48)
+BAR_ORANGE = RGBColor(0xFF, 0x8C, 0x2A)
+BAR_PURPLE = RGBColor(0xB0, 0x6A, 0xF0)
+BAR_BLUE = RGBColor(0x5B, 0xA8, 0xF7)
+BAR_GREEN = RGBColor(0x34, 0xD3, 0x99)
+
+
+def add_horizontal_bar(slide, left, top, max_width, fraction, height, bar_color):
+    bg = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top,
+                                int(max_width), int(height))
+    bg.fill.solid()
+    bg.fill.fore_color.rgb = BAR_BG
+    bg.line.fill.background()
+    bar_w = max(Inches(0.15), int(max_width * fraction))
+    bar = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top,
+                                 int(bar_w), int(height))
+    bar.fill.solid()
+    bar.fill.fore_color.rgb = bar_color
+    bar.line.fill.background()
+    return bar
+
+
+max_bar_w = Inches(7.5)
+bar_h = Inches(0.55)
+bar_left = Inches(4.0)
+section_gap = Inches(0.15)
+
+y = Inches(1.7)
+add_text_box(slide, Inches(0.8), y, Inches(3), Inches(0.35),
+             "TOTAL TOKENS PER TASK", font_size=11, color=MUTED, bold=True)
+y += Inches(0.35)
+
+token_bars = [
+    ("OpenClaw (Multi-Agent)", "~110,000 tokens",
+     "8K base + tool calls + agent coordination + context replay",
+     110000, BAR_ORANGE),
+    ("Reasoning Model (o3)", "~60,000 tokens",
+     "500 visible + 9,500 thinking tokens + context; 5–14x overhead",
+     60000, BAR_PURPLE),
+    ("Single-Shot (GPT-4.1)", "~8,000 tokens",
+     "Direct prompt → response; no reasoning chain or agent loops",
+     8000, BAR_BLUE),
+]
+
+max_tokens = 110000
+for label, token_count, desc, tokens, color in token_bars:
+    add_text_box(slide, Inches(0.8), y + Inches(0.02), Inches(3), Inches(0.3),
+                 label, font_size=14, color=color, bold=True)
+    add_horizontal_bar(slide, bar_left, y, max_bar_w, tokens / max_tokens, bar_h, color)
+    add_text_box(slide, bar_left + Inches(0.2), y + Inches(0.08), Inches(3),
+                 Inches(0.35), token_count, font_size=16, color=WHITE, bold=True)
+    add_text_box(slide, Inches(0.8), y + bar_h + Inches(0.0), Inches(10.5),
+                 Inches(0.25), desc, font_size=10, color=LIGHT_GRAY)
+    y += bar_h + Inches(0.35)
+
+y += section_gap
+add_text_box(slide, Inches(0.8), y, Inches(3), Inches(0.35),
+             "COST PER TASK", font_size=11, color=MUTED, bold=True)
+y += Inches(0.35)
+
+cost_bars = [
+    ("OpenClaw (Multi-Agent)", "$1.65 / task",
+     "Highest cost — agent coordination, context passing, backtracking (2–3x Claude Code)",
+     1.65, BAR_ORANGE),
+    ("Reasoning Model (o3)", "$0.80 / task",
+     "Thinking tokens billed as output at $8.00/M; invisible but expensive",
+     0.80, BAR_PURPLE),
+    ("Single-Shot (GPT-4.1)", "$0.02 / task",
+     "Minimal tokens, direct completion — but limited to simple tasks",
+     0.02, BAR_BLUE),
+]
+
+max_cost = 1.65
+for label, cost_label, desc, cost, color in cost_bars:
+    add_text_box(slide, Inches(0.8), y + Inches(0.02), Inches(3), Inches(0.3),
+                 label, font_size=14, color=color, bold=True)
+    add_horizontal_bar(slide, bar_left, y, max_bar_w, cost / max_cost, bar_h, color)
+    add_text_box(slide, bar_left + Inches(0.2), y + Inches(0.08), Inches(3),
+                 Inches(0.35), cost_label, font_size=16, color=WHITE, bold=True)
+    add_text_box(slide, Inches(0.8), y + bar_h + Inches(0.0), Inches(10.5),
+                 Inches(0.25), desc, font_size=10, color=LIGHT_GRAY)
+    y += bar_h + Inches(0.35)
+
+# Why it matters callout
+card = add_card(slide, Inches(0.8), Inches(6.3), Inches(11.5), Inches(0.9),
+                color=RGBColor(0x20, 0x24, 0x33))
+add_accent_bar(slide, Inches(0.8), Inches(6.3), Pt(5), Inches(0.9), ACCENT_GREEN)
+add_multi_text(slide, Inches(1.3), Inches(6.35), Inches(10.5), Inches(0.8), [
+    {"text": "Why it matters: At 50 tasks/day, OpenClaw costs ~$82/day vs "
+             "$40/day for reasoning vs $1/day for single-shot.",
+     "size": 13, "color": ACCENT_GREEN, "bold": True, "space_after": 2},
+    {"text": "Agentic systems trade token efficiency for autonomy. The right "
+             "approach depends on task complexity — use single-shot for simple "
+             "queries, reasoning for complex logic, and multi-agent (OpenClaw) "
+             "for full autonomous workflows.",
+     "size": 11, "color": LIGHT_GRAY, "space_after": 2},
+    {"text": "Sources: OpenClaw docs, BSWEN token analysis, AI Cost Check "
+             "reasoning model pricing (2026)",
+     "size": 9, "color": MUTED},
+])
+
+
+# ── SLIDE 14: AGENTIC AI ARCHITECTURE PATTERNS ────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Agentic AI Architecture Patterns",
              bar_color=ACCENT_RED, bar_width=Inches(2.5))
@@ -912,7 +1028,7 @@ add_multi_text(slide, Inches(6.9), Inches(4.9), Inches(5), Inches(1.7), [
 ])
 
 
-# ── SLIDE 14: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION ───────────────────
+# ── SLIDE 15: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION ───────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "AI Agent Usage in Company Filings (Part 1)",
              bar_color=ACCENT_TEAL, bar_width=Inches(3))
@@ -965,7 +1081,7 @@ for comp_name, filing_ref, stat_cards, bullets, color in filing_companies_1:
     y_offset += Inches(2.75)
 
 
-# ── SLIDE 15: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION (Part 2) ─────────
+# ── SLIDE 16: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION (Part 2) ─────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "AI Agent Usage in Company Filings (Part 2)",
              bar_color=ACCENT_TEAL, bar_width=Inches(3))
@@ -1031,7 +1147,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.0), Inches(11), Inches(0.4), [
 ])
 
 
-# ── SLIDE 16: COMPETITIVE LANDSCAPE ──────────────────────────────────────────
+# ── SLIDE 17: COMPETITIVE LANDSCAPE ──────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Competitive Landscape: Databricks vs. Peers",
              bar_color=ACCENT_RED, bar_width=Inches(3))
@@ -1131,7 +1247,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 17: PRIVATE AI COMPANIES — FOUNDATION MODEL PROVIDERS ───────────────
+# ── SLIDE 18: PRIVATE AI COMPANIES — FOUNDATION MODEL PROVIDERS ───────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Companies: Foundation Model Providers",
              bar_color=ACCENT_RED, bar_width=Inches(3))
@@ -1189,7 +1305,7 @@ for comp_name, valuation, rev_label, products, stat_cards, bullets, color in pri
     y_offset += Inches(2.85)
 
 
-# ── SLIDE 18: PRIVATE AI COMPANIES — AGENT-NATIVE PRODUCTS ───────────────────
+# ── SLIDE 19: PRIVATE AI COMPANIES — AGENT-NATIVE PRODUCTS ───────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Companies: Agent-Native Products",
              bar_color=ACCENT_BLUE, bar_width=Inches(3))
@@ -1251,7 +1367,7 @@ for comp_name, val_label, product, stat_cards, bullets, color in agent_native:
     y_offset += Inches(1.82)
 
 
-# ── SLIDE 19: PRIVATE AI COMPANIES — ENTERPRISE & INFRASTRUCTURE ─────────────
+# ── SLIDE 20: PRIVATE AI COMPANIES — ENTERPRISE & INFRASTRUCTURE ─────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Companies: Enterprise & Infrastructure",
              bar_color=ACCENT_GREEN, bar_width=Inches(3))
@@ -1330,7 +1446,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 20: PRIVATE AI VALUATION LANDSCAPE ─────────────────────────────────
+# ── SLIDE 21: PRIVATE AI VALUATION LANDSCAPE ─────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Valuation Landscape",
              bar_color=ACCENT_PURPLE, bar_width=Inches(2.5))
@@ -1397,7 +1513,7 @@ add_multi_text(slide, Inches(0.8), y_offset + Inches(0.1), Inches(11), Inches(1.
 ])
 
 
-# ── SLIDE 21: CEO QUOTES ON AGENTIC AI ──────────────────────────────────────
+# ── SLIDE 22: CEO QUOTES ON AGENTIC AI ──────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "CEO Quotes on Agentic AI — From Filings & Earnings",
              bar_color=ACCENT_ORANGE, bar_width=Inches(3))
@@ -1447,7 +1563,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 22: MARKET CONTEXT ──────────────────────────────────────────────────
+# ── SLIDE 23: MARKET CONTEXT ──────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Enterprise AI Agent Market Context",
              bar_color=ACCENT_ORANGE)
@@ -1487,7 +1603,7 @@ add_multi_text(slide, Inches(1.3), Inches(5.6), Inches(10.5), Inches(1.3), [
 ])
 
 
-# ── SLIDE 23: KEY TAKEAWAYS ───────────────────────────────────────────────────
+# ── SLIDE 24: KEY TAKEAWAYS ───────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Key Takeaways", bar_color=ACCENT_ORANGE, bar_width=Inches(1.5))
 
@@ -1529,7 +1645,7 @@ for i, (title, desc, color) in enumerate(takeaways):
                  desc, font_size=12, color=LIGHT_GRAY)
 
 
-# ── SLIDE 24: SOURCES & REFERENCES ────────────────────────────────────────────
+# ── SLIDE 25: SOURCES & REFERENCES ────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Sources & References", bar_color=ACCENT_ORANGE,
              bar_width=Inches(1.8))
