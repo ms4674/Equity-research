@@ -13,17 +13,33 @@ Super Micro Computer has transformed from a niche server OEM into a top-tier AI 
 | Metric | Detail |
 |---|---|
 | Largest single customer | ~63% of Q2 FY2026 revenue (~$8B in the quarter) |
-| Customer identity | Undisclosed; widely speculated to be a major hyperscaler or GPU cloud provider |
+| Customer identity | Not formally disclosed; widely reported to be **xAI** (Elon Musk) based on supply chain evidence |
 | Second-tier customers | Mix of hyperscalers, cloud service providers, enterprise, and government |
+| OEM/Large Data Center mix | Grew from 68% of revenue (Q1) to 84% (Q2 FY2026) |
 
 SMCI has historically served a broad base — cloud service providers, enterprise data centers, telecom operators, and government agencies — but the AI infrastructure boom has dramatically skewed revenue toward a single mega-customer.
 
-### Known & Reported Customer Relationships
+### xAI — The Dominant Customer
 
-- **Hyperscalers & Cloud Providers**: SMCI supplies GPU-dense server racks to major cloud infrastructure builders. While specific names are not formally disclosed, analyst reports and supply chain coverage reference relationships with entities in the CoreWeave / GPU-as-a-Service ecosystem, as well as large-cap hyperscalers.
-- **Enterprise & Mid-Market**: CEO Charles Liang has stated the company is "aggressively growing enterprise mid-size" customers to reduce concentration risk.
+While SMCI does not formally name its largest customer, extensive supply chain reporting and public disclosures point to **xAI** as the ~63% customer:
+
+- **Colossus Supercomputer (Memphis, TN)**: SMCI supplied the liquid-cooled server racks for xAI's Colossus data center — initially 100,000 NVIDIA H100 GPUs deployed in 122 days, expanded to 200,000 GPUs (adding 50,000 H200 units) by early 2025. Each SMCI rack housed eight 4U servers with 8 GPUs each (64 GPUs per rack). SMCI designed custom 4U Universal GPU liquid-cooled servers specifically for xAI.
+- **Memphis local operations**: In December 2024, CEO Charles Liang announced SMCI would establish dedicated production, validation, service, and support operations in Memphis to support xAI's expansion — an unusual level of commitment to a single customer.
+- **MACROHARDRR expansion**: xAI announced a $1.2 billion expansion adding ~1.05 million NVIDIA H200 GPUs, pushing total facility capacity toward two gigawatts. SMCI is positioned as a primary infrastructure supplier.
+- **Revenue scale**: At ~$8B in a single quarter, the customer's spend aligns with xAI's known GPU infrastructure buildout pace rather than the procurement patterns of traditional hyperscalers (Meta, Google, Microsoft) who rely more heavily on ODMs and in-house server designs.
+
+### Other Known Customer Relationships
+
+- **Other large-scale data center customers**: Management stated the number of large-scale data center customers expanded from four to eight during FY2026.
+- **Enterprise & Mid-Market**: CEO Liang has stated the company is "aggressively growing enterprise mid-size" customers to reduce concentration risk.
 - **U.S. Federal Government**: SMCI established **Super Micro Federal LLC** to expand into government and defense, leveraging domestic U.S. manufacturing of AI server platforms.
 - **Channel Partners**: SMCI uses a significant network of distributors and VARs globally, particularly for non-hyperscale enterprise deals.
+
+### Not Meta, Not BYD
+
+**Meta** builds the majority of its server infrastructure through direct ODM relationships (primarily Quanta and Wiwynn) and in-house designs. While SMCI may supply some Meta infrastructure, Meta is not believed to be the dominant customer — Meta's procurement model is too diversified and ODM-reliant.
+
+**BYD** is a Chinese electric vehicle and electronics manufacturer. There is **no publicly reported supplier relationship** between BYD and SMCI in the server/data center space.
 
 ### Concentration Risk Assessment
 
