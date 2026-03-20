@@ -594,7 +594,115 @@ add_multi_text(slide, Inches(6.9), Inches(4.4), Inches(5), Inches(2.4), [
 ])
 
 
-# ── SLIDE 10: ENTERPRISE CASE STUDIES ──────────────────────────────────────────
+# ── SLIDE 10: TOP WAYS ENTERPRISES USE AI AGENTS (BUBBLE CHART) ───────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+set_slide_bg(slide, DARK_BG)
+add_accent_bar(slide, Inches(0), Inches(0), SLIDE_W, Inches(0.08), ACCENT_ORANGE)
+
+add_text_box(slide, Inches(0.8), Inches(0.3), Inches(11), Inches(0.8),
+             "Top Ways Enterprises Use AI Agents", font_size=36, color=WHITE,
+             bold=True)
+add_text_box(slide, Inches(0.8), Inches(1.0), Inches(10), Inches(0.4),
+             "Databricks State of AI Agents Report 2026  |  20,000+ global customers",
+             font_size=13, color=LIGHT_GRAY)
+
+BUBBLE_BLUE = RGBColor(0x7D, 0xB8, 0xE8)
+BUBBLE_PINK = RGBColor(0xE8, 0xA0, 0xD0)
+BUBBLE_MINT = RGBColor(0x6E, 0xD4, 0xB8)
+BUBBLE_YELLOW = RGBColor(0xE8, 0xD4, 0x5A)
+BUBBLE_LILAC = RGBColor(0xC4, 0xA0, 0xE8)
+BUBBLE_PEACH = RGBColor(0xF0, 0xB0, 0x80)
+BUBBLE_SKY = RGBColor(0xA0, 0xCC, 0xE8)
+BUBBLE_CORAL = RGBColor(0xE8, 0x80, 0x80)
+
+
+def add_bubble(slide, cx, cy, diameter, pct_text, label_text, bubble_color,
+               label_below=False, font_scale=1.0):
+    left = cx - diameter / 2
+    top = cy - diameter / 2
+    shape = slide.shapes.add_shape(MSO_SHAPE.OVAL, int(left), int(top),
+                                   int(diameter), int(diameter))
+    shape.fill.solid()
+    shape.fill.fore_color.rgb = bubble_color
+    shape.line.fill.background()
+
+    pct_size = max(10, int(22 * (diameter / Inches(2.5)) * font_scale))
+    pct_box = slide.shapes.add_textbox(int(left), int(cy - Inches(0.25)),
+                                       int(diameter), Inches(0.5))
+    tf = pct_box.text_frame
+    tf.word_wrap = True
+    p = tf.paragraphs[0]
+    p.text = pct_text
+    p.font.size = Pt(pct_size)
+    p.font.color.rgb = RGBColor(0x1A, 0x1A, 0x1A)
+    p.font.bold = True
+    p.alignment = PP_ALIGN.CENTER
+
+    if label_below:
+        lbl_top = int(cy + diameter / 2 + Inches(0.05))
+    else:
+        lbl_top = int(cy - diameter / 2 - Inches(0.35))
+    lbl_size = max(8, int(11 * font_scale))
+    lbl_box = slide.shapes.add_textbox(int(cx - Inches(1)), lbl_top,
+                                       Inches(2), Inches(0.35))
+    tf2 = lbl_box.text_frame
+    tf2.word_wrap = True
+    p2 = tf2.paragraphs[0]
+    p2.text = label_text
+    p2.font.size = Pt(lbl_size)
+    p2.font.color.rgb = WHITE
+    p2.font.bold = True
+    p2.alignment = PP_ALIGN.CENTER
+
+
+bubbles = [
+    (Inches(2.8), Inches(3.4), Inches(3.0), "40%", "CUSTOMER\nEXPERIENCE",
+     BUBBLE_BLUE, False, 1.0),
+    (Inches(5.8), Inches(4.0), Inches(2.3), "35%", "PREDICTIVE\nMAINTENANCE",
+     BUBBLE_PINK, True, 0.9),
+    (Inches(8.0), Inches(3.0), Inches(1.7), "23%", "MEDICAL LIT.\nSYNTHESIS",
+     BUBBLE_MINT, False, 0.75),
+    (Inches(4.5), Inches(2.0), Inches(1.4), "19%", "MARKET\nINTELLIGENCE",
+     BUBBLE_YELLOW, False, 0.65),
+    (Inches(9.5), Inches(3.8), Inches(1.5), "14%", "DOCUMENT\nEXTRACTION",
+     BUBBLE_LILAC, True, 0.65),
+    (Inches(7.0), Inches(5.0), Inches(1.2), "12%", "CODE\nGENERATION",
+     BUBBLE_PEACH, True, 0.55),
+    (Inches(10.5), Inches(2.8), Inches(1.1), "11%", "SUPPLY CHAIN\nOPTIMIZATION",
+     BUBBLE_SKY, False, 0.50),
+    (Inches(10.8), Inches(4.5), Inches(1.0), "9%", "FRAUD\nDETECTION",
+     BUBBLE_CORAL, True, 0.45),
+]
+
+for cx, cy, diam, pct, label, bcolor, below, fscale in bubbles:
+    add_bubble(slide, cx, cy, diam, pct, label, bcolor, below, fscale)
+
+quote_card = add_card(slide, Inches(0.8), Inches(5.6), Inches(11.5), Inches(1.6),
+                      color=RGBColor(0x20, 0x24, 0x33))
+add_accent_bar(slide, Inches(0.8), Inches(5.6), Pt(5), Inches(1.6), ACCENT_ORANGE)
+
+add_text_box(slide, Inches(1.4), Inches(5.55), Inches(0.5), Inches(0.5),
+             "\u201C", font_size=40, color=ACCENT_ORANGE, bold=True)
+
+add_multi_text(slide, Inches(1.8), Inches(5.7), Inches(9.5), Inches(1.0), [
+    {"text": "AI agents are fantastic for the first 80% of enterprise workflows: "
+             "routing tickets, extracting data, generating reports. But that final "
+             "20%\u2014the judgment calls, regulatory nuance, and stakeholder "
+             "trust\u2014that's still very much human territory.",
+     "size": 13, "color": LIGHT_GRAY, "space_after": 4},
+    {"text": "\u2014 Databricks State of AI Agents Report 2026  |  "
+             "20,000+ enterprise customers surveyed",
+     "size": 10, "color": MUTED, "bold": True},
+])
+
+add_multi_text(slide, Inches(0.8), Inches(7.15), Inches(11), Inches(0.3), [
+    {"text": "Source: Databricks State of AI Agents Report 2026 & Enterprise AI "
+             "Agent Trends blog  |  Bubble size proportional to adoption share",
+     "size": 9, "color": MUTED},
+])
+
+
+# ── SLIDE 11: ENTERPRISE CASE STUDIES ──────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Enterprise Case Studies from Databricks Summits",
              bar_color=ACCENT_PURPLE, bar_width=Inches(3))
@@ -659,7 +767,7 @@ for i, (company, subtitle, bullets, color) in enumerate(companies):
                    card_h - Inches(1.0), bullet_lines)
 
 
-# ── SLIDE 11: TOKEN ECONOMICS & COST ──────────────────────────────────────────
+# ── SLIDE 12: TOKEN ECONOMICS & COST ──────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Token Economics & Cost Optimization",
              bar_color=ACCENT_GREEN)
@@ -716,7 +824,7 @@ add_text_box(slide, Inches(0.8), Inches(6.6), Inches(11), Inches(0.5),
              font_size=10, color=MUTED)
 
 
-# ── SLIDE 12: AGENTIC AI ARCHITECTURE PATTERNS ────────────────────────────────
+# ── SLIDE 13: AGENTIC AI ARCHITECTURE PATTERNS ────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Agentic AI Architecture Patterns",
              bar_color=ACCENT_RED, bar_width=Inches(2.5))
@@ -804,7 +912,7 @@ add_multi_text(slide, Inches(6.9), Inches(4.9), Inches(5), Inches(1.7), [
 ])
 
 
-# ── SLIDE 13: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION ───────────────────
+# ── SLIDE 14: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION ───────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "AI Agent Usage in Company Filings (Part 1)",
              bar_color=ACCENT_TEAL, bar_width=Inches(3))
@@ -857,7 +965,7 @@ for comp_name, filing_ref, stat_cards, bullets, color in filing_companies_1:
     y_offset += Inches(2.75)
 
 
-# ── SLIDE 14: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION (Part 2) ─────────
+# ── SLIDE 15: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION (Part 2) ─────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "AI Agent Usage in Company Filings (Part 2)",
              bar_color=ACCENT_TEAL, bar_width=Inches(3))
@@ -923,7 +1031,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.0), Inches(11), Inches(0.4), [
 ])
 
 
-# ── SLIDE 15: COMPETITIVE LANDSCAPE ──────────────────────────────────────────
+# ── SLIDE 16: COMPETITIVE LANDSCAPE ──────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Competitive Landscape: Databricks vs. Peers",
              bar_color=ACCENT_RED, bar_width=Inches(3))
@@ -1023,7 +1131,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 16: PRIVATE AI COMPANIES — FOUNDATION MODEL PROVIDERS ───────────────
+# ── SLIDE 17: PRIVATE AI COMPANIES — FOUNDATION MODEL PROVIDERS ───────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Companies: Foundation Model Providers",
              bar_color=ACCENT_RED, bar_width=Inches(3))
@@ -1081,7 +1189,7 @@ for comp_name, valuation, rev_label, products, stat_cards, bullets, color in pri
     y_offset += Inches(2.85)
 
 
-# ── SLIDE 17: PRIVATE AI COMPANIES — AGENT-NATIVE PRODUCTS ───────────────────
+# ── SLIDE 18: PRIVATE AI COMPANIES — AGENT-NATIVE PRODUCTS ───────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Companies: Agent-Native Products",
              bar_color=ACCENT_BLUE, bar_width=Inches(3))
@@ -1143,7 +1251,7 @@ for comp_name, val_label, product, stat_cards, bullets, color in agent_native:
     y_offset += Inches(1.82)
 
 
-# ── SLIDE 18: PRIVATE AI COMPANIES — ENTERPRISE & INFRASTRUCTURE ─────────────
+# ── SLIDE 19: PRIVATE AI COMPANIES — ENTERPRISE & INFRASTRUCTURE ─────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Companies: Enterprise & Infrastructure",
              bar_color=ACCENT_GREEN, bar_width=Inches(3))
@@ -1222,7 +1330,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 19: PRIVATE AI VALUATION LANDSCAPE ─────────────────────────────────
+# ── SLIDE 20: PRIVATE AI VALUATION LANDSCAPE ─────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Valuation Landscape",
              bar_color=ACCENT_PURPLE, bar_width=Inches(2.5))
@@ -1289,7 +1397,7 @@ add_multi_text(slide, Inches(0.8), y_offset + Inches(0.1), Inches(11), Inches(1.
 ])
 
 
-# ── SLIDE 20: CEO QUOTES ON AGENTIC AI ──────────────────────────────────────
+# ── SLIDE 21: CEO QUOTES ON AGENTIC AI ──────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "CEO Quotes on Agentic AI — From Filings & Earnings",
              bar_color=ACCENT_ORANGE, bar_width=Inches(3))
@@ -1339,7 +1447,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 21: MARKET CONTEXT ──────────────────────────────────────────────────
+# ── SLIDE 22: MARKET CONTEXT ──────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Enterprise AI Agent Market Context",
              bar_color=ACCENT_ORANGE)
@@ -1379,7 +1487,7 @@ add_multi_text(slide, Inches(1.3), Inches(5.6), Inches(10.5), Inches(1.3), [
 ])
 
 
-# ── SLIDE 22: KEY TAKEAWAYS ───────────────────────────────────────────────────
+# ── SLIDE 23: KEY TAKEAWAYS ───────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Key Takeaways", bar_color=ACCENT_ORANGE, bar_width=Inches(1.5))
 
@@ -1421,7 +1529,7 @@ for i, (title, desc, color) in enumerate(takeaways):
                  desc, font_size=12, color=LIGHT_GRAY)
 
 
-# ── SLIDE 23: SOURCES & REFERENCES ────────────────────────────────────────────
+# ── SLIDE 24: SOURCES & REFERENCES ────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Sources & References", bar_color=ACCENT_ORANGE,
              bar_width=Inches(1.8))
