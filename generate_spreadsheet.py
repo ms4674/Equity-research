@@ -1936,11 +1936,588 @@ ws9.column_dimensions["B"].width = 44
 ws9.column_dimensions["C"].width = 44
 ws9.column_dimensions["D"].width = 44
 
+# ═══════════════════════════════════════════════════════════════
+# SHEET 10 — KV Cache & Prefill Requirements
+# ═══════════════════════════════════════════════════════════════
+ws10 = wb.create_sheet("KV Cache & Prefill")
+
+kv_headers = [
+    "Metric",
+    "OpenClaw",
+    "Claude Code / Cowork",
+    "Cursor",
+    "Devin",
+    "GitHub Copilot",
+    "Windsurf",
+]
+
+kv_rows = [
+    kv_headers,
+    # ── Fundamentals ──
+    ["— KV CACHE FUNDAMENTALS —", "", "", "", "", "", ""],
+    [
+        "What Is KV Cache",
+        "Stores pre-computed Key and Value attention vectors so the model skips\n"
+        "re-processing previously seen tokens.\n"
+        "Without it: computation grows quadratically with sequence length.\n"
+        "With it: only new tokens require fresh computation.\n\n"
+        "Memory formula:\n"
+        "2 × layers × KV_heads × head_dim × seq_length × bytes_per_element\n\n"
+        "Rule of thumb: ~1 MB per token for modern models (varies by architecture).\n"
+        "Llama-70B at 4K tokens ≈ 10 GB per request; 100 concurrent users ≈ 1 TB.",
+        "", "", "", "", "",
+    ],
+    [
+        "Why It Matters\nfor Agents",
+        "Agent workloads are WORM (write-once-read-many):\n"
+        "input/output ratios exceed 100:1.\n\n"
+        "Claude Code: 11.7× read/write ratio (891K read vs 76K written per session).\n\n"
+        "KV cache hit rate is 'the single most important metric'\n"
+        "for production AI agents (Manus team).\n\n"
+        "High cache hit rates reduce inference cost and latency by up to 10×.",
+        "", "", "", "", "",
+    ],
+    # ── Prefill Context Sizes ──
+    ["— PREFILL CONTEXT SIZE (INPUT TOKENS PER REQUEST) —", "", "", "", "", "", ""],
+    [
+        "System Prompt\nBaseline",
+        "~8,000 tokens of core instructions\n"
+        "and skills sent with EVERY request.\n\n"
+        "Full system prompt (with workspace\n"
+        "bootstrap files, AGENTS.md, SOUL.md,\n"
+        "MEMORY.md, skills, tool schemas):\n"
+        "~40,000 tokens before any user input.",
+        "~78,000 tokens average per request\n"
+        "(system instructions + file contents +\n"
+        "conversation history + tool definitions).\n\n"
+        "Input tokens = 99.4% of total;\n"
+        "output = 0.6%.\n"
+        "166:1 input-to-output ratio.",
+        "Dynamic context injection\n"
+        "(open files, git status, OS info,\n"
+        "workspace rules) before each message.\n\n"
+        "Self-summarization compresses\n"
+        "older context when window fills.\n"
+        "Dynamic context discovery:\n"
+        "on-demand rather than upfront.",
+        "10M+ token context (Enterprise).\n\n"
+        "Full repository ingestion.\n"
+        "Planner, Critic, Coder, Browser\n"
+        "models each receive task-specific\n"
+        "context subsets.\n\n"
+        "Exact prompt sizes not disclosed.",
+        "40-50K tokens per request\n"
+        "during multi-step reasoning.\n\n"
+        "Conversation handling resends\n"
+        "rolling context with each turn.\n\n"
+        "Premium request model limits\n"
+        "total usage.",
+        "Hybrid indexing:\n"
+        "AST parsing + semantic embeddings.\n\n"
+        "SWE-grep: 10× faster code retrieval.\n"
+        "Persistent 'Memories' as vectors.\n\n"
+        "'Flows' track edits, terminal,\n"
+        "clipboard in real-time.",
+    ],
+    [
+        "Typical Session\nContext Growth",
+        "After 3-5 turns with tool calls:\n"
+        "80-90K tokens accumulated.\n\n"
+        "5-turn chat costs 13× more\n"
+        "than single-turn (full history\n"
+        "re-sent each message).\n\n"
+        "Default context window: 200K tokens.\n"
+        "Max bootstrap files: 150K chars.",
+        "Grows to fill context window.\n"
+        "Auto-compaction at ~70% capacity\n"
+        "frees 60-70% of space.\n\n"
+        "Quality degrades past 70%\n"
+        "context utilization.\n\n"
+        "Max context: 200K (Sonnet/Opus)\n"
+        "or 1M (Max plans, extended).",
+        "Self-summarization at fixed\n"
+        "context-length trigger.\n"
+        "Trained via RL to compress\n"
+        "without information loss.\n\n"
+        "Dynamic discovery pulls\n"
+        "context on-demand → more\n"
+        "token-efficient over long\n"
+        "agent trajectories.",
+        "Not disclosed.\n"
+        "Compound architecture may\n"
+        "split context across\n"
+        "specialized models.",
+        "Not disclosed.\n"
+        "Premium request allocation\n"
+        "limits total per-user usage.",
+        "950 tok/s inference speed.\n"
+        "SWE-1.5 proprietary model.\n\n"
+        "Context management via\n"
+        "'Memories' + 'Flows'\n"
+        "paradigm.",
+    ],
+    # ── Cache Hit Rates ──
+    ["— KV CACHE HIT RATES —", "", "", "", "", "", ""],
+    [
+        "Cache Hit Rate\n(Reported)",
+        "KNOWN BUG: Dynamic prompt\n"
+        "variations (timestamps, metadata,\n"
+        "tool results) invalidate prefix\n"
+        "between turns.\n\n"
+        "Creates multiple cached prompt\n"
+        "entries → reduced efficiency.\n\n"
+        "Byte-identical prefixes NOT\n"
+        "consistently preserved.\n\n"
+        "Estimated: significantly below\n"
+        "Claude Code's 84-96%.",
+        "84% average cache hit rate\n"
+        "(real-world tracked data).\n\n"
+        "Up to 96% in optimized sessions.\n\n"
+        "Agent teams/swarms: 97.2%\n"
+        "aggregate cache hit rate\n"
+        "across 4 Opus teammates.\n\n"
+        "Strict byte-exact prefix matching\n"
+        "(any byte change invalidates\n"
+        "everything after that point).",
+        "Not publicly disclosed.\n\n"
+        "Custom Composer MoE model\n"
+        "with proprietary caching.\n\n"
+        "250 tok/s inference speed\n"
+        "suggests optimized pipeline.",
+        "Not publicly disclosed.\n\n"
+        "Proprietary compound system\n"
+        "with multiple model stages.",
+        "Known cache invalidation issues:\n"
+        "full 40-50K token re-processing\n"
+        "during multi-step reasoning.\n\n"
+        "Rolling context resends break\n"
+        "cache assumptions.\n\n"
+        "Bug documented in vscode#298554.",
+        "Not publicly disclosed.\n\n"
+        "SWE-1.5 at 950 tok/s\n"
+        "suggests aggressive\n"
+        "caching optimization.",
+    ],
+    [
+        "Cache Invalidation\nRisks",
+        "HIGH risk:\n"
+        "• Changing timestamps in prompts\n"
+        "• Dynamic metadata injection\n"
+        "• Tool result variations\n"
+        "• Model switching mid-session\n"
+        "• Adding/removing skills\n\n"
+        "Mitigation: stabilize system\n"
+        "prompt prefix; move dynamic\n"
+        "content to end of prompt.",
+        "MODERATE risk:\n"
+        "• Changing system prompt casing\n"
+        "• Adding timestamps\n"
+        "• Adding/removing MCP tools\n"
+        "• Switching models mid-session\n\n"
+        "Mitigation: tools → system →\n"
+        "messages cache hierarchy.\n"
+        "Static prefix design.",
+        "LOW risk (estimated):\n"
+        "• Self-summarization replaces\n"
+        "  context rather than shifting it\n"
+        "• Dynamic discovery limits\n"
+        "  unnecessary context churn",
+        "UNKNOWN:\n"
+        "Proprietary infrastructure.",
+        "HIGH risk:\n"
+        "Documented frequent\n"
+        "invalidation during\n"
+        "multi-step workflows.",
+        "UNKNOWN:\n"
+        "Proprietary infrastructure.",
+    ],
+    # ── Prefill Performance ──
+    ["— PREFILL THROUGHPUT (LOCAL INFERENCE) —", "", "", "", "", "", ""],
+    [
+        "DGX Spark\nLocal Prefill\n(128K input tokens)",
+        "Nemotron 3 Super 120B (NVFP4):\n"
+        "  2,851 tok/s prefill\n"
+        "  18 tok/s generation\n"
+        "  99.4s end-to-end latency\n\n"
+        "Qwen3.5 35B (FP8):\n"
+        "  3,080 tok/s prefill\n"
+        "  35.75 tok/s generation\n\n"
+        "Qwen3 Coder 80B (FP8):\n"
+        "  2,390 tok/s prefill\n"
+        "  28.95 tok/s generation",
+        "N/A — Cloud inference only.\n"
+        "No local model support.\n\n"
+        "Cloud-side: Anthropic manages\n"
+        "inference infrastructure.\n\n"
+        "Prompt caching reduces costs\n"
+        "but NOT latency (generation\n"
+        "speed identical cached or fresh).",
+        "N/A — Cloud inference.\n\n"
+        "Custom Composer MoE model\n"
+        "achieves 250 tok/s via\n"
+        "MXFP8 kernels + expert\n"
+        "parallelism.\n\n"
+        "Trained on thousands of\n"
+        "NVIDIA GPUs.",
+        "N/A — Cloud inference.\n"
+        "Proprietary infrastructure.",
+        "N/A — Cloud inference.\n"
+        "Microsoft/OpenAI\n"
+        "infrastructure.",
+        "N/A — Cloud inference.\n"
+        "SWE-1.5: 950 tok/s\n"
+        "(server-side).",
+    ],
+    [
+        "DGX Spark\nMulti-Agent Prefill\n(32K input, 4 agents)",
+        "Qwen3 Coder 80B (FP8):\n"
+        "  9,616 tok/s prefill (3× single)\n"
+        "  53 tok/s generation\n\n"
+        "~3× throughput improvement\n"
+        "at 2.6× additional time.\n\n"
+        "128 GB unified memory enables\n"
+        "concurrent KV cache for\n"
+        "4 simultaneous sub-agents.",
+        "N/A — Cloud inference.\n"
+        "Parallel sub-agents each\n"
+        "use separate API calls;\n"
+        "Anthropic manages batching.",
+        "N/A — Cursor trains/runs\n"
+        "Composer on proprietary\n"
+        "GPU clusters. End users\n"
+        "don't manage inference.",
+        "N/A — Cloud.\n"
+        "EC2 auto-scaling for\n"
+        "concurrent sessions.",
+        "N/A — Cloud.\n"
+        "Microsoft manages\n"
+        "scaling.",
+        "N/A — Cloud.\n"
+        "Cognition manages\n"
+        "infrastructure.",
+    ],
+    [
+        "Local LLM Prefill\n(Consumer GPU)",
+        "Slow prefill on consumer HW:\n"
+        "  ~4.5 tok/s on modest GPU\n"
+        "  80K tokens → ~300s prefill\n"
+        "  (5 minutes for prompt alone)\n\n"
+        "Workaround: reduce contextWindow\n"
+        "to 50K tokens, enable aggressive\n"
+        "compaction and cache-TTL pruning.\n\n"
+        "GPU tiers:\n"
+        "  RTX 3060 (12GB) → 8B models\n"
+        "  RTX 4090 (24GB) → 34-70B\n"
+        "  A100 (80GB) → 70B+",
+        "Not applicable.\n"
+        "Claude Cowork does not support\n"
+        "local model inference.\n"
+        "All inference via Anthropic cloud.",
+        "Not applicable.\n"
+        "Cursor uses cloud inference\n"
+        "for its Composer model.",
+        "Not applicable.\n"
+        "Devin uses proprietary\n"
+        "cloud infrastructure.",
+        "Not applicable.\n"
+        "Cloud inference only.",
+        "Not applicable.\n"
+        "Cloud inference only.",
+    ],
+    # ── Cost Impact ──
+    ["— COST IMPACT OF CACHING —", "", "", "", "", "", ""],
+    [
+        "Cached Token Pricing",
+        "Model-dependent (user's API):\n\n"
+        "Anthropic Claude:\n"
+        "  Cached reads: $0.30/M tokens\n"
+        "  vs. $3.00/M fresh (Sonnet)\n"
+        "  = 90% discount on cached input.\n\n"
+        "OpenClaw native pricing:\n"
+        "  Input: $1.25/M tokens\n"
+        "  Cached: $0.125/M tokens\n"
+        "  Output: $10.00/M tokens\n"
+        "  (8:1 output-to-input cost ratio)",
+        "Cached reads: 10% of normal\n"
+        "input price.\n\n"
+        "Opus: $0.50/M cached vs $5/M fresh.\n"
+        "Sonnet: $0.30/M vs $3/M.\n\n"
+        "100M tokens tracked:\n"
+        "  Without caching: ~$310\n"
+        "  With 84% cache: ~$82\n"
+        "  Savings: $228 (74%)\n\n"
+        "Per-request: $0.24 → $0.06\n"
+        "(75% reduction).",
+        "Included in subscription\n"
+        "credit pool.\n\n"
+        "Internal caching managed\n"
+        "by Cursor; users don't\n"
+        "see token-level pricing.",
+        "Included in $500/mo\n"
+        "subscription.\n\n"
+        "Internal caching not\n"
+        "visible to users.",
+        "$0.04 per premium request.\n"
+        "Internal caching managed\n"
+        "by Microsoft.\n\n"
+        "Cache invalidation =\n"
+        "higher internal cost per\n"
+        "premium request.",
+        "Included in credits.\n"
+        "Add-on: $10/250 credits.\n\n"
+        "Internal caching at\n"
+        "950 tok/s suggests\n"
+        "heavy optimization.",
+    ],
+    [
+        "Cost of Cache Misses\n(Re-Prefill Penalty)",
+        "8,000 token baseline × every request.\n"
+        "40K full system prompt per turn.\n\n"
+        "Cache miss on 40K prompt:\n"
+        "  Claude Sonnet: $0.12 per miss\n"
+        "  vs $0.012 cached (10× penalty).\n\n"
+        "5-turn chat: 13× single-turn cost\n"
+        "due to full history re-send.\n\n"
+        "Web fetching: 320K+ input tokens\n"
+        "per request (HTML scraping) →\n"
+        "extremely expensive if uncached.",
+        "78K avg prompt per request.\n\n"
+        "Cache miss on 78K prompt:\n"
+        "  Opus: $0.39 per miss\n"
+        "  vs $0.039 cached (10× penalty).\n\n"
+        "Without caching: $0.24/request.\n"
+        "With caching: $0.06/request.\n"
+        "Penalty: 4× cost per request.\n\n"
+        "Cowork sessions burn quota\n"
+        "faster than regular chat due\n"
+        "to multi-step reasoning overhead.",
+        "Self-summarization avoids\n"
+        "re-prefill of old context.\n\n"
+        "Overage charges beyond\n"
+        "credit pool apply.",
+        "Not visible to users.\n"
+        "Absorbed in flat $500/mo.",
+        "Re-processing 40-50K tokens\n"
+        "on each cache miss.\n"
+        "Documented as performance\n"
+        "degradation issue.",
+        "Not visible to users.\n"
+        "Absorbed in credit model.",
+    ],
+    # ── KV Cache Memory ──
+    ["— KV CACHE MEMORY REQUIREMENTS (LOCAL INFERENCE) —", "", "", "", "", "", ""],
+    [
+        "Per-Token KV Cache\nMemory",
+        "Varies by model:\n"
+        "  Qwen2.5-14B (FP16): ~0.2 MB/tok\n"
+        "  LLaMA2-70B (FP16): ~2.6 MB/tok\n"
+        "  Llama 3 70B (128K): ~40 GB total\n\n"
+        "Nemotron 3 Super 120B:\n"
+        "  FP8 KV cache precision\n"
+        "  (FP4 weight, FP8 cache)\n"
+        "  on DGX Spark 128 GB unified mem.",
+        "N/A — cloud inference.\n"
+        "Anthropic manages GPU memory.",
+        "N/A — cloud inference.\n"
+        "Cursor manages GPU clusters.",
+        "N/A — cloud.\n"
+        "Cognition manages infra.",
+        "N/A — cloud.\n"
+        "Microsoft manages infra.",
+        "N/A — cloud.\n"
+        "Cognition manages infra.",
+    ],
+    [
+        "Context Scaling\nImpact (128K → 1M)",
+        "8× memory increase per session.\n"
+        "Reduces concurrent sessions per GPU.\n"
+        "Memory bandwidth becomes bottleneck.\n\n"
+        "1M token context:\n"
+        "  ~15 GB KV cache per user.\n\n"
+        "DGX Spark (128 GB):\n"
+        "  ~8 concurrent 1M sessions\n"
+        "  (theoretical maximum).\n\n"
+        "DGX Station GB300 (748 GB):\n"
+        "  ~49 concurrent 1M sessions.",
+        "Anthropic absorbs scaling costs.\n"
+        "Max plans offer 1M context.\n\n"
+        "Users experience rate limits\n"
+        "(5-hour reset windows)\n"
+        "rather than GPU constraints.",
+        "Cursor uses custom Composer\n"
+        "model with self-summarization\n"
+        "to avoid extreme context lengths.",
+        "10M+ token Enterprise context.\n"
+        "Cognition absorbs GPU costs.",
+        "Cloud-managed.\n"
+        "Microsoft absorbs costs.",
+        "Cloud-managed.\n"
+        "SWE-1.5 optimized for speed.",
+    ],
+    # ── Optimization Strategies ──
+    ["— OPTIMIZATION STRATEGIES —", "", "", "", "", "", ""],
+    [
+        "Prefill Optimization",
+        "1. PagedAttention: Allocates KV cache\n"
+        "   in fixed-size blocks on demand.\n"
+        "   60-80% better memory utilization.\n\n"
+        "2. Prefix Caching: Caches system prompt\n"
+        "   KV vectors across requests.\n"
+        "   2K tokens × 100 users = 200K tokens\n"
+        "   of computation saved.\n\n"
+        "3. MLA: Compresses K/V into smaller\n"
+        "   latent space via learned projections.\n\n"
+        "4. Pre-send token estimation:\n"
+        "   Proactive compaction before sending\n"
+        "   to prevent 300s+ timeouts.\n\n"
+        "5. Isolated Mode for cron jobs:\n"
+        "   Eliminates history carryover,\n"
+        "   saves ~37% monthly.",
+        "1. Prompt caching: 84-96% hit rate.\n"
+        "   Byte-exact prefix matching.\n"
+        "   5-min TTL (reset on hit).\n"
+        "   1-hour TTL option at 2× price.\n\n"
+        "2. Cache hierarchy:\n"
+        "   tools → system → messages.\n"
+        "   Static tools cached first.\n\n"
+        "3. Auto-compaction at ~70%\n"
+        "   context utilization.\n"
+        "   Pre/PostCompact hooks.\n\n"
+        "4. Sub-agent parallelism:\n"
+        "   97.2% aggregate cache hit\n"
+        "   across agent teams.",
+        "1. Self-summarization:\n"
+        "   Trained via RL to compress\n"
+        "   without information loss.\n\n"
+        "2. Dynamic context discovery:\n"
+        "   On-demand rather than\n"
+        "   upfront loading.\n\n"
+        "3. MXFP8 MoE kernels:\n"
+        "   Hardware-optimized inference.\n\n"
+        "4. Expert parallelism:\n"
+        "   Low communication cost.",
+        "1. Repository-wide context\n"
+        "   ingestion (10M+ tokens).\n\n"
+        "2. Compound model splits\n"
+        "   workload across\n"
+        "   specialized models.\n\n"
+        "3. Separate planning\n"
+        "   from execution.",
+        "1. Agentic memory system\n"
+        "   with just-in-time\n"
+        "   verification.\n\n"
+        "2. Citations to specific\n"
+        "   code locations\n"
+        "   (avoid stale context).",
+        "1. SWE-grep: 10× faster\n"
+        "   code retrieval.\n\n"
+        "2. Persistent Memories\n"
+        "   as long-lived vectors.\n\n"
+        "3. Flow-aware context\n"
+        "   tracking.",
+    ],
+    [
+        "NVIDIA Dynamo\nOptimizations\n(March 2026)",
+        "Agent-aware inference runtime:\n\n"
+        "1. Agent Hints: per-request metadata\n"
+        "   • latency_sensitivity\n"
+        "   • priority (cache eviction order)\n"
+        "   • speculative_prefill\n"
+        "   • osl (output sequence length)\n\n"
+        "2. KV-aware routing: evaluates\n"
+        "   cache overlap across workers.\n\n"
+        "3. Priority-based eviction:\n"
+        "   Distinguishes stable prefixes\n"
+        "   from ephemeral content.\n\n"
+        "4. Cache pinning: protects\n"
+        "   high-value system prompts.\n\n"
+        "5. Speculative prefill: warms\n"
+        "   cache for predicted next turns.\n\n"
+        "Applies to OpenClaw via NemoClaw stack.",
+        "N/A — Anthropic manages\n"
+        "own inference infrastructure.\n"
+        "Not using Dynamo.\n\n"
+        "Anthropic has proprietary\n"
+        "caching optimizations.",
+        "N/A — Cursor manages own\n"
+        "GPU clusters with custom\n"
+        "Composer model.",
+        "N/A — Cognition manages\n"
+        "own infrastructure.",
+        "N/A — Microsoft/OpenAI\n"
+        "manages infrastructure.",
+        "N/A — Cognition manages\n"
+        "infrastructure.",
+    ],
+    # ── Summary ──
+    ["— SUMMARY —", "", "", "", "", "", ""],
+    [
+        "KV Cache\nCharacterization",
+        "UNIQUE: Only platform supporting\nboth cloud AND local inference.\n\n"
+        "Cloud: Dependent on provider's\ncaching (Anthropic, OpenAI, etc.).\n"
+        "Known bug: dynamic prompts\ninvalidate cache prefix.\n\n"
+        "Local (NemoClaw/DGX Spark):\n"
+        "Full user control over KV cache.\n"
+        "PagedAttention + prefix caching.\n"
+        "FP8 KV cache on Nemotron.\n"
+        "2,851-3,080 tok/s prefill.\n\n"
+        "Consumer GPU: Severe prefill\nbottleneck (~4.5 tok/s → 300s\nfor 80K tokens).",
+        "BEST-IN-CLASS caching:\n"
+        "84-96% hit rate.\n"
+        "97.2% in agent teams.\n\n"
+        "Managed by Anthropic —\nno user tuning needed.\n\n"
+        "Cost: 74% reduction with caching.\n"
+        "Latency: no improvement from cache\n"
+        "(generation speed unchanged).\n\n"
+        "Risk: byte-exact matching means\nany prefix change = full re-prefill.",
+        "PROPRIETARY optimization:\n"
+        "Self-summarization avoids\nextreme context growth.\n\n"
+        "Dynamic discovery limits\nunnecessary prefill.\n\n"
+        "250 tok/s with MXFP8 kernels.\n\n"
+        "Users don't manage caching.",
+        "OPAQUE:\n"
+        "Compound architecture\n"
+        "distributes context across\n"
+        "specialized models.\n\n"
+        "10M+ token Enterprise\n"
+        "context implies massive\n"
+        "KV cache infrastructure.",
+        "BUGGY:\n"
+        "Documented frequent\n"
+        "cache invalidation.\n\n"
+        "Full 40-50K token\n"
+        "re-processing on each miss.",
+        "OPTIMIZED:\n"
+        "950 tok/s inference.\n"
+        "SWE-grep fast retrieval.\n\n"
+        "Proprietary model likely\n"
+        "uses aggressive caching.",
+    ],
+]
+
+for r_idx, row_data in enumerate(kv_rows, start=1):
+    for c_idx, value in enumerate(row_data, start=1):
+        ws10.cell(row=r_idx, column=c_idx, value=value)
+    if r_idx == 1:
+        style_header(ws10, r_idx, len(kv_headers))
+    elif row_data[0].startswith("—"):
+        style_row(ws10, r_idx, len(kv_headers), fill=category_fill, font=category_font)
+    else:
+        style_row(ws10, r_idx, len(kv_headers))
+        ws10.cell(row=r_idx, column=2).fill = openclaw_fill
+        ws10.cell(row=r_idx, column=3).fill = cowork_fill
+
+ws10.column_dimensions["A"].width = 26
+for c in range(2, len(kv_headers) + 1):
+    ws10.column_dimensions[get_column_letter(c)].width = 38
+
 # Move sheets into desired order
-wb.move_sheet(ws6, offset=-7)  # OpenClaw vs Claude Cowork → first
-wb.move_sheet(ws9, offset=-6)  # Harnesses Comparison → second
-wb.move_sheet(ws7, offset=-5)  # NVIDIA GTC → third
-wb.move_sheet(ws8, offset=-4)  # Skills & Orchestration → fourth
+total_sheets = len(wb.sheetnames)
+wb.move_sheet(ws6, offset=-(total_sheets - 1))   # OpenClaw vs Claude Cowork → 1st
+wb.move_sheet(ws9, offset=-(total_sheets - 2))    # Harnesses Comparison → 2nd
+wb.move_sheet(ws10, offset=-(total_sheets - 3))   # KV Cache & Prefill → 3rd
+wb.move_sheet(ws7, offset=-(total_sheets - 4))    # NVIDIA GTC → 4th
+wb.move_sheet(ws8, offset=-(total_sheets - 5))    # Skills & Orchestration → 5th
 
 # ── Save ──
 output_path = "/workspace/OpenClaw_Architecture_Comparison.xlsx"
