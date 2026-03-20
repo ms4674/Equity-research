@@ -940,7 +940,159 @@ add_multi_text(slide, Inches(1.3), Inches(6.35), Inches(10.5), Inches(0.8), [
 ])
 
 
-# ── SLIDE 14: AGENTIC AI ARCHITECTURE PATTERNS ────────────────────────────────
+# ── SLIDE 14: AI AGENT USE CASE COMPARISON — 5 PLATFORMS ──────────────────────
+slide = prs.slides.add_slide(prs.slide_layouts[6])
+set_slide_bg(slide, DARK_BG)
+add_accent_bar(slide, Inches(0), Inches(0), SLIDE_W, Inches(0.08), ACCENT_ORANGE)
+
+add_text_box(slide, Inches(0.8), Inches(0.3), Inches(11), Inches(0.8),
+             "AI Agent Comparison: Use Cases & Monthly Token Cost",
+             font_size=34, color=WHITE, bold=True)
+add_accent_bar(slide, Inches(0.8), Inches(1.05), Inches(3.5), Pt(4), ACCENT_BLUE)
+add_text_box(slide, Inches(0.8), Inches(1.15), Inches(11), Inches(0.35),
+             "OpenClaw  |  Moltbook  |  Manus AI  |  Claude Code  |  Cursor",
+             font_size=14, color=LIGHT_GRAY)
+
+CLAW_COLOR = RGBColor(0xFF, 0x8C, 0x2A)
+MOLT_COLOR = RGBColor(0x34, 0xD3, 0x99)
+MANUS_COLOR = RGBColor(0xE8, 0x6A, 0xD0)
+CLAUDE_COLOR = RGBColor(0xB0, 0x6A, 0xF0)
+CURSOR_COLOR = RGBColor(0x5B, 0xA8, 0xF7)
+
+platforms = [
+    ("OpenClaw",
+     "General-Purpose AI Agent",
+     "Open-source (MIT, 322K+ stars). Autonomous coding, browsing, research, "
+     "and multi-agent coordination. Built on TypeScript/Node.js.",
+     "~8K base tokens per request + context replay.\n"
+     "5-turn chat = 13x single-turn cost.\n"
+     "88% of costs from automated operations.",
+     "$90 – $210", "~3M – 7M",
+     CLAW_COLOR),
+    ("Moltbook",
+     "Agent Social Network & Identity",
+     "Free platform for AI-to-AI interaction. 1.5M agents registered in first "
+     "week. Built on OpenClaw framework. Heartbeat system (48 checks/day).",
+     "Agent heartbeats: ~9,600 tokens/day.\n"
+     "Identity tokens: free (1-hour expiry).\n"
+     "LLM costs are model-dependent.",
+     "$10 – $50", "~0.5M – 2M",
+     MOLT_COLOR),
+    ("Manus AI",
+     "Autonomous Task Agent",
+     "General-purpose autonomous agent (acquired by Meta for $2B). "
+     "Planner → Executor → Verifier pipeline. Credit-based pricing, "
+     "no upfront cost estimation.",
+     "Credit-based: 10–900 credits/task.\n"
+     "Typical task: ~150 credits.\n"
+     "No per-token visibility to user.",
+     "$20 – $200", "N/A (credits)",
+     MANUS_COLOR),
+    ("Claude Code",
+     "Terminal-Native Coding Agent",
+     "Anthropic's agentic coding tool. ~$0.40 avg per coding session. "
+     "40K–100K input + 5K–15K output tokens per session. 80.9% SWE-bench.",
+     "Avg $6/dev/day; 90% stay under $12/day.\n"
+     "~45K input + 12K output tokens/task.\n"
+     "Max 20x plan: 20x token capacity.",
+     "$64 – $240", "~5M – 16M",
+     CLAUDE_COLOR),
+    ("Cursor",
+     "AI-Native IDE (Coding Agent)",
+     "Fastest B2B to $1B ARR. Background agents, multi-file editing, "
+     "autonomous workflows. 1M+ DAU, 50%+ Fortune 500.",
+     "Auto pool: $1.25 input / $6 output per 1M.\n"
+     "API pool: model-specific rates.\n"
+     "Pro includes $20 usage; Ultra $400.",
+     "$20 – $200", "~4M – 60M",
+     CURSOR_COLOR),
+]
+
+col_w = Inches(2.3)
+col_gap = Inches(0.12)
+col_start = Inches(0.5)
+
+for i, (name, category, description, token_detail, monthly_cost, monthly_tokens,
+        color) in enumerate(platforms):
+    x = col_start + i * (col_w + col_gap)
+    y_top = Inches(1.55)
+
+    card = add_card(slide, x, y_top, col_w, Inches(5.55))
+    add_accent_bar(slide, x, y_top, col_w, Pt(4), color)
+
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(0.1), col_w - Inches(0.2),
+                 Inches(0.3), name, font_size=16, color=color, bold=True,
+                 alignment=PP_ALIGN.CENTER)
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(0.38), col_w - Inches(0.2),
+                 Inches(0.25), category, font_size=9, color=WHITE, bold=True,
+                 alignment=PP_ALIGN.CENTER)
+
+    add_accent_bar(slide, x + Inches(0.1), y_top + Inches(0.68), col_w - Inches(0.2),
+                   Pt(1), RGBColor(0x3A, 0x3F, 0x50))
+
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(0.72), col_w - Inches(0.2),
+                 Inches(1.1), description, font_size=8, color=LIGHT_GRAY)
+
+    add_accent_bar(slide, x + Inches(0.1), y_top + Inches(1.85), col_w - Inches(0.2),
+                   Pt(1), RGBColor(0x3A, 0x3F, 0x50))
+
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(1.9), col_w - Inches(0.2),
+                 Inches(0.2), "TOKEN USAGE", font_size=7, color=MUTED, bold=True,
+                 alignment=PP_ALIGN.CENTER)
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(2.1), col_w - Inches(0.2),
+                 Inches(0.85), token_detail, font_size=8, color=WHITE)
+
+    add_accent_bar(slide, x + Inches(0.1), y_top + Inches(3.0), col_w - Inches(0.2),
+                   Pt(1), RGBColor(0x3A, 0x3F, 0x50))
+
+    cost_card = add_card(slide, x + Inches(0.1), y_top + Inches(3.1),
+                         col_w - Inches(0.2), Inches(0.9),
+                         color=RGBColor(0x1E, 0x22, 0x30))
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(3.12), col_w - Inches(0.2),
+                 Inches(0.18), "MONTHLY COST / DEV", font_size=7, color=MUTED,
+                 bold=True, alignment=PP_ALIGN.CENTER)
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(3.3), col_w - Inches(0.2),
+                 Inches(0.3), monthly_cost, font_size=16, color=color, bold=True,
+                 alignment=PP_ALIGN.CENTER)
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(3.62), col_w - Inches(0.2),
+                 Inches(0.18), "EST. TOKENS / MONTH", font_size=7, color=MUTED,
+                 bold=True, alignment=PP_ALIGN.CENTER)
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(3.78), col_w - Inches(0.2),
+                 Inches(0.22), monthly_tokens, font_size=12, color=WHITE, bold=True,
+                 alignment=PP_ALIGN.CENTER)
+
+    bar_max = Inches(2.0)
+    cost_vals = [210, 50, 200, 240, 200]
+    bar_frac = cost_vals[i] / 240
+    bar_y = y_top + Inches(4.15)
+    bg_bar = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
+                                    int(x + Inches(0.1)), int(bar_y),
+                                    int(bar_max), int(Inches(0.18)))
+    bg_bar.fill.solid()
+    bg_bar.fill.fore_color.rgb = RGBColor(0x30, 0x35, 0x48)
+    bg_bar.line.fill.background()
+    fill_bar = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
+                                      int(x + Inches(0.1)), int(bar_y),
+                                      max(int(Inches(0.1)), int(bar_max * bar_frac)),
+                                      int(Inches(0.18)))
+    fill_bar.fill.solid()
+    fill_bar.fill.fore_color.rgb = color
+    fill_bar.line.fill.background()
+
+    add_text_box(slide, x + Inches(0.1), y_top + Inches(4.38), col_w - Inches(0.2),
+                 Inches(0.15), f"max ${cost_vals[i]}/mo", font_size=7, color=MUTED,
+                 alignment=PP_ALIGN.CENTER)
+
+add_multi_text(slide, Inches(0.5), Inches(7.15), Inches(12), Inches(0.3), [
+    {"text": "Sources: OpenClaw docs & Phala token analysis  |  Moltbook docs & "
+             "forum  |  Manus AI pricing (manus.im)  |  Claude Code cost guide "
+             "(Anthropic)  |  Cursor pricing docs. Estimates based on moderate "
+             "daily usage (8–20 sessions/day, 20 working days/month).",
+     "size": 8, "color": MUTED},
+])
+
+
+# ── SLIDE 15: AGENTIC AI ARCHITECTURE PATTERNS ────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Agentic AI Architecture Patterns",
              bar_color=ACCENT_RED, bar_width=Inches(2.5))
@@ -1028,7 +1180,7 @@ add_multi_text(slide, Inches(6.9), Inches(4.9), Inches(5), Inches(1.7), [
 ])
 
 
-# ── SLIDE 15: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION ───────────────────
+# ── SLIDE 16: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION ───────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "AI Agent Usage in Company Filings (Part 1)",
              bar_color=ACCENT_TEAL, bar_width=Inches(3))
@@ -1081,7 +1233,7 @@ for comp_name, filing_ref, stat_cards, bullets, color in filing_companies_1:
     y_offset += Inches(2.75)
 
 
-# ── SLIDE 16: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION (Part 2) ─────────
+# ── SLIDE 17: COMPANY FILINGS — AI AGENT REVENUE & ADOPTION (Part 2) ─────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "AI Agent Usage in Company Filings (Part 2)",
              bar_color=ACCENT_TEAL, bar_width=Inches(3))
@@ -1147,7 +1299,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.0), Inches(11), Inches(0.4), [
 ])
 
 
-# ── SLIDE 17: COMPETITIVE LANDSCAPE ──────────────────────────────────────────
+# ── SLIDE 18: COMPETITIVE LANDSCAPE ──────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Competitive Landscape: Databricks vs. Peers",
              bar_color=ACCENT_RED, bar_width=Inches(3))
@@ -1247,7 +1399,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 18: PRIVATE AI COMPANIES — FOUNDATION MODEL PROVIDERS ───────────────
+# ── SLIDE 19: PRIVATE AI COMPANIES — FOUNDATION MODEL PROVIDERS ───────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Companies: Foundation Model Providers",
              bar_color=ACCENT_RED, bar_width=Inches(3))
@@ -1305,7 +1457,7 @@ for comp_name, valuation, rev_label, products, stat_cards, bullets, color in pri
     y_offset += Inches(2.85)
 
 
-# ── SLIDE 19: PRIVATE AI COMPANIES — AGENT-NATIVE PRODUCTS ───────────────────
+# ── SLIDE 20: PRIVATE AI COMPANIES — AGENT-NATIVE PRODUCTS ───────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Companies: Agent-Native Products",
              bar_color=ACCENT_BLUE, bar_width=Inches(3))
@@ -1367,7 +1519,7 @@ for comp_name, val_label, product, stat_cards, bullets, color in agent_native:
     y_offset += Inches(1.82)
 
 
-# ── SLIDE 20: PRIVATE AI COMPANIES — ENTERPRISE & INFRASTRUCTURE ─────────────
+# ── SLIDE 21: PRIVATE AI COMPANIES — ENTERPRISE & INFRASTRUCTURE ─────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Companies: Enterprise & Infrastructure",
              bar_color=ACCENT_GREEN, bar_width=Inches(3))
@@ -1446,7 +1598,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 21: PRIVATE AI VALUATION LANDSCAPE ─────────────────────────────────
+# ── SLIDE 22: PRIVATE AI VALUATION LANDSCAPE ─────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Private AI Valuation Landscape",
              bar_color=ACCENT_PURPLE, bar_width=Inches(2.5))
@@ -1513,7 +1665,7 @@ add_multi_text(slide, Inches(0.8), y_offset + Inches(0.1), Inches(11), Inches(1.
 ])
 
 
-# ── SLIDE 22: CEO QUOTES ON AGENTIC AI ──────────────────────────────────────
+# ── SLIDE 23: CEO QUOTES ON AGENTIC AI ──────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "CEO Quotes on Agentic AI — From Filings & Earnings",
              bar_color=ACCENT_ORANGE, bar_width=Inches(3))
@@ -1563,7 +1715,7 @@ add_multi_text(slide, Inches(0.8), Inches(7.1), Inches(11), Inches(0.3), [
 ])
 
 
-# ── SLIDE 23: MARKET CONTEXT ──────────────────────────────────────────────────
+# ── SLIDE 24: MARKET CONTEXT ──────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Enterprise AI Agent Market Context",
              bar_color=ACCENT_ORANGE)
@@ -1603,7 +1755,7 @@ add_multi_text(slide, Inches(1.3), Inches(5.6), Inches(10.5), Inches(1.3), [
 ])
 
 
-# ── SLIDE 24: KEY TAKEAWAYS ───────────────────────────────────────────────────
+# ── SLIDE 25: KEY TAKEAWAYS ───────────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Key Takeaways", bar_color=ACCENT_ORANGE, bar_width=Inches(1.5))
 
@@ -1645,7 +1797,7 @@ for i, (title, desc, color) in enumerate(takeaways):
                  desc, font_size=12, color=LIGHT_GRAY)
 
 
-# ── SLIDE 25: SOURCES & REFERENCES ────────────────────────────────────────────
+# ── SLIDE 26: SOURCES & REFERENCES ────────────────────────────────────────────
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 slide_header(slide, "Sources & References", bar_color=ACCENT_ORANGE,
              bar_width=Inches(1.8))
