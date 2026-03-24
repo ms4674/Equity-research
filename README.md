@@ -4,7 +4,7 @@
 
 `open_source_llm_landscape.csv` contains a comprehensive comparison of major open source large language models, covering:
 
-- **Model families**: Llama (Meta), DeepSeek, Qwen (Alibaba), Mistral, Gemma (Google), Phi (Microsoft), Falcon (TII), DBRX (Databricks)
+- **Model families**: Llama (Meta), DeepSeek, Qwen (Alibaba), Kimi (Moonshot AI), GLM (Zhipu AI), Yi (01.AI), Baichuan (Baichuan AI), InternLM (Shanghai AI Lab), MiniMax, Mistral, Gemma (Google), Phi (Microsoft), Falcon (TII), DBRX (Databricks)
 - **Parameters**: Total and active parameter counts, available model sizes
 - **User base & adoption**: HuggingFace download metrics, cumulative downloads, app installs
 - **Top customers/partners**: Enterprise adopters and cloud platform integrations
