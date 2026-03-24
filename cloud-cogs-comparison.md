@@ -62,9 +62,71 @@ Neoclouds operate a fundamentally different model: GPU-dense infrastructure, oft
 
 ---
 
-## 3. Comparative Analysis
+## 3. Deep Dive: Energy Costs as a Percentage of COGS
 
-### 3.1 Gross Margin Comparison
+Energy (electricity for compute + cooling) is one of the most consequential COGS line items because it scales directly with capacity and is subject to external price volatility. The table below summarizes energy cost as a share of COGS across vendor types, then breaks it down further.
+
+### 3.0 Summary Table — Energy as % of COGS
+
+| Metric | Hyperscalers | Neoclouds |
+|---|---|---|
+| **Energy (power + cooling) as % of cost of revenue** | **20–30%** | **20–30%** |
+| **Energy as % of total data center OpEx** | 40–60% | 25–40% (power only, excl. cooling passed through colo fees) |
+| **Energy as % of total revenue** | ~7–12% | ~10–18% |
+| **Cooling as % of total energy spend** | 30–40% | Bundled into colocation fees for most neoclouds |
+| **Absolute cost per 8-GPU H100 node (electricity only)** | $2,400–$5,600/mo | $2,400–$5,600/mo |
+
+The raw electricity cost per GPU hour is roughly equivalent for both vendor types — the same H100 draws the same wattage regardless of who owns it. The difference lies in how that cost flows through the P&L and what share of the revenue base it consumes.
+
+### 3.0.1 Hyperscaler Energy Economics
+
+For hyperscalers, energy costs represent approximately **20–30% of cost of revenue** for infrastructure services (IaaS). At the data center facility level, electricity is the single largest operating cost at **40–60% of total facility OpEx**, with cooling systems consuming an additional **30–40% of total energy draw** (reflected in PUE ratios of 1.1–1.3 for best-in-class hyperscale facilities).
+
+As a percentage of **revenue**, energy runs approximately **7–12%** because hyperscalers carry high gross margins (60–65%) — the large revenue denominator dilutes energy's share. This is calculated as:
+
+> Energy % of revenue = Energy % of COGS × (1 – Gross Margin)
+> ≈ 25% × 35–40% COGS-to-revenue = ~9–10% of revenue
+
+Key hyperscaler energy advantages:
+- **Long-term PPAs** at $0.03–$0.05/kWh vs. spot rates of $0.07–$0.22/kWh
+- **Owned substations and dedicated grid connections** that eliminate markup
+- **Custom silicon** (Graviton, TPU, Trainium) that delivers 30–50% better performance per watt vs. NVIDIA GPUs for compatible workloads, effectively reducing energy COGS per unit of compute sold
+- **AI-optimized cooling** (Google claims 40% reduction in cooling energy through ML-driven controls)
+- **PUE of 1.1–1.2** at best facilities, meaning only 10–20% overhead on top of IT power draw
+
+### 3.0.2 Neocloud Energy Economics
+
+For neoclouds, electricity represents approximately **25–40% of operating expenses** and **20–30% of cost of revenue**. The percentage range is wider than hyperscalers because neoclouds vary significantly in their power sourcing:
+
+| Neocloud | Power Strategy | Estimated Electricity Cost |
+|---|---|---|
+| **CoreWeave** | Colocation (3.1 GW contracted across 40+ sites) | Market rate via colo providers |
+| **Lambda** | Colocation, multiple regions | Market rate, varies by region |
+| **Crusoe** | Stranded natural gas generation | ~$0.01–$0.03/kWh (~1/13th standard rates) |
+
+As a percentage of **revenue**, energy costs run higher for neoclouds at approximately **10–18%** because their gross margins are far thinner (14–16% fully loaded), so COGS components consume a larger share of each revenue dollar:
+
+> Energy % of revenue = Energy % of COGS × COGS-to-revenue ratio
+> ≈ 25% × 65–85% COGS-to-revenue = ~16–21% of revenue (at fully loaded margins)
+> ≈ 25% × 40–50% COGS-to-revenue = ~10–13% of revenue (at adjusted margins)
+
+The neocloud energy cost sensitivity is acute: a **$0.05/kWh difference** in electricity rates changes annual margins by **$15,000–$30,000 per 8-GPU node**. For a fleet of 1,000 nodes, that is a $15M–$30M annual margin swing — which can be the difference between profitability and loss.
+
+### 3.0.3 Why Energy % of COGS Is Similar Despite Different Business Models
+
+The paradox is that energy as a percentage of COGS is roughly comparable (20–30%) for both hyperscalers and neoclouds, despite vastly different business models. This is because:
+
+1. **Physics is the same**: A given GPU or server draws a fixed amount of power regardless of who owns it. The electricity input per unit of compute is an engineering constant.
+2. **Depreciation scales proportionally**: Both vendor types have hardware depreciation as their largest COGS component (30–55%), and energy scales roughly in proportion to the hardware base.
+3. **The difference shows up in revenue, not COGS**: Hyperscalers charge 3–5x more per GPU hour for the same hardware, so the same energy cost consumes a much smaller share of revenue. Neoclouds compete on price, so energy eats a larger share of their thinner margins.
+
+The strategic implication: **energy efficiency and procurement are margin-critical for neoclouds but margin-enhancing for hyperscalers**. A 20% reduction in power costs might add 1–2 percentage points of margin for a hyperscaler but could double a neocloud's gross profit.
+
+---
+
+## 4. Comparative Analysis
+
+### 4.1 Gross Margin Comparison
 
 | Metric | Hyperscalers | Neoclouds |
 |---|---|---|
@@ -75,7 +137,7 @@ Neoclouds operate a fundamentally different model: GPU-dense infrastructure, oft
 
 The divergence between adjusted EBITDA and GAAP operating income for neoclouds is a critical analytical point. Neocloud EBITDA margins (~60%) suggest a healthy business, but this metric excludes the single largest cost driver — hardware depreciation — which is the core "raw material" of the business.
 
-### 3.2 Unit Economics: GPU Hour
+### 4.2 Unit Economics: GPU Hour
 
 | Cost Component | Hyperscaler (H100/hr) | Neocloud (H100/hr) |
 |---|---|---|
@@ -88,7 +150,7 @@ The divergence between adjusted EBITDA and GAAP operating income for neoclouds i
 
 Hyperscalers bundle GPUs with managed services, monitoring, security, and ecosystem lock-in that justify premium pricing. Neoclouds compete on raw price but carry similar underlying hardware costs, resulting in far thinner margins.
 
-### 3.3 Structural COGS Advantages by Vendor Type
+### 4.3 Structural COGS Advantages by Vendor Type
 
 | Advantage | Hyperscalers | Neoclouds |
 |---|---|---|
@@ -101,7 +163,7 @@ Hyperscalers bundle GPUs with managed services, monitoring, security, and ecosys
 
 ---
 
-## 4. Capital Structure Impact on Effective COGS
+## 5. Capital Structure Impact on Effective COGS
 
 While interest expense is not classified as COGS under GAAP, the neocloud business model is so capital-intensive that debt service is effectively part of the unit cost of delivering compute.
 
@@ -127,7 +189,7 @@ Hyperscalers fund infrastructure from operating cash flow and investment-grade d
 
 ---
 
-## 5. COGS Trajectory & Outlook
+## 6. COGS Trajectory & Outlook
 
 ### Headwinds (Both)
 - **Accelerating depreciation**: Hardware generations turning over every 1–2 years (H100 → B200 → next-gen) compresses useful life assumptions
@@ -147,7 +209,7 @@ Hyperscalers fund infrastructure from operating cash flow and investment-grade d
 
 ---
 
-## 6. Key Takeaways for Investors
+## 7. Key Takeaways for Investors
 
 1. **Neocloud EBITDA margins are misleading**: The ~60% adjusted EBITDA margin headline masks the fact that depreciation (the core input cost) is excluded. Fully loaded gross margins are 14–16%.
 
