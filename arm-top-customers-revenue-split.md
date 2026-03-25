@@ -112,18 +112,87 @@ License revenue is earned upfront or over time when customers sign agreements to
 - **Annualized Contract Value (ACV):** $1.37B in Q4 FY2025 (+15% YoY)
 - **Remaining Performance Obligations (RPO):** $2.23B in Q4 FY2025 (-10% YoY, reflecting timing of large deals)
 
-### 4c. Revenue Growth Forecast -- Arm's Own AGI CPU Initiative
+### 4c. Royalty Per Chip Economics
 
-At the March 2026 Arm Conference, the company announced its entry into the data center CPU market with its own **AGI CPU**:
+Arm does not disclose exact per-chip royalty dollar amounts, but the economics can be derived from public data and analyst estimates:
 
-| Metric | Detail |
-|--------|--------|
-| Revenue start | Material revenue expected from FY2028 |
-| Revenue target | ~$15 billion by FY2031 |
-| First customer | Meta announced as anchor customer |
-| Model shift | Represents a move from pure IP licensing to direct silicon sales |
+| Chip Category | Est. Royalty Per Chip | Architecture | Notes |
+|---------------|----------------------|--------------|-------|
+| **IoT / low-end embedded** | ~$0.01 - $0.03 | Armv7 / Armv8 | Billions of units shipped quarterly; very low per-chip value |
+| **Mid-range smartphone SoC** | ~$0.10 - $0.50 | Armv8 / Armv9 | Higher for Armv9-based Dimensity, Snapdragon mid-tier |
+| **Premium smartphone SoC** | ~$0.50 - $1.50 | Armv9 / CSS | Apple A-series, Snapdragon 8 Gen series, Exynos flagships |
+| **Data center / server CPU** | ~$10 - $100+ | Armv9 / Neoverse / CSS | Graviton, Axion, Cobalt, Grace/Vera; scales with core count |
+| **Automotive compute** | ~$1 - $10 | Armv8 / Armv9 | Rising with ADAS compute content; first auto CSS deals signed |
 
-This initiative, if successful, would fundamentally alter Arm's revenue composition from a pure royalty/licensing model toward a hybrid model with a direct silicon revenue stream.
+**Blended average:** Arm's partners ship 7B+ chips per quarter. At ~$470M royalty revenue in Q3 FY2024, the blended average was ~$0.065/chip. This average is heavily skewed downward by the massive volume of low-value IoT/embedded chips. The mix is shifting structurally upward as Armv9 and CSS adoption grows.
+
+**Royalty rate as % of chip value:** Arm historically charges ~1-2% of chip selling price for standard cores, rising to ~3-5% for Armv9 + CSS subsystem designs. On a $5,000 data center CPU, a 3% royalty rate yields ~$150/chip -- orders of magnitude above the IoT per-chip average.
+
+### 4d. Arm AGI CPU -- Meta Partnership & Revenue Model (NEW: March 2026)
+
+On March 24, 2026, Arm announced its first-ever in-house silicon product, the **AGI CPU**, marking a fundamental shift from pure IP licensing to direct chip sales. This is **not a royalty arrangement** -- Arm is selling physical silicon.
+
+#### What the chip is
+
+| Specification | Detail |
+|---------------|--------|
+| **Purpose** | **AI inference and agentic AI orchestration** (NOT training) |
+| **Architecture** | 136 Neoverse V3 cores, Armv9.2, bfloat16 + INT8 AI instructions |
+| **Frequency** | 3.2 GHz base / 3.7 GHz boost |
+| **Process** | TSMC 3nm, dual-die |
+| **Power** | 300W TDP |
+| **Cache** | 2MB L2 per core + 128MB additional |
+| **Rack density** | Up to 64 CPUs (8,700+ cores) per air-cooled rack; 336 CPUs (45,000+ cores) per liquid-cooled 200kW rack |
+| **Performance** | ~2x performance-per-watt vs. x86 racks (Arm claim) |
+
+#### Meta relationship: inference, not training
+
+Meta is the **lead partner and co-development customer**, not just a buyer. Key details:
+
+- Meta co-developed the AGI CPU with Arm, with the project starting in 2023
+- The chip is designed to complement Meta's own **MTIA (Meta Training and Inference Accelerator)** chips -- the AGI CPU handles orchestration, scheduling, data movement, and agent coordination while MTIA and NVIDIA GPUs handle model execution
+- Meta explicitly described it as a "full replacement, drop-in replacement, for our current compute CPUs"
+- Meta's use case: managing gigawatt-scale AI data centers running the Meta family of apps, coordinating thousands of agentic AI tasks, and optimizing power efficiency (wattage is "a very scarce resource")
+- **This is an inference/orchestration CPU, not a training accelerator** -- it coordinates accelerators and manages distributed AI workloads rather than directly training models
+
+#### Revenue model: chip sales, not royalties
+
+| Aspect | Old Model (IP licensing) | New Model (AGI CPU) |
+|--------|--------------------------|---------------------|
+| **Revenue type** | Royalty per chip (~1-5% of chip value) | Direct chip sale (full ASP) |
+| **Gross margin** | ~95-98% (pure IP) | ~50% (hardware + silicon cost) |
+| **Revenue per unit** | $0.01-$150 royalty per chip | Estimated thousands of dollars per chip |
+| **Illustrative example** | On a $1,000 chip: ~$50 royalty (5% pure profit) | On a $1,000 chip: ~$500 gross profit (50% margin) |
+| **Absolute profit per unit** | Lower $ but near-100% margin | ~10x more absolute $ profit per unit |
+
+#### Financial projections
+
+| Metric | Projection |
+|--------|------------|
+| Material revenue start | FY2028 |
+| AGI CPU revenue target | **~$15 billion annually by FY2031** |
+| IP licensing revenue target | **~$10 billion by FY2031** |
+| Combined total revenue target | **~$25 billion by FY2031** (~5x FY2025 revenue) |
+| EPS target | **$9 by FY2031** |
+| Chip pricing | Not disclosed; analyst estimate: "in the thousands of dollars" |
+| Potential Meta wallet share | Analyst estimate: ~5% of Meta's $115-135B annual capex = $5.75-6.75B |
+
+#### Committed customers (as of launch)
+
+| Customer | Use Case |
+|----------|----------|
+| **Meta** | Lead partner; gigawatt-scale AI data center orchestration alongside MTIA accelerators |
+| **OpenAI** | Orchestration layer for ChatGPT / Codex infrastructure at scale |
+| **Cloudflare** | Global edge network compute |
+| **SAP** | Enterprise AI / HANA workloads |
+| **Cerebras** | AI inference infrastructure alongside wafer-scale accelerators |
+| **F5** | Networking and application delivery |
+| **SK Telecom** | Sovereign AI inference data centers with Rebellions AI accelerators |
+| **Positron** | Purpose-built inference acceleration |
+
+#### Key risk: competing with licensees
+
+By selling its own chip, Arm is now competing directly with some of its largest royalty-paying customers (AWS Graviton, Google Axion, Microsoft Cobalt, NVIDIA Vera). This "Switzerland" risk is mitigated by targeting companies that lack the ~$500M budget and ~1,000-engineer team required to design custom silicon, but it introduces potential tension with existing licensees.
 
 ---
 
