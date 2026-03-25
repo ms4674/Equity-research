@@ -228,4 +228,78 @@ By selling its own chip, Arm is now competing directly with some of its largest 
 
 ---
 
-*Sources: Arm Holdings SEC filings (Form 20-F, Form 6-K), quarterly earnings press releases, shareholder letters, Arm Newsroom, Futurum Group analysis, MarketBeat. Revenue estimates for individual customers are based on publicly available analyst frameworks and are not disclosed by Arm. All figures in USD unless noted.*
+## 7. CPU Content Per Gigawatt of Data Center Capacity
+
+At the Arm Everywhere event (March 24, 2026), Arm provided its own framework for sizing CPU content per gigawatt of data center capacity. This is a critical metric as the industry shifts from megawatt-scale to gigawatt-scale AI data center deployments.
+
+### 7a. CPU Core Demand Per Gigawatt
+
+| Scenario | CPU Cores per GW | Increase | Driver |
+|----------|------------------|----------|--------|
+| **Traditional AI data center** | ~30 million cores | Baseline | Conventional inference and batch processing |
+| **Agentic AI data center** | ~120 million cores | **~4x increase** | Multi-step agentic workflows running continuously; 15x+ more tokens per human interaction |
+
+Arm's thesis: agentic AI workloads (where software agents run multi-step workflows, coordinate tasks, interact with multiple models, and make decisions in real time) dramatically increase the CPU-to-GPU ratio. While GPUs generate tokens, CPUs handle orchestration, memory management, data movement, networking, and workflow execution -- and this CPU role grows disproportionately as workloads become more agentic.
+
+### 7b. Hardware Cost Savings Per Gigawatt
+
+Arm claims the AGI CPU can deliver **up to $10 billion in hardware cost savings per gigawatt** of data center capacity compared to x86-based configurations. This is derived from the ~2x performance-per-watt advantage, which means operators can fit approximately twice the compute work into the same power and cooling envelope.
+
+### 7c. Deriving CPU Dollar Content Per Gigawatt
+
+Using Arm's specifications and public data center cost benchmarks, we can estimate CPU dollar content per GW:
+
+**Bottom-up calculation (Arm AGI CPU configuration):**
+
+| Component | Calculation | Result |
+|-----------|-------------|--------|
+| AGI CPU power draw | 300W per chip | -- |
+| CPUs per GW (theoretical max, 100% CPU) | 1,000,000,000W / 300W | ~3.33 million CPUs |
+| Realistic CPU power share (20-30% of total facility power for CPU) | 200-300 MW allocated to CPUs per GW | -- |
+| CPUs at 20% power share (200 MW) | 200,000,000W / 300W | ~667,000 CPUs |
+| CPUs at 30% power share (300 MW) | 300,000,000W / 300W | ~1,000,000 CPUs |
+| Cores at 20% share | 667,000 x 136 cores | ~90 million cores |
+| Cores at 30% share | 1,000,000 x 136 cores | ~136 million cores |
+
+This is consistent with Arm's stated ~120 million cores per GW for agentic workloads.
+
+**Dollar content estimate:**
+
+| Metric | Low Est. | Mid Est. | High Est. |
+|--------|----------|----------|-----------|
+| CPUs per GW | ~667,000 | ~850,000 | ~1,000,000 |
+| Est. CPU ASP | $3,000 | $5,000 | $7,000 |
+| **CPU dollar content per GW** | **$2.0B** | **$4.3B** | **$7.0B** |
+
+For context, a 1 GW data center facility typically costs $10-15B+ in total capex (land, building, power, cooling, networking, servers, accelerators). CPU silicon represents an estimated **15-30% of total IT equipment spend**, with GPUs/accelerators accounting for the largest share (40-50%).
+
+### 7d. What This Means for Arm's Revenue Opportunity
+
+| Metric | Estimate |
+|--------|----------|
+| Global data center capacity under construction/planned | ~38.5 GW across 11 confirmed gigawatt-scale projects (early 2026) |
+| Total planned global DC capacity (by ~2030) | ~100+ GW |
+| Arm CPU content per GW (mid estimate) | ~$4.3B |
+| Arm's current DC CPU market share | ~13% of server CPU revenue (and growing) |
+| Arm's target DC CPU share | ~50% of new hyperscaler deployments |
+| **Implied Arm addressable CPU TAM (100 GW x $4.3B x 50%)** | **~$215B cumulative** over the buildout |
+
+Arm's own TAM framework at the event:
+- Current royalty TAM from data center: **~$3 billion**
+- With AGI CPU chip sales (near-term): **~$100 billion**
+- End-of-decade ambition (edge to cloud): **>$1 trillion**
+
+### 7e. Meta's Specific GW-Scale Deployments
+
+Meta referenced two major gigawatt-scale projects at the event:
+
+| Project | Scale | Timeline |
+|---------|-------|----------|
+| **Prometheus** | >1 GW | By end of 2026 |
+| **Hyperion** (Richland Parish, Louisiana) | ~5 GW | Next few years |
+
+Meta's total capex is guided at $115-135B for 2026, with the AGI CPU positioned as the CPU backbone for these facilities alongside Meta's own MTIA accelerators and NVIDIA GPUs. If Arm captures ~5% of Meta's capex (analyst estimate), that alone would represent **$5.75-6.75B annually** from a single customer.
+
+---
+
+*Sources: Arm Holdings SEC filings (Form 20-F, Form 6-K), quarterly earnings press releases, shareholder letters, Arm Newsroom, Arm Everywhere event (March 24, 2026), MarketBeat, SiliconANGLE, CNBC, Futurum Group, Shrout Research, The Register. Revenue estimates for individual customers are based on publicly available analyst frameworks and are not disclosed by Arm. CPU content per GW estimates are derived from Arm's published specifications and industry benchmarks. All figures in USD unless noted.*
