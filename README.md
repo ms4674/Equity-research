@@ -23,13 +23,27 @@ Tracks the evolution of maximum context window sizes across major AI model provi
 
 ![Context Window Time Series (Linear Scale)](charts/context_window_timeseries_linear.png)
 
+## Monthly Total Token Volume (Training vs Inference)
+
+Excel workbook with monthly token counts across all six companies, split by training and inference:
+
+[`data/token_volume_monthly.xlsx`](data/token_volume_monthly.xlsx)
+
+**Sheets:**
+1. **Monthly Token Volume** — Combined view: every company × every month, training + inference + total
+2. **OpenAI / Anthropic / Google / Meta / xAI / Cursor** — Per-company breakdowns with embedded charts
+3. **Training Runs** — Reference table of all model training runs with token counts and sources
+4. **Methodology** — Data sources, estimation approach, and caveats
+
 ### Data
 
-Raw data: [`data/token_context_windows.csv`](data/token_context_windows.csv)
+- Context windows: [`data/token_context_windows.csv`](data/token_context_windows.csv)
+- Token volumes: [`data/token_volume_monthly.xlsx`](data/token_volume_monthly.xlsx)
 
-### Regenerating Charts
+### Regenerating
 
 ```bash
-pip install pandas matplotlib
+pip install pandas matplotlib openpyxl
 python3 scripts/plot_token_context_windows.py
+python3 scripts/generate_token_volume_excel.py
 ```
