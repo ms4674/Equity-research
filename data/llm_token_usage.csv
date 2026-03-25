@@ -1,0 +1,28 @@
+date,daily_tokens_trillion,source
+2024-01-01,0.15,Industry estimates / OpenRouter extrapolation
+2024-02-01,0.18,Industry estimates / OpenRouter extrapolation
+2024-03-01,0.22,Industry estimates / OpenRouter extrapolation
+2024-04-01,0.28,Industry estimates / OpenRouter extrapolation
+2024-05-01,0.35,Industry estimates / OpenRouter extrapolation
+2024-06-01,0.42,Industry estimates / OpenRouter extrapolation
+2024-07-01,0.50,Industry estimates / OpenRouter extrapolation
+2024-08-01,0.60,Industry estimates / OpenRouter extrapolation
+2024-09-01,0.72,Industry estimates / OpenRouter extrapolation
+2024-10-01,0.86,OpenAI API avg 8.6T tokens/day (Oct 2024)
+2024-11-01,0.90,Industry estimates
+2024-12-01,0.95,Industry estimates / OpenRouter data
+2025-01-01,1.00,OpenRouter State of AI (scaling to 1T/day)
+2025-02-01,1.10,OpenRouter State of AI
+2025-03-01,1.25,OpenRouter State of AI / a16z study
+2025-04-01,1.40,OpenRouter State of AI / a16z study
+2025-05-01,1.60,OpenRouter State of AI / a16z study
+2025-06-01,1.80,OpenRouter 100T token study (mid-2025)
+2025-07-01,2.00,OpenRouter / industry estimates
+2025-08-01,2.20,Industry estimates
+2025-09-01,2.40,Industry estimates
+2025-10-01,2.60,Industry estimates / OpenRouter late-2025
+2025-11-01,2.80,Industry estimates / OpenRouter late-2025
+2025-12-01,3.00,OpenRouter >1T tokens/day by late 2025
+2026-01-01,3.30,2026 extrapolation based on growth trends
+2026-02-01,3.60,2026 extrapolation based on growth trends
+2026-03-01,4.00,2026 extrapolation based on growth trends
