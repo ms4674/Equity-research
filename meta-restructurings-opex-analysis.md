@@ -187,7 +187,123 @@ The $8.1 billion in restructuring charges through 2023 can be viewed as a two-ye
 
 ---
 
-## 7. Key Takeaways
+## 8. 2026 OpEx Outlook & YTD Revisions
+
+### 8a. Company Guidance (Issued January 28, 2026 -- Q4 2025 Earnings)
+
+| Metric | 2025 Actual | 2026 Guidance | YoY Growth |
+|---|---|---|---|
+| Total expenses | $117.69B | **$162-169B** | +38% to +44% |
+| Capital expenditures | $69.69B | **$115-135B** | +65% to +94% |
+| Reality Labs op. loss | $19.2B | ~$19B (similar to 2025) | roughly flat |
+| Q1 2026 revenue | $48.39B (Q1 '25) | **$53.5-56.5B** | +11% to +17% |
+| Tax rate | n/a | 13-16% | -- |
+| Operating income | $83.28B | Above 2025 levels | -- |
+
+The $162-169B total expense guide came in meaningfully above the pre-earnings Street consensus of ~$153-160B (Bank of America estimate). The midpoint of $165.5B implies **+41% YoY expense growth** vs. +24% in 2025.
+
+### 8b. What's Driving the Step-Up
+
+Meta broke out two primary expense growth drivers:
+
+**1. Infrastructure costs (largest contributor)**
+- Higher depreciation from $115-135B in capex flowing onto the P&L
+- Third-party cloud spend for AI workloads
+- Higher infrastructure operating expenses (power, cooling, maintenance)
+- D&A has compounded at ~29% CAGR from 2022 ($8.7B) to 2025 ($18.6B); the trajectory steepens further in 2026 given the capex near-doubling
+
+**2. Employee compensation (second-largest contributor)**
+- Full-year run-rate of 2025 hires
+- New 2026 hires focused on AI/ML technical talent
+- Partially offset by 5% stock award reduction for most employees (second consecutive year of equity cuts) and planned 20% workforce reduction
+
+| D&A Expense | Amount | YoY |
+|---|---|---|
+| 2022 | $8.69B | +9.0% |
+| 2023 | $11.18B | +28.7% |
+| 2024 | $15.50B | +38.7% |
+| 2025 | $18.62B | +20.1% |
+| 2026E | ~$25-30B | +35-60% (est.) |
+
+Meta extended useful life of servers/networking from 4-5 years to 5.5 years in Q4 2024, saving $2.9B in 2025 depreciation. Without this change, 2025 D&A would have been ~$21.5B and the 2026 figure even higher.
+
+### 8c. Segment-Level View
+
+| Segment | 2025 Op. Income | 2026 Direction |
+|---|---|---|
+| Family of Apps | $102.48B | Expense growth concentrated here; driven by AI infra |
+| Reality Labs | -$19.20B | Losses expected to remain similar to 2025 levels ("likely the peak" per Zuckerberg) |
+| **Consolidated** | **$83.28B** | **Guided above 2025 levels** |
+
+### 8d. YTD Revisions and Developments (January-March 2026)
+
+The expense and operating picture has evolved materially since the January 28 earnings call:
+
+| Date | Event | Impact on 2026 OpEx |
+|---|---|---|
+| **Jan 28** | Q4 2025 earnings: 2026 expenses guided at $162-169B; capex at $115-135B | Initial guide above consensus (~$153-160B); capex above expected ~$110B |
+| **Feb 19** | Stock awards cut 5% for most employees (2nd consecutive year) | Modest SBC savings; redirected to AI infrastructure |
+| **Feb 2026** | Analyst estimates coalesce around $165B total expenses | Street consensus moves to midpoint of guide |
+| **Mar 14** | Reuters reports planned 20% workforce reduction (~16,000 employees) | Potential $5-8B annualized savings (see below) |
+| **Mar 16** | Meta stock rises ~3% on layoff reports; spokesperson calls reports "speculative" | Market endorses cost discipline |
+| **Mar 18** | Forbes reports Meta pursuing AI automation to permanently reduce headcount | Structural efficiency gains beyond one-time cuts |
+| **Mar 25** | Senior executives granted large stock option packages tied to valuation targets; executive bonuses raised to 200% of base (from 75%) | Executive comp rising even as broad-based comp is cut |
+
+### 8e. Potential Impact of Planned ~20% Workforce Reduction
+
+If the reported ~16,000-employee reduction is executed, analyst estimates suggest the following OpEx impact:
+
+| Analyst | Estimated Annual Savings | Per-Share EPS Impact |
+|---|---|---|
+| JPMorgan | ~$6B | +~$2.00 GAAP EPS |
+| Bank of America | Up to $8B (conservative) | Necessary to hit 2026 OI targets |
+| Rosenblatt Securities | ~$6B | +5% to adjusted core earnings |
+| **Consensus range** | **$5-8B** | **+$1.50-$2.50 EPS** |
+
+Putting this in context relative to the $162-169B expense guide:
+
+| Scenario | 2026 Total Expenses | Op. Margin (at $245B rev est.) |
+|---|---|---|
+| **No layoffs (current guide)** | $162-169B | 31-34% |
+| **With ~$6B layoff savings** | $156-163B | 33-36% |
+| **With ~$8B layoff savings** | $154-161B | 34-37% |
+
+However, analysts caution that:
+- Savings are modest vs. total expense base (3-5% of guided expenses)
+- Restructuring charges (severance, facilities) will be a one-time headwind
+- Savings may be partially reinvested into higher AI talent compensation
+- The layoffs alone will not meaningfully offset the infrastructure cost ramp
+
+### 8f. 2026 OpEx Bridge ($ billions)
+
+Waterfall from 2025 actual to 2026 guided midpoint:
+
+| Component | Amount |
+|---|---|
+| **2025 actual total expenses** | **$117.7B** |
+| + Infrastructure (depreciation, cloud, ops) | +$20-25B |
+| + R&D headcount & AI talent | +$10-15B |
+| + Cost of revenue growth | +$5-8B |
+| - SG&A efficiencies (layoffs, comp cuts) | -($3-6B) |
+| +/- Reality Labs (roughly flat losses) | ~$0B |
+| **2026 guided midpoint** | **~$165.5B** |
+
+The dominant driver is infrastructure cost passthrough: $115-135B in 2026 capex flowing through as depreciation (with a 5.5-year useful life) adds ~$21-25B to the annual depreciation run-rate, of which a significant portion hits 2026. Headcount costs are the swing factor -- the planned layoffs could shift the guide toward the lower end of the $162-169B range or even below it if fully executed.
+
+### 8g. Implied Operating Margins
+
+| Metric | 2025 Actual | 2026E (Low-End Expenses) | 2026E (High-End Expenses) |
+|---|---|---|---|
+| Revenue (consensus ~$245B) | $200.97B | $245B | $245B |
+| Total expenses | $117.69B | $162B | $169B |
+| Operating income | $83.28B | $83B | $76B |
+| Operating margin | 41.4% | 33.9% | 31.0% |
+
+At the guided expense range, operating margins will compress 8-10 percentage points in 2026, partially offset if layoff savings materialize. Meta has guided that operating income will exceed 2025 levels, which implies either (a) revenue outperformance above $245B, (b) expense management below the $162B low end, or (c) a combination. The planned layoffs are likely a key lever to deliver on this commitment.
+
+---
+
+## 9. Key Takeaways
 
 1. **Three completed restructuring waves** (Nov 2022, 2023, Feb 2025) eliminated over 25,000 positions and incurred ~$8.1 billion in one-time charges.
 
@@ -199,10 +315,14 @@ The $8.1 billion in restructuring charges through 2023 can be viewed as a two-ye
 
 5. **OpEx savings were redeployed into AI capex**, which grew from $31.4B (2022) to $69.7B (2025) with $115-135B guided for 2026.
 
-6. **A fourth restructuring wave** (March 2026, up to ~16,000 employees) may further reduce operating costs to fund the next phase of AI infrastructure buildout.
+6. **2026 represents an inflection year for OpEx**: total expenses guided at $162-169B (+38-44% YoY) as infrastructure depreciation and AI talent costs ramp sharply.
 
-7. **Operating margin at 41-42%** in 2024-2025 exceeds pre-restructuring levels (38-40% in 2020-2021), even as the company invests aggressively in AI -- underscoring the lasting efficiency improvements from the restructurings.
+7. **Planned fourth restructuring** (March 2026, up to ~16,000 employees) could yield $5-8B in annualized savings -- a key lever for Meta to deliver on its commitment that 2026 operating income will exceed 2025 levels despite the massive expense ramp.
+
+8. **Operating margin compression of 8-10pp is expected** in 2026 (from 41.4% to ~31-34%), partially offset if layoff savings materialize. The tension between AI investment and margin preservation is the central investor debate.
+
+9. **YTD 2026 revisions have been uniformly toward higher spending**: initial expense guide above consensus, capex above expectations, and additional cost measures (equity cuts, planned layoffs) signal that Meta is front-loading AI infrastructure investment while managing the P&L through workforce efficiencies.
 
 ---
 
-*Sources: Meta Platforms SEC filings (10-K, 10-Q, Exhibit 99.1), earnings press releases, Reuters, Bloomberg, Fortune, CNBC, Forbes, MacroTrends, Business Insider. Data as of March 2026.*
+*Sources: Meta Platforms SEC filings (10-K, 10-Q, Exhibit 99.1), earnings press releases, Q4 2025 earnings call transcript, Reuters, Bloomberg, Fortune, CNBC, Forbes, MacroTrends, Business Insider, JPMorgan/BofA/Rosenblatt analyst notes. Data as of March 25, 2026.*
