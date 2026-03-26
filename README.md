@@ -18,6 +18,12 @@ Comprehensive analysis of KV cache memory requirements, prefill throughput chara
 | TurboQuant (Google, March 2026) | 6× KV cache compression, zero quality loss | Potential breakthrough for self-hosted inference |
 | SGLang RadixAttention | 29% higher throughput vs vLLM for prefix workloads | Best framework for agent/shared-prefix serving |
 | Consumer GPU prefill | ~4.5 tok/s on modest GPU | 300s to prefill 80K tokens — prohibitive |
+| **HBM supply-demand gap** | Demand exceeds supply by ~33% in 2026 | SK Hynix & Micron sold out through 2026; gap persists to 2028–2029 |
+| **HBM per GPU: 3.6× growth** | 80 GB (A100) → 288 GB (B300) in 5 years | HBM now 35–38% of GPU manufacturing cost |
+| **KV cache = demand multiplier** | 83% of VRAM at 128K × 8 users | Turns memory shortage into memory crisis |
+| **Inference flip** | 67% of all AI compute is inference (2026) | Inference is KV-cache-dominated; compounds memory demand |
+| **$54.6B HBM market (2026)** | Growing to $100B+ by 2028 | New fab capacity won't close gap until 2028–2029 |
+| **Near-duopoly risk** | SK Hynix ~60% share; Samsung quality issues | Only 2 reliable suppliers for most critical AI component |
 
 ### Models Covered
 
@@ -27,8 +33,8 @@ GPT-4.1, GPT-4o, Claude Sonnet 4.6, Claude Opus 4.6, Gemini 2.5 Pro, DeepSeek V3
 
 | File | Description |
 |------|-------------|
-| `kv_cache_prefill_analysis.ipynb` | Full analysis notebook with 11 visualizations + interactive dashboard |
-| `kv_cache_prefill_data.xlsx` | All data tables (8 sheets: architectures, pricing, benchmarks, optimizations, frameworks, agents, GPU budget, cost sensitivity) |
+| `kv_cache_prefill_analysis.ipynb` | Full analysis notebook with 14 visualizations + interactive dashboard |
+| `kv_cache_prefill_data.xlsx` | All data tables (12 sheets: architectures, pricing, benchmarks, optimizations, frameworks, agents, GPU budget, HBM supply-demand, GPU HBM requirements, installed base memory, KV cache scenarios, cost sensitivity) |
 | `01_kv_cache_memory_scaling.png` | KV cache memory scaling by context length across models |
 | `02_attention_mechanism_kv_impact.png` | MHA vs GQA vs MLA per-token KV cache comparison |
 | `03_prefill_vs_decode_throughput.png` | Prefill and decode throughput by model and framework |
@@ -40,7 +46,10 @@ GPT-4.1, GPT-4o, Claude Sonnet 4.6, Claude Opus 4.6, Gemini 2.5 Pro, DeepSeek V3
 | `09_monthly_cost_model.png` | Monthly cost projections at various usage levels |
 | `10_gpu_memory_budget.png` | Model weights vs KV cache memory breakdown |
 | `11_concurrent_users_vs_gpu.png` | Concurrent user capacity by GPU configuration |
+| `12_hbm_supply_demand_mismatch.png` | HBM supply vs demand, revenue, per-GPU requirements, vendor share |
 | `12_interactive_dashboard.html` | Interactive Plotly dashboard (4-panel) |
+| `13_kv_cache_memory_demand_multiplier.png` | KV cache as VRAM demand multiplier + inference flip |
+| `14_aggregate_memory_gap.png` | Global installed base memory breakdown and KV cache share |
 
 ### Data Sources
 
@@ -49,6 +58,8 @@ GPT-4.1, GPT-4o, Claude Sonnet 4.6, Claude Opus 4.6, Gemini 2.5 Pro, DeepSeek V3
 - Inference benchmarks: vLLM/SGLang/TensorRT-LLM published comparisons, NVIDIA DGX Spark specs, Artificial Analysis
 - Agent workload data: Claude Code usage statistics, GitHub Copilot engineering blog, Cursor technical posts
 - Optimization research: TurboQuant (Google, March 2026), KV-Compress (2025), PagedAttention (vLLM), RadixAttention (SGLang), NVIDIA Dynamo docs
+- HBM market data: SK Hynix/Samsung/Micron financials, TrendForce, Yole Group, CNBC, Epoch AI GPU tracker
+- GPU installed base: Epoch AI (15M H100-equivalents), NVIDIA GTC 2026 disclosures, SemiAnalysis estimates
 
 ### Requirements
 
