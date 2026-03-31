@@ -12,6 +12,8 @@ Airbnb launched **Airbnb Services** and reimagined **Airbnb Experiences** in May
 
 **Key finding:** Experiences carry a **higher take rate (20%)** than core stays (~15.5%), which should drive structurally better monetization over time, though contribution margins are currently negative as the company invests in supply acquisition, quality curation, and marketing. The core stays business remains highly profitable with ~83% gross margins and ~35% EBITDA margins.
 
+**Agentic booking thesis:** Services & Experiences are strategically critical for Airbnb's pivot to AI-driven agentic bookings. An AI agent that orchestrates full trips (stay + experiences + services) drives **+89% GBV per trip** and **+103% revenue per trip** vs. stays-only — while also generating richer behavioral data that makes the AI agent harder to disintermediate. Without these categories, Airbnb would be commodity supply for third-party AI agents; with them, it becomes the only platform where an agent can build a quality-controlled, end-to-end trip.
+
 ---
 
 ## 1. Consolidated Financial Overview
@@ -208,7 +210,124 @@ The bull case thesis is that Services & Experiences **accelerates the revenue gr
 
 ---
 
-## 9. Competitive Context
+## 9. Services as the Enabler of Agentic Bookings
+
+The most underappreciated strategic dimension of Airbnb's Services & Experiences expansion is how it positions the company for the shift to **agentic AI-driven bookings** — a paradigm where AI agents orchestrate entire trips rather than users searching for individual listings.
+
+### 9a. The Agentic Booking Thesis
+
+The travel industry is undergoing a fundamental transition. Instead of users visiting 141 web pages to plan a trip (industry average), **AI agents will compress the entire funnel** — discovering destinations, selecting accommodations, booking activities, and arranging services — into a single conversational flow. McKinsey estimates agentic commerce could orchestrate **$3-5 trillion** in global B2C transactions by 2030, with travel being a leading vertical.
+
+Airbnb is already building toward this:
+- **AI-powered search** in testing — conversational, natural-language queries about properties and locations
+- **AI customer support** handling ~33% of issues without human agents in North America
+- **New CTO Ahmad Al-Dahle** (ex-Meta, built Llama models) hired to lead AI-native transformation
+- CEO Chesky's stated vision: an app that **"knows you"** and **"helps guests plan their entire trip"**
+
+**The critical insight:** Without Services & Experiences, Airbnb's AI agent can only book a stay. With them, it can orchestrate the full trip — and that changes the economics entirely.
+
+### 9b. Revenue Per Trip Uplift
+
+![Agentic Revenue Per Trip](output/11_agentic_revenue_per_trip.png)
+
+| Trip Composition | GBV Per Trip | ABNB Revenue | Blended Take Rate |
+|---|---|---|---|
+| **Stays only** (today's average) | $900 | $140 | 15.5% |
+| **Stay + 1 Experience** | $1,120 | $184 | 16.4% |
+| **Stay + 2 Exp + 1 Service** | $1,380 | $230 | 16.7% |
+| **Agent-orchestrated full trip** | $1,700 | $285 | 16.7% |
+
+An AI agent that bundles stays with experiences and services drives **+89% GBV per trip** and **+103% revenue per trip** vs. a stays-only booking. The blended take rate rises from 15.5% to ~16.7% because Experiences carry a 20% take rate, diluted only modestly by Services at ~15%.
+
+**This is why Services matter for the agentic pivot:** They give the AI agent more products to sell into each trip, increasing both absolute revenue and take rate per transaction.
+
+Current data supports this dynamic: **30% of stay bookings now include an Experience add-on** (up from zero pre-May 2025), and AI matching already pairs 92% of users with activities matching their preferences on the first attempt.
+
+### 9c. The Agentic Flywheel
+
+![Agentic Flywheel](output/12_agentic_flywheel.png)
+
+Services & Experiences create a **self-reinforcing flywheel** for agentic bookings:
+
+1. **AI agent orchestrates a full trip** (stay + experiences + services) rather than just a stay
+2. **Higher GBV per trip** → more revenue and margin for Airbnb per transaction
+3. **Richer behavioral data** → the agent learns preferences across stays, activities, and services (not just accommodation type)
+4. **Better personalization** → higher conversion rates, lower cancellations, repeat usage
+5. **Repeat loop** → the agent gets smarter, drives higher-value trips, and the flywheel accelerates
+
+Without Services, the data collected per trip is limited to stay preferences (location, property type, price range). With Services, Airbnb learns that a user likes wine tastings, prefers private chefs for groups of 6+, books yoga before 8am, and favors walking tours over bus tours. This **multi-dimensional preference graph** is far more defensible than accommodation-only data and far harder for competitors or third-party AI agents to replicate.
+
+**Airbnb's proprietary data moat:**
+- **200M+ verified identities** with trust/safety history
+- **500M+ reviews** spanning stays, experiences, and services
+- **Host-guest messaging data** revealing trip intent and preferences
+- **Cross-category behavioral signals** (what people do, not just where they sleep)
+
+This is fundamentally different from what Google, Perplexity, or other AI agent platforms can access. They see search intent; Airbnb sees completed trip behavior across multiple categories.
+
+### 9d. Why This Matters More for Airbnb Than Competitors
+
+![Agentic Competitive](output/13_agentic_competitive.png)
+
+| Platform | Bookable Categories | Can an Agent Build a Full Trip? | Proprietary Data Depth |
+|---|---|---|---|
+| **Airbnb** | Stays + Experiences + Services | Yes (within Airbnb ecosystem) | Deep: multi-category behavioral data |
+| **Booking Holdings** | Hotels + Flights + Cars + Attractions + Restaurants | Yes (broadest) | Broad but transactional |
+| **Expedia** | Hotels + Flights + Cars + Activities (Viator) | Yes (broad) | Broad but fragmented across brands |
+| **AI-native agents** (Perplexity, etc.) | Can search across platforms | Cross-platform but no booking relationship | Shallow: search queries only |
+
+**Airbnb's agentic advantage is narrow but deep.** It can't book flights or cars (yet), but within its categories — stays, experiences, services — it has the deepest quality-controlled supply and the richest user data. The curation model (4.93-star average for Services & Experiences) means AI recommendations are higher quality than aggregator-based alternatives.
+
+**The strategic risk without Services:** If Airbnb remained stays-only, third-party AI agents (Google, Perplexity Comet, OpenAI) could easily intermediate the booking by searching across Airbnb, Booking, VRBO, and hotels — reducing Airbnb to commodity supply. But when the AI agent needs to also book a private chef, a guided tour, and a yoga instructor as part of the trip, only Airbnb offers that in a unified, quality-controlled marketplace. **Services make Airbnb harder to disintermediate.**
+
+### 9e. Cost Structure Implications
+
+Agentic bookings should be structurally **margin-accretive** for several reasons:
+
+| Cost Driver | Stays-Only Model | Agentic Full-Trip Model | Impact |
+|---|---|---|---|
+| **Customer acquisition** | One CAC per stay booking | One CAC for stay + N services (bundled) | CAC amortized across higher GBV |
+| **Customer support** | ~$5-8 per booking (with AI) | Incremental cost per add-on ~$1-2 | AI handles routine S&E support |
+| **Search & matching** | Single accommodation search | One search session → multiple bookings | Higher conversion per session |
+| **Repeat booking** | 40% repeat rate for Experiences | Higher lifetime value per user | Lower ongoing CAC |
+| **Payment processing** | ~2% of GBV | Same ~2% rate on higher GBV | Fixed cost, scales linearly |
+
+The key margin lever: **CAC amortization.** Today Airbnb spends $2,588M on Sales & Marketing (21% of revenue). In an agentic model, a single user session that books a stay + 2 experiences + a service generates ~$285 in revenue vs. $140 for stays-only — a **2x revenue yield** on the same acquisition cost. Over time, this should compress effective CAC/revenue ratios even as absolute marketing spend grows.
+
+Booking Holdings' early data supports this: AI-driven bookings show **higher conversion rates and lower cancellation rates** compared to traditional search, which structurally improves unit economics.
+
+### 9f. Agentic Revenue Scenarios
+
+![Agentic Revenue Scenario](output/14_agentic_revenue_scenario.png)
+
+| Scenario | FY2025 | FY2026E | FY2027E | FY2028E | CAGR |
+|---|---|---|---|---|---|
+| **Base: Stays Only** | $12.2B | $13.5B | $14.9B | $16.1B | ~10% |
+| **Current Plan: Stays + S&E** | $12.2B | $14.3B | $16.9B | $19.7B | ~17% |
+| **Agentic Bull: AI-Orchestrated** | $12.2B | $14.8B | $18.5B | $23.0B | ~24% |
+
+The **agentic bull case** assumes:
+- AI-driven trip bundling increases average GBV per trip by 40-60% by FY2028
+- Services attach rate reaches 40%+ of stay bookings (vs. ~30% today)
+- Experiences standalone demand continues growing 25%+ annually
+- AI search drives 15-20% higher conversion vs. traditional search
+- Take rate expands 50-80bps from mix shift toward Experiences
+
+If the agentic thesis plays out, the Services segment doesn't just add incremental revenue — it **transforms the revenue growth algorithm** from single-product (~10% growth) to multi-product platform (~24% growth).
+
+### 9g. Key Risks to the Agentic Thesis
+
+| Risk | Description | Probability | Mitigation |
+|---|---|---|---|
+| **Third-party agent disintermediation** | Google/Perplexity agents book across platforms, bypassing Airbnb | Medium-High | Services/Experiences moat; proprietary data; direct app relationship |
+| **Booking Holdings moves faster** | BKNG has $700M AI budget and broader categories | Medium | Different positioning; Airbnb's curated quality vs. BKNG's breadth |
+| **Slow agentic adoption** | Consumers may not trust AI for full trip planning | Medium | Gradual rollout; AI search → AI recommendations → full orchestration |
+| **Services quality doesn't scale** | Maintaining 4.93-star quality at 10x volume | Medium | Curation flywheel; AI-powered quality monitoring |
+| **Margin pressure from AI investment** | Significant R&D spend before monetization | Low-Medium | Core business generates $4.7B FCF to fund investment |
+
+---
+
+## 10. Competitive Context (Traditional)
 
 | Competitor | Core Business | Adjacent Services | Take Rate |
 |---|---|---|---|
@@ -222,7 +341,7 @@ Airbnb's competitive advantage in Services/Experiences lies in its **existing de
 
 ---
 
-## 10. Key Risks
+## 11. Key Risks
 
 | Risk | Severity | Mitigation |
 |---|---|---|
@@ -241,6 +360,7 @@ Airbnb's competitive advantage in Services/Experiences lies in its **existing de
 - Revenue and margin figures are GAAP unless noted as "Adjusted"
 - Services & Experiences estimates are derived from disclosed bookings data, take rates, and management commentary
 - Forward estimates (2026E-2028E) are illustrative scenarios, not consensus
+- Agentic booking analysis based on company disclosures, earnings call commentary, and industry research
 - All charts generated via `airbnb_services_revenue_margins.py`
 
-*Sources: Airbnb 10-K (FY2024, FY2025), Q2/Q3/Q4 2025 Shareholder Letters, Q4 FY2025 Earnings Call Transcript, Q1 2026 reported metrics*
+*Sources: Airbnb 10-K (FY2024, FY2025), Q2/Q3/Q4 2025 Shareholder Letters, Q4 FY2025 Earnings Call Transcript, Q1 2026 reported metrics, TechCrunch (Airbnb AI features, Feb 2026), Business Insider (Chesky AI-first strategy), McKinsey (Agentic Commerce report, Remapping Travel with Agentic AI), Booking Holdings Q4 2025 earnings, Expedia agentic commerce disclosures, Airbnb Engineering Blog (destination recommendations, Mar 2026)*
