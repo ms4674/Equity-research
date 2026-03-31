@@ -182,7 +182,98 @@ As a percentage of revenue, Marvell's silicon photonics and optical interconnect
 
 ---
 
-## 4. The Role of Silicon Photonics in Training vs. Inference
+## 4. Silicon Photonics: Scale-Up vs. Scale-Out Networking
+
+### Definitions
+
+- **Scale-up networking**: GPU-to-GPU, chip-to-chip, and chip-to-memory interconnects *within* a node or supernode (e.g., NVLink, PCIe/CXL, proprietary GPU fabrics). These are short-reach, ultra-high-bandwidth links—historically copper.
+- **Scale-out networking**: Rack-to-rack, cluster-to-cluster, and data-center-to-data-center connectivity via Ethernet or InfiniBand switches and optical transceivers. These are medium-to-long-reach links—historically optical.
+
+### Where Is Silicon Photonics Exposure Higher Today?
+
+**Scale-out dominates current silicon photonics revenue.** The vast majority of optical transceivers, DSPs, and silicon photonics light engines sold today serve scale-out Ethernet and InfiniBand backend fabrics connecting racks of GPUs. This is Marvell's primary optical revenue stream (Ara 1.6T DSPs, light engines, Colorz DCI modules). The scale-out optical transceiver market for AI data centers reached ~$16.5 billion in 2025 and is projected to hit ~$26 billion in 2026 (60% growth), driven by the 800G-to-1.6T speed transition.
+
+Scale-up has been almost entirely copper-based through 2025. NVIDIA's NVLink, AMD's Infinity Fabric, and custom hyperscaler XPU interconnects have relied on copper traces, passive copper cables, and active electrical cables (AEC) for GPU-to-GPU links within racks.
+
+### Where Is the Bigger Opportunity Emerging?
+
+**Scale-up is the larger long-term TAM for silicon photonics and is growing faster, but from a near-zero base.**
+
+The reasons are structural:
+
+| Dimension | Scale-Up | Scale-Out |
+|-----------|----------|-----------|
+| **Bandwidth per link** | Up to 10x higher than scale-out (multi-Tbps per GPU) | 800G–1.6T per port today |
+| **Current optical penetration** | Near zero (copper dominates) | Near 100% (already optical beyond 2m) |
+| **Net new TAM creation** | Massive—entire copper domain converting to optical | Incremental—speed upgrades (800G→1.6T→3.2T) on existing optical links |
+| **Links per GPU** | 8-18 NVLink/scale-up connections per GPU | 1-2 scale-out network connections per GPU |
+| **Total bandwidth demand** | Growing faster (training clusters 100K→1M GPUs, each needing multi-Tbps scale-up) | Growing (more racks, faster ports) |
+| **Technology required** | Co-packaged optics (CPO), photonic fabric, on-package optics | Pluggable transceivers (LPO), silicon photonics light engines |
+| **Revenue timeline** | 2027-2028 volume ramp | Now and growing |
+| **Key suppliers** | NVIDIA + Lumentum/Coherent/Ayar Labs (CPO), Marvell/Celestial AI (Photonic Fabric) | Marvell (DSPs), Broadcom, Credo, Coherent, Lumentum |
+
+### The Scale-Up Inflection
+
+Several catalysts are accelerating the scale-up optical transition:
+
+1. **NVIDIA's $4B optical investment (March 2026)**: $2B each to Lumentum and Coherent, plus Ayar Labs Series E participation, all targeting co-packaged optics for scale-up GPU interconnects. This is a clear signal that NVLink's copper era has a finite horizon.
+
+2. **NVIDIA Spectrum-X Photonics**: First fully integrated 512-lane 200G CPO switch, delivering 3.5x energy savings and 10x network resilience versus pluggable optics. Available 2026, targeting scale-up AI factory networks.
+
+3. **Copper physical limits**: At 200G/lane speeds (required for 1.6T and beyond), passive copper cannot reliably span beyond a single rack. Every next-generation AI cluster being designed today must plan for optical scale-up.
+
+4. **CPO power economics**: Pluggable optics consume ~15 picojoules/bit; CPO reduces this to ~5 pJ/bit with a path to <1 pJ/bit. At megawatt-scale clusters, this difference is existential for power budgets.
+
+### Marvell's Exposure: Scale-Up vs. Scale-Out
+
+| Product | Scale-Up or Scale-Out | Status | Revenue Contribution |
+|---------|----------------------|--------|---------------------|
+| Ara 1.6T Optical DSP | **Scale-out** (pluggable transceivers for Ethernet/IB fabrics) | Mass production | Large — core of current interconnect revenue |
+| 1.6T SiPh Light Engine | **Both** (pluggable and on-board optics) | Ramping | Growing |
+| AEC (Active Electrical Cables) | **Scale-up** (short-reach copper-based, pre-optical) | Shipping | Moderate — bridge product before CPO |
+| Alaska P PCIe Retimers | **Scale-up** (copper-based, intra-server) | Shipping | Moderate |
+| Structera CXL Switches | **Scale-up** (memory pooling, electrical today) | Early | Small |
+| Celestial AI Photonic Fabric | **Scale-up** (chip-to-chip, chip-to-memory optical) | Pre-revenue | $0 now; $500M ARR by FY2028, $1B by FY2029 |
+| Colorz DCI | **Scale-out** (inter-data-center) | Shipping | Small |
+| Teralynx Ethernet Switch | **Scale-out** (spine/leaf switching) | Volume production | ~$300M FY2026 |
+
+**Today**: Marvell's silicon photonics exposure is ~90% scale-out (optical DSPs and light engines for pluggable transceivers in Ethernet/IB fabrics).
+
+**By FY2029**: The mix shifts significantly toward scale-up, driven by Celestial AI Photonic Fabric ($1B ARR target) and on-board optical integration. Scale-up could represent 25-35% of total optical/SiPh revenue, up from near-zero today.
+
+### Market Size Comparison
+
+```
+SCALE-OUT OPTICAL MARKET (PLUGGABLE TRANSCEIVERS + DSPs)
+├── 2025: ~$16.5B (mature, already optical)
+├── 2026: ~$26B (800G→1.6T upgrade cycle)
+├── 2028: ~$35B+ (1.6T→3.2T, more racks)
+└── Growth: ~20-25% CAGR
+
+SCALE-UP OPTICAL MARKET (CPO + PHOTONIC FABRIC)
+├── 2025: <$0.5B (near-zero, copper dominates)
+├── 2026: ~$1-2B (early CPO deployments)
+├── 2028: ~$5-8B (CPO volume ramp, photonic fabric)
+├── 2030: ~$10-15B+ (standard for all new clusters)
+└── Growth: ~80-100%+ CAGR from near-zero base
+
+COMBINED AI OPTICAL INTERCONNECT TAM
+├── 2025: ~$18B
+├── 2028: ~$40-43B
+└── 2030: ~$50B+
+```
+
+### Answer: Which Has Higher Exposure?
+
+**Scale-out is bigger today and remains the larger absolute market through at least 2028.** Marvell's current silicon photonics revenue is almost entirely scale-out (optical DSPs for pluggable transceivers). This market is large ($26B in 2026), growing steadily (20-25% CAGR), and Marvell has a leadership position with its Ara DSP platform.
+
+**Scale-up is the more transformative opportunity and will grow faster.** The copper-to-optical transition in scale-up creates entirely new TAM (not just speed upgrades). NVIDIA's $4B optical investment, the Spectrum-X Photonics platform, and Marvell's own Celestial AI acquisition all target this transition. Scale-up bandwidth demand per link is up to 10x higher than scale-out, and every GPU in a cluster needs 8-18 scale-up connections versus 1-2 scale-out connections.
+
+**Marvell's strategic bet (Celestial AI) is explicitly a scale-up play.** The Photonic Fabric embeds optics directly into processor packages for chip-to-chip and chip-to-memory links—this is scale-up by definition. The $3.25B acquisition price and $1B ARR target by FY2029 signal Marvell's view that scale-up optical is the higher-growth vector, even though scale-out is the larger revenue base today.
+
+---
+
+## 5. The Role of Silicon Photonics in Training vs. Inference
 
 ### Why Silicon Photonics Matters for AI Workloads
 
@@ -278,7 +369,7 @@ Training built the initial market for silicon photonics in AI data centers, but 
 
 ---
 
-## 5. Financial Outlook and Valuation Context
+## 6. Financial Outlook and Valuation Context
 
 | Metric | FY2026A | FY2027E | FY2028E |
 |--------|---------|---------|---------|
@@ -305,7 +396,7 @@ FY2028: ~$15B
 
 ---
 
-## 6. Risks
+## 7. Risks
 
 1. **Customer concentration**: Amazon and Microsoft represent an outsized share of custom silicon revenue. Loss of either would be material.
 2. **Microsoft/Broadcom switching risk**: Reports of Microsoft evaluating Broadcom for Maia could reduce Marvell's custom ASIC TAM by $500M+.
@@ -316,9 +407,9 @@ FY2028: ~$15B
 
 ---
 
-## 7. Summary
+## 8. Summary
 
-Marvell is the second-most-important infrastructure silicon company for AI data centers after Broadcom. Its strength lies in the combination of custom ASIC design partnerships (Amazon, Microsoft), optical DSP leadership (1.6T Ara platform), and a forward-looking silicon photonics strategy (Celestial AI Photonic Fabric). The company's silicon photonics exposure—currently ~18% of revenue and growing toward 25-30%—positions it at the epicenter of the copper-to-optical transition that is essential for scaling both training and inference workloads. While training built the initial silicon photonics market, disaggregated inference architectures represent the larger long-term TAM, and Marvell's Celestial AI acquisition is specifically designed to capture this opportunity.
+Marvell is the second-most-important infrastructure silicon company for AI data centers after Broadcom. Its strength lies in the combination of custom ASIC design partnerships (Amazon, Microsoft), optical DSP leadership (1.6T Ara platform), and a forward-looking silicon photonics strategy (Celestial AI Photonic Fabric). The company's silicon photonics exposure—currently ~18% of revenue and growing toward 25-30%—positions it at the epicenter of the copper-to-optical transition that is essential for scaling both training and inference workloads. Scale-out optical (pluggable transceivers, DSPs) is the larger revenue base today (~$26B market in 2026), but scale-up optical (co-packaged optics, photonic fabric) is the faster-growing and more transformative opportunity, converting an entirely copper-based domain to optical over the next 3-5 years. Marvell's $3.25B Celestial AI acquisition is a direct bet on scale-up optical, while its Ara DSP platform captures the scale-out cycle. Across both vectors, training built the initial market but disaggregated inference architectures represent the larger long-term TAM.
 
 ---
 
