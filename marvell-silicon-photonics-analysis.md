@@ -273,7 +273,193 @@ COMBINED AI OPTICAL INTERCONNECT TAM
 
 ---
 
-## 5. The Role of Silicon Photonics in Training vs. Inference
+## 5. How Silicon Photonics Helps with KV Cache, Prefill, and Decode
+
+Modern LLM inference is not a single monolithic operation. It splits into two fundamentally different phases—prefill and decode—that impose opposite hardware demands. The KV cache sits at the center of both, and its growing memory and bandwidth requirements are driving adoption of silicon photonics-based solutions. This section explains the mechanism in detail.
+
+### 5.1 Prefill, Decode, and the KV Cache — Primer
+
+#### What happens during inference
+
+When an LLM generates a response, the computation proceeds in two distinct phases:
+
+**Prefill phase** — processes the entire input prompt in parallel, performing dense matrix multiplications across all input tokens simultaneously. This phase is **compute-bound**: GPU TFLOPS are the bottleneck, and memory bandwidth is underutilized. The output of prefill is the initial KV cache—a set of key and value tensors for every attention layer that encode the "memory" of all tokens seen so far.
+
+**Decode phase** — generates output tokens one at a time, autoregressively. Each new token requires loading the entire model weights plus the full KV cache from memory to compute attention. This phase is **memory-bandwidth-bound**: the GPU spends most of its time waiting for data from HBM, not computing. Compute utilization during decode can fall below 5%.
+
+#### Why the KV cache is the central bottleneck
+
+The KV cache stores key-value representations for every token at every attention layer. Its size scales linearly with context length and model depth:
+
+| Model | Context Length | KV Cache Size | Comparison |
+|-------|---------------|---------------|------------|
+| Llama 3 70B | 8K tokens | ~20 GB | Fits in one H100's HBM |
+| Llama 3 70B | 128K tokens | ~40 GB | Consumes half an H100's HBM |
+| Llama 3.1 405B | 16K tokens | ~15 GB | Manageable per-request |
+| Llama 3.1 405B | 128K tokens | ~123 GB | Exceeds a single H100's total HBM |
+| 1T parameter model | 128K tokens | ~250+ GB | Requires multiple GPUs for KV cache alone |
+
+As a rule of thumb, modern LLMs consume roughly **1 MB per token** in KV cache. A single 128K-token request on a 405B model needs 123 GB of KV cache—more than the 80 GB of HBM on an H100. At 1M-token context (emerging for agentic and RAG workloads), KV cache approaches **1 TB per request**.
+
+The result: at long contexts, KV cache—not model weights—becomes the dominant memory consumer, and the memory bandwidth required to read it each decode step becomes the binding constraint on throughput and latency.
+
+### 5.2 The Three Problems Silicon Photonics Solves
+
+Silicon photonics addresses three specific bottlenecks in the KV cache / prefill / decode pipeline:
+
+#### Problem 1: The Decode Memory Bandwidth Wall
+
+During decode, every generated token requires a full read of the KV cache plus model weights from HBM. An H100 GPU provides 3.35 TB/s of HBM bandwidth. For a 70B model at 128K context, each decode step must read ~40 GB of KV cache + ~140 GB of model weights = ~180 GB. At 3.35 TB/s, this takes ~54 ms per token—limiting throughput to ~19 tokens/second per GPU regardless of compute capability. The GPU's compute units sit largely idle.
+
+**How silicon photonics helps:** Optical memory pooling (e.g., Celestial AI's Photonic Fabric Appliance) decouples memory from compute by creating a shared memory pool accessible to multiple GPUs over optical links. Instead of each GPU being limited to its own 80-96 GB of HBM, a photonic fabric enables:
+
+- **32 TB of shared HBM3E memory** accessible at near-local bandwidth via 115 Tbps all-to-all optical switching
+- Multiple GPUs sharing the same KV cache without duplicating it across each GPU's local memory
+- Dynamic allocation of memory to whichever GPU needs it, eliminating stranded memory on idle GPUs
+
+The Photonic Fabric Appliance demonstrates **3.66x throughput improvement** and **1.40x latency improvement** for 405B parameter inference, and **7.04x throughput improvement** for 1T parameter models—primarily by eliminating the per-GPU memory bandwidth ceiling.
+
+```
+TRADITIONAL ARCHITECTURE (COPPER, FIXED HBM)
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│    GPU 0     │  │    GPU 1     │  │    GPU 2     │
+│ ┌─────────┐ │  │ ┌─────────┐ │  │ ┌─────────┐ │
+│ │ HBM 80GB│ │  │ │ HBM 80GB│ │  │ │ HBM 80GB│ │
+│ │ (fixed) │ │  │ │ (fixed) │ │  │ │ (fixed) │ │
+│ └─────────┘ │  │ └─────────┘ │  │ └─────────┘ │
+│  KV cache:  │  │  KV cache:  │  │  KV cache:  │
+│  40GB used  │  │  40GB used  │  │  10GB used  │
+│  40GB idle  │  │  40GB idle  │  │  70GB idle  │
+└──────┬──────┘  └──────┬──────┘  └──────┬──────┘
+       │ NVLink (copper) │               │
+       └────────┬────────┘───────────────┘
+          Each GPU reads its own KV cache shard
+          Bandwidth: limited to local HBM (3.35 TB/s per GPU)
+
+PHOTONIC FABRIC ARCHITECTURE (OPTICAL, POOLED MEMORY)
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│    GPU 0     │  │    GPU 1     │  │    GPU 2     │
+│  (compute)   │  │  (compute)   │  │  (compute)   │
+└──────┬──────┘  └──────┬──────┘  └──────┬──────┘
+       │                │                │
+  ┌────┴────────────────┴────────────────┴────┐
+  │        PHOTONIC FABRIC (115 Tbps)          │
+  │        Silicon photonics switching         │
+  │        ~100ns latency, ~10 pJ/bit          │
+  └────┬────────────────┬────────────────┬────┘
+       │                │                │
+  ┌────┴────┐     ┌─────┴────┐    ┌─────┴────┐
+  │ HBM3E   │     │ HBM3E    │    │ HBM3E    │
+  │ Pool A  │     │ Pool B   │    │ Pool C   │
+  │ 10+ TB  │     │ 10+ TB   │    │ 10+ TB   │
+  └─────────┘     └──────────┘    └──────────┘
+         Shared 32 TB memory pool
+         Any GPU reads any KV cache at full bandwidth
+         No stranded memory, no duplication
+```
+
+#### Problem 2: KV Cache Transfer in Disaggregated Inference
+
+In disaggregated architectures, prefill and decode run on separate hardware pools. After prefill completes, the KV cache must be **transferred over the network** from the prefill server to the decode server before token generation can begin. This transfer directly impacts Time-to-First-Token (TTFT).
+
+For a 405B model at 128K context, the KV cache is ~123 GB. Transfer times at different network speeds:
+
+| Network Technology | Bandwidth | Transfer Time (123 GB) | Impact on TTFT |
+|-------------------|-----------|----------------------|----------------|
+| 100 GbE (copper/optical) | 12.5 GB/s | ~10 seconds | Unacceptable |
+| 400 GbE (optical) | 50 GB/s | ~2.5 seconds | Marginal |
+| 800 GbE (optical) | 100 GB/s | ~1.2 seconds | Usable |
+| 1.6T optical (Marvell Ara DSP) | 200 GB/s | ~0.6 seconds | Good |
+| Photonic Fabric (Celestial AI) | 1-2 TB/s effective | ~60-120 ms | Excellent |
+
+**How silicon photonics helps:** Higher-speed optical links (1.6T and beyond) with lower latency directly reduce the KV cache migration penalty. Marvell's Ara 1.6T DSP platform enables 200 GB/s per link, and the Celestial AI Photonic Fabric provides multi-terabit effective bandwidth for KV cache transfers. With photonic fabric, a 123 GB KV cache transfer completes in ~60-120 ms—fast enough that disaggregation adds negligible TTFT overhead.
+
+CXL-based memory pooling over optical links (Marvell's Structera S CXL switch) offers an alternative: rather than transferring the KV cache, both prefill and decode hardware access the KV cache from a shared CXL memory pool, eliminating the transfer entirely. Alibaba's Beluga system demonstrates this approach, achieving **89.6% reduction in TTFT** and **7.35x throughput improvement** versus RDMA-based KV cache transfer.
+
+#### Problem 3: KV Cache Similarity Search at Scale (Emerging)
+
+For long-context inference (64K-1M+ tokens), the KV cache becomes so large that even reading it for attention computation is prohibitively expensive. Emerging techniques like block-sparse attention, paged attention, and KV cache eviction require a **similarity search** step to determine which KV cache blocks are relevant to the current query token.
+
+This similarity search is itself memory-bandwidth-bound—scanning a 1M-token KV cache to find the most relevant blocks is an O(n) operation that dominates decode latency.
+
+**How silicon photonics helps:** The PRISM architecture (March 2026) uses a thin-film lithium niobate photonic engine to perform KV cache block-selection in **O(1) time** using analog optical computation. Instead of electronically scanning all cache blocks, the photonic engine computes inner-product similarity in a single optical pass:
+
+| Metric | Electronic (GPU baseline) | Photonic (PRISM) |
+|--------|--------------------------|------------------|
+| Block-selection complexity | O(n) — linear in context | O(1) — constant time |
+| Traffic reduction at 64K tokens | Baseline | 16-32x reduction |
+| Energy efficiency | Baseline | 10,000x improvement |
+| Accuracy (4K-64K tokens) | 100% | 100% |
+
+While PRISM is still a research prototype, it demonstrates the fundamental physics advantage of photonic computing for the specific operation (high-dimensional inner products) that bottlenecks long-context KV cache management.
+
+### 5.3 Mapping Solutions to the Inference Pipeline
+
+```
+USER PROMPT (e.g., 128K tokens)
+        │
+        ▼
+┌───────────────────────────────────────────────────────┐
+│  PREFILL PHASE (compute-bound)                         │
+│                                                        │
+│  Process all 128K tokens → Generate KV cache (~123 GB) │
+│                                                        │
+│  Silicon photonics role: MINIMAL                       │
+│  → Prefill is compute-bound, not bandwidth-bound       │
+│  → Standard GPU compute + local HBM is sufficient      │
+│  → Optical interconnect matters only for multi-GPU      │
+│    tensor parallelism at very large model sizes         │
+└───────────────────┬───────────────────────────────────┘
+                    │
+                    │  KV CACHE TRANSFER (123 GB)
+                    │
+                    │  Silicon photonics role: HIGH
+                    │  → 1.6T optical links (Ara DSP): ~0.6s transfer
+                    │  → Photonic Fabric: ~60-120ms transfer
+                    │  → CXL memory pooling: eliminates transfer entirely
+                    │
+                    ▼
+┌───────────────────────────────────────────────────────┐
+│  DECODE PHASE (memory-bandwidth-bound)                 │
+│                                                        │
+│  Generate tokens one at a time, reading full KV cache   │
+│  each step. ~180 GB read per token for 70B @ 128K.     │
+│                                                        │
+│  Silicon photonics role: CRITICAL                      │
+│  → Photonic memory pooling: 32 TB shared HBM @ 115    │
+│    Tbps → breaks per-GPU memory bandwidth ceiling      │
+│  → Enables 3.66x throughput (405B), 7.04x (1T models) │
+│  → Eliminates stranded memory, KV cache duplication    │
+│  → Photonic KV cache selection (PRISM): O(1) block     │
+│    selection for long-context, 16-32x traffic reduction │
+└───────────────────────────────────────────────────────┘
+```
+
+### 5.4 Marvell's Product Exposure to Each Problem
+
+| Problem | Marvell Product | Status | Revenue Impact |
+|---------|----------------|--------|---------------|
+| Decode memory bandwidth wall | Celestial AI Photonic Fabric (32 TB shared HBM3E, 115 Tbps switching) | Pre-revenue; $500M ARR by Q4 FY2028 | High — addresses the core value proposition of inference scaling |
+| KV cache transfer in disaggregated inference | Ara 1.6T Optical DSP (high-speed links between prefill/decode pools) | Mass production | Included in current interconnect revenue (~$1.5B) |
+| KV cache transfer elimination | Structera S CXL Switch (shared memory pool, no transfer needed) | Launched 2026 | Early — CXL memory pooling is nascent |
+| KV cache similarity search | Not yet — PRISM-type photonic engines are research-stage | N/A | Future potential |
+| High-speed backend fabric | Teralynx 51.2T switch + Ara DSPs (scale-out for distributed inference) | Volume production | ~$300M switching + growing DSP revenue |
+
+### 5.5 Why This Matters for Marvell's Thesis
+
+The KV cache problem is Marvell's most compelling silicon photonics growth driver because it creates demand that **cannot be met by faster GPUs alone**:
+
+1. **Faster GPUs don't solve the decode bottleneck.** Decode is memory-bandwidth-bound, not compute-bound. Doubling GPU TFLOPS has no effect on decode throughput. The only solutions are more memory bandwidth (HBM stacking, which has physical limits) or breaking the memory-to-compute coupling (photonic memory pooling).
+
+2. **Longer contexts make the problem worse, not better.** As context windows expand from 128K to 1M+ tokens (driven by agentic workflows, RAG, and reasoning chains), KV cache sizes grow linearly. A single 1M-token request on a 405B model requires ~1 TB of KV cache—this is fundamentally incompatible with fixed 80-192 GB HBM per GPU.
+
+3. **Disaggregated inference requires high-bandwidth interconnect.** The shift from monolithic to disaggregated prefill/decode architectures (already deployed at Meta, LinkedIn, Mistral) creates new demand for KV cache transfer bandwidth that directly maps to silicon photonics products (optical DSPs, photonic fabric).
+
+4. **The economics scale with model size.** The Photonic Fabric Appliance shows 3.66x throughput improvement at 405B parameters but 7.04x at 1T parameters—the value of optical memory pooling increases as models grow, ensuring long-term demand.
+
+---
+
+## 6. The Role of Silicon Photonics in Training vs. Inference
 
 ### Why Silicon Photonics Matters for AI Workloads
 
@@ -369,7 +555,7 @@ Training built the initial market for silicon photonics in AI data centers, but 
 
 ---
 
-## 6. Financial Outlook and Valuation Context
+## 7. Financial Outlook and Valuation Context
 
 | Metric | FY2026A | FY2027E | FY2028E |
 |--------|---------|---------|---------|
@@ -396,7 +582,7 @@ FY2028: ~$15B
 
 ---
 
-## 7. Risks
+## 8. Risks
 
 1. **Customer concentration**: Amazon and Microsoft represent an outsized share of custom silicon revenue. Loss of either would be material.
 2. **Microsoft/Broadcom switching risk**: Reports of Microsoft evaluating Broadcom for Maia could reduce Marvell's custom ASIC TAM by $500M+.
@@ -407,7 +593,7 @@ FY2028: ~$15B
 
 ---
 
-## 8. Summary
+## 9. Summary
 
 Marvell is the second-most-important infrastructure silicon company for AI data centers after Broadcom. Its strength lies in the combination of custom ASIC design partnerships (Amazon, Microsoft), optical DSP leadership (1.6T Ara platform), and a forward-looking silicon photonics strategy (Celestial AI Photonic Fabric). The company's silicon photonics exposure—currently ~18% of revenue and growing toward 25-30%—positions it at the epicenter of the copper-to-optical transition that is essential for scaling both training and inference workloads. Scale-out optical (pluggable transceivers, DSPs) is the larger revenue base today (~$26B market in 2026), but scale-up optical (co-packaged optics, photonic fabric) is the faster-growing and more transformative opportunity, converting an entirely copper-based domain to optical over the next 3-5 years. Marvell's $3.25B Celestial AI acquisition is a direct bet on scale-up optical, while its Ara DSP platform captures the scale-out cycle. Across both vectors, training built the initial market but disaggregated inference architectures represent the larger long-term TAM.
 
