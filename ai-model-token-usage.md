@@ -114,6 +114,91 @@ The industry is undergoing a structural shift from training-dominated to inferen
 
 ---
 
+## 6. Token Usage: Coding Agents vs Other Use Cases
+
+### 6.1 Token Intensity by Use Case
+
+| Use Case | Tokens per Interaction | Typical Cost | Multiplier vs Chatbot |
+|----------|----------------------|-------------|----------------------|
+| **Simple chatbot Q&A** | ~200-500 tokens | ~$0.01 | 1x (baseline) |
+| **General ChatGPT conversation** | ~500-1,500 tokens (avg 348 words, 1.7 messages) | ~$0.01-0.02 | 1-3x |
+| **RAG-augmented query** | ~2,000-10,000 tokens | ~$0.02-0.10 | 10-50x |
+| **Customer support agent** | ~5,000-15,000 tokens (avg 11 LLM calls per conversation) | ~$0.05-0.15 | 25-75x |
+| **Coding agent - quick fix** | ~7,000 tokens (5K input + 2K output) | ~$0.05-0.23 | 35x |
+| **Coding agent - feature build (1hr)** | ~100,000 tokens (80K input + 20K output) | ~$0.54-2.70 | 500x |
+| **Coding agent - large refactor** | ~360,000 tokens (300K input + 60K output) | ~$1.80-9.00 | 1,800x |
+| **Coding agent - full day heavy use** | ~950,000 tokens (800K input + 150K output) | ~$4.65-23.25 | 4,750x |
+| **GitHub Copilot agentic workflow** | ~650K-860K tokens per run (avg) | Varies | ~4,000x |
+
+Coding agents are by far the most token-intensive consumer use case -- a single feature-building session consumes **~500x more tokens** than a typical chatbot interaction, and a full-day coding session can reach **~5,000x** the baseline.
+
+### 6.2 Why Coding Agents Consume So Many Tokens
+
+The "agent tax" is driven by structural factors unique to coding workflows:
+
+**Context re-reads (52% of total spend):** Every request re-sends the full conversation history, file contents, system instructions, and tool definitions. Claude Code data shows an input-to-output ratio of **166:1** -- for every 1 token of code generated, 166 tokens of context are read. Even a simple "Hello" message sends ~20,000 tokens of context overhead.
+
+**Multi-turn reasoning loops:** Agentic workflows use ReAct-style loops (plan -> tool call -> observe -> reason -> repeat), with each cycle re-processing the full context. A 10-cycle loop can consume **50x** the tokens of a single-pass query.
+
+**Tool call overhead:** Each tool invocation adds function schemas, call parameters, and result injection. A coding agent making 15-20 tool calls in a session accumulates substantial token overhead beyond the actual code being written.
+
+**Retrieval inefficiency:** How the agent finds relevant code matters enormously. Structural code analysis uses ~8,500 tokens vs grep-based file search at ~117,000 tokens for the same task -- a **14x** difference.
+
+**Prompt caching is critical:** Claude Code data shows 84% of input tokens are served from cache. Without caching, costs are ~$310 per 100M tokens; with caching, ~$82 -- a **74% reduction**. This is the single most important efficiency lever for coding agents.
+
+### 6.3 Coding's Share of Total AI Token Volume
+
+Coding has become the **dominant use case by token volume** across the AI industry:
+
+| Period | Coding's Share of Total Tokens | Source |
+|--------|-------------------------------|--------|
+| Early 2025 | ~11% | OpenRouter / a16z |
+| Late 2025 | **>50%** | OpenRouter / a16z |
+
+This shift reflects the mainstream adoption of AI coding tools. On open-source model platforms, the distribution is different -- roleplay leads at ~52%, with coding second -- because closed-model providers (OpenAI, Anthropic) refuse roleplay content, concentrating that workload on open-source.
+
+For Chinese open-source models specifically: coding + technology = ~39%, roleplay = ~33%.
+
+### 6.4 Coding Agent Revenue vs Other AI Products
+
+The AI coding tools market has rapidly scaled to become one of the largest AI product categories:
+
+| Product | ARR (March 2026) | Notes |
+|---------|-----------------|-------|
+| **Claude Code** | ~$2.5B | Reached $1B ARR within months of launch; ~13% of Anthropic's total revenue |
+| **Cursor** | ~$2.0B | Doubled from $1B in 3 months |
+| **GitHub Copilot** | ~$2.0B | 46% of all developer-written code is Copilot-assisted |
+| **Total AI coding tools market** | ~$8-8.5B (2025) | Projected to reach $91B by 2035 (27.6% CAGR) |
+
+The three leaders (Copilot, Cursor, Claude Code) hold **70%+ combined market share**. 84% of developers use or plan to use AI coding tools, and 90% of Fortune 100 companies have adopted them.
+
+### 6.5 The "Jevons Paradox" of AI Tokens
+
+A counterintuitive dynamic is at play: **token prices have collapsed ~300x** since early 2023 (from ~$30/M to ~$0.10/M for Gemini 2.0 Flash input tokens), yet **total AI bills are rising** because:
+
+1. Cheaper tokens enable more complex, multi-step agentic workflows that were previously cost-prohibitive
+2. Coding agents consume 500-5,000x more tokens per session than simple chatbot queries
+3. Reasoning models (now >50% of total token volume) use dramatically more tokens per task
+4. Enterprise adoption is deepening -- structured workflow usage grew **19x** and reasoning token consumption grew **320x** YoY
+
+The result: per-token costs are falling, but total inference demand is growing faster, driven overwhelmingly by coding and agentic use cases. This is the primary driver of the industry-wide shift from training-dominated to inference-dominated compute allocation described in Section 3.
+
+### 6.6 Cost Comparison Across Providers for Coding
+
+Average daily cost per developer using AI coding tools (API/pay-per-use pricing):
+
+| Tool | Avg Daily Cost | Pricing Model |
+|------|---------------|---------------|
+| **Claude Code (API)** | ~$6/day (~$180/month) | Pay-per-token |
+| **Claude Code (Max 20x sub)** | ~$6.67/day ($200/month) | Subscription, capped |
+| **Cursor Pro** | ~$0.67/day ($20/month) | Subscription, usage-capped |
+| **GitHub Copilot Pro** | ~$0.33/day ($10/month) | Subscription |
+| **Devin** | ~$9/hour ($2-2.25/ACU) | Pay-per-compute-unit |
+
+The wide pricing spread reflects fundamentally different architectures: subscription tools (Cursor, Copilot) cap usage and subsidize heavy users, while pay-per-token tools (Claude Code API, Devin) expose the true cost of agentic token consumption.
+
+---
+
 ## Sources
 
 - Epoch AI, "Most of OpenAI's 2024 compute went to experiments" (2025)
@@ -129,3 +214,17 @@ The industry is undergoing a structural shift from training-dominated to inferen
 - Deloitte, "More compute for AI, not less" (2026)
 - Gartner, AI infrastructure spending projections (2025-2029)
 - Sacra, "Anthropic" research report (2026)
+- BSWEN, "Claude Code Token Usage: Real Data From 100M Tokens Tracked" (Mar 2026)
+- BSWEN, "Claude Code Cost: Real Pricing Data From 100M Tokens" (Mar 2026)
+- ClaudeCodePricing.com, Claude Code pricing plans and calculator (2026)
+- Adam Holter, "OpenRouter's 100 Trillion Token Study" (2025)
+- Adam Holter, "AI Costs in 2025: Cheaper Tokens, Pricier Workflows" (2025)
+- Adam Holter, "Cheap AI Tokens, Expensive Tasks" (2025)
+- Cash and Cache, "The Agent Tax: Why Your AI Workflow Costs 50x More Than You Think" (2026)
+- Milind Nair, "Your AI Agent is Burning 10x the Tokens It Needs" (Mar 2026)
+- Grislabs/AgentMeter, "Cost Anatomy of 1,127 Agent Runs" (2026)
+- Zylos Research, "AI Agent Cost Optimization: Token Economics and FinOps in Production" (2026)
+- IdeaPlan, "AI Coding Assistants Market Share 2026" (2026)
+- OpenPR, "AI Code Tools Market Size Projected to Reach $91.09 Billion by 2035" (2026)
+- WebFX, "How People Use ChatGPT: Stats From 13,252 Conversations" (2025)
+- OpenAI, "The State of Enterprise AI 2025 Report" (2025)
