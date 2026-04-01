@@ -199,6 +199,100 @@ The wide pricing spread reflects fundamentally different architectures: subscrip
 
 ---
 
+## 7. General-Purpose AI Agents: OpenClaw, Claude Cowork, Perplexity Computer
+
+A new category of AI products is emerging beyond chatbots and coding agents: **general-purpose autonomous agents** that perform multi-step knowledge work, computer use, and real-world task execution. These products consume tokens at rates that rival or exceed coding agents, with distinct architectural patterns driving their costs.
+
+### 7.1 Product Overview
+
+| Product | Launched | What It Does | Pricing | Users |
+|---------|----------|-------------|---------|-------|
+| **OpenClaw** | Nov 2025 | Open-source AI agent platform; runs locally, connects to Discord/WhatsApp/Telegram; 5,700+ skills (email, calendar, GitHub, smart home); persistent memory | Free (self-hosted) + LLM API costs | 2M MAU, 335K GitHub stars |
+| **Claude Cowork** | Jan 2026 | Anthropic's knowledge-work agent; operates on your computer via screen control, connectors (Gmail, Slack, Drive), and browser; handles docs, data, research tasks | $20-200/month (Pro to Max 20x) | Included in Claude subscriptions |
+| **Perplexity Computer** | Feb 2026 | Orchestrates 19 AI models; decomposes goals into subtasks routed to specialist models (Claude Opus for reasoning, GPT-5.2 for long-context, Gemini for research); parallel cloud execution | $200/month (Max) + credits | Max subscribers |
+
+### 7.2 Token Consumption Per Task
+
+| Agent Type | Tokens per Interaction | Cost per Task | vs Chatbot Baseline |
+|-----------|----------------------|---------------|-------------------|
+| **Simple chatbot Q&A** | ~200-500 | ~$0.01 | 1x |
+| **General ChatGPT conversation** | ~500-1,500 | ~$0.01-0.02 | 1-3x |
+| **RAG-augmented query** | ~2,000-10,000 | ~$0.02-0.10 | 10-50x |
+| **OpenClaw - single message** | ~8,000+ baseline | ~$0.01-0.03 | 40x |
+| **OpenClaw - 5-turn conversation** | ~100,000+ (13x single turn) | ~$0.10-0.30 | 500x |
+| **OpenClaw - web fetch task** | Variable (HTML processing) | ~$0.18/request | 900x |
+| **Claude Cowork - light task** (file rename, draft email) | ~10,000-30,000 | ~$0.05-0.15 | 50-150x |
+| **Claude Cowork - heavy task** (multi-source research, spreadsheet analysis) | ~100,000-500,000 | ~$0.50-5.00 | 500-2,500x |
+| **Perplexity Computer - simple task** | Not disclosed (est. ~200-500 credits) | ~$2-5 | ~2,000-5,000x |
+| **Perplexity Computer - complex workflow** (due diligence, multi-model project) | Not disclosed (500-2,000 credits) | ~$5-30+ | ~5,000-30,000x |
+| **Coding agent - feature build (1hr)** | ~100,000 | ~$0.54-2.70 | 500x |
+| **Coding agent - full day heavy use** | ~950,000 | ~$4.65-23.25 | 4,750x |
+
+### 7.3 Why General-Purpose Agents Are So Token-Hungry
+
+Each product category has distinct architectural drivers of token consumption:
+
+**OpenClaw: Context compounding and baseline overhead**
+- Every single message carries an **8,000-token baseline** payload (system prompt, memory, tool definitions) before any user content
+- Multi-turn conversations suffer from **quadratic context growth**: a 5-turn chat costs **13x** a single turn because the entire history is re-sent each time
+- Context compounding can cause sessions to balloon to **2.9MB** (~700K tokens) over just 35 messages as tool outputs are stored permanently in session files
+- Gemini 2.5 Pro users report consuming **1.9M+ input tokens** in just a few dozen API calls due to the model's architecture
+- Enabling reasoning/thinking mode adds **10-50x** token overhead
+
+**Claude Cowork: Screen capture and multi-step execution loops**
+- Computer use requires **iterative screenshot-action loops**: capture screen (~400-2,100 tokens per screenshot depending on resolution) -> analyze -> act -> repeat
+- Each screenshot at 1920x1080 costs ~2,100 vision tokens; at typical web resolution (~1280x720), ~130-200 tokens
+- A task requiring 50-100 screen interactions accumulates 10,000-210,000 tokens just from screenshots alone, before any reasoning
+- Cowork shares the same token pool as Claude Chat and Claude Code, so heavy Cowork use directly cannibalizes chat/code capacity
+- One engineer reported hitting Pro's session cap after only **~15 Cowork sessions**, implying each session consumes ~3x a standard chat conversation's allocation
+
+**Perplexity Computer: Multi-model orchestration amplifier**
+- The most token-intensive architecture: a single user request spawns **multiple sub-agents across 19 models** running in parallel
+- The orchestrator (Claude Opus 4.6) decomposes tasks, then each sub-agent independently consumes tokens on its assigned model (GPT-5.2, Gemini, Grok, etc.)
+- Total token consumption is the **sum across all models** -- a project touching 5 sub-agents effectively multiplies base token cost by 5x+
+- Long-running tasks can execute for hours or months, continuously consuming tokens
+- Token pricing varies dramatically by which sub-agent models are selected ($0.15/M for Flash vs $25/M output for Claude Opus), creating high variance in credit burn rates
+
+### 7.4 Comparative Token Economics: Chatbot vs Coding Agent vs General Agent
+
+| Dimension | Chatbot | Coding Agent | General-Purpose Agent |
+|-----------|---------|-------------|----------------------|
+| **Tokens per session** | 200-1,500 | 7,000-950,000 | 8,000-2,000,000+ |
+| **Input:Output ratio** | ~3:1 | ~166:1 (Claude Code) | ~50-200:1 (varies) |
+| **Primary token driver** | User prompt + response | Context re-reads (84% cached) | Context compounding, screenshots, multi-model fan-out |
+| **Caching benefit** | Minimal | Critical (74% cost reduction) | Moderate-to-critical (varies by architecture) |
+| **Session duration** | Seconds to minutes | Minutes to hours | Minutes to hours (or continuous) |
+| **Tool calls per session** | 0-1 | 15-50+ | 10-100+ (including sub-agent spawns) |
+| **Multi-model orchestration** | No | No (single model) | Yes (Perplexity: 19 models; OpenClaw: configurable) |
+| **Computer vision tokens** | Rare | Rare | Frequent (Cowork: screen captures; Perplexity: browser automation) |
+| **Cost predictability** | High | Moderate | Low (high variance by task complexity) |
+| **Monthly cost (active user)** | $0-20 (subscription) | $20-200 (subscription) or ~$180 (API) | $20-200 (subscription) + potential overage |
+
+### 7.5 Key Structural Differences
+
+**Coding agents vs general-purpose agents operate at similar token volumes but for different reasons:**
+
+Coding agents are dominated by **context re-reads** -- 99.4% of tokens are input, with 84% served from cache. The model reads large codebases repeatedly but generates relatively little output. Prompt caching is the primary cost lever, reducing costs by 74%.
+
+General-purpose agents face **three compounding cost drivers** that coding agents largely avoid:
+1. **Screen capture / vision tokens**: Computer use agents (Cowork, Perplexity) ingest screenshots at every step, adding 130-2,100 tokens per frame -- a cost channel that text-only coding agents don't have
+2. **Multi-model fan-out**: Perplexity Computer's 19-model orchestration means one user request becomes 3-10+ parallel LLM calls across different providers, multiplicatively increasing total token consumption
+3. **Unbounded session length**: Coding agents typically scope to a feature or bug fix; general-purpose agents can run for hours or continuously (Perplexity Computer can run for months), with no natural stopping point for token accumulation
+
+**OpenClaw is structurally distinct** from both categories: as an open-source, self-hosted agent, the user directly bears API costs rather than the platform absorbing them via subscription margins. This makes token economics more transparent but also more volatile -- users report runaway consumption of 1-3M tokens within minutes without proper guardrails.
+
+### 7.6 Market Context
+
+| Product | Revenue / Ecosystem | Growth Trajectory |
+|---------|-------------------|-------------------|
+| **OpenClaw** | Ecosystem of 172 startups generating ~$360K/month; total spending est. $5-15M/month | 335K GitHub stars (surpassed React); 2M MAU with 92% retention; 27M monthly visitors (925% MoM growth, Feb-Mar 2026) |
+| **Claude Cowork** | Part of Claude subscription revenue (~$19B ARR for Anthropic overall) | Expanded from Max-only to Pro tier in Jan 2026; computer use launched Mar 2026 |
+| **Perplexity Computer** | Part of Perplexity Max ($200/month tier) | Launched Feb 2026; 19-model orchestration; early-stage adoption |
+
+General-purpose agents represent the next frontier of token consumption growth. If coding agents drove tokens per session from hundreds to hundreds of thousands, general-purpose agents with multi-model orchestration and computer use are pushing toward **millions of tokens per session** -- a further 5-10x increase over coding agents for complex workflows.
+
+---
+
 ## Sources
 
 - Epoch AI, "Most of OpenAI's 2024 compute went to experiments" (2025)
@@ -228,3 +322,20 @@ The wide pricing spread reflects fundamentally different architectures: subscrip
 - OpenPR, "AI Code Tools Market Size Projected to Reach $91.09 Billion by 2035" (2026)
 - WebFX, "How People Use ChatGPT: Stats From 13,252 Conversations" (2025)
 - OpenAI, "The State of Enterprise AI 2025 Report" (2025)
+- OpenClaw, "Token Usage & Cost Control Guide" (2026)
+- BSWEN, "Why Does OpenClaw Burn Through Tokens So Fast?" (Mar 2026)
+- Phala Network, "Understanding OpenClaw's Token Usage: A Data-Driven Deep Dive" (2026)
+- OpenClaw VPS, "OpenClaw Statistics 2026: Growth, Users, Data" (2026)
+- The Menon Lab, "From Fork to Industry: How OpenClaw Spawned a Market in Four Months" (Q1 2026)
+- Anthropic, "Claude Cowork" product page (2026)
+- TrySliq, "How Much Does Claude Cowork Actually Cost?" (2026)
+- NYC Claw, "Claude Cowork Pricing: Plan Comparison" (2026)
+- Anthropic, "Let Claude use your computer in Cowork" help article (Mar 2026)
+- Perplexity, "Computer" product announcement (Feb 2026)
+- BuildFastWithAI, "What Is Perplexity Computer? The 2026 AI Agent Explained" (2026)
+- Ars Technica, "Perplexity announces Computer, an AI agent that assigns work to other AI agents" (Feb 2026)
+- AICost, "Perplexity Computer: The 19-Model AI Digital Worker" (2026)
+- TrySliq, "Perplexity Computer Pricing & Credits Explained" (2026)
+- HackerNoon, "A Guide on How to Save Credits in Perplexity Computer" (2026)
+- PageBolt, "Why screenshot MCPs cost 170x less than Playwright MCP" (2026)
+- Anthropic, "Computer use tool" API documentation (2026)
