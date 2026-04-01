@@ -1,0 +1,11 @@
+Driver,Impact_Level,Category,Description
+AI Model Training Demand,Very High,Demand,"Exponential growth in LLM parameter counts and training compute requirements; GPT-4 class models require 10000+ GPUs for months"
+AI Inference Scale-Out,Very High,Demand,"Production AI services (search copilots agents) require massive GPU fleets for real-time inference at scale"
+Cloud Revenue Growth,High,Demand,"Cloud revenue growing 20-30% YoY across hyperscalers driving continued traditional infrastructure expansion"
+Enterprise AI Adoption,High,Demand,"Fortune 500 companies deploying private AI workloads on hyperscale platforms; Google Cloud backlog at $240B"
+GPU Supply Constraints,Very High,Supply,"NVIDIA Blackwell/Rubin sold out through 2027; TSMC CoWoS packaging at capacity; supply-constrained not demand-constrained"
+Power Grid Bottlenecks,Very High,Infrastructure,"Power transformer lead times at 128 weeks; PJM capacity pricing 10x increase; data center timelines extended 24-72 months"
+Sovereign AI Requirements,Medium,Regulatory,"Governments mandating in-country AI compute and data residency; driving geographic diversification of builds"
+Competitive Dynamics,High,Strategy,"Arms race dynamics between hyperscalers; no company willing to under-invest and lose AI market position"
+GPU Price Inflation,High,Cost,"Next-gen GPU systems (GB200 NVL72) cost $3M+ per rack; 15-25% hardware cost inflation"
+Interest Rate Environment,Medium,Financial,"Higher borrowing costs as hyperscalers issue $108B in bonds in 2025; $1.5T total debt issuance projected"
