@@ -6,11 +6,12 @@ Comprehensive comparison of TSMC semiconductor fabrication operational costs bet
 
 ### Files
 
-- **`TSMC_Phoenix_vs_Taiwan_Fab_Costs.xlsx`** — Full Excel spreadsheet with four tabs:
+- **`TSMC_Phoenix_vs_Taiwan_Fab_Costs.xlsx`** — Full Excel spreadsheet with five tabs:
   - **Cost Comparison** — Detailed side-by-side comparison across all cost categories
-  - **Sources & References** — 85 cited sources with URLs and dates
+  - **Sources & References** — 102 cited sources with URLs and dates
   - **Key Findings** — 15 summary findings
   - **AZ Expansion Phases** — Phase-by-phase status of all 6 fabs + supporting facilities
+  - **Yields & Capacity** — Yield rates and wafers/month for every TSMC fab (AZ vs Taiwan)
 - **`TSMC_Phoenix_vs_Taiwan_Fab_Costs.csv`** — CSV version of the cost comparison
 - **`TSMC_Arizona_Expansion_Phases.csv`** — CSV version of the expansion timeline
 
@@ -61,6 +62,19 @@ Comprehensive comparison of TSMC semiconductor fabrication operational costs bet
 
 **Total investment**: $165B ($265B potential). **Site**: ~2,000 acres. **Jobs**: ~6,000 direct mfg + 20,000 construction. **Key customers**: Apple (100M+ chips 2026), NVIDIA, AMD, Qualcomm, Broadcom. **AZ capacity share**: 30% of 2nm+ at full buildout.
 
+### Yields & Capacity (AZ vs Taiwan)
+
+| Fab / Location | Node | Yield | Capacity (WPM) | Utilization |
+|---|---|---|---|---|
+| **Fab 21 Phase 1 (AZ)** | N4P (4nm) | **~92%** | 15K → 24K (ramping to 30K) | ~100% |
+| **Fab 18 P1–P3 (Tainan)** | N4/N4P (4nm) | ~88% | ~60K (of 120K P1–P6) | ~100% |
+| **Fab 18 P4–P6 (Tainan)** | N3 (3nm) | ~75–85% | ~60K (→ 160K total N3) | >100% |
+| **Fab 12 (Hsinchu)** | N7/N5 (7nm/5nm) | ~90%+ | ~132–135K (all nodes) | >100% |
+| **Fab 15 (Taichung)** | N16/N20 | ~95%+ | ~166K | Moderate–High |
+| **Fab 20 (Hsinchu)** | N2 (2nm) | 70–90% (ramping) | 3.5K → 120K (by end 2026) | Ramping |
+
+**Key finding**: Arizona's N4P yield of ~92% **exceeds** Taiwan Fab 18's ~88% for the same node — a significant achievement. Arizona capacity is currently ~1.5% of total TSMC 12-inch output (~15–24K vs ~1.27M WPM), but will represent 30% of 2nm+ capacity at full buildout.
+
 ### Data Sources
 
-85 sources cited from public reports (2024–2026) including TechInsights, EIA, City of Phoenix, Taipei Times, TrendForce, Reuters, Glassdoor, Levels.fyi, Tax Foundation, Deloitte, Silicon Analysts, SemiWiki, White Hsu / Taiwan Tech Dispatch, Wikipedia, Tom's Hardware, AZ Central, and others. See the Sources tab in the spreadsheet for complete citations.
+102 sources cited from public reports (2024–2026). See the Sources tab in the spreadsheet for complete citations.

@@ -642,6 +642,23 @@ sources = [
     ("83", "TrendForce – TSMC 2nm US, 1nm Tainan", "https://www.trendforce.com/news/2025/02/03/news-tsmc-said-to-plan-2nm-production-in-u-s-1nm-fab-in-tainan/", "Feb 2025"),
     ("84", "IndustrialInfo – TSMC 2026 CapEx $52-56B", "https://www.industrialinfo.com/news/article/chipmaker-tsmc-projects-2026-capex-will-reach-52-billion-56-billion--352061", "2026"),
     ("85", "FinancialContent – TSMC AZ CoWoS Plant", "https://www.financialcontent.com/article/tokenring-2026-1-15-arizona-silicon-fortress-tsmc-accelerates-3nm-expansion-and-plans-us-based-cowos-plant", "Jan 2026"),
+    ("86", "TechSoda – TSMC AZ 100% Capacity Utilization", "https://techsoda.substack.com/p/tsmc-arizonas-first-fab-to-reach", "2025"),
+    ("87", "diskmfr.com – TSMC Global Fab Capacity Overview", "https://www.diskmfr.com/tsmc-global-fab-capacity-and-process-node-overview/", "Sep 2025"),
+    ("88", "globalsemiresearch – TSMC Fab Capacity by Wafer Size 2025", "https://globalsemiresearch.substack.com/p/tsmcs-fab-wafer-capacity-breakdown", "2025"),
+    ("89", "TSMC Official – Fab Capacity Page", "https://www.tsmc.com/english/dedicatedFoundry/manufacturing/fab_capacity", "2025"),
+    ("90", "TechPowerUp – TSMC 2nm Surpasses 90% Yield", "https://www.techpowerup.com/337668/tsmc-reportedly-surpasses-90-production-yield-rate-with-2-nm-process", "2025"),
+    ("91", "Digitimes – TSMC 2nm Yield by Product Type", "https://www.digitimes.com/news/a20250325PD228/tsmc-2nm-fab-yield-rate-2025.html", "Mar 2025"),
+    ("92", "Digitimes – TSMC 3nm/5nm Utilization >100% Q1 2025", "https://www.digitimes.com/news/a20250226PD245/tsmc-5nm-3nm-chips-2025.html", "Feb 2025"),
+    ("93", "WCCFTech – TSMC 3nm 160K WPM Golden Period", "https://wccftech.com/tsmc-3nm-golden-period-of-mass-production-has-started-says-report/", "2025"),
+    ("94", "AnandTech – TSMC N5 Better Yield Than N7", "https://www.anandtech.com/print/16028/better-yield-on-5nm-than-7nm-tsmc-update-on-defect-rates-for-n5", "2020"),
+    ("95", "guru3d – TSMC 3nm Yields 60–80%", "https://www.guru3d.com/story/tsmc-3nm-yields-between-60-and-80/", "2023"),
+    ("96", "Comkex – TSMC N3P On Track", "https://comkex.com/tech/tsmc-performance-optimized-3nm-n3p-process-on-track-for-mass-production-this-year/", "2024"),
+    ("97", "topcpu.net – TSMC 2nm 90% Yield Trial", "https://www.topcpu.net/pl/news/tsmc-completes-trial-production-of-2nm-process-with-an-impressive-90-percent-yield", "2025"),
+    ("98", "heqingele.com – TSMC 2nm Yield Surge 2026", "https://heqingele.com/blog/tsmc-2nm-yield-rates-mass-production-status-2026/", "2026"),
+    ("99", "StreetsTocker – TSMC 2nm 50K to 140K Wafers", "https://streetstocker.com/tsmc-2nm-capacity-constraints-2026/", "2026"),
+    ("100", "SMM – TSMC N3 100 NTOs", "https://news.metal.com/newscontent/103631957/TSMCs-Luo-Zhenqiu:-N3-Has-Secured-Approximately-100-NTOs-and-Is-Expected-to-Become-a-High-Production-Long-Running-Process-Period", "Sep 2025"),
+    ("101", "smbom.com – TSMC 3nm/5nm 100% Utilization", "https://www.smbom.com/news/45772", "2025"),
+    ("102", "FinancialContent – TSMC AZ Blackwell HVM", "https://markets.financialcontent.com/bpas/article/tokenring-2026-2-5-silicon-sovereignty-nvidia-and-tsmc-achieve-high-volume-blackwell-production-on-us-soil", "Feb 2026"),
 ]
 
 for i, (num, name, url, date) in enumerate(sources):
@@ -1003,6 +1020,333 @@ for i, (metric, value, src) in enumerate(metrics):
     ws4.row_dimensions[r].height = 30
 
 ws4.freeze_panes = "A5"
+
+# ═══════════════════════════════════════════════════════════════════════
+# Sheet 5: Yields & Capacity Comparison
+# ═══════════════════════════════════════════════════════════════════════
+ws5 = wb.create_sheet("Yields & Capacity")
+ws5.sheet_properties.tabColor = "C00000"
+
+col_w5 = {"A": 22, "B": 16, "C": 16, "D": 18, "E": 16, "F": 50, "G": 45}
+for col, w in col_w5.items():
+    ws5.column_dimensions[col].width = w
+
+ws5.merge_cells("A1:G1")
+ws5["A1"].value = "TSMC Yields & Wafer Capacity: Arizona vs Taiwan Fabs (as of Q1 2026)"
+ws5["A1"].font = title_font
+ws5["A1"].alignment = Alignment(horizontal="center", vertical="center")
+ws5.row_dimensions[1].height = 35
+
+ws5.merge_cells("A2:G2")
+ws5["A2"].value = (
+    "TSMC does not officially disclose yield rates. Figures are from analyst reports, media, and industry estimates. "
+    "Total TSMC capacity: ~1.3M wafers/month (~17M+ wafers/year, 12-inch equivalent). "
+    "Advanced nodes (≤7nm) = 77% of Q4 2025 wafer revenue."
+)
+ws5["A2"].font = note_font
+ws5["A2"].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+ws5.row_dimensions[2].height = 35
+
+yc_headers = [
+    "Fab / Location",
+    "Process Node",
+    "Yield Rate (est.)",
+    "Capacity (WPM)",
+    "Utilization",
+    "Notes",
+    "Sources",
+]
+for col_idx, h in enumerate(yc_headers, 1):
+    cell = ws5.cell(row=4, column=col_idx, value=h)
+    cell.font = header_font
+    cell.fill = header_fill
+    cell.alignment = header_align
+    cell.border = thin_border
+ws5.row_dimensions[4].height = 30
+
+# ── ARIZONA SECTION ────────────────────────────────────────────
+ws5.merge_cells(start_row=5, start_column=1, end_row=5, end_column=7)
+ws5.cell(row=5, column=1, value="ARIZONA (Phoenix, USA)")
+ws5.cell(row=5, column=1).font = section_font
+ws5.cell(row=5, column=1).fill = PatternFill(start_color="FCD5B4", end_color="FCD5B4", fill_type="solid")
+ws5.cell(row=5, column=1).alignment = Alignment(vertical="center")
+ws5.cell(row=5, column=1).border = thin_border
+for c in range(2, 8):
+    ws5.cell(row=5, column=c).fill = PatternFill(start_color="FCD5B4", end_color="FCD5B4", fill_type="solid")
+    ws5.cell(row=5, column=c).border = thin_border
+ws5.row_dimensions[5].height = 25
+
+az_data = [
+    (
+        "Fab 21 Phase 1",
+        "N4P / N4 (4nm)",
+        "~92%",
+        "15K → 24K WPM\n(ramping; target 30K)",
+        "~100%\n(approaching)",
+        "92% yield exceeds Taiwan Hsinchu's 88% for same N4P node. Producing Apple A16, S9, AMD Ryzen 9000, NVIDIA Blackwell (from Oct 2025). Apple committed 100M+ chips in 2026. 'Copy-exactly' strategy from Taiwan achieved yield parity.",
+        "FinancialContent Dec 2025 (92% yield); TechSoda (100% util); Wikipedia (TSMC AZ); Tom's HW Jan 2025",
+    ),
+    (
+        "Fab 21 Phase 1",
+        "N5 (5nm family)",
+        "~88–92%",
+        "(shared with N4P above)",
+        "~100%",
+        "NVIDIA Blackwell B200 uses custom 4NP variant (5nm family). Silicon yields in high-80% to low-90% range. 5nm is a mature node for TSMC; AZ yields match Taiwan levels.",
+        "FinancialContent Feb 2026 (Blackwell production); SemiWiki (AZ near 100% capacity)",
+    ),
+    (
+        "Fab 21 Phase 2",
+        "N3 (3nm)",
+        "N/A (not yet in production)",
+        "~20K WPM (est. target)",
+        "N/A",
+        "Building complete. Tool install Q3 2026. HVM targeted H2 2027. Expected to benefit from Phase 1 learning — yields likely to ramp faster than Taiwan's initial N3 ramp.",
+        "TrendForce Mar 2026; theGPUTrade; Digitimes Dec 2025",
+    ),
+    (
+        "Fab 21 Phase 3",
+        "N2 / A16 (2nm / 1.6nm)",
+        "N/A (under construction)",
+        "TBD",
+        "N/A",
+        "Under construction (broke ground Apr 2025). Production targeted 2029. GAA nanosheet architecture. Backside power delivery for A16.",
+        "Wikipedia (TSMC AZ); TechOvedas; Tom's HW Jul 2025",
+    ),
+]
+
+row_num_5 = 6
+for i, (fab, node, yld, cap, util, notes, srcs) in enumerate(az_data):
+    r = row_num_5 + i
+    ws5.cell(row=r, column=1, value=fab)
+    ws5.cell(row=r, column=2, value=node)
+    ws5.cell(row=r, column=3, value=yld)
+    ws5.cell(row=r, column=4, value=cap)
+    ws5.cell(row=r, column=5, value=util)
+    ws5.cell(row=r, column=6, value=notes)
+    ws5.cell(row=r, column=7, value=srcs)
+    for c in range(1, 8):
+        cell = ws5.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+    ws5.cell(row=r, column=3).alignment = center_align
+    ws5.cell(row=r, column=3).font = Font(name="Calibri", bold=True, size=11, color="006100")
+    ws5.cell(row=r, column=5).alignment = center_align
+    ws5.row_dimensions[r].height = 80
+row_num_5 += len(az_data)
+
+# ── TAIWAN SECTION ────────────────────────────────────────────
+ws5.merge_cells(start_row=row_num_5, start_column=1, end_row=row_num_5, end_column=7)
+ws5.cell(row=row_num_5, column=1, value="TAIWAN (Hsinchu, Tainan, Taichung)")
+ws5.cell(row=row_num_5, column=1).font = section_font
+ws5.cell(row=row_num_5, column=1).fill = section_fill
+ws5.cell(row=row_num_5, column=1).alignment = Alignment(vertical="center")
+ws5.cell(row=row_num_5, column=1).border = thin_border
+for c in range(2, 8):
+    ws5.cell(row=row_num_5, column=c).fill = section_fill
+    ws5.cell(row=row_num_5, column=c).border = thin_border
+ws5.row_dimensions[row_num_5].height = 25
+row_num_5 += 1
+
+tw_data = [
+    (
+        "Fab 18 P1–P3\n(Tainan)",
+        "N4 / N4P (4nm)",
+        "~88%",
+        "~60K WPM\n(part of 120K P1–P6)",
+        "~100%",
+        "Primary 4nm production base. Hot-run premiums 50–100% with lead times 39–52 weeks (Q1 2026). AZ Fab 21 Phase 1 actually exceeds this yield (~92% vs ~88%). Mature node, fully booked.",
+        "diskmfr.com (fab overview); Silicon Analysts Q1 2026 (allocation); FinancialContent Dec 2025",
+    ),
+    (
+        "Fab 18 P4–P6\n(Tainan)",
+        "N3 / N3E / N3P (3nm)",
+        "~75–85% (maturing)",
+        "~60K WPM\n(part of 120K P1–P6;\nramping to 160K total N3)",
+        ">100%",
+        "3nm mass production since 2024. N3E defect density at parity with N5 for same lifecycle point. N3P yields 'close to N3E.' 3nm = 28% of Q4 2025 wafer revenue. Severely constrained: lead times 52–78 weeks.",
+        "Silicon Analysts Q1 2026; WCCFTech (160K WPM target); guru3d (60–80% early); Digitimes Q1 2025",
+    ),
+    (
+        "Fab 18 P7–P8\n(Tainan)",
+        "N3 (3nm expansion)",
+        "~80–85% (est.)",
+        "Expansion underway\n(→ 160K total N3 by late 2025)",
+        "Ramping",
+        "Expanding Fab 18 3nm capacity. Combined P4–P8 targeting 160K WPM for N3 by end of 2025. ~100 NTOs secured by Sep 2025. N3 expected to be 'high-production, long-running' node.",
+        "WCCFTech (N3 golden period); SMM (100 NTOs); diskmfr.com",
+    ),
+    (
+        "Fab 12\n(Hsinchu)",
+        "N7 / N7+ (7nm)",
+        "~90%+ (mature)",
+        "~132–135K WPM\n(all nodes in Fab 12)",
+        "High",
+        "Mature 7nm production. Also produces 10nm, 12nm, 16nm, 20nm. Capacity declining slightly (135K Q1 → 132K Q4 2025) as advanced demand shifts to Fab 18. 7nm = 14% of Q4 2025 wafer revenue.",
+        "globalsemiresearch (fab capacity); diskmfr.com; TSMC Q4 2025 results",
+    ),
+    (
+        "Fab 12\n(Hsinchu)",
+        "N5 / N4 (5nm/4nm)",
+        "~90%+ (mature)",
+        "(included in 132–135K above)",
+        ">100%",
+        "5nm is fully mature with yields better than 7nm (per TSMC). 5nm = 35% of Q4 2025 wafer revenue. 100% utilization in Q1 2025. Driven by NVIDIA Blackwell, Apple, AMD demand.",
+        "AnandTech (N5 yields > N7); Digitimes Q1 2025 (100% util); TSMC Q4 2025",
+    ),
+    (
+        "Fab 15\n(Taichung)",
+        "N16 / N20 (16nm/20nm)",
+        "~95%+ (very mature)",
+        "~166K WPM",
+        "Moderate–High",
+        "Mature 16/20nm production base. Began production 2012. Serves HPC, networking, consumer applications. Stable yields on well-established processes.",
+        "diskmfr.com (fab overview); Wikipedia (TSMC fabs)",
+    ),
+    (
+        "Fab 14\n(Tainan)",
+        "N28+ (28nm and above)",
+        "~95%+ (very mature)",
+        "Not disclosed",
+        "Moderate",
+        "Specialty process production: RF, high voltage, embedded memory/flash. Serves automotive, IoT, industrial. 28nm HV for automotive power management, 40nm RF-SOI for 5G, 55nm embedded flash.",
+        "diskmfr.com (fab overview)",
+    ),
+    (
+        "Fab 20\n(Hsinchu Baoshan)",
+        "N2 (2nm)",
+        "~70–90% (trial→HVM)",
+        "3K–3.5K WPM (2025)\n→ 120K WPM (end 2026)",
+        "Ramping",
+        "2nm R&D and mass production base. Trial production achieved 90% yield (memory products, Q1 2025). Logic yields 70–80% as of Jan 2026. GAA nanosheet technology. HVM entered Jan 2026. Combined with Kaohsiung Fab 22: targeting 50K WPM by end 2025, 120–140K by end 2026.",
+        "TechPowerUp (90% trial yield); topcpu.net; heqingele.com; FinancialContent Jan 2026",
+    ),
+]
+
+for i, (fab, node, yld, cap, util, notes, srcs) in enumerate(tw_data):
+    r = row_num_5 + i
+    ws5.cell(row=r, column=1, value=fab)
+    ws5.cell(row=r, column=2, value=node)
+    ws5.cell(row=r, column=3, value=yld)
+    ws5.cell(row=r, column=4, value=cap)
+    ws5.cell(row=r, column=5, value=util)
+    ws5.cell(row=r, column=6, value=notes)
+    ws5.cell(row=r, column=7, value=srcs)
+    for c in range(1, 8):
+        cell = ws5.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+    ws5.cell(row=r, column=3).alignment = center_align
+    ws5.cell(row=r, column=3).font = Font(name="Calibri", bold=True, size=11, color="006100")
+    ws5.cell(row=r, column=5).alignment = center_align
+    ws5.row_dimensions[r].height = 80
+row_num_5 += len(tw_data)
+
+# ── OTHER OVERSEAS SECTION ────────────────────────────────────
+ws5.merge_cells(start_row=row_num_5, start_column=1, end_row=row_num_5, end_column=7)
+ws5.cell(row=row_num_5, column=1, value="OTHER OVERSEAS FABS (for context)")
+ws5.cell(row=row_num_5, column=1).font = section_font
+ws5.cell(row=row_num_5, column=1).fill = section_fill
+ws5.cell(row=row_num_5, column=1).alignment = Alignment(vertical="center")
+ws5.cell(row=row_num_5, column=1).border = thin_border
+for c in range(2, 8):
+    ws5.cell(row=row_num_5, column=c).fill = section_fill
+    ws5.cell(row=row_num_5, column=c).border = thin_border
+ws5.row_dimensions[row_num_5].height = 25
+row_num_5 += 1
+
+other_data = [
+    (
+        "Fab 16\n(Nanjing, China)",
+        "N16/N12 + N28",
+        "~90%+ (mature)",
+        "~24K WPM (16/12nm)\n+ 50K WPM (28nm P2)",
+        "High",
+        "Most profitable overseas fab (NT$274.5B profit 2025) due to reduced depreciation. Phase 1: 16/12nm. Phase 2: 28nm (accepted Oct 2024, +600K wafers/yr).",
+        "diskmfr.com; BigGo Finance (TSMC 2025 overseas); TrendForce Mar 2026",
+    ),
+    (
+        "JASM Fab 1\n(Kumamoto, Japan)",
+        "N22/N28 + N12/N16",
+        "Ramping",
+        "~55K WPM (target)",
+        "Low (ramping)",
+        "Mass production from end of 2024. Posted NT$97.7B loss in 2025 — adjustment phase, capacity not yet utilized. Serves automotive and mature-process demand.",
+        "diskmfr.com; TrendForce Mar 2026; BigGo Finance",
+    ),
+]
+
+for i, (fab, node, yld, cap, util, notes, srcs) in enumerate(other_data):
+    r = row_num_5 + i
+    ws5.cell(row=r, column=1, value=fab)
+    ws5.cell(row=r, column=2, value=node)
+    ws5.cell(row=r, column=3, value=yld)
+    ws5.cell(row=r, column=4, value=cap)
+    ws5.cell(row=r, column=5, value=util)
+    ws5.cell(row=r, column=6, value=notes)
+    ws5.cell(row=r, column=7, value=srcs)
+    for c in range(1, 8):
+        cell = ws5.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+    ws5.cell(row=r, column=3).alignment = center_align
+    ws5.cell(row=r, column=5).alignment = center_align
+    ws5.row_dimensions[r].height = 80
+row_num_5 += len(other_data)
+
+# ── SUMMARY COMPARISON ────────────────────────────────────────
+row_num_5 += 1
+ws5.merge_cells(start_row=row_num_5, start_column=1, end_row=row_num_5, end_column=7)
+ws5.cell(row=row_num_5, column=1, value="YIELD & CAPACITY COMPARISON SUMMARY")
+ws5.cell(row=row_num_5, column=1).font = section_font
+ws5.cell(row=row_num_5, column=1).fill = highlight_fill
+ws5.cell(row=row_num_5, column=1).alignment = Alignment(vertical="center")
+ws5.cell(row=row_num_5, column=1).border = thin_border
+for c in range(2, 8):
+    ws5.cell(row=row_num_5, column=c).fill = highlight_fill
+    ws5.cell(row=row_num_5, column=c).border = thin_border
+ws5.row_dimensions[row_num_5].height = 25
+row_num_5 += 1
+
+summary_data = [
+    ("N4P Yield: AZ vs TW", "AZ: ~92% | TW (Fab 18): ~88%", "Arizona EXCEEDS Taiwan by ~4 percentage points on the same N4P node — a notable achievement for the first US advanced fab.", "FinancialContent Dec 2025; multiple corroborating sources"),
+    ("N3 Yield (TW only so far)", "TW: ~75–85% (maturing)", "N3E defect density at parity with N5. N3P yields close to N3E. 3nm is entering 'golden period.' AZ Phase 2 N3 not yet in production (H2 2027).", "guru3d; TSMC Comkex (N3P); WCCFTech"),
+    ("N2 Yield (TW only so far)", "TW: 90% (trial) → 70–80% (HVM)", "Impressive trial yield on memory; logic HVM yields 70–80% as of Jan 2026. AZ Phase 3 N2 not until 2029.", "TechPowerUp; topcpu.net; heqingele.com"),
+    ("AZ Capacity vs TW Total", "AZ: ~15–24K WPM | TW: ~1.27M WPM", "Arizona is currently ~1.2–1.9% of total TSMC 12-inch capacity. At full 6-fab buildout, AZ will represent 30% of 2nm+ capacity.", "TechSoda; globalsemiresearch; TSMC official"),
+    ("Capacity by Revenue Node (Q4 2025)", "N3: 28% | N5: 35% | N7: 14%", "Advanced nodes (≤7nm) = 77% of wafer revenue. N3+N5 together = 63% of revenue. N3 capacity severely constrained (52–78 week lead times).", "TSMC Q4 2025 results; Silicon Analysts Q1 2026"),
+    ("Utilization Rate", "N3/N5: >100% | AZ N4P: ~100%", "Both Taiwan and Arizona advanced fabs are at or above full utilization. TSMC overall 2024 utilization >95%. 4 US fabs already fully booked.", "Digitimes Q1 2025; TechSoda; TrendForce Mar 2026"),
+    ("Key Takeaway", "", "Arizona has ACHIEVED yield parity (and in N4P, surpassed Taiwan) on its operational node. The 'copy-exactly' strategy works. Capacity remains a fraction of Taiwan, but is scaling. Backend packaging remains Taiwan-dependent until AP1 comes online (~2030).", ""),
+]
+
+for i, (metric, value, detail, src) in enumerate(summary_data):
+    r = row_num_5 + i
+    ws5.cell(row=r, column=1, value=metric)
+    ws5.cell(row=r, column=1).font = Font(name="Calibri", bold=True, size=11)
+    ws5.merge_cells(start_row=r, start_column=2, end_row=r, end_column=3)
+    ws5.cell(row=r, column=2, value=value)
+    ws5.cell(row=r, column=2).font = Font(name="Calibri", bold=True, size=11, color="1F4E79")
+    ws5.merge_cells(start_row=r, start_column=4, end_row=r, end_column=6)
+    ws5.cell(row=r, column=4, value=detail)
+    ws5.cell(row=r, column=7, value=src)
+    ws5.cell(row=r, column=7).font = source_font
+    for c in range(1, 8):
+        cell = ws5.cell(row=r, column=c)
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+    ws5.row_dimensions[r].height = 55
+
+ws5.freeze_panes = "A5"
 
 # Save
 output_path = "/workspace/TSMC_Phoenix_vs_Taiwan_Fab_Costs.xlsx"
