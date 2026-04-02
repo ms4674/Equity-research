@@ -1,0 +1,1354 @@
+import openpyxl
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side, numbers
+from openpyxl.utils import get_column_letter
+
+wb = openpyxl.Workbook()
+
+# ── Styles ──────────────────────────────────────────────────────────────
+header_font = Font(name="Calibri", bold=True, size=12, color="FFFFFF")
+title_font = Font(name="Calibri", bold=True, size=14, color="1F4E79")
+section_font = Font(name="Calibri", bold=True, size=11, color="1F4E79")
+normal_font = Font(name="Calibri", size=11)
+source_font = Font(name="Calibri", size=9, color="555555")
+note_font = Font(name="Calibri", size=10, italic=True, color="333333")
+
+header_fill = PatternFill(start_color="1F4E79", end_color="1F4E79", fill_type="solid")
+section_fill = PatternFill(start_color="D6E4F0", end_color="D6E4F0", fill_type="solid")
+alt_fill = PatternFill(start_color="F2F7FB", end_color="F2F7FB", fill_type="solid")
+highlight_fill = PatternFill(start_color="FFF2CC", end_color="FFF2CC", fill_type="solid")
+
+thin_border = Border(
+    left=Side(style="thin", color="B0B0B0"),
+    right=Side(style="thin", color="B0B0B0"),
+    top=Side(style="thin", color="B0B0B0"),
+    bottom=Side(style="thin", color="B0B0B0"),
+)
+
+wrap_align = Alignment(wrap_text=True, vertical="top")
+center_align = Alignment(horizontal="center", vertical="center", wrap_text=True)
+header_align = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
+
+def style_row(ws, row, font=normal_font, fill=None, alignment=wrap_align):
+    for col in range(1, 7):
+        cell = ws.cell(row=row, column=col)
+        cell.font = font
+        cell.alignment = alignment
+        cell.border = thin_border
+        if fill:
+            cell.fill = fill
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Sheet 1: Cost Comparison
+# ═══════════════════════════════════════════════════════════════════════
+ws = wb.active
+ws.title = "Cost Comparison"
+ws.sheet_properties.tabColor = "1F4E79"
+
+# Column widths
+ws.column_dimensions["A"].width = 30
+ws.column_dimensions["B"].width = 22
+ws.column_dimensions["C"].width = 22
+ws.column_dimensions["D"].width = 18
+ws.column_dimensions["E"].width = 55
+ws.column_dimensions["F"].width = 55
+
+# Title
+ws.merge_cells("A1:F1")
+title_cell = ws["A1"]
+title_cell.value = "TSMC Fab Operational Costs: Phoenix, AZ vs. Taipei/Hsinchu, Taiwan"
+title_cell.font = title_font
+title_cell.alignment = Alignment(horizontal="center", vertical="center")
+ws.row_dimensions[1].height = 35
+
+# Subtitle
+ws.merge_cells("A2:F2")
+ws["A2"].value = "Data compiled from public sources (2024–2025). All USD conversions at ~NT$32.5 = US$1."
+ws["A2"].font = note_font
+ws["A2"].alignment = Alignment(horizontal="center", vertical="center")
+ws.row_dimensions[2].height = 22
+
+# Headers (row 4)
+headers = [
+    "Cost Category",
+    "Phoenix, AZ (USA)",
+    "Taipei / Hsinchu (Taiwan)",
+    "Δ (AZ vs TW)",
+    "Notes",
+    "Sources",
+]
+for col_idx, h in enumerate(headers, 1):
+    cell = ws.cell(row=4, column=col_idx, value=h)
+    cell.font = header_font
+    cell.fill = header_fill
+    cell.alignment = header_align
+    cell.border = thin_border
+ws.row_dimensions[4].height = 30
+
+# ── Data rows ───────────────────────────────────────────────────────────
+rows = [
+    # Section: Electricity
+    ("SECTION", "ELECTRICITY", "", "", "", "", ""),
+    (
+        "Industrial Electricity Rate",
+        "~$0.079/kWh",
+        "~$0.136/kWh (NT$4.29/kWh after Oct 2024 hike)",
+        "AZ ~42% cheaper",
+        "AZ rate is Phoenix industrial avg. Taiwan rate is post-Oct 2024 industrial rate after 12.5% increase. Taiwan semiconductor companies classified as heavy users face up to 14% surcharge.",
+        "EIA / Electricity Local (Phoenix industrial avg); Taipei Times Oct 2024; TrendForce Mar 2024",
+    ),
+    (
+        "Electricity per Wafer (est.)",
+        "~$3.20/wafer (40.5 kWh × $0.079)",
+        "~$5.51/wafer (40.5 kWh × $0.136)",
+        "AZ ~42% cheaper",
+        "Per-wafer electricity is 40.5 kWh (TSMC 2023 data for 3nm-class). AZ benefits from lower electricity rates despite same consumption.",
+        "WCCFTech (TSMC 2023 ESG data: 40.5 kWh/wafer); rate sources above",
+    ),
+    (
+        "Grid Reliability / Renewables",
+        "APS/SRP grid; solar potential high; ~12% renewable",
+        "Taipower; ~8–10% renewable; green power deficit concern",
+        "Comparable",
+        "Both regions face grid strain from fab expansion. Taiwan has green power deficit threatening net-zero goals. AZ has abundant solar but limited current adoption.",
+        "Reuters Jun 2024 (Taiwan green power deficit); Stand.earth Feb 2024 (AZ grid mix)",
+    ),
+    # Section: Water
+    ("SECTION", "WATER", "", "", "", "", ""),
+    (
+        "Industrial Water Rate",
+        "~$8.25/1,000 gal ($4.93–$6.13/CCF by season + env. charge; ~$2.18/m³)",
+        "~$0.37/m³ (NT$12/m³ residential tier; industrial estimated NT$11–14/m³)",
+        "AZ ~5–6× more expensive",
+        "Phoenix uses tiered seasonal pricing (low/med/high season). Taiwan water has been essentially unchanged for 31 years; Taiwater loses NT$2.45/m³ sold. Industrial rates artificially low.",
+        "City of Phoenix Water Rates Mar 2025; Focus Taiwan Jan 2024; Taipei Times Mar 2025 (Taiwater)",
+    ),
+    (
+        "Water Consumption per Wafer",
+        "~3,000–5,000 liters/wafer start (leading edge ≤5nm)",
+        "~3,000–5,000 liters/wafer start (leading edge ≤5nm)",
+        "Same",
+        "Industry benchmark for advanced 300mm fabs. TSMC Taiwan achieves ~90% recycling; AZ currently ~65%, targeting 85–90% by 2028 with new reclamation plant.",
+        "Energy Solutions 2026; AZ Central Jun 2024; AZ Central Aug 2025 (reclamation plant)",
+    ),
+    (
+        "Water Cost per Wafer (est.)",
+        "~$6.54–$10.90/wafer",
+        "~$1.11–$1.85/wafer",
+        "AZ ~5–6× more expensive",
+        "Based on 3,000–5,000 L/wafer × local rate. Water is a small fraction of total wafer cost (<0.1%) but important for sustainability and permitting.",
+        "Calculated from rates and consumption above",
+    ),
+    (
+        "Total Fab Water Usage",
+        "~4.75M gallons/day (18M liters/day) at full capacity",
+        "~10–20M gallons/day per leading-edge fab",
+        "Similar scale",
+        "TSMC Phoenix Fab 21 at full capacity. Taiwan mega-fabs may be larger. Hsinchu faces water supply challenges with MOEA targeting no industrial cuts before Jun 2026.",
+        "AZ Central Jun 2024; Digitimes Mar 2026; Business Insider Jul 2024",
+    ),
+    # Section: Natural Gas
+    ("SECTION", "NATURAL GAS", "", "", "", "", ""),
+    (
+        "Industrial Natural Gas Rate",
+        "~$5.33/MCF ($0.53/therm; ~$0.19/m³)",
+        "~$0.35/m³ (NT$11.35/m³ for NG(1) industrial, Aug 2024)",
+        "AZ ~46% cheaper",
+        "AZ is ranked #1 nationally for affordable natural gas. Taiwan gas prices governed by CPC Corporation formula with 3%/month adjustment cap.",
+        "EIA 2024 (AZ industrial NG); CPC Corporation Taiwan Aug 2024",
+    ),
+    # Section: Labor
+    ("SECTION", "LABOR", "", "", "", "", ""),
+    (
+        "Process Engineer Salary (median)",
+        "~$118,000/yr ($96K–$147K total comp)",
+        "~$72,000/yr (NT$2.32M–2.62M median; range NT$868K–4.41M)",
+        "AZ ~64% higher",
+        "US wages ~3× Taiwan on average, but engineer gap is smaller due to TSMC Taiwan's above-market pay. Labor is <2% of total wafer cost due to automation.",
+        "Glassdoor (TSMC Phoenix Engineer); Levels.fyi (TSMC Taiwan Engineer); TechInsights Mar 2025",
+    ),
+    (
+        "Technician/Operator Salary",
+        "~$45,000–$65,000/yr",
+        "~$18,000–$30,000/yr (NT$600K–1M)",
+        "AZ ~2–3× higher",
+        "Technician roles show larger gap than engineers. AZ requires significant training investment for new workforce.",
+        "Industry estimates; TSMC Taiwan salary data (blog.salary.tw)",
+    ),
+    (
+        "Labor as % of Wafer Cost",
+        "<2%",
+        "<2%",
+        "Negligible impact",
+        "Modern fabs are highly automated. Despite ~3× wage differential, labor impact on per-wafer cost is minimal. This is the key insight from TechInsights analysis.",
+        "TechInsights Mar 2025 (Chip Insider); multiple corroborating sources",
+    ),
+    # Section: Equipment & Depreciation
+    ("SECTION", "EQUIPMENT & DEPRECIATION", "", "", "", "", ""),
+    (
+        "Equipment Cost (% of wafer cost)",
+        ">67% of total wafer cost",
+        ">67% of total wafer cost",
+        "Same",
+        "Equipment from ASML, Applied Materials, KLA, Lam Research, Tokyo Electron is priced the same globally. This is the dominant cost equalizer.",
+        "TechInsights Mar 2025; SemiWiki; TechPowerUp Mar 2025",
+    ),
+    (
+        "EUV Lithography System",
+        "~$200–350M per tool",
+        "~$200–350M per tool",
+        "Same",
+        "ASML EUV/High-NA EUV systems are globally priced. Lithography alone is ~25% of total wafer fabrication cost.",
+        "ASML pricing data; costdata.de (IC Fabrication Cost Breakdown)",
+    ),
+    (
+        "Fab Construction Cost",
+        "~$20B per fab (4–5× Taiwan)",
+        "~$4–5B per equivalent fab",
+        "AZ 4–5× higher (capex only)",
+        "Construction premium driven by US labor costs, regulatory/permitting, and first-greenfield-site complexity. TSMC total AZ commitment: $65B for 3 fabs.",
+        "Wikipedia (TSMC Arizona); TechOvedas; BlackRidge Research",
+    ),
+    # Section: Materials & Chemicals
+    ("SECTION", "MATERIALS & CHEMICALS", "", "", "", "", ""),
+    (
+        "Process Chemicals & Gases",
+        "Higher (import from Asia + US sourcing)",
+        "Lower (proximity to Asian supply chain)",
+        "AZ ~10–15% higher",
+        "Global specialty gas market ~$5.7B (2025). Modern fab uses 50–100 gas species, 30–60 liquid chemical precursors. Materials are a significant but not dominant cost component.",
+        "AppIT Software (Semiconductor fab gas mgmt); Silicon Analysts 2026; costdata.de",
+    ),
+    (
+        "Silicon Wafer Blanks (300mm)",
+        "~$130–$150/wafer",
+        "~$130–$150/wafer",
+        "Same",
+        "Raw 300mm silicon wafer blanks are globally commoditized. Price is same regardless of fab location.",
+        "Industry pricing data; Silicon Analysts 2026",
+    ),
+    (
+        "Photomask Sets",
+        "~$5–15M per set (advanced nodes)",
+        "~$5–15M per set (advanced nodes)",
+        "Same",
+        "Photomask costs are node-dependent, not location-dependent. 3nm masks cost ~$5–10M, 2nm can exceed $15M.",
+        "costdata.de; industry estimates",
+    ),
+    # Section: Taxes & Incentives
+    ("SECTION", "TAXES & GOVERNMENT INCENTIVES", "", "", "", "", ""),
+    (
+        "Corporate Income Tax Rate",
+        "21% federal + 6.968% AZ state = ~28% combined",
+        "20% + 5% surtax on undistributed earnings",
+        "AZ ~3–8% higher nominal",
+        "Effective rates differ significantly due to credits and deductions. Both jurisdictions offer substantial semiconductor-specific incentives.",
+        "Tax Foundation 2024; AZ JBC; Deloitte Taiwan Highlights 2024",
+    ),
+    (
+        "Semiconductor Tax Credits (R&D)",
+        "Federal: 25% AMTC or 20% regular R&D credit; AZ: Qualified Facility credit up to $30K/job",
+        "25% deduction on R&D spending (≥NT$6B R&D, 6% intensity); 5% deduction on advanced equipment (≥NT$10B)",
+        "Both generous",
+        "Taiwan CHIPS Act (Feb 2024) offers historic tax breaks. US CHIPS Act + AZ state incentives provide significant offsets. AZ: up to $125M/yr in Qualified Facility credits through 2030.",
+        "TrendForce Jan 2024; AZ Commerce Authority; US CHIPS Act",
+    ),
+    (
+        "Federal/National Subsidies",
+        "$6.6B direct CHIPS Act funding + $5B in loans",
+        "Indirect via tax incentives; NT$350B+ in various programs",
+        "AZ has larger direct grants",
+        "TSMC receives up to $6.6B direct + $5B loans. Conditions: 5-yr buyback restrictions, upside sharing. Taiwan subsidies are primarily via tax breaks rather than direct grants.",
+        "Reuters Nov 2024; AZ Commerce Authority Apr 2024; NIST (TSMC Arizona)",
+    ),
+    (
+        "Property Tax Rate",
+        "~0.44–0.47% (Maricopa County effective rate)",
+        "~0.2–1% (Hsinchu; science park concessions available)",
+        "AZ slightly higher",
+        "Maricopa County rate is below AZ state avg (0.55%) and national avg (0.91%). Hsinchu Science Park offers various property-related tax concessions.",
+        "PropertyTaxByState 2024; Hsinchu Local Tax Bureau; Kaizen (HSP incentives)",
+    ),
+    # Section: Land & Real Estate
+    ("SECTION", "LAND & REAL ESTATE", "", "", "", "", ""),
+    (
+        "Industrial Land Cost",
+        "~$24,000/acre (2024 auction near TSMC site)",
+        "Hsinchu Science Park: government-subsidized lease rates",
+        "Variable",
+        "AZ land purchased at state auction. TSMC AZ site is 1,129 acres. Taiwan science parks offer long-term leases at subsidized rates rather than outright purchase.",
+        "AZ Central May 2024; AZ State Land Dept auction; InvestTaiwan (science park incentives)",
+    ),
+    # Section: Logistics & Supply Chain
+    ("SECTION", "LOGISTICS & SUPPLY CHAIN", "", "", "", "", ""),
+    (
+        "Wafer Post-Processing Logistics",
+        "Ship back to Taiwan for dicing/test/packaging (adds cost & time)",
+        "On-site or nearby OSAT facilities",
+        "AZ disadvantage",
+        "Current AZ production requires returning wafers to Taiwan for back-end processing. Adds logistics cost and 2–4 weeks transit. Long-term OSAT buildout in AZ planned.",
+        "TechInsights Mar 2025; TechPowerUp Mar 2025; inkl.com Mar 2025",
+    ),
+    (
+        "Supply Chain Proximity",
+        "Limited local ecosystem; most materials imported",
+        "Mature local ecosystem; dense supplier network",
+        "TW advantage",
+        "Taiwan has decades of semiconductor supply chain density. AZ ecosystem is nascent but growing with adjacent development (Halo Vista, etc.).",
+        "General industry analysis; AZ Central Mar 2026 (Halo Vista development)",
+    ),
+    # Section: Dicing, Packaging & Backend
+    ("SECTION", "DICING, PACKAGING & BACKEND COSTS (AZ-MADE CHIPS)", "", "", "", "", ""),
+    (
+        "Backend Process Flow (AZ chips)",
+        "Wafers air-freighted to Taiwan for dicing, test & packaging",
+        "Dicing, test & packaging done on-site or nearby OSAT (ASE/SPIL)",
+        "AZ adds logistics loop",
+        "AZ wafers currently fly back to Taiwan via Eva Air for all backend processing (dicing, wafer probe, packaging, final test), then ship to end customers or assembly sites. This adds ~2–4 weeks transit time.",
+        "SemiWiki (AZ chips flown to TW); TechPowerUp Feb 2025; inkl.com Mar 2025",
+    ),
+    (
+        "Air Freight Cost (AZ→TW round trip)",
+        "Estimated ~$50–$150/wafer (specialized handling)",
+        "N/A (no shipping needed)",
+        "Added AZ cost",
+        "300mm wafers require specialized FOUPs, temperature/vibration control, and insurance. Air freight Taiwan↔USA is 1–5 days. Cost is modest per-wafer but adds up at volume; exact rates are negotiated privately.",
+        "Wafer World (wafer shipping guide); FreightAmigo (TW→US routes); industry estimates",
+    ),
+    (
+        "Wafer Dicing",
+        "Done in Taiwan (same cost as TW-made wafers + freight)",
+        "~$30–$80/wafer (blade or laser dicing, 300mm)",
+        "AZ adds freight overhead",
+        "Dicing cost itself is location-independent since performed in Taiwan for both. Laser dicing (>42% market share) used for advanced nodes with thin wafers and 3D stacking. Global dicing services market: $614M (2024).",
+        "Astute Analytica (dicing market); Han's Laser (300mm dicing methods); industry estimates",
+    ),
+    (
+        "Wafer Probe / Wafer-Level Test",
+        "Done in Taiwan (same cost as TW-made wafers)",
+        "~$100–$300/wafer (varies by test complexity)",
+        "Same (done in TW)",
+        "Wafer probe testing identifies good dies before packaging. Cost depends on number of test insertions, probe card costs (~$932/thousand probes), and test time. Test equipment ~8% of total fab equipment spend.",
+        "SemiconductorInsight (wafer test probe market); MDPI Electronics (multi-site test cost analysis)",
+    ),
+    (
+        "Packaging – Standard (FC-BGA)",
+        "Done in Taiwan; ~$8/unit",
+        "~$8/unit",
+        "Same",
+        "Flip-chip BGA is the standard package for most logic chips. Price is set by OSAT providers (ASE, SPIL, Amkor) and is location-independent since both use Taiwan OSAT.",
+        "Silicon Analysts 2026 (semiconductor cost guide); OSAT market data",
+    ),
+    (
+        "Packaging – InFO (Fan-Out WLP)",
+        "Done in Taiwan; ~$15/unit",
+        "~$15/unit",
+        "Same",
+        "TSMC InFO used primarily for Apple A-series/M-series SoCs and MediaTek Dimensity. TSMC InFO revenue >$3.5B/yr. Pricing identical since both sourced from TSMC Taiwan packaging.",
+        "Silicon Analysts 2026; SemiconductorX (InFO overview); TechTicker (FOWLP market)",
+    ),
+    (
+        "Packaging – CoWoS-S (2.5D)",
+        "Done in Taiwan; ~$70/unit",
+        "~$70/unit",
+        "Same",
+        "CoWoS-S is the dominant advanced package for AI/HPC chips (NVIDIA H100, AMD MI300). Demand exceeds supply by 40–50%, lead times 40–52 weeks. Prices rising ~20% over next 2 years.",
+        "Silicon Analysts 2026; smbom.com (TSMC price hikes); Morgan Stanley estimates",
+    ),
+    (
+        "Packaging – CoWoS-L (large interposer)",
+        "Done in Taiwan; ~$84–$98/unit (20–40% > CoWoS-S)",
+        "~$84–$98/unit",
+        "Same",
+        "CoWoS-L uses organic interposer for larger multi-die designs (NVIDIA B200 Blackwell). Higher cost due to interposer complexity and lower yields.",
+        "Silicon Analysts packaging calculator; NVIDIA B200 cost breakdown",
+    ),
+    (
+        "Packaging – SoIC (3D Stacking)",
+        "Done in Taiwan; ~$120/unit",
+        "~$120/unit",
+        "Same",
+        "TSMC SoIC enables 3D die stacking for highest-density integration. Currently lowest-volume, highest-cost option. Pricing is TSMC-set and location-independent.",
+        "Silicon Analysts 2026; TSMC advanced packaging roadmap",
+    ),
+    (
+        "Full Backend Cost (H100-class AI chip)",
+        "~$750–$1,100/chip (CoWoS-S/L + test + dicing) + AZ freight",
+        "~$750–$1,100/chip (CoWoS-S/L + test + dicing)",
+        "AZ adds ~$50–$150 freight",
+        "NVIDIA H100 SXM5 total COGS ~$3,320; CoWoS-S packaging alone ~$750. NVIDIA B200 total COGS ~$6,400 with CoWoS-L ~$1,100. Backend is 20–30% of total chip cost for AI accelerators.",
+        "Silicon Analysts (H100/B200 cost breakdown); industry estimates",
+    ),
+    (
+        "Backend as % of Total Chip Cost",
+        "~10–20% (standard); ~20–30% (AI/HPC with CoWoS)",
+        "~10–20% (standard); ~20–30% (AI/HPC with CoWoS)",
+        "Same % (same providers)",
+        "Backend share is growing rapidly with advanced packaging complexity. OSAT providers raising prices 8–20%, memory packaging surcharges up 30%. Industry shift: backend becoming strategic differentiator.",
+        "SemiconductorX (backend overview); Silicon Analysts (chip price hikes 2026)",
+    ),
+    (
+        "OSAT Price Trend",
+        "8–20% price hikes (2025–2026)",
+        "8–20% price hikes (2025–2026)",
+        "Same",
+        "ASE expects advanced packaging/testing revenue to double in 2026. Near 90% utilization driving pricing power. Memory packaging surcharges up 30% due to AI server demand.",
+        "Silicon Analysts (repricing wave); Digitimes Feb 2026 (ASE); SemiconductorX",
+    ),
+    # Section: Gross Margin
+    ("SECTION", "GROSS MARGIN COMPARISON", "", "", "", "", ""),
+    (
+        "TSMC Corporate Gross Margin (2025)",
+        "59.9% full-year; 62.3% in Q4 2025",
+        "59.9% full-year; 62.3% in Q4 2025",
+        "N/A (consolidated)",
+        "Company-wide margin. Up 3.8pp from 56.1% in 2024. Q4 2025 beat guidance (59–61%) by 1.3pp. Driven by N3 scaling, favorable FX, stronger pricing.",
+        "Finovian (TSMC Q4 2025 earnings); MacroTrends (TSM gross margin); TSMC Q4 2025 results",
+    ),
+    (
+        "TSMC Operating Margin (2025)",
+        "50.8% full-year; 54.0% in Q4 2025",
+        "50.8% full-year; 54.0% in Q4 2025",
+        "N/A (consolidated)",
+        "Operating margin up 5.1pp from 45.7% in 2024. Net income ~$55.4B (NT$1,717B), +51.7% YoY.",
+        "Finovian (TSMC Q4 2025 earnings); TSMC investor relations",
+    ),
+    (
+        "Arizona Fab Estimated Gross Margin",
+        "~8% (5nm production, est. 2025)",
+        "~50–60% (mature Taiwan fabs)",
+        "AZ ~42–52pp lower",
+        "AZ 5nm production estimated at ~8% gross margin per White Hsu / Taiwan Tech Dispatch analysis. Low margin reflects: (1) new fab depreciation, (2) ramp-up phase, (3) all hidden efficiencies priced explicitly in US system. This is expected to improve over time.",
+        "White Hsu Blog (TSMC AZ low margins, Feb 2026); mbi-deepdives.com (TSMC's Margins)",
+    ),
+    (
+        "Arizona Fab Net Profit (2025)",
+        "NT$161.4B (~$5.15B) profit",
+        "N/A (not separately reported)",
+        "First profitable year",
+        "Dramatic turnaround from NT$142B loss in 2024 — a ~NT$300B swing. Driven by N4P ramp (began Q4 2024) + AI client demand. Government grants (25% of qualified investment) significantly aided financial performance.",
+        "BigGo Finance (TSMC AZ turnaround); TrendForce Mar 2026; AZ Tech Council; TSMC 2025 financial report",
+    ),
+    (
+        "Arizona Margin Dilution Impact",
+        "1–2% dilution to corporate margin (2025 est.)",
+        "N/A",
+        "Manageable",
+        "Overseas fabs (AZ+Japan+Germany) expected to dilute corporate gross margin by 2–3% in early stages, widening to 3–4% at scale. 2025 revised down to 1–2%. TSMC mitigates with premium pricing for 'geographic flexibility.'",
+        "mbi-deepdives.com (TSMC's Margins); BeyondSPX (margin dilution analysis); Yahoo Finance",
+    ),
+    (
+        "Wafer Price Premium (AZ vs TW)",
+        "5–20% premium charged to customers",
+        "Baseline pricing",
+        "+5–20%",
+        "AMD CEO Lisa Su confirmed 5–20% premium for AZ-made chips. TSMC CEO C.C. Wei: charges for 'geographic flexibility' and considers 'made in USA' a premium product. Customers have agreed to pay premium.",
+        "The Verge (TSMC US chips premium); Yahoo Finance (TSMC AZ pricing); Taiwan News May 2025",
+    ),
+    (
+        "Long-Term Margin Trajectory (AZ)",
+        "Improving toward ~30–40% (analyst consensus 3–5 yr)",
+        "Stable at ~50–60%",
+        "Gap narrowing over time",
+        "AZ margins expected to improve as: (1) depreciation burden decreases, (2) yields improve (already 92% N4P vs 88% in Hsinchu), (3) local ecosystem matures, (4) Fab 2 & 3 add scale. Unlikely to fully match Taiwan margins due to structural cost differences.",
+        "Digitimes (AZ profitability milestone); ainvest.com (TSMC AZ catalyst); analyst consensus",
+    ),
+    (
+        "Key Margin Differentiator",
+        "Cultural costs made explicit (formally priced labor, compliance, procedures)",
+        "Cultural efficiencies absorbed informally (unpaid OT, flexible roles, implicit response)",
+        "Structural",
+        "Per White Hsu analysis: Taiwan's high margins partly reflect 'invisible costs' — engineers returning to fabs without being called, blurred job roles, rapid cross-team action without formal escalation. In AZ, all these are formalized into explicit labor/compliance costs.",
+        "White Hsu Blog (TSMC AZ low margins, Feb 2026)",
+    ),
+    # Section: Overall
+    ("SECTION", "OVERALL WAFER PROCESSING COST", "", "", "", "", ""),
+    (
+        "Total Wafer Processing Cost (300mm, N4/N3)",
+        "~$17,000–$22,000/wafer",
+        "~$15,500–$20,000/wafer",
+        "AZ ~10% higher overall",
+        "Per TechInsights Strategic Cost & Price Model (Scotten Jones). Equipment dominance (~67%+ of cost) equalizes locations. Total difference is <10%.",
+        "TechInsights Mar 2025 (Chip Insider, G. Dan Hutcheson); Silicon Analysts 2026; SemiWiki",
+    ),
+    (
+        "Total Chip Cost incl. Backend (AI/HPC)",
+        "~$3,500–$7,000/chip (wafer + backend + AZ freight)",
+        "~$3,300–$6,400/chip (wafer + backend)",
+        "AZ ~5–10% higher all-in",
+        "For AI accelerators (H100/B200 class). Frontend wafer cost is ~10% higher in AZ; backend costs identical (done in Taiwan); freight adds ~$50–150/wafer. All-in premium is lower than frontend-only premium.",
+        "Silicon Analysts (H100/B200 COGS); TechInsights; calculated",
+    ),
+    (
+        "Operating Cost Premium (all-in)",
+        "Baseline + ~10%",
+        "Baseline",
+        "+10%",
+        "Final TechInsights assessment. Earlier estimates of 30–50%+ premiums were based on construction costs and flawed labor assumptions. Equipment parity is decisive.",
+        "TechInsights Mar 2025; TechPowerUp Feb 2025 & Mar 2025; TechSpot Mar 2025",
+    ),
+]
+
+row_num = 5
+for entry in rows:
+    if entry[0] == "SECTION":
+        ws.merge_cells(
+            start_row=row_num, start_column=1, end_row=row_num, end_column=6
+        )
+        cell = ws.cell(row=row_num, column=1, value=entry[1])
+        cell.font = section_font
+        cell.fill = section_fill
+        cell.alignment = Alignment(vertical="center")
+        cell.border = thin_border
+        for c in range(2, 7):
+            ws.cell(row=row_num, column=c).fill = section_fill
+            ws.cell(row=row_num, column=c).border = thin_border
+        ws.row_dimensions[row_num].height = 25
+    else:
+        ws.cell(row=row_num, column=1, value=entry[0])
+        ws.cell(row=row_num, column=2, value=entry[1])
+        ws.cell(row=row_num, column=3, value=entry[2])
+        ws.cell(row=row_num, column=4, value=entry[3])
+        ws.cell(row=row_num, column=5, value=entry[4])
+        ws.cell(row=row_num, column=6, value=entry[5])
+
+        use_alt = (row_num % 2 == 0)
+        fill = alt_fill if use_alt else None
+        style_row(ws, row_num, fill=fill)
+
+        delta_cell = ws.cell(row=row_num, column=4)
+        delta_cell.alignment = center_align
+        if "cheaper" in str(entry[3]).lower() or "lower" in str(entry[3]).lower():
+            delta_cell.font = Font(name="Calibri", size=11, color="006100")
+        elif "higher" in str(entry[3]).lower() or "expensive" in str(entry[3]).lower() or "disadvantage" in str(entry[3]).lower():
+            delta_cell.font = Font(name="Calibri", size=11, color="9C0006")
+
+        ws.row_dimensions[row_num].height = 65
+
+    row_num += 1
+
+# Freeze panes
+ws.freeze_panes = "A5"
+
+# ═══════════════════════════════════════════════════════════════════════
+# Sheet 2: Sources
+# ═══════════════════════════════════════════════════════════════════════
+ws2 = wb.create_sheet("Sources & References")
+ws2.sheet_properties.tabColor = "2E75B6"
+
+ws2.column_dimensions["A"].width = 8
+ws2.column_dimensions["B"].width = 35
+ws2.column_dimensions["C"].width = 90
+ws2.column_dimensions["D"].width = 20
+
+ws2.merge_cells("A1:D1")
+ws2["A1"].value = "Sources & References"
+ws2["A1"].font = title_font
+ws2["A1"].alignment = Alignment(horizontal="center", vertical="center")
+ws2.row_dimensions[1].height = 30
+
+src_headers = ["#", "Source", "URL / Reference", "Date"]
+for col_idx, h in enumerate(src_headers, 1):
+    cell = ws2.cell(row=3, column=col_idx, value=h)
+    cell.font = header_font
+    cell.fill = header_fill
+    cell.alignment = header_align
+    cell.border = thin_border
+
+sources = [
+    ("1", "TechInsights – Chip Insider: TSMC's True Cost", "https://www.techinsights.com/blog/chip-insider-tsmcs-true-cost-arizona-versus-taiwan", "Mar 2025"),
+    ("2", "TechPowerUp – TSMC AZ Only 10% More Expensive", "https://www.techpowerup.com/334634/tsmc-arizona-operations-only-10-more-expensive-than-taiwanese-fab-operations", "Mar 2025"),
+    ("3", "TechPowerUp – TSMC AZ 30% More (earlier est.)", "https://www.techpowerup.com/330349/tsmc-arizona-plant-operations-will-reportedly-cost-30-more-than-taiwan-sites", "Feb 2025"),
+    ("4", "NIST – TSMC Arizona CHIPS Act", "https://www.nist.gov/chips/tsmc-arizona-phoenix", "2024"),
+    ("5", "Reuters – US finalizes $6.6B CHIPS award", "https://www.reuters.com/technology/us-finalizes-66-billion-chips-award-tsmc-ahead-trump-return-2024-11-15/", "Nov 2024"),
+    ("6", "AZ Commerce Authority – TSMC CHIPS Funding", "https://azcommerce.com/news-events/news/2024/4/tsmc-arizona-and-us-department-of-commerce-announce-up-to-66-billion-in-proposed-chips-act-direct-funding", "Apr 2024"),
+    ("7", "Electricity Local – Phoenix Industrial Rates", "https://www.electricitylocal.com/states/arizona/phoenix/", "2024"),
+    ("8", "Taipei Times – Industrial power rates +12.5%", "https://www.taipeitimes.com/News/front/archives/2024/10/01/2003824615", "Oct 2024"),
+    ("9", "TrendForce – Taiwan Electricity Price Increase", "https://www.trendforce.com/news/2024/03/11/news-taiwans-electricity-prices-to-increase-in-april-semiconductor-industry-among-top-consumers-facing-largest-hikes/", "Mar 2024"),
+    ("10", "Taiwan News – Electricity prices +0.71%", "https://taiwannews.com.tw/news/6204295", "Sep 2025"),
+    ("11", "City of Phoenix – Water & Sewer Rates", "https://phoenix.gov/waterrates", "Mar 2025"),
+    ("12", "Focus Taiwan – Taiwater water price evaluation", "https://focustaiwan.tw/society/202401260017", "Jan 2024"),
+    ("13", "Taipei Times – Taiwater water prices", "https://www.taipeitimes.com/News/taiwan/archives/2025/03/17/2003833563", "Mar 2025"),
+    ("14", "AZ Central – TSMC water use less than expected", "https://www.azcentral.com/story/opinion/op-ed/joannaallhands/2024/06/12/tsmc-arizona-water-use-recycling/74059522007/", "Jun 2024"),
+    ("15", "AZ Central – TSMC builds water reclamation plant", "https://www.azcentral.com/story/money/business/tech/2025/08/27/tsmc-builds-water-plant-to-bolster-sustainability-at-phoenix-campus/85841094007/", "Aug 2025"),
+    ("16", "Business Insider – TSMC & Intel water innovation", "https://www.businessinsider.com/chip-production-water-usage-tsmc-intel-2024-7", "Jul 2024"),
+    ("17", "EIA – Arizona Natural Gas Prices", "https://www.eia.gov/dnav/ng/ng_pri_sum_dcu_saz_m.htm", "2024"),
+    ("18", "CPC Corporation Taiwan – NG Pricing (Aug 2024)", "https://www.energy-omni.com/en/news/article/0A5Zz37IsdSs3Uh0", "Aug 2024"),
+    ("19", "Glassdoor – TSMC Engineer Phoenix Salaries", "https://www.glassdoor.com/Salary/TSMC-Engineer-Phoenix-Salaries-EJI_IE4130.0,4_KO5,13_IL.14,21_IM678.htm", "2024"),
+    ("20", "Levels.fyi – TSMC Engineer Salaries (Taiwan)", "https://www.levels.fyi/companies/tsmc/salaries/engineer", "2024"),
+    ("21", "blog.salary.tw – TSMC Taiwan salary data", "https://blog.salary.tw/article/265d13b4-ba23-41a9-b44c-b3c547ba6024", "Nov 2024"),
+    ("22", "Tax Foundation – State Corporate Income Tax Rates", "https://taxfoundation.org/data/all/state/state-corporate-income-tax-rates-brackets-2024", "2024"),
+    ("23", "Deloitte – Taiwan Tax Highlights 2024", "https://www2.deloitte.com/content/dam/Deloitte/global/Documents/Tax/dttl-tax-taiwanhighlights-2024.pdf", "2024"),
+    ("24", "TrendForce – Taiwan CHIPS Act Tax Incentives", "https://www.trendforce.com/news/2024/01/16/news-taiwans-chip-act-takes-effect-in-february-tsmc-to-benefit-from-historic-tax-incentives/", "Jan 2024"),
+    ("25", "AZ Commerce Authority – Qualified Facility Credit", "https://www.azcommerce.com/incentives/qualified-facility-tax-credit/", "2024"),
+    ("26", "PropertyTaxByState – Maricopa County", "https://propertytaxbystate.com/arizona/maricopa-county", "2024"),
+    ("27", "Hsinchu Local Tax Bureau – Land Value Tax", "https://www.hcct.gov.tw/en/home.jsp?id=24&parentpath=0%2C3", "2024"),
+    ("28", "AZ Central – Land auction near TSMC", "https://www.azcentral.com/story/news/local/phoenix/2024/05/29/7b-development-planned-for-land-near-taiwan-semiconductor-manufacturing-company-phoenix/73841274007/", "May 2024"),
+    ("29", "WCCFTech – TSMC electricity demand per wafer", "https://wccftech.com/tsmcs-growing-electricity-demand-could-stress-credit-in-2030-warns-sp/", "2024"),
+    ("30", "Energy Solutions – Semiconductor Foundries 2026", "https://energy-solutions.co/articles/sub/semiconductor-foundries-managing-extreme-power-density-water-risks", "2026"),
+    ("31", "Silicon Analysts – Semiconductor Market Data 2026", "https://siliconanalysts.com/market", "2026"),
+    ("32", "Wikipedia – TSMC Arizona", "https://en.wikipedia.org/wiki/TSMC_Arizona", "2025"),
+    ("33", "BlackRidge Research – TSMC Arizona Project Profile", "https://blackridgeresearch.com/project-profiles/tsmc-arizona-fab-united-states-us-details-cost-expansion-latest-update", "2025"),
+    ("34", "Digitimes – Hsinchu water supply issue", "https://www.digitimes.com/news/a20260327PD213/water-taiwan-moea-industrial-2026.html", "Mar 2026"),
+    ("35", "InvestTaiwan – Science Park Incentives", "https://investtaiwan.nat.gov.tw/showPageeng10310015?lang=eng&search=10310015", "2024"),
+    ("36", "AppIT Software – Semiconductor Fab Gas Management", "https://www.appitsoftware.com/blog/specialty-gas-chemical-precursor-semiconductor-fabs", "2025"),
+    ("37", "Resto NYC – Water per chip", "https://www.restonyc.com/how-many-gallons-of-water-does-it-take-to-make-a-chip/", "2024"),
+    ("38", "inkl.com – TSMC AZ 10% more expensive", "https://www.inkl.com/news/producing-wafers-at-tsmc-arizona-is-only-10-more-expensive-than-in-taiwan-techinsights", "Mar 2025"),
+    ("39", "Tom's Hardware – TSMC EUV power reduction", "https://www.tomshardware.com/tech-industry/semiconductors/tsmc-reduces-peak-power-consumption-of-euv-tools-by-44-percent-company-to-save-190-million-kilowatt-hours-of-electricity-by-2030", "2024"),
+    ("40", "Reuters – Taiwan green power deficit", "https://www.reuters.com/sustainability/climate-energy/how-taiwans-green-power-deficit-threatens-tech-industrys-bid-net-zero-2024-06-04/", "Jun 2024"),
+    ("41", "AZ Central – Halo Vista development near TSMC", "https://www.azcentral.com/picture-gallery/news/local/phoenix/2026/03/27/halo-vista-development-near-tsmc-in-phoenix-breaks-ground/89341509007/", "Mar 2026"),
+    ("42", "costdata.de – IC Fabrication Cost Breakdown", "https://www.costdata.de/en/blog/ic-fabrication-cost-breakdown", "2024"),
+    ("43", "BigGo Finance – TSMC AZ $5.15B Profit Turnaround", "https://finance.biggo.com/news/C_MZoZwBq7sy_YQMmt-O", "Mar 2026"),
+    ("44", "TrendForce – TSMC 2025 Overseas Split", "https://www.trendforce.com/news/2026/03/02/news-tsmcs-2025-overseas-split-china-leads-profits-arizona-turns-profitable-japan-losses-triple/", "Mar 2026"),
+    ("45", "White Hsu Blog – TSMC AZ Fab Low Margins", "https://whitehsu.blog/2026/02/09/tsmc-arizona-fab-low-margins/", "Feb 2026"),
+    ("46", "Finovian – TSMC Q4 2025 Earnings (62.3% GM)", "https://finovian.com/category/earnings/tsmc-q4-2025-earnings-explained/", "Q4 2025"),
+    ("47", "mbi-deepdives.com – TSMC's Margins", "https://www.mbi-deepdives.com/tsmcs-margins/", "2025"),
+    ("48", "BeyondSPX – TSMC AI Supremacy & Margin Dilution", "https://beyondspx.com/quote/TSM/tsmc-s-ai-supremacy-meets-global-reality-why-margin-dilution-is-a-feature-not-a-bug-nyse-tsm", "2025"),
+    ("49", "The Verge – TSMC US Chips Price Premium", "https://on.theverge.com/news/712904/tsmcs-us-chips-come-at-a-premium", "2025"),
+    ("50", "Taiwan News – TSMC 30% Price Hike AZ Chips", "https://www.taiwannews.com.tw/news/6114167", "May 2025"),
+    ("51", "Yahoo Finance – TSMC AZ Fab 21 Higher Price", "https://finance.yahoo.com/news/tsmcs-arizona-fab-21-mass-114824172.html", "2025"),
+    ("52", "Silicon Analysts – Semiconductor Cost Guide 2026", "https://siliconanalysts.com/guide/semiconductor-costs", "2026"),
+    ("53", "Silicon Analysts – Chip Price Hikes 2026", "https://siliconanalysts.com/analysis/semiconductor-repricing-wave-price-hikes-reshape-chip-supply-chain", "2026"),
+    ("54", "Silicon Analysts – NVIDIA B200 Cost Breakdown", "https://siliconanalysts.com/analysis/nvidia-b200-blackwell-cost-breakdown", "2025"),
+    ("55", "Silicon Analysts – Adv. Packaging Cost Calculator", "https://siliconanalysts.com/tools/packaging", "2026"),
+    ("56", "SemiconductorX – Backend Assembly & Test Overview", "https://www.semiconductorx.com/back-end-assembly-overview.html", "2024"),
+    ("57", "SemiWiki – TSMC AZ Chips Flown to Taiwan", "https://semiwiki.com/forum/threads/tsmc-arizona-chips-are-reportedly-being-flown-back-to-taiwan-for-packaging-u-s-semiconductor-supply-chain-still-remains-dependent-on-taiwan.23109/", "2025"),
+    ("58", "Digitimes – TSMC AZ Profitability Milestone", "https://www.digitimes.com/news/a20260302VL210/tsmc-arizona-fab-profit-2025.html", "Mar 2026"),
+    ("59", "Digitimes – ASE Advanced Packaging Revenue 2x", "https://www.digitimes.com/news/a20260206PD224/packaging-ase-2026-testing-osat.html", "Feb 2026"),
+    ("60", "AZ Tech Council – TSMC AZ First Profit", "https://www.aztechcouncil.org/tsmcs-arizona-fab-generates-first-profit/", "2025"),
+    ("61", "Astute Analytica – Wafer Dicing Services Market", "https://www.astuteanalytica.com/industry-report/wafer-dicing-services-market", "2024"),
+    ("62", "MacroTrends – TSMC Gross Margin History", "https://www.macrotrends.net/stocks/charts/TSM/taiwan-semiconductor-manufacturing/gross-margin", "2025"),
+    ("63", "ainvest.com – TSMC AZ Bet Valuation Analysis", "https://www.ainvest.com/news/tsmc-arizona-bet-catalyst-valuation-costly-distraction-2601/", "2026"),
+    ("64", "Wafer World – Guide to Wafer Shipping", "https://www.waferworld.com/post/guide-to-wafer-shipping", "2024"),
+    ("65", "TrendForce – TSMC AZ Fab 2 3nm H2 2027", "https://www.trendforce.com/news/2026/03/24/news-tsmc-reportedly-eyes-2h27-3nm-mass-production-at-arizona-fab-2-four-u-s-fabs-said-to-be-fully-booked/", "Mar 2026"),
+    ("66", "theGPUTrade – TSMC Moves AZ Fab-2 to H2 2027", "https://thegputrade.com/news/tsmc-moves-arizona-fab2-production-up-to-h2-2027-zz6u58ee", "2026"),
+    ("67", "TechOvedas – TSMC Accelerates AZ to 2027", "https://techovedas.com/tsmc-accelerates-arizona-fab-to-2027-2nm-a16-chips-and-the-future-of-u-s-semiconductor-strategy/", "2025"),
+    ("68", "Tom's Hardware – TSMC AZ Fab 21 4nm Production", "https://aztechcouncil.org/tsmc-arizona-fab21-already-making-4nm-chips", "Jan 2025"),
+    ("69", "Tom's Hardware – TSMC Speeds Up 2nm AZ Plans", "https://www.tomshardware.com/tech-industry/tsmc-moves-up-2nm-production-plans-in-arizona-ceo-also-hints-at-further-site-expansion-beyond-usd165-billion-commitment", "Jul 2025"),
+    ("70", "TechPowerUp – TSMC CoPoS/SoIC for AZ Fab", "https://www.techpowerup.com/338847/tsmc-plans-copos-and-soic-advanced-packaging-for-arizona-fab", "Jul 2025"),
+    ("71", "FinancialContent – TSMC AZ 92% Yield", "https://markets.financialcontent.com/wedbush/article/tokenring-2025-12-24-silicon-sovereignty-tsmc-arizona-hits-92-yield-as-3nm-equipment-arrives-for-2027-powerhouse", "Dec 2025"),
+    ("72", "Barchart – TSMC Fab 4 Fully Booked", "https://www.barchart.com/story/news/927456/taiwan-semiconductor-s-new-fab-4-is-fully-booked-before-construction-even-begins", "2026"),
+    ("73", "Benzinga – TSMC Supply Squeeze Through 2028", "https://www.benzinga.com/markets/tech/26/03/51558739/tsmc-supply-squeeze-2028-chipmaker-opportunity-ai-demand-nvidia-apple", "Mar 2026"),
+    ("74", "Silicon Analysts – Foundry Allocation Q1 2026", "https://siliconanalysts.com/analysis/foundry-allocation-status-q1-2026", "Q1 2026"),
+    ("75", "AZ Central – Apple 100M TSMC AZ Chips 2026", "https://azcentral.com/story/money/business/tech/2026/02/27/apple-to-buy-100-million-tsmc-arizona-chips-in-2026/88888519007/", "Feb 2026"),
+    ("76", "AZ Central – TSMC Hiring Thousands for $165B", "https://www.azcentral.com/story/money/business/tech/2025/03/13/tsmc-will-need-to-fill-thousands-of-jobs/81760910007/", "Mar 2025"),
+    ("77", "Axios Phoenix – TSMC Workforce Growth", "https://www.axios.com/local/phoenix/2025/05/06/tsmc-arizona-hiring-workforce-growth", "May 2025"),
+    ("78", "PCMag – TSMC 3 New Fabs $100B Investment", "https://uk.pcmag.com/processors/156935/tsmc-to-build-3-new-us-fabs-with-100-billion-investment", "Mar 2025"),
+    ("79", "InBusinessPHX – TSMC Additional Fabs/AP/R&D", "https://inbusinessphx.com/semi-insights/tsmc-to-build-additional-three-fabs-two-advanced-packaging-facilities-and-rd-center-in-arizona", "2025"),
+    ("80", "CNBC – TSMC AZ Expansion Not Done (CFO)", "https://www.cnbc.com/2026/01/16/tsmcs-arizona-chip-expansion-isnt-done-after-us-investment-cfo.html", "Jan 2026"),
+    ("81", "Wedbush – TSMC AZ Gigafab Cluster $165B", "https://investor.wedbush.com/wedbush/article/tokenring-2026-1-23-tsmcs-arizona-gigafab-cluster-scales-up-with-165-billion-total-investment", "Jan 2026"),
+    ("82", "Yahoo Finance – TSMC $100B Additional AZ Investment", "https://finance.yahoo.com/news/tsmc-considers-additional-100-billion-153658229.html", "2025"),
+    ("83", "TrendForce – TSMC 2nm US, 1nm Tainan", "https://www.trendforce.com/news/2025/02/03/news-tsmc-said-to-plan-2nm-production-in-u-s-1nm-fab-in-tainan/", "Feb 2025"),
+    ("84", "IndustrialInfo – TSMC 2026 CapEx $52-56B", "https://www.industrialinfo.com/news/article/chipmaker-tsmc-projects-2026-capex-will-reach-52-billion-56-billion--352061", "2026"),
+    ("85", "FinancialContent – TSMC AZ CoWoS Plant", "https://www.financialcontent.com/article/tokenring-2026-1-15-arizona-silicon-fortress-tsmc-accelerates-3nm-expansion-and-plans-us-based-cowos-plant", "Jan 2026"),
+    ("86", "TechSoda – TSMC AZ 100% Capacity Utilization", "https://techsoda.substack.com/p/tsmc-arizonas-first-fab-to-reach", "2025"),
+    ("87", "diskmfr.com – TSMC Global Fab Capacity Overview", "https://www.diskmfr.com/tsmc-global-fab-capacity-and-process-node-overview/", "Sep 2025"),
+    ("88", "globalsemiresearch – TSMC Fab Capacity by Wafer Size 2025", "https://globalsemiresearch.substack.com/p/tsmcs-fab-wafer-capacity-breakdown", "2025"),
+    ("89", "TSMC Official – Fab Capacity Page", "https://www.tsmc.com/english/dedicatedFoundry/manufacturing/fab_capacity", "2025"),
+    ("90", "TechPowerUp – TSMC 2nm Surpasses 90% Yield", "https://www.techpowerup.com/337668/tsmc-reportedly-surpasses-90-production-yield-rate-with-2-nm-process", "2025"),
+    ("91", "Digitimes – TSMC 2nm Yield by Product Type", "https://www.digitimes.com/news/a20250325PD228/tsmc-2nm-fab-yield-rate-2025.html", "Mar 2025"),
+    ("92", "Digitimes – TSMC 3nm/5nm Utilization >100% Q1 2025", "https://www.digitimes.com/news/a20250226PD245/tsmc-5nm-3nm-chips-2025.html", "Feb 2025"),
+    ("93", "WCCFTech – TSMC 3nm 160K WPM Golden Period", "https://wccftech.com/tsmc-3nm-golden-period-of-mass-production-has-started-says-report/", "2025"),
+    ("94", "AnandTech – TSMC N5 Better Yield Than N7", "https://www.anandtech.com/print/16028/better-yield-on-5nm-than-7nm-tsmc-update-on-defect-rates-for-n5", "2020"),
+    ("95", "guru3d – TSMC 3nm Yields 60–80%", "https://www.guru3d.com/story/tsmc-3nm-yields-between-60-and-80/", "2023"),
+    ("96", "Comkex – TSMC N3P On Track", "https://comkex.com/tech/tsmc-performance-optimized-3nm-n3p-process-on-track-for-mass-production-this-year/", "2024"),
+    ("97", "topcpu.net – TSMC 2nm 90% Yield Trial", "https://www.topcpu.net/pl/news/tsmc-completes-trial-production-of-2nm-process-with-an-impressive-90-percent-yield", "2025"),
+    ("98", "heqingele.com – TSMC 2nm Yield Surge 2026", "https://heqingele.com/blog/tsmc-2nm-yield-rates-mass-production-status-2026/", "2026"),
+    ("99", "StreetsTocker – TSMC 2nm 50K to 140K Wafers", "https://streetstocker.com/tsmc-2nm-capacity-constraints-2026/", "2026"),
+    ("100", "SMM – TSMC N3 100 NTOs", "https://news.metal.com/newscontent/103631957/TSMCs-Luo-Zhenqiu:-N3-Has-Secured-Approximately-100-NTOs-and-Is-Expected-to-Become-a-High-Production-Long-Running-Process-Period", "Sep 2025"),
+    ("101", "smbom.com – TSMC 3nm/5nm 100% Utilization", "https://www.smbom.com/news/45772", "2025"),
+    ("102", "FinancialContent – TSMC AZ Blackwell HVM", "https://markets.financialcontent.com/bpas/article/tokenring-2026-2-5-silicon-sovereignty-nvidia-and-tsmc-achieve-high-volume-blackwell-production-on-us-soil", "Feb 2026"),
+]
+
+for i, (num, name, url, date) in enumerate(sources):
+    r = i + 4
+    ws2.cell(row=r, column=1, value=int(num))
+    ws2.cell(row=r, column=2, value=name)
+    ws2.cell(row=r, column=3, value=url)
+    ws2.cell(row=r, column=4, value=date)
+    for c in range(1, 5):
+        cell = ws2.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.border = thin_border
+        cell.alignment = wrap_align
+        if i % 2 == 0:
+            cell.fill = alt_fill
+    ws2.row_dimensions[r].height = 22
+
+ws2.freeze_panes = "A4"
+
+# ═══════════════════════════════════════════════════════════════════════
+# Sheet 3: Key Findings Summary
+# ═══════════════════════════════════════════════════════════════════════
+ws3 = wb.create_sheet("Key Findings")
+ws3.sheet_properties.tabColor = "548235"
+
+ws3.column_dimensions["A"].width = 5
+ws3.column_dimensions["B"].width = 100
+
+ws3.merge_cells("A1:B1")
+ws3["A1"].value = "Key Findings: TSMC Phoenix vs Taiwan Fab Operational Costs"
+ws3["A1"].font = title_font
+ws3["A1"].alignment = Alignment(horizontal="center", vertical="center")
+ws3.row_dimensions[1].height = 35
+
+findings = [
+    "Overall operating cost difference is less than 10%, per TechInsights' Strategic Cost and Price Model (Mar 2025). Earlier estimates of 30–50%+ were based on construction costs and labor misconceptions.",
+    "Equipment costs dominate (>67% of wafer cost) and are globally uniform from ASML, Applied Materials, KLA, Lam Research, and Tokyo Electron — this is the single biggest cost equalizer between locations.",
+    "Labor accounts for less than 2% of total wafer cost despite US wages being ~3× Taiwan wages. Modern fabs are highly automated, making wage differentials largely irrelevant to per-wafer economics.",
+    "Electricity is significantly cheaper in Phoenix (~$0.079/kWh) vs Taiwan (~$0.136/kWh), a ~42% advantage for Arizona. Taiwan has been raising industrial electricity rates aggressively (4 increases in 3 years).",
+    "Water is 5–6× more expensive in Phoenix vs Taiwan, but water represents <0.1% of total wafer cost. The bigger concern is water availability and recycling (AZ: 65% recycling now, targeting 90%).",
+    "Natural gas is ~46% cheaper in Arizona than Taiwan. Arizona ranks #1 nationally for affordable natural gas.",
+    "Construction/capex costs are 4–5× higher in Arizona vs Taiwan, driven by US labor costs, regulatory requirements, and greenfield site complexity. This is distinct from operating costs.",
+    "TSMC receives $6.6B in direct CHIPS Act funding plus $5B in loans for its Arizona operations. Taiwan offers tax-based incentives (25% R&D deduction, 5% equipment deduction) rather than direct grants.",
+    "Supply chain logistics remain an AZ disadvantage — wafers currently ship back to Taiwan for dicing, testing, and packaging. Long-term OSAT buildout in Arizona is planned.",
+    "Both locations face infrastructure challenges: Arizona faces water scarcity in the desert Southwest; Taiwan faces green power deficits and water supply tension in Hsinchu.",
+    "GROSS MARGIN: Arizona fab estimated at ~8% gross margin (5nm) vs ~50–60% for mature Taiwan fabs. The gap reflects new-fab depreciation, ramp-up costs, and explicit pricing of cultural efficiencies that are absorbed informally in Taiwan.",
+    "GROSS MARGIN: TSMC Arizona posted NT$161.4B ($5.15B) profit in 2025 — a dramatic turnaround from NT$142B loss in 2024. Government grants (25% of qualified investment) were critical. Corporate gross margin: 59.9% (2025), 62.3% in Q4.",
+    "GROSS MARGIN: TSMC charges a 5–20% wafer price premium for Arizona-made chips (per AMD CEO Lisa Su). CEO C.C. Wei frames it as charging for 'geographic flexibility' and 'made in USA' premium.",
+    "BACKEND COSTS: All Arizona wafers currently ship back to Taiwan for dicing, testing, and packaging — adding ~$50–$150/wafer in air freight but using the same OSAT infrastructure as Taiwan-made wafers.",
+    "BACKEND COSTS: Advanced packaging (CoWoS-S at ~$70/unit, CoWoS-L at ~$84–98/unit, SoIC at ~$120/unit) is identical in cost for AZ and TW wafers since all packaging is done in Taiwan. Backend is 10–20% of standard chip cost, rising to 20–30% for AI/HPC with CoWoS.",
+]
+
+for i, finding in enumerate(findings):
+    r = i + 3
+    ws3.cell(row=r, column=1, value=i + 1)
+    ws3.cell(row=r, column=1).font = Font(name="Calibri", bold=True, size=11, color="1F4E79")
+    ws3.cell(row=r, column=1).alignment = Alignment(horizontal="center", vertical="top")
+    ws3.cell(row=r, column=2, value=finding)
+    ws3.cell(row=r, column=2).font = normal_font
+    ws3.cell(row=r, column=2).alignment = wrap_align
+    ws3.row_dimensions[r].height = 45
+    if i % 2 == 0:
+        ws3.cell(row=r, column=1).fill = alt_fill
+        ws3.cell(row=r, column=2).fill = alt_fill
+
+# ═══════════════════════════════════════════════════════════════════════
+# Sheet 4: Arizona Expansion Phases
+# ═══════════════════════════════════════════════════════════════════════
+ws4 = wb.create_sheet("AZ Expansion Phases")
+ws4.sheet_properties.tabColor = "BF8F00"
+
+col_widths_4 = {"A": 18, "B": 16, "C": 14, "D": 18, "E": 20, "F": 18, "G": 50, "H": 50}
+for col, w in col_widths_4.items():
+    ws4.column_dimensions[col].width = w
+
+ws4.merge_cells("A1:H1")
+ws4["A1"].value = "TSMC Arizona Fab Expansion: Phase-by-Phase Status (as of Mar 2026)"
+ws4["A1"].font = title_font
+ws4["A1"].alignment = Alignment(horizontal="center", vertical="center")
+ws4.row_dimensions[1].height = 35
+
+ws4.merge_cells("A2:H2")
+ws4["A2"].value = (
+    "Total committed investment: $165B (potentially $265B incl. additional $100B announced Mar 2025). "
+    "Complex: 6 fabs + 2 advanced packaging facilities + 1 R&D center on ~2,000 acres in North Phoenix."
+)
+ws4["A2"].font = note_font
+ws4["A2"].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+ws4.row_dimensions[2].height = 35
+
+phase_headers = [
+    "Facility",
+    "Process Node",
+    "Status",
+    "Announced",
+    "Production Start",
+    "Capacity (WPM)",
+    "Key Details",
+    "Sources",
+]
+for col_idx, h in enumerate(phase_headers, 1):
+    cell = ws4.cell(row=4, column=col_idx, value=h)
+    cell.font = header_font
+    cell.fill = header_fill
+    cell.alignment = header_align
+    cell.border = thin_border
+ws4.row_dimensions[4].height = 30
+
+# Status colors
+status_green = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
+status_yellow = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
+status_orange = PatternFill(start_color="FCD5B4", end_color="FCD5B4", fill_type="solid")
+status_blue = PatternFill(start_color="D6E4F0", end_color="D6E4F0", fill_type="solid")
+
+phase_data = [
+    # (Facility, Node, Status, Announced, Prod Start, Capacity, Details, Sources, status_fill)
+    (
+        "Fab 21 Phase 1",
+        "N4P / N5 (4nm-class)",
+        "OPERATIONAL",
+        "May 2020",
+        "Q4 2024 (HVM early 2025)",
+        "10K→30K WPM (ramping)",
+        "First operational US advanced fab. 92% yield on N4P (exceeds Taiwan's 88%). "
+        "Producing: Apple A16 Bionic, Apple S9, AMD Ryzen 9000, NVIDIA Blackwell GPUs (Oct 2025). "
+        "Apple committed 100M+ chips in 2026. First profitable year: 2025 (NT$161.4B / $5.15B profit). "
+        "Chips currently fly to Taiwan for backend, but Amkor Peoria AZ handles some Apple packaging.",
+        "Wikipedia (TSMC AZ); Tom's Hardware Jan 2025; AZ Central Feb 2026; TrendForce Feb 2025",
+        status_green,
+    ),
+    (
+        "Fab 21 Phase 2",
+        "N3 (3nm-class)",
+        "CONSTRUCTION COMPLETE\nTool install 2026",
+        "Dec 2022",
+        "H2 2027 (accelerated from 2028)",
+        "~20K WPM (est.)",
+        "Building construction completed 2025. Equipment move-in planned 2026; tool installation Q3 2026. "
+        "Timeline accelerated by ~6 months — compressed from 6 quarters to 4–5 quarters. "
+        "TSMC sending more personnel to AZ to speed cleanroom prep and MEP engineering. "
+        "Capacity already booked by major customers.",
+        "TrendForce Mar 2026; Digitimes Dec 2025; theGPUTrade; Wikipedia (TSMC AZ)",
+        status_yellow,
+    ),
+    (
+        "Fab 21 Phase 3",
+        "N2 / A16 (2nm / 1.6nm)",
+        "UNDER CONSTRUCTION",
+        "Apr 2024",
+        "2029 (originally; some reports say 2027 accelerated)",
+        "TBD",
+        "Broke ground April 2025. Will use nanosheet transistor architecture (GAA). "
+        "A16 (1.6nm) includes backside power delivery — TSMC's most advanced process. "
+        "Conflicting timelines: Wikipedia says 2029; TechOvedas reported acceleration to 2027. "
+        "Part of the original $65B commitment (3 fabs).",
+        "Wikipedia (TSMC AZ); TechOvedas; Tom's Hardware Jul 2025; NIST",
+        status_orange,
+    ),
+    (
+        "Fab 21 Phase 4",
+        "TBD (likely N2/A16+)",
+        "PLANNED",
+        "Mar 2025",
+        "~2030 (est.)",
+        "TBD",
+        "Part of the additional $100B commitment (3 more fabs) announced Mar 2025 at White House with TSMC CEO C.C. Wei. "
+        "Fully booked by customers before construction begins (Apple, NVIDIA, AMD, Broadcom, Qualcomm). "
+        "Permits filed; scheduling is demand-driven.",
+        "Barchart (Fab 4 fully booked); PCMag Mar 2025; Wikipedia (TSMC AZ)",
+        status_blue,
+    ),
+    (
+        "Fab 21 Phase 5",
+        "TBD",
+        "PLANNED",
+        "Mar 2025",
+        "TBD",
+        "TBD",
+        "Part of the 6-fab gigafab cluster. Limited public details. "
+        "CEO C.C. Wei: at completion, AZ gigafab will represent 30% of TSMC's 2nm-and-beyond capacity. "
+        "CFO indicated expansion isn't done even after $165B commitment.",
+        "CNBC Jan 2026; AZ Central Jul 2025; Wikipedia (TSMC AZ)",
+        status_blue,
+    ),
+    (
+        "Fab 21 Phase 6",
+        "TBD",
+        "PLANNED",
+        "Mar 2025",
+        "TBD",
+        "TBD",
+        "Final fab in the 6-fab gigafab cluster. Very early planning stages. "
+        "Process node and timeline to be determined by market demand and technology roadmap. "
+        "TSMC acquired ~900 additional acres adjacent to original 1,100-acre site for total ~2,000-acre complex.",
+        "Wikipedia (TSMC AZ); Wedbush Investor Jan 2026; BlackRidge Research",
+        status_blue,
+    ),
+]
+
+# Section header: Fabrication Plants
+ws4.merge_cells(start_row=5, start_column=1, end_row=5, end_column=8)
+ws4.cell(row=5, column=1, value="FABRICATION PLANTS (6 FABS)")
+ws4.cell(row=5, column=1).font = section_font
+ws4.cell(row=5, column=1).fill = section_fill
+ws4.cell(row=5, column=1).alignment = Alignment(vertical="center")
+ws4.cell(row=5, column=1).border = thin_border
+for c in range(2, 9):
+    ws4.cell(row=5, column=c).fill = section_fill
+    ws4.cell(row=5, column=c).border = thin_border
+ws4.row_dimensions[5].height = 25
+
+for i, (facility, node, status, announced, prod_start, capacity, details, srcs, sfill) in enumerate(phase_data):
+    r = i + 6
+    ws4.cell(row=r, column=1, value=facility)
+    ws4.cell(row=r, column=2, value=node)
+    ws4.cell(row=r, column=3, value=status)
+    ws4.cell(row=r, column=4, value=announced)
+    ws4.cell(row=r, column=5, value=prod_start)
+    ws4.cell(row=r, column=6, value=capacity)
+    ws4.cell(row=r, column=7, value=details)
+    ws4.cell(row=r, column=8, value=srcs)
+
+    for c in range(1, 9):
+        cell = ws4.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+
+    ws4.cell(row=r, column=1).font = Font(name="Calibri", bold=True, size=11)
+    ws4.cell(row=r, column=3).fill = sfill
+    ws4.cell(row=r, column=3).alignment = center_align
+    ws4.cell(row=r, column=3).font = Font(name="Calibri", bold=True, size=10)
+    ws4.row_dimensions[r].height = 90
+
+# Supporting Facilities section
+supp_start = 6 + len(phase_data)
+ws4.merge_cells(start_row=supp_start, start_column=1, end_row=supp_start, end_column=8)
+ws4.cell(row=supp_start, column=1, value="SUPPORTING FACILITIES")
+ws4.cell(row=supp_start, column=1).font = section_font
+ws4.cell(row=supp_start, column=1).fill = section_fill
+ws4.cell(row=supp_start, column=1).alignment = Alignment(vertical="center")
+ws4.cell(row=supp_start, column=1).border = thin_border
+for c in range(2, 9):
+    ws4.cell(row=supp_start, column=c).fill = section_fill
+    ws4.cell(row=supp_start, column=c).border = thin_border
+ws4.row_dimensions[supp_start].height = 25
+
+supp_data = [
+    (
+        "Adv. Packaging 1 (AP1)",
+        "CoWoS / CoPoS / SoIC",
+        "PLANNED",
+        "2025",
+        "Late 2029 / Early 2030",
+        "N/A",
+        "First US-based advanced packaging. Groundbreaking slated 2028. CoPoS pilot line as early as 2026; partner validation late 2027. "
+        "Partnership with Amkor Technology (Peoria, AZ) for final assembly. "
+        "Critical for eliminating the current need to fly wafers back to Taiwan for packaging.",
+        "TechPowerUp (CoPoS/SoIC plans); FinancialContent Jan 2026; Amkor press release Oct 2024",
+        status_orange,
+    ),
+    (
+        "Adv. Packaging 2 (AP2)",
+        "TBD",
+        "PLANNED",
+        "2025",
+        "TBD",
+        "N/A",
+        "Second advanced packaging facility. Very early planning. Part of the gigafab cluster announcement. "
+        "Will help TSMC localize more of the backend supply chain in the US.",
+        "Wikipedia (TSMC AZ); InBusinessPHX; NIST",
+        status_blue,
+    ),
+    (
+        "R&D Center",
+        "N/A",
+        "PLANNED",
+        "2025",
+        "TBD",
+        "N/A",
+        "Research and development center as part of the gigafab cluster. "
+        "Will support process development and yield optimization for US-based manufacturing. "
+        "Part of broader strategy to build self-sufficient semiconductor ecosystem in Arizona.",
+        "Wikipedia (TSMC AZ); PCMag Mar 2025; NIST",
+        status_blue,
+    ),
+]
+
+for i, (facility, node, status, announced, prod_start, capacity, details, srcs, sfill) in enumerate(supp_data):
+    r = supp_start + 1 + i
+    ws4.cell(row=r, column=1, value=facility)
+    ws4.cell(row=r, column=2, value=node)
+    ws4.cell(row=r, column=3, value=status)
+    ws4.cell(row=r, column=4, value=announced)
+    ws4.cell(row=r, column=5, value=prod_start)
+    ws4.cell(row=r, column=6, value=capacity)
+    ws4.cell(row=r, column=7, value=details)
+    ws4.cell(row=r, column=8, value=srcs)
+
+    for c in range(1, 9):
+        cell = ws4.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+
+    ws4.cell(row=r, column=1).font = Font(name="Calibri", bold=True, size=11)
+    ws4.cell(row=r, column=3).fill = sfill
+    ws4.cell(row=r, column=3).alignment = center_align
+    ws4.cell(row=r, column=3).font = Font(name="Calibri", bold=True, size=10)
+    ws4.row_dimensions[r].height = 90
+
+# Key Metrics section
+metrics_start = supp_start + 1 + len(supp_data) + 1
+ws4.merge_cells(start_row=metrics_start, start_column=1, end_row=metrics_start, end_column=8)
+ws4.cell(row=metrics_start, column=1, value="KEY METRICS & MILESTONES")
+ws4.cell(row=metrics_start, column=1).font = section_font
+ws4.cell(row=metrics_start, column=1).fill = section_fill
+ws4.cell(row=metrics_start, column=1).alignment = Alignment(vertical="center")
+ws4.cell(row=metrics_start, column=1).border = thin_border
+for c in range(2, 9):
+    ws4.cell(row=metrics_start, column=c).fill = section_fill
+    ws4.cell(row=metrics_start, column=c).border = thin_border
+ws4.row_dimensions[metrics_start].height = 25
+
+metrics = [
+    ("Total Investment", "$165B pledged (potentially $265B with additional $100B)", "PCMag Mar 2025; Yahoo Finance"),
+    ("Federal Subsidies", "$6.6B direct CHIPS Act grants + $5B loans", "Reuters Nov 2024; NIST"),
+    ("Total Site Area", "~2,000 acres (original 1,100 + 900 additional acres acquired)", "Wedbush Investor Jan 2026; Wikipedia"),
+    ("Direct Manufacturing Jobs", "~6,000 (at full buildout)", "NIST; AZ Central Mar 2025"),
+    ("Current Employees (2024)", "~3,000 (growing to ~6,000 within a few years)", "AZ Central Mar 2025; Axios Phoenix May 2025"),
+    ("Construction Jobs", "~20,000+ over project lifetime", "NIST; AZ Commerce Authority"),
+    ("Key Customers (Booked)", "Apple (100M+ chips 2026), NVIDIA (largest TSMC customer), AMD, Qualcomm, Broadcom", "AZ Central Feb 2026; Barchart; Silicon Analysts Q1 2026"),
+    ("AZ Share of Advanced Capacity", "30% of 2nm-and-beyond capacity at full buildout", "AZ Central Jul 2025; Wikipedia"),
+    ("Yield Achievement", "92% N4P yield (exceeds Taiwan's 88% for same node)", "FinancialContent Dec 2025; SemiWiki"),
+    ("Build Time Compression", "Reduced from ~3 years (Fab 1) to ~1.5–2 years (subsequent fabs)", "TrendForce Mar 2026"),
+    ("2026 CapEx (Company-wide)", "$52–56B (+40% vs 2025); significant Arizona allocation", "IndustrialInfo; Tom's Hardware May 2025"),
+    ("Halo Vista Development", "3,500-acre mixed-use development adjacent to TSMC site (Sonoran Oasis Research & Tech Park)", "AZ Central Oct 2024; AZ Central Mar 2026"),
+    ("Key Supplier Partnerships", "Amkor (packaging, Peoria AZ); Linde (N₂, O₂, Ar); Air Liquide (H₂, He, CO₂)", "Amkor Oct 2024; Linde Sep 2021; Air Liquide Jan 2022"),
+]
+
+for i, (metric, value, src) in enumerate(metrics):
+    r = metrics_start + 1 + i
+    ws4.merge_cells(start_row=r, start_column=2, end_row=r, end_column=6)
+    ws4.cell(row=r, column=1, value=metric)
+    ws4.cell(row=r, column=1).font = Font(name="Calibri", bold=True, size=11)
+    ws4.cell(row=r, column=2, value=value)
+    ws4.cell(row=r, column=2).font = normal_font
+    ws4.merge_cells(start_row=r, start_column=7, end_row=r, end_column=8)
+    ws4.cell(row=r, column=7, value=src)
+    ws4.cell(row=r, column=7).font = source_font
+
+    for c in range(1, 9):
+        cell = ws4.cell(row=r, column=c)
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+
+    ws4.row_dimensions[r].height = 30
+
+ws4.freeze_panes = "A5"
+
+# ═══════════════════════════════════════════════════════════════════════
+# Sheet 5: Yields & Capacity Comparison
+# ═══════════════════════════════════════════════════════════════════════
+ws5 = wb.create_sheet("Yields & Capacity")
+ws5.sheet_properties.tabColor = "C00000"
+
+col_w5 = {"A": 22, "B": 16, "C": 16, "D": 18, "E": 16, "F": 50, "G": 45}
+for col, w in col_w5.items():
+    ws5.column_dimensions[col].width = w
+
+ws5.merge_cells("A1:G1")
+ws5["A1"].value = "TSMC Yields & Wafer Capacity: Arizona vs Taiwan Fabs (as of Q1 2026)"
+ws5["A1"].font = title_font
+ws5["A1"].alignment = Alignment(horizontal="center", vertical="center")
+ws5.row_dimensions[1].height = 35
+
+ws5.merge_cells("A2:G2")
+ws5["A2"].value = (
+    "TSMC does not officially disclose yield rates. Figures are from analyst reports, media, and industry estimates. "
+    "Total TSMC capacity: ~1.3M wafers/month (~17M+ wafers/year, 12-inch equivalent). "
+    "Advanced nodes (≤7nm) = 77% of Q4 2025 wafer revenue."
+)
+ws5["A2"].font = note_font
+ws5["A2"].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+ws5.row_dimensions[2].height = 35
+
+yc_headers = [
+    "Fab / Location",
+    "Process Node",
+    "Yield Rate (est.)",
+    "Capacity (WPM)",
+    "Utilization",
+    "Notes",
+    "Sources",
+]
+for col_idx, h in enumerate(yc_headers, 1):
+    cell = ws5.cell(row=4, column=col_idx, value=h)
+    cell.font = header_font
+    cell.fill = header_fill
+    cell.alignment = header_align
+    cell.border = thin_border
+ws5.row_dimensions[4].height = 30
+
+# ── ARIZONA SECTION ────────────────────────────────────────────
+ws5.merge_cells(start_row=5, start_column=1, end_row=5, end_column=7)
+ws5.cell(row=5, column=1, value="ARIZONA (Phoenix, USA)")
+ws5.cell(row=5, column=1).font = section_font
+ws5.cell(row=5, column=1).fill = PatternFill(start_color="FCD5B4", end_color="FCD5B4", fill_type="solid")
+ws5.cell(row=5, column=1).alignment = Alignment(vertical="center")
+ws5.cell(row=5, column=1).border = thin_border
+for c in range(2, 8):
+    ws5.cell(row=5, column=c).fill = PatternFill(start_color="FCD5B4", end_color="FCD5B4", fill_type="solid")
+    ws5.cell(row=5, column=c).border = thin_border
+ws5.row_dimensions[5].height = 25
+
+az_data = [
+    (
+        "Fab 21 Phase 1",
+        "N4P / N4 (4nm)",
+        "~92%",
+        "15K → 24K WPM\n(ramping; target 30K)",
+        "~100%\n(approaching)",
+        "92% yield exceeds Taiwan Hsinchu's 88% for same N4P node. Producing Apple A16, S9, AMD Ryzen 9000, NVIDIA Blackwell (from Oct 2025). Apple committed 100M+ chips in 2026. 'Copy-exactly' strategy from Taiwan achieved yield parity.",
+        "FinancialContent Dec 2025 (92% yield); TechSoda (100% util); Wikipedia (TSMC AZ); Tom's HW Jan 2025",
+    ),
+    (
+        "Fab 21 Phase 1",
+        "N5 (5nm family)",
+        "~88–92%",
+        "(shared with N4P above)",
+        "~100%",
+        "NVIDIA Blackwell B200 uses custom 4NP variant (5nm family). Silicon yields in high-80% to low-90% range. 5nm is a mature node for TSMC; AZ yields match Taiwan levels.",
+        "FinancialContent Feb 2026 (Blackwell production); SemiWiki (AZ near 100% capacity)",
+    ),
+    (
+        "Fab 21 Phase 2",
+        "N3 (3nm)",
+        "N/A (not yet in production)",
+        "~20K WPM (est. target)",
+        "N/A",
+        "Building complete. Tool install Q3 2026. HVM targeted H2 2027. Expected to benefit from Phase 1 learning — yields likely to ramp faster than Taiwan's initial N3 ramp.",
+        "TrendForce Mar 2026; theGPUTrade; Digitimes Dec 2025",
+    ),
+    (
+        "Fab 21 Phase 3",
+        "N2 / A16 (2nm / 1.6nm)",
+        "N/A (under construction)",
+        "TBD",
+        "N/A",
+        "Under construction (broke ground Apr 2025). Production targeted 2029. GAA nanosheet architecture. Backside power delivery for A16.",
+        "Wikipedia (TSMC AZ); TechOvedas; Tom's HW Jul 2025",
+    ),
+]
+
+row_num_5 = 6
+for i, (fab, node, yld, cap, util, notes, srcs) in enumerate(az_data):
+    r = row_num_5 + i
+    ws5.cell(row=r, column=1, value=fab)
+    ws5.cell(row=r, column=2, value=node)
+    ws5.cell(row=r, column=3, value=yld)
+    ws5.cell(row=r, column=4, value=cap)
+    ws5.cell(row=r, column=5, value=util)
+    ws5.cell(row=r, column=6, value=notes)
+    ws5.cell(row=r, column=7, value=srcs)
+    for c in range(1, 8):
+        cell = ws5.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+    ws5.cell(row=r, column=3).alignment = center_align
+    ws5.cell(row=r, column=3).font = Font(name="Calibri", bold=True, size=11, color="006100")
+    ws5.cell(row=r, column=5).alignment = center_align
+    ws5.row_dimensions[r].height = 80
+row_num_5 += len(az_data)
+
+# ── TAIWAN SECTION ────────────────────────────────────────────
+ws5.merge_cells(start_row=row_num_5, start_column=1, end_row=row_num_5, end_column=7)
+ws5.cell(row=row_num_5, column=1, value="TAIWAN (Hsinchu, Tainan, Taichung)")
+ws5.cell(row=row_num_5, column=1).font = section_font
+ws5.cell(row=row_num_5, column=1).fill = section_fill
+ws5.cell(row=row_num_5, column=1).alignment = Alignment(vertical="center")
+ws5.cell(row=row_num_5, column=1).border = thin_border
+for c in range(2, 8):
+    ws5.cell(row=row_num_5, column=c).fill = section_fill
+    ws5.cell(row=row_num_5, column=c).border = thin_border
+ws5.row_dimensions[row_num_5].height = 25
+row_num_5 += 1
+
+tw_data = [
+    (
+        "Fab 18 P1–P3\n(Tainan)",
+        "N4 / N4P (4nm)",
+        "~88%",
+        "~60K WPM\n(part of 120K P1–P6)",
+        "~100%",
+        "Primary 4nm production base. Hot-run premiums 50–100% with lead times 39–52 weeks (Q1 2026). AZ Fab 21 Phase 1 actually exceeds this yield (~92% vs ~88%). Mature node, fully booked.",
+        "diskmfr.com (fab overview); Silicon Analysts Q1 2026 (allocation); FinancialContent Dec 2025",
+    ),
+    (
+        "Fab 18 P4–P6\n(Tainan)",
+        "N3 / N3E / N3P (3nm)",
+        "~75–85% (maturing)",
+        "~60K WPM\n(part of 120K P1–P6;\nramping to 160K total N3)",
+        ">100%",
+        "3nm mass production since 2024. N3E defect density at parity with N5 for same lifecycle point. N3P yields 'close to N3E.' 3nm = 28% of Q4 2025 wafer revenue. Severely constrained: lead times 52–78 weeks.",
+        "Silicon Analysts Q1 2026; WCCFTech (160K WPM target); guru3d (60–80% early); Digitimes Q1 2025",
+    ),
+    (
+        "Fab 18 P7–P8\n(Tainan)",
+        "N3 (3nm expansion)",
+        "~80–85% (est.)",
+        "Expansion underway\n(→ 160K total N3 by late 2025)",
+        "Ramping",
+        "Expanding Fab 18 3nm capacity. Combined P4–P8 targeting 160K WPM for N3 by end of 2025. ~100 NTOs secured by Sep 2025. N3 expected to be 'high-production, long-running' node.",
+        "WCCFTech (N3 golden period); SMM (100 NTOs); diskmfr.com",
+    ),
+    (
+        "Fab 12\n(Hsinchu)",
+        "N7 / N7+ (7nm)",
+        "~90%+ (mature)",
+        "~132–135K WPM\n(all nodes in Fab 12)",
+        "High",
+        "Mature 7nm production. Also produces 10nm, 12nm, 16nm, 20nm. Capacity declining slightly (135K Q1 → 132K Q4 2025) as advanced demand shifts to Fab 18. 7nm = 14% of Q4 2025 wafer revenue.",
+        "globalsemiresearch (fab capacity); diskmfr.com; TSMC Q4 2025 results",
+    ),
+    (
+        "Fab 12\n(Hsinchu)",
+        "N5 / N4 (5nm/4nm)",
+        "~90%+ (mature)",
+        "(included in 132–135K above)",
+        ">100%",
+        "5nm is fully mature with yields better than 7nm (per TSMC). 5nm = 35% of Q4 2025 wafer revenue. 100% utilization in Q1 2025. Driven by NVIDIA Blackwell, Apple, AMD demand.",
+        "AnandTech (N5 yields > N7); Digitimes Q1 2025 (100% util); TSMC Q4 2025",
+    ),
+    (
+        "Fab 15\n(Taichung)",
+        "N16 / N20 (16nm/20nm)",
+        "~95%+ (very mature)",
+        "~166K WPM",
+        "Moderate–High",
+        "Mature 16/20nm production base. Began production 2012. Serves HPC, networking, consumer applications. Stable yields on well-established processes.",
+        "diskmfr.com (fab overview); Wikipedia (TSMC fabs)",
+    ),
+    (
+        "Fab 14\n(Tainan)",
+        "N28+ (28nm and above)",
+        "~95%+ (very mature)",
+        "Not disclosed",
+        "Moderate",
+        "Specialty process production: RF, high voltage, embedded memory/flash. Serves automotive, IoT, industrial. 28nm HV for automotive power management, 40nm RF-SOI for 5G, 55nm embedded flash.",
+        "diskmfr.com (fab overview)",
+    ),
+    (
+        "Fab 20\n(Hsinchu Baoshan)",
+        "N2 (2nm)",
+        "~70–90% (trial→HVM)",
+        "3K–3.5K WPM (2025)\n→ 120K WPM (end 2026)",
+        "Ramping",
+        "2nm R&D and mass production base. Trial production achieved 90% yield (memory products, Q1 2025). Logic yields 70–80% as of Jan 2026. GAA nanosheet technology. HVM entered Jan 2026. Combined with Kaohsiung Fab 22: targeting 50K WPM by end 2025, 120–140K by end 2026.",
+        "TechPowerUp (90% trial yield); topcpu.net; heqingele.com; FinancialContent Jan 2026",
+    ),
+]
+
+for i, (fab, node, yld, cap, util, notes, srcs) in enumerate(tw_data):
+    r = row_num_5 + i
+    ws5.cell(row=r, column=1, value=fab)
+    ws5.cell(row=r, column=2, value=node)
+    ws5.cell(row=r, column=3, value=yld)
+    ws5.cell(row=r, column=4, value=cap)
+    ws5.cell(row=r, column=5, value=util)
+    ws5.cell(row=r, column=6, value=notes)
+    ws5.cell(row=r, column=7, value=srcs)
+    for c in range(1, 8):
+        cell = ws5.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+    ws5.cell(row=r, column=3).alignment = center_align
+    ws5.cell(row=r, column=3).font = Font(name="Calibri", bold=True, size=11, color="006100")
+    ws5.cell(row=r, column=5).alignment = center_align
+    ws5.row_dimensions[r].height = 80
+row_num_5 += len(tw_data)
+
+# ── OTHER OVERSEAS SECTION ────────────────────────────────────
+ws5.merge_cells(start_row=row_num_5, start_column=1, end_row=row_num_5, end_column=7)
+ws5.cell(row=row_num_5, column=1, value="OTHER OVERSEAS FABS (for context)")
+ws5.cell(row=row_num_5, column=1).font = section_font
+ws5.cell(row=row_num_5, column=1).fill = section_fill
+ws5.cell(row=row_num_5, column=1).alignment = Alignment(vertical="center")
+ws5.cell(row=row_num_5, column=1).border = thin_border
+for c in range(2, 8):
+    ws5.cell(row=row_num_5, column=c).fill = section_fill
+    ws5.cell(row=row_num_5, column=c).border = thin_border
+ws5.row_dimensions[row_num_5].height = 25
+row_num_5 += 1
+
+other_data = [
+    (
+        "Fab 16\n(Nanjing, China)",
+        "N16/N12 + N28",
+        "~90%+ (mature)",
+        "~24K WPM (16/12nm)\n+ 50K WPM (28nm P2)",
+        "High",
+        "Most profitable overseas fab (NT$274.5B profit 2025) due to reduced depreciation. Phase 1: 16/12nm. Phase 2: 28nm (accepted Oct 2024, +600K wafers/yr).",
+        "diskmfr.com; BigGo Finance (TSMC 2025 overseas); TrendForce Mar 2026",
+    ),
+    (
+        "JASM Fab 1\n(Kumamoto, Japan)",
+        "N22/N28 + N12/N16",
+        "Ramping",
+        "~55K WPM (target)",
+        "Low (ramping)",
+        "Mass production from end of 2024. Posted NT$97.7B loss in 2025 — adjustment phase, capacity not yet utilized. Serves automotive and mature-process demand.",
+        "diskmfr.com; TrendForce Mar 2026; BigGo Finance",
+    ),
+]
+
+for i, (fab, node, yld, cap, util, notes, srcs) in enumerate(other_data):
+    r = row_num_5 + i
+    ws5.cell(row=r, column=1, value=fab)
+    ws5.cell(row=r, column=2, value=node)
+    ws5.cell(row=r, column=3, value=yld)
+    ws5.cell(row=r, column=4, value=cap)
+    ws5.cell(row=r, column=5, value=util)
+    ws5.cell(row=r, column=6, value=notes)
+    ws5.cell(row=r, column=7, value=srcs)
+    for c in range(1, 8):
+        cell = ws5.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+    ws5.cell(row=r, column=3).alignment = center_align
+    ws5.cell(row=r, column=5).alignment = center_align
+    ws5.row_dimensions[r].height = 80
+row_num_5 += len(other_data)
+
+# ── SUMMARY COMPARISON ────────────────────────────────────────
+row_num_5 += 1
+ws5.merge_cells(start_row=row_num_5, start_column=1, end_row=row_num_5, end_column=7)
+ws5.cell(row=row_num_5, column=1, value="YIELD & CAPACITY COMPARISON SUMMARY")
+ws5.cell(row=row_num_5, column=1).font = section_font
+ws5.cell(row=row_num_5, column=1).fill = highlight_fill
+ws5.cell(row=row_num_5, column=1).alignment = Alignment(vertical="center")
+ws5.cell(row=row_num_5, column=1).border = thin_border
+for c in range(2, 8):
+    ws5.cell(row=row_num_5, column=c).fill = highlight_fill
+    ws5.cell(row=row_num_5, column=c).border = thin_border
+ws5.row_dimensions[row_num_5].height = 25
+row_num_5 += 1
+
+summary_data = [
+    ("N4P Yield: AZ vs TW", "AZ: ~92% | TW (Fab 18): ~88%", "Arizona EXCEEDS Taiwan by ~4 percentage points on the same N4P node — a notable achievement for the first US advanced fab.", "FinancialContent Dec 2025; multiple corroborating sources"),
+    ("N3 Yield (TW only so far)", "TW: ~75–85% (maturing)", "N3E defect density at parity with N5. N3P yields close to N3E. 3nm is entering 'golden period.' AZ Phase 2 N3 not yet in production (H2 2027).", "guru3d; TSMC Comkex (N3P); WCCFTech"),
+    ("N2 Yield (TW only so far)", "TW: 90% (trial) → 70–80% (HVM)", "Impressive trial yield on memory; logic HVM yields 70–80% as of Jan 2026. AZ Phase 3 N2 not until 2029.", "TechPowerUp; topcpu.net; heqingele.com"),
+    ("AZ Capacity vs TW Total", "AZ: ~15–24K WPM | TW: ~1.27M WPM", "Arizona is currently ~1.2–1.9% of total TSMC 12-inch capacity. At full 6-fab buildout, AZ will represent 30% of 2nm+ capacity.", "TechSoda; globalsemiresearch; TSMC official"),
+    ("Capacity by Revenue Node (Q4 2025)", "N3: 28% | N5: 35% | N7: 14%", "Advanced nodes (≤7nm) = 77% of wafer revenue. N3+N5 together = 63% of revenue. N3 capacity severely constrained (52–78 week lead times).", "TSMC Q4 2025 results; Silicon Analysts Q1 2026"),
+    ("Utilization Rate", "N3/N5: >100% | AZ N4P: ~100%", "Both Taiwan and Arizona advanced fabs are at or above full utilization. TSMC overall 2024 utilization >95%. 4 US fabs already fully booked.", "Digitimes Q1 2025; TechSoda; TrendForce Mar 2026"),
+    ("Key Takeaway", "", "Arizona has ACHIEVED yield parity (and in N4P, surpassed Taiwan) on its operational node. The 'copy-exactly' strategy works. Capacity remains a fraction of Taiwan, but is scaling. Backend packaging remains Taiwan-dependent until AP1 comes online (~2030).", ""),
+]
+
+for i, (metric, value, detail, src) in enumerate(summary_data):
+    r = row_num_5 + i
+    ws5.cell(row=r, column=1, value=metric)
+    ws5.cell(row=r, column=1).font = Font(name="Calibri", bold=True, size=11)
+    ws5.merge_cells(start_row=r, start_column=2, end_row=r, end_column=3)
+    ws5.cell(row=r, column=2, value=value)
+    ws5.cell(row=r, column=2).font = Font(name="Calibri", bold=True, size=11, color="1F4E79")
+    ws5.merge_cells(start_row=r, start_column=4, end_row=r, end_column=6)
+    ws5.cell(row=r, column=4, value=detail)
+    ws5.cell(row=r, column=7, value=src)
+    ws5.cell(row=r, column=7).font = source_font
+    for c in range(1, 8):
+        cell = ws5.cell(row=r, column=c)
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+    ws5.row_dimensions[r].height = 55
+
+ws5.freeze_panes = "A5"
+
+# Save
+output_path = "/workspace/TSMC_Phoenix_vs_Taiwan_Fab_Costs.xlsx"
+wb.save(output_path)
+print(f"Spreadsheet saved to {output_path}")
