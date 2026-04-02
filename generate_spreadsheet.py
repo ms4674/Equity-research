@@ -621,6 +621,27 @@ sources = [
     ("62", "MacroTrends – TSMC Gross Margin History", "https://www.macrotrends.net/stocks/charts/TSM/taiwan-semiconductor-manufacturing/gross-margin", "2025"),
     ("63", "ainvest.com – TSMC AZ Bet Valuation Analysis", "https://www.ainvest.com/news/tsmc-arizona-bet-catalyst-valuation-costly-distraction-2601/", "2026"),
     ("64", "Wafer World – Guide to Wafer Shipping", "https://www.waferworld.com/post/guide-to-wafer-shipping", "2024"),
+    ("65", "TrendForce – TSMC AZ Fab 2 3nm H2 2027", "https://www.trendforce.com/news/2026/03/24/news-tsmc-reportedly-eyes-2h27-3nm-mass-production-at-arizona-fab-2-four-u-s-fabs-said-to-be-fully-booked/", "Mar 2026"),
+    ("66", "theGPUTrade – TSMC Moves AZ Fab-2 to H2 2027", "https://thegputrade.com/news/tsmc-moves-arizona-fab2-production-up-to-h2-2027-zz6u58ee", "2026"),
+    ("67", "TechOvedas – TSMC Accelerates AZ to 2027", "https://techovedas.com/tsmc-accelerates-arizona-fab-to-2027-2nm-a16-chips-and-the-future-of-u-s-semiconductor-strategy/", "2025"),
+    ("68", "Tom's Hardware – TSMC AZ Fab 21 4nm Production", "https://aztechcouncil.org/tsmc-arizona-fab21-already-making-4nm-chips", "Jan 2025"),
+    ("69", "Tom's Hardware – TSMC Speeds Up 2nm AZ Plans", "https://www.tomshardware.com/tech-industry/tsmc-moves-up-2nm-production-plans-in-arizona-ceo-also-hints-at-further-site-expansion-beyond-usd165-billion-commitment", "Jul 2025"),
+    ("70", "TechPowerUp – TSMC CoPoS/SoIC for AZ Fab", "https://www.techpowerup.com/338847/tsmc-plans-copos-and-soic-advanced-packaging-for-arizona-fab", "Jul 2025"),
+    ("71", "FinancialContent – TSMC AZ 92% Yield", "https://markets.financialcontent.com/wedbush/article/tokenring-2025-12-24-silicon-sovereignty-tsmc-arizona-hits-92-yield-as-3nm-equipment-arrives-for-2027-powerhouse", "Dec 2025"),
+    ("72", "Barchart – TSMC Fab 4 Fully Booked", "https://www.barchart.com/story/news/927456/taiwan-semiconductor-s-new-fab-4-is-fully-booked-before-construction-even-begins", "2026"),
+    ("73", "Benzinga – TSMC Supply Squeeze Through 2028", "https://www.benzinga.com/markets/tech/26/03/51558739/tsmc-supply-squeeze-2028-chipmaker-opportunity-ai-demand-nvidia-apple", "Mar 2026"),
+    ("74", "Silicon Analysts – Foundry Allocation Q1 2026", "https://siliconanalysts.com/analysis/foundry-allocation-status-q1-2026", "Q1 2026"),
+    ("75", "AZ Central – Apple 100M TSMC AZ Chips 2026", "https://azcentral.com/story/money/business/tech/2026/02/27/apple-to-buy-100-million-tsmc-arizona-chips-in-2026/88888519007/", "Feb 2026"),
+    ("76", "AZ Central – TSMC Hiring Thousands for $165B", "https://www.azcentral.com/story/money/business/tech/2025/03/13/tsmc-will-need-to-fill-thousands-of-jobs/81760910007/", "Mar 2025"),
+    ("77", "Axios Phoenix – TSMC Workforce Growth", "https://www.axios.com/local/phoenix/2025/05/06/tsmc-arizona-hiring-workforce-growth", "May 2025"),
+    ("78", "PCMag – TSMC 3 New Fabs $100B Investment", "https://uk.pcmag.com/processors/156935/tsmc-to-build-3-new-us-fabs-with-100-billion-investment", "Mar 2025"),
+    ("79", "InBusinessPHX – TSMC Additional Fabs/AP/R&D", "https://inbusinessphx.com/semi-insights/tsmc-to-build-additional-three-fabs-two-advanced-packaging-facilities-and-rd-center-in-arizona", "2025"),
+    ("80", "CNBC – TSMC AZ Expansion Not Done (CFO)", "https://www.cnbc.com/2026/01/16/tsmcs-arizona-chip-expansion-isnt-done-after-us-investment-cfo.html", "Jan 2026"),
+    ("81", "Wedbush – TSMC AZ Gigafab Cluster $165B", "https://investor.wedbush.com/wedbush/article/tokenring-2026-1-23-tsmcs-arizona-gigafab-cluster-scales-up-with-165-billion-total-investment", "Jan 2026"),
+    ("82", "Yahoo Finance – TSMC $100B Additional AZ Investment", "https://finance.yahoo.com/news/tsmc-considers-additional-100-billion-153658229.html", "2025"),
+    ("83", "TrendForce – TSMC 2nm US, 1nm Tainan", "https://www.trendforce.com/news/2025/02/03/news-tsmc-said-to-plan-2nm-production-in-u-s-1nm-fab-in-tainan/", "Feb 2025"),
+    ("84", "IndustrialInfo – TSMC 2026 CapEx $52-56B", "https://www.industrialinfo.com/news/article/chipmaker-tsmc-projects-2026-capex-will-reach-52-billion-56-billion--352061", "2026"),
+    ("85", "FinancialContent – TSMC AZ CoWoS Plant", "https://www.financialcontent.com/article/tokenring-2026-1-15-arizona-silicon-fortress-tsmc-accelerates-3nm-expansion-and-plans-us-based-cowos-plant", "Jan 2026"),
 ]
 
 for i, (num, name, url, date) in enumerate(sources):
@@ -685,6 +706,303 @@ for i, finding in enumerate(findings):
     if i % 2 == 0:
         ws3.cell(row=r, column=1).fill = alt_fill
         ws3.cell(row=r, column=2).fill = alt_fill
+
+# ═══════════════════════════════════════════════════════════════════════
+# Sheet 4: Arizona Expansion Phases
+# ═══════════════════════════════════════════════════════════════════════
+ws4 = wb.create_sheet("AZ Expansion Phases")
+ws4.sheet_properties.tabColor = "BF8F00"
+
+col_widths_4 = {"A": 18, "B": 16, "C": 14, "D": 18, "E": 20, "F": 18, "G": 50, "H": 50}
+for col, w in col_widths_4.items():
+    ws4.column_dimensions[col].width = w
+
+ws4.merge_cells("A1:H1")
+ws4["A1"].value = "TSMC Arizona Fab Expansion: Phase-by-Phase Status (as of Mar 2026)"
+ws4["A1"].font = title_font
+ws4["A1"].alignment = Alignment(horizontal="center", vertical="center")
+ws4.row_dimensions[1].height = 35
+
+ws4.merge_cells("A2:H2")
+ws4["A2"].value = (
+    "Total committed investment: $165B (potentially $265B incl. additional $100B announced Mar 2025). "
+    "Complex: 6 fabs + 2 advanced packaging facilities + 1 R&D center on ~2,000 acres in North Phoenix."
+)
+ws4["A2"].font = note_font
+ws4["A2"].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+ws4.row_dimensions[2].height = 35
+
+phase_headers = [
+    "Facility",
+    "Process Node",
+    "Status",
+    "Announced",
+    "Production Start",
+    "Capacity (WPM)",
+    "Key Details",
+    "Sources",
+]
+for col_idx, h in enumerate(phase_headers, 1):
+    cell = ws4.cell(row=4, column=col_idx, value=h)
+    cell.font = header_font
+    cell.fill = header_fill
+    cell.alignment = header_align
+    cell.border = thin_border
+ws4.row_dimensions[4].height = 30
+
+# Status colors
+status_green = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
+status_yellow = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
+status_orange = PatternFill(start_color="FCD5B4", end_color="FCD5B4", fill_type="solid")
+status_blue = PatternFill(start_color="D6E4F0", end_color="D6E4F0", fill_type="solid")
+
+phase_data = [
+    # (Facility, Node, Status, Announced, Prod Start, Capacity, Details, Sources, status_fill)
+    (
+        "Fab 21 Phase 1",
+        "N4P / N5 (4nm-class)",
+        "OPERATIONAL",
+        "May 2020",
+        "Q4 2024 (HVM early 2025)",
+        "10K→30K WPM (ramping)",
+        "First operational US advanced fab. 92% yield on N4P (exceeds Taiwan's 88%). "
+        "Producing: Apple A16 Bionic, Apple S9, AMD Ryzen 9000, NVIDIA Blackwell GPUs (Oct 2025). "
+        "Apple committed 100M+ chips in 2026. First profitable year: 2025 (NT$161.4B / $5.15B profit). "
+        "Chips currently fly to Taiwan for backend, but Amkor Peoria AZ handles some Apple packaging.",
+        "Wikipedia (TSMC AZ); Tom's Hardware Jan 2025; AZ Central Feb 2026; TrendForce Feb 2025",
+        status_green,
+    ),
+    (
+        "Fab 21 Phase 2",
+        "N3 (3nm-class)",
+        "CONSTRUCTION COMPLETE\nTool install 2026",
+        "Dec 2022",
+        "H2 2027 (accelerated from 2028)",
+        "~20K WPM (est.)",
+        "Building construction completed 2025. Equipment move-in planned 2026; tool installation Q3 2026. "
+        "Timeline accelerated by ~6 months — compressed from 6 quarters to 4–5 quarters. "
+        "TSMC sending more personnel to AZ to speed cleanroom prep and MEP engineering. "
+        "Capacity already booked by major customers.",
+        "TrendForce Mar 2026; Digitimes Dec 2025; theGPUTrade; Wikipedia (TSMC AZ)",
+        status_yellow,
+    ),
+    (
+        "Fab 21 Phase 3",
+        "N2 / A16 (2nm / 1.6nm)",
+        "UNDER CONSTRUCTION",
+        "Apr 2024",
+        "2029 (originally; some reports say 2027 accelerated)",
+        "TBD",
+        "Broke ground April 2025. Will use nanosheet transistor architecture (GAA). "
+        "A16 (1.6nm) includes backside power delivery — TSMC's most advanced process. "
+        "Conflicting timelines: Wikipedia says 2029; TechOvedas reported acceleration to 2027. "
+        "Part of the original $65B commitment (3 fabs).",
+        "Wikipedia (TSMC AZ); TechOvedas; Tom's Hardware Jul 2025; NIST",
+        status_orange,
+    ),
+    (
+        "Fab 21 Phase 4",
+        "TBD (likely N2/A16+)",
+        "PLANNED",
+        "Mar 2025",
+        "~2030 (est.)",
+        "TBD",
+        "Part of the additional $100B commitment (3 more fabs) announced Mar 2025 at White House with TSMC CEO C.C. Wei. "
+        "Fully booked by customers before construction begins (Apple, NVIDIA, AMD, Broadcom, Qualcomm). "
+        "Permits filed; scheduling is demand-driven.",
+        "Barchart (Fab 4 fully booked); PCMag Mar 2025; Wikipedia (TSMC AZ)",
+        status_blue,
+    ),
+    (
+        "Fab 21 Phase 5",
+        "TBD",
+        "PLANNED",
+        "Mar 2025",
+        "TBD",
+        "TBD",
+        "Part of the 6-fab gigafab cluster. Limited public details. "
+        "CEO C.C. Wei: at completion, AZ gigafab will represent 30% of TSMC's 2nm-and-beyond capacity. "
+        "CFO indicated expansion isn't done even after $165B commitment.",
+        "CNBC Jan 2026; AZ Central Jul 2025; Wikipedia (TSMC AZ)",
+        status_blue,
+    ),
+    (
+        "Fab 21 Phase 6",
+        "TBD",
+        "PLANNED",
+        "Mar 2025",
+        "TBD",
+        "TBD",
+        "Final fab in the 6-fab gigafab cluster. Very early planning stages. "
+        "Process node and timeline to be determined by market demand and technology roadmap. "
+        "TSMC acquired ~900 additional acres adjacent to original 1,100-acre site for total ~2,000-acre complex.",
+        "Wikipedia (TSMC AZ); Wedbush Investor Jan 2026; BlackRidge Research",
+        status_blue,
+    ),
+]
+
+# Section header: Fabrication Plants
+ws4.merge_cells(start_row=5, start_column=1, end_row=5, end_column=8)
+ws4.cell(row=5, column=1, value="FABRICATION PLANTS (6 FABS)")
+ws4.cell(row=5, column=1).font = section_font
+ws4.cell(row=5, column=1).fill = section_fill
+ws4.cell(row=5, column=1).alignment = Alignment(vertical="center")
+ws4.cell(row=5, column=1).border = thin_border
+for c in range(2, 9):
+    ws4.cell(row=5, column=c).fill = section_fill
+    ws4.cell(row=5, column=c).border = thin_border
+ws4.row_dimensions[5].height = 25
+
+for i, (facility, node, status, announced, prod_start, capacity, details, srcs, sfill) in enumerate(phase_data):
+    r = i + 6
+    ws4.cell(row=r, column=1, value=facility)
+    ws4.cell(row=r, column=2, value=node)
+    ws4.cell(row=r, column=3, value=status)
+    ws4.cell(row=r, column=4, value=announced)
+    ws4.cell(row=r, column=5, value=prod_start)
+    ws4.cell(row=r, column=6, value=capacity)
+    ws4.cell(row=r, column=7, value=details)
+    ws4.cell(row=r, column=8, value=srcs)
+
+    for c in range(1, 9):
+        cell = ws4.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+
+    ws4.cell(row=r, column=1).font = Font(name="Calibri", bold=True, size=11)
+    ws4.cell(row=r, column=3).fill = sfill
+    ws4.cell(row=r, column=3).alignment = center_align
+    ws4.cell(row=r, column=3).font = Font(name="Calibri", bold=True, size=10)
+    ws4.row_dimensions[r].height = 90
+
+# Supporting Facilities section
+supp_start = 6 + len(phase_data)
+ws4.merge_cells(start_row=supp_start, start_column=1, end_row=supp_start, end_column=8)
+ws4.cell(row=supp_start, column=1, value="SUPPORTING FACILITIES")
+ws4.cell(row=supp_start, column=1).font = section_font
+ws4.cell(row=supp_start, column=1).fill = section_fill
+ws4.cell(row=supp_start, column=1).alignment = Alignment(vertical="center")
+ws4.cell(row=supp_start, column=1).border = thin_border
+for c in range(2, 9):
+    ws4.cell(row=supp_start, column=c).fill = section_fill
+    ws4.cell(row=supp_start, column=c).border = thin_border
+ws4.row_dimensions[supp_start].height = 25
+
+supp_data = [
+    (
+        "Adv. Packaging 1 (AP1)",
+        "CoWoS / CoPoS / SoIC",
+        "PLANNED",
+        "2025",
+        "Late 2029 / Early 2030",
+        "N/A",
+        "First US-based advanced packaging. Groundbreaking slated 2028. CoPoS pilot line as early as 2026; partner validation late 2027. "
+        "Partnership with Amkor Technology (Peoria, AZ) for final assembly. "
+        "Critical for eliminating the current need to fly wafers back to Taiwan for packaging.",
+        "TechPowerUp (CoPoS/SoIC plans); FinancialContent Jan 2026; Amkor press release Oct 2024",
+        status_orange,
+    ),
+    (
+        "Adv. Packaging 2 (AP2)",
+        "TBD",
+        "PLANNED",
+        "2025",
+        "TBD",
+        "N/A",
+        "Second advanced packaging facility. Very early planning. Part of the gigafab cluster announcement. "
+        "Will help TSMC localize more of the backend supply chain in the US.",
+        "Wikipedia (TSMC AZ); InBusinessPHX; NIST",
+        status_blue,
+    ),
+    (
+        "R&D Center",
+        "N/A",
+        "PLANNED",
+        "2025",
+        "TBD",
+        "N/A",
+        "Research and development center as part of the gigafab cluster. "
+        "Will support process development and yield optimization for US-based manufacturing. "
+        "Part of broader strategy to build self-sufficient semiconductor ecosystem in Arizona.",
+        "Wikipedia (TSMC AZ); PCMag Mar 2025; NIST",
+        status_blue,
+    ),
+]
+
+for i, (facility, node, status, announced, prod_start, capacity, details, srcs, sfill) in enumerate(supp_data):
+    r = supp_start + 1 + i
+    ws4.cell(row=r, column=1, value=facility)
+    ws4.cell(row=r, column=2, value=node)
+    ws4.cell(row=r, column=3, value=status)
+    ws4.cell(row=r, column=4, value=announced)
+    ws4.cell(row=r, column=5, value=prod_start)
+    ws4.cell(row=r, column=6, value=capacity)
+    ws4.cell(row=r, column=7, value=details)
+    ws4.cell(row=r, column=8, value=srcs)
+
+    for c in range(1, 9):
+        cell = ws4.cell(row=r, column=c)
+        cell.font = normal_font
+        cell.alignment = wrap_align
+        cell.border = thin_border
+
+    ws4.cell(row=r, column=1).font = Font(name="Calibri", bold=True, size=11)
+    ws4.cell(row=r, column=3).fill = sfill
+    ws4.cell(row=r, column=3).alignment = center_align
+    ws4.cell(row=r, column=3).font = Font(name="Calibri", bold=True, size=10)
+    ws4.row_dimensions[r].height = 90
+
+# Key Metrics section
+metrics_start = supp_start + 1 + len(supp_data) + 1
+ws4.merge_cells(start_row=metrics_start, start_column=1, end_row=metrics_start, end_column=8)
+ws4.cell(row=metrics_start, column=1, value="KEY METRICS & MILESTONES")
+ws4.cell(row=metrics_start, column=1).font = section_font
+ws4.cell(row=metrics_start, column=1).fill = section_fill
+ws4.cell(row=metrics_start, column=1).alignment = Alignment(vertical="center")
+ws4.cell(row=metrics_start, column=1).border = thin_border
+for c in range(2, 9):
+    ws4.cell(row=metrics_start, column=c).fill = section_fill
+    ws4.cell(row=metrics_start, column=c).border = thin_border
+ws4.row_dimensions[metrics_start].height = 25
+
+metrics = [
+    ("Total Investment", "$165B pledged (potentially $265B with additional $100B)", "PCMag Mar 2025; Yahoo Finance"),
+    ("Federal Subsidies", "$6.6B direct CHIPS Act grants + $5B loans", "Reuters Nov 2024; NIST"),
+    ("Total Site Area", "~2,000 acres (original 1,100 + 900 additional acres acquired)", "Wedbush Investor Jan 2026; Wikipedia"),
+    ("Direct Manufacturing Jobs", "~6,000 (at full buildout)", "NIST; AZ Central Mar 2025"),
+    ("Current Employees (2024)", "~3,000 (growing to ~6,000 within a few years)", "AZ Central Mar 2025; Axios Phoenix May 2025"),
+    ("Construction Jobs", "~20,000+ over project lifetime", "NIST; AZ Commerce Authority"),
+    ("Key Customers (Booked)", "Apple (100M+ chips 2026), NVIDIA (largest TSMC customer), AMD, Qualcomm, Broadcom", "AZ Central Feb 2026; Barchart; Silicon Analysts Q1 2026"),
+    ("AZ Share of Advanced Capacity", "30% of 2nm-and-beyond capacity at full buildout", "AZ Central Jul 2025; Wikipedia"),
+    ("Yield Achievement", "92% N4P yield (exceeds Taiwan's 88% for same node)", "FinancialContent Dec 2025; SemiWiki"),
+    ("Build Time Compression", "Reduced from ~3 years (Fab 1) to ~1.5–2 years (subsequent fabs)", "TrendForce Mar 2026"),
+    ("2026 CapEx (Company-wide)", "$52–56B (+40% vs 2025); significant Arizona allocation", "IndustrialInfo; Tom's Hardware May 2025"),
+    ("Halo Vista Development", "3,500-acre mixed-use development adjacent to TSMC site (Sonoran Oasis Research & Tech Park)", "AZ Central Oct 2024; AZ Central Mar 2026"),
+    ("Key Supplier Partnerships", "Amkor (packaging, Peoria AZ); Linde (N₂, O₂, Ar); Air Liquide (H₂, He, CO₂)", "Amkor Oct 2024; Linde Sep 2021; Air Liquide Jan 2022"),
+]
+
+for i, (metric, value, src) in enumerate(metrics):
+    r = metrics_start + 1 + i
+    ws4.merge_cells(start_row=r, start_column=2, end_row=r, end_column=6)
+    ws4.cell(row=r, column=1, value=metric)
+    ws4.cell(row=r, column=1).font = Font(name="Calibri", bold=True, size=11)
+    ws4.cell(row=r, column=2, value=value)
+    ws4.cell(row=r, column=2).font = normal_font
+    ws4.merge_cells(start_row=r, start_column=7, end_row=r, end_column=8)
+    ws4.cell(row=r, column=7, value=src)
+    ws4.cell(row=r, column=7).font = source_font
+
+    for c in range(1, 9):
+        cell = ws4.cell(row=r, column=c)
+        cell.alignment = wrap_align
+        cell.border = thin_border
+        if i % 2 == 0:
+            cell.fill = alt_fill
+
+    ws4.row_dimensions[r].height = 30
+
+ws4.freeze_panes = "A5"
 
 # Save
 output_path = "/workspace/TSMC_Phoenix_vs_Taiwan_Fab_Costs.xlsx"

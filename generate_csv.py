@@ -417,9 +417,102 @@ rows = [
 with open(output_path, "w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
     writer.writerow(["TSMC Fab Operational Costs: Phoenix AZ vs. Taipei/Hsinchu Taiwan"])
-    writer.writerow(["Data compiled from public sources (2024-2025). All USD conversions at ~NT$32.5 = US$1."])
+    writer.writerow(["Data compiled from public sources (2024-2026). All USD conversions at ~NT$32.5 = US$1."])
     writer.writerow([])
     writer.writerow(headers)
     writer.writerows(rows)
 
 print(f"CSV saved to {output_path}")
+
+# ── Second CSV: Expansion Phases ──
+phases_path = "/workspace/TSMC_Arizona_Expansion_Phases.csv"
+phase_headers = [
+    "Facility", "Process Node", "Status", "Announced",
+    "Production Start", "Capacity (WPM)", "Key Details", "Sources",
+]
+phase_rows = [
+    ["═══ FABRICATION PLANTS (6 FABS) ═══", "", "", "", "", "", "", ""],
+    [
+        "Fab 21 Phase 1", "N4P / N5 (4nm)", "OPERATIONAL", "May 2020",
+        "Q4 2024 (HVM early 2025)", "10K->30K WPM (ramping)",
+        "92% N4P yield (exceeds TW 88%). Producing Apple A16, S9, AMD Ryzen 9000, NVIDIA Blackwell. "
+        "Apple 100M+ chips 2026. First profitable year 2025 ($5.15B). Amkor Peoria for some Apple packaging.",
+        "Wikipedia; Tom's HW Jan 2025; AZ Central Feb 2026; TrendForce Feb 2025",
+    ],
+    [
+        "Fab 21 Phase 2", "N3 (3nm)", "CONSTRUCTION COMPLETE / Tool install 2026", "Dec 2022",
+        "H2 2027 (accelerated from 2028)", "~20K WPM (est.)",
+        "Building done 2025. Equip move-in 2026, tool install Q3 2026. Timeline compressed from 6 to 4-5 quarters. "
+        "Capacity already booked.",
+        "TrendForce Mar 2026; Digitimes Dec 2025; theGPUTrade",
+    ],
+    [
+        "Fab 21 Phase 3", "N2 / A16 (2nm / 1.6nm)", "UNDER CONSTRUCTION", "Apr 2024",
+        "2029 (some reports: 2027 accelerated)", "TBD",
+        "Broke ground Apr 2025. Nanosheet (GAA) transistors. A16 incl backside power delivery. "
+        "Part of original $65B (3 fabs).",
+        "Wikipedia; TechOvedas; Tom's HW Jul 2025; NIST",
+    ],
+    [
+        "Fab 21 Phase 4", "TBD (likely N2/A16+)", "PLANNED", "Mar 2025",
+        "~2030 (est.)", "TBD",
+        "Part of additional $100B (3 more fabs). Fully booked before construction begins "
+        "(Apple, NVIDIA, AMD, Broadcom, Qualcomm). Permits filed.",
+        "Barchart; PCMag Mar 2025; Wikipedia",
+    ],
+    [
+        "Fab 21 Phase 5", "TBD", "PLANNED", "Mar 2025", "TBD", "TBD",
+        "Part of 6-fab gigafab. AZ will represent 30% of 2nm+ capacity at full buildout. "
+        "CFO: expansion not done after $165B.",
+        "CNBC Jan 2026; AZ Central Jul 2025; Wikipedia",
+    ],
+    [
+        "Fab 21 Phase 6", "TBD", "PLANNED", "Mar 2025", "TBD", "TBD",
+        "Final fab. ~900 additional acres acquired for total ~2,000-acre complex.",
+        "Wikipedia; Wedbush Jan 2026; BlackRidge",
+    ],
+    ["", "", "", "", "", "", "", ""],
+    ["═══ SUPPORTING FACILITIES ═══", "", "", "", "", "", "", ""],
+    [
+        "Adv. Packaging 1 (AP1)", "CoWoS / CoPoS / SoIC", "PLANNED", "2025",
+        "Late 2029 / Early 2030", "N/A",
+        "First US advanced packaging. Groundbreaking 2028. CoPoS pilot line 2026. "
+        "Partnership with Amkor (Peoria AZ). Eliminates need to fly wafers back to TW.",
+        "TechPowerUp Jul 2025; FinancialContent Jan 2026; Amkor Oct 2024",
+    ],
+    [
+        "Adv. Packaging 2 (AP2)", "TBD", "PLANNED", "2025", "TBD", "N/A",
+        "Second packaging facility. Early planning. Part of gigafab cluster.",
+        "Wikipedia; InBusinessPHX; NIST",
+    ],
+    [
+        "R&D Center", "N/A", "PLANNED", "2025", "TBD", "N/A",
+        "Process development and yield optimization for US manufacturing.",
+        "Wikipedia; PCMag Mar 2025; NIST",
+    ],
+    ["", "", "", "", "", "", "", ""],
+    ["═══ KEY METRICS ═══", "", "", "", "", "", "", ""],
+    ["Total Investment", "$165B (potentially $265B)", "", "", "", "", "", ""],
+    ["Federal Subsidies", "$6.6B direct + $5B loans", "", "", "", "", "", ""],
+    ["Site Area", "~2,000 acres", "", "", "", "", "", ""],
+    ["Direct Mfg Jobs (full buildout)", "~6,000", "", "", "", "", "", ""],
+    ["Current Employees (2024)", "~3,000", "", "", "", "", "", ""],
+    ["Construction Jobs", "~20,000+", "", "", "", "", "", ""],
+    ["Key Customers", "Apple (100M+ chips 2026), NVIDIA, AMD, Qualcomm, Broadcom", "", "", "", "", "", ""],
+    ["AZ Share of Adv. Capacity", "30% of 2nm+ at full buildout", "", "", "", "", "", ""],
+    ["N4P Yield Achievement", "92% (exceeds Taiwan's 88%)", "", "", "", "", "", ""],
+    ["Build Time Compression", "~3 years (Fab 1) -> ~1.5-2 years (subsequent)", "", "", "", "", "", ""],
+    ["2026 CapEx (Company-wide)", "$52-56B (+40% vs 2025)", "", "", "", "", "", ""],
+    ["Halo Vista Development", "3,500-acre mixed-use adjacent to TSMC site", "", "", "", "", "", ""],
+    ["Key Suppliers (On-site)", "Amkor (packaging); Linde (N2/O2/Ar); Air Liquide (H2/He/CO2)", "", "", "", "", "", ""],
+]
+
+with open(phases_path, "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(["TSMC Arizona Fab Expansion: Phase-by-Phase Status (as of Mar 2026)"])
+    writer.writerow(["Total: $165B committed. 6 fabs + 2 advanced packaging + 1 R&D center on ~2,000 acres."])
+    writer.writerow([])
+    writer.writerow(phase_headers)
+    writer.writerows(phase_rows)
+
+print(f"Phases CSV saved to {phases_path}")
