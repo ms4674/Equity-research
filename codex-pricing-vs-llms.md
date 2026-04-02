@@ -11,9 +11,10 @@
 3. [API Token Pricing Comparison](#api-token-pricing-comparison)
 4. [Subscription & Seat-Based Plans](#subscription--seat-based-plans)
 5. [Coding Agent Products](#coding-agent-products)
-6. [Benchmark Performance](#benchmark-performance)
-7. [Cost-Efficiency Analysis](#cost-efficiency-analysis)
-8. [Key Takeaways](#key-takeaways)
+6. [GitHub Commit Activity & Market Adoption](#github-commit-activity--market-adoption)
+7. [Benchmark Performance](#benchmark-performance)
+8. [Cost-Efficiency Analysis](#cost-efficiency-analysis)
+9. [Key Takeaways](#key-takeaways)
 
 ---
 
@@ -25,6 +26,8 @@ OpenAI Codex has evolved from a standalone code-completion model into a full-fle
 - On a per-token basis, Codex models (GPT-5.x-Codex) are **price-competitive with Gemini** and **significantly cheaper than Claude Opus** for output-heavy coding workloads.
 - At the subscription level, ChatGPT Pro ($200/mo) competes directly with Claude Max ($100-200/mo) and Cursor Ultra ($200/mo) for power-user unlimited access.
 - Benchmark performance across SWE-Bench Verified has converged (~80% for all frontier models), making **cost, context window, and tooling integration** the primary differentiators.
+- **Claude Code dominates public GitHub commit share** at 5.78% (~20.8M cumulative commits), dwarfing Codex, Cursor, and Copilot in detected autonomous commits — though this gap is inflated by attribution methodology.
+- **Google Antigravity is the newest entrant** (Nov 2025, free preview), powered by Gemini 3 Pro with a 1-2M context window, but has minimal detectable GitHub commit footprint so far.
 
 ---
 
@@ -191,6 +194,123 @@ At the **power-user tier** ($100-200/mo), ChatGPT Pro, Claude Max, and Cursor Ul
 
 ---
 
+## GitHub Commit Activity & Market Adoption
+
+A critical measure of real-world traction — distinct from benchmarks — is how much code each agent actually ships. Public GitHub commit tracking provides the most transparent (if imperfect) signal of adoption.
+
+### Detected Public GitHub Commit Share (March 2026)
+
+Sources: [Powerset GitHub Coding Agent Tracker](https://github.com/powerset-co/github-coding-agent-tracker), [claudescode.dev](https://www.claudescode.dev), [botcommits.dev](https://botcommits.dev), CoreMention.
+
+| Agent | Share of Public Commits (10-day avg) | Estimated Daily Commits | Total Commits (cumulative) |
+|---|---|---|---|
+| **Claude Code** | **5.78%** (~9.7% by late March) | 326,000-377,000 | **~20.8 million** (since Feb 2025 launch) |
+| **GitHub Copilot** | 0.24% | ~13,500* | Not disclosed |
+| **OpenAI Codex** | <0.24%** | Low (tracked via `chatgpt-codex-connector[bot]`) | Not disclosed |
+| **Cursor** | <0.24%** | Low (tracked via `cursoragent@cursor.com`) | Not disclosed |
+| **Google Jules** | 0.05% | ~2,800* | Not disclosed |
+| **Google Antigravity** | Not detected*** | Unknown | Not tracked |
+
+*Estimated from share × ~5.6M daily public GitHub commits. **Specific percentages not broken out in public tracker data but listed below Claude Code and Copilot. ***Antigravity does not appear to leave detectable commit signatures in public tracking data.
+
+```
+Share of Public GitHub Commits (March 2026)
+═══════════════════════════════════════════════════════
+
+Claude Code       ██████████████████████████████████████████████████████████  5.78%
+GitHub Copilot    ██                                                          0.24%
+Google Jules      ▌                                                           0.05%
+Codex             ▏                                                          <0.24%
+Cursor            ▏                                                          <0.24%
+Antigravity       (not detected)                                              —
+```
+
+### Claude Code: The Dominant Commit Generator
+
+Claude Code's commit footprint is an order of magnitude larger than any competitor:
+
+| Metric | Value |
+|---|---|
+| Total commits since launch (Feb 2025) | 20,807,124 |
+| Active repositories | 1,087,408 |
+| Lines of code added | 50.4 billion |
+| Lines of code deleted | 19.8 billion |
+| New repos per week (first Claude Code commit) | ~114,785 |
+| Week-over-week growth | +8% |
+| Doubling time | 61 days |
+| Peak daily commits (late March 2026) | 377,162 |
+
+**Top languages by Claude Code commits:**
+
+| Language | Share | Total Commits |
+|---|---|---|
+| TypeScript | 34.8% | 7.25M |
+| Python | 18.9% | 3.92M |
+| JavaScript | 10.2% | 2.13M |
+
+**Quality caveat:** ~90% of Claude Code commits land in repositories with fewer than 2 GitHub stars, indicating heavy personal/experimental use rather than high-impact production code.
+
+### Why the Disparity Is Misleading
+
+The massive gap between Claude Code and other agents in public commit data reflects **detection methodology**, not necessarily true market share:
+
+| Factor | Impact |
+|---|---|
+| **Commit signature attribution** | Claude Code leaves a `Co-authored-by: Claude` trailer by default; Copilot, Cursor, and Antigravity often leave no detectable signature |
+| **Inline completions vs. agent commits** | Copilot and Cursor primarily operate via inline completions that blend into human commits — invisible to trackers |
+| **Public vs. private repos** | Only ~18.5% of GitHub activity is public; enterprise-heavy tools (Copilot, Codex) skew toward private repos |
+| **Agent mode maturity** | Codex's autonomous agent mode launched later than Claude Code; Antigravity launched Nov 2025 |
+
+**Bottom line:** Claude Code genuinely leads in autonomous commit generation, but the 5.78% vs. <0.24% gap overstates the true difference in code influence because Copilot, Cursor, and Codex generate enormous volumes of code that is committed under human authorship.
+
+### Google Antigravity: Early but Growing
+
+Google Antigravity (launched November 2025) is the newest entrant. Key adoption signals:
+
+| Metric | Value |
+|---|---|
+| Pricing | Free (public preview) |
+| Powered by | Gemini 3 Pro (1-2M context window) |
+| GitHub ecosystem | 73+ public repos, 28,000+ stars across projects |
+| Attention growth | +244.4% (from near-zero baseline) |
+| SWE-Bench Verified | 76.2% |
+| Task completion (first attempt) | 72% |
+| Built on | Google's $2.4B Windsurf acquisition |
+
+Antigravity does not appear in public commit trackers, likely because: (1) it operates primarily as a browser-based cloud IDE, (2) commits may not carry detectable agent signatures, and (3) the product is still in early public preview with rate-limited access.
+
+### Projection: AI-Authored Commits by End of 2026
+
+SemiAnalysis analyst Dylan Patel projects Claude Code alone will exceed **20% of all daily GitHub commits by end of 2026**, driven by 8% week-over-week growth.
+
+Combined with Copilot, Cursor, Codex, and Antigravity, **total AI-assisted code is estimated to already represent 42% of new code on GitHub** as of early 2026, though only a fraction carries detectable attribution.
+
+### Developer Satisfaction Rankings
+
+Complementing commit volume, developer satisfaction surveys show:
+
+| Agent | Developer Satisfaction |
+|---|---|
+| Claude Code | 46% |
+| Cursor | 19% |
+| GitHub Copilot | 9% |
+
+### PR Merge Rates (Quality Signal)
+
+Pull request acceptance rates across agents (from PR Arena):
+
+| Agent | PR Merge Rate |
+|---|---|
+| Cursor Agents | 96.1% |
+| GitHub Copilot | 95.6% |
+| Google Jules | 93.6% |
+| OpenAI Codex | 87.0% |
+| Devin | 61.2% |
+
+Cursor and Copilot lead in PR merge rates, suggesting higher-quality code output in agentic PR workflows, though Codex's lower rate may reflect more ambitious autonomous tasks.
+
+---
+
 ## Benchmark Performance
 
 ### SWE-Bench Verified (Real-World Bug Fixing)
@@ -291,6 +411,15 @@ The March 2026 plugin system gives Codex the broadest integration surface across
 ### 6. Budget-Tier Models Are Disruptively Cheap
 GPT-5.1-Codex-Mini ($0.25/$2.00) and Gemini 2.5 Flash ($0.15/$0.60) enable coding assistance at 10-20x lower cost than flagship models, making AI-assisted coding economically viable for high-volume, lower-stakes tasks like boilerplate generation, test writing, and documentation.
 
+### 7. Claude Code Leads Autonomous Commit Volume by an Order of Magnitude
+With 20.8M cumulative commits and 5.78% of public GitHub activity, Claude Code generates more detected autonomous commits than Codex, Cursor, Copilot, and Antigravity combined. However, this reflects Claude Code's default commit attribution (`Co-authored-by: Claude`) more than a true 20:1 usage gap — Copilot and Cursor generate substantial code that is committed under human authorship without agent signatures.
+
+### 8. Google Antigravity Is a Wild Card
+Free, powered by Gemini 3 Pro with a 1-2M context window, and backed by Google's $2.4B Windsurf acquisition, Antigravity has compelling positioning but minimal market traction so far. Its browser-based cloud IDE approach and lack of commit attribution make it invisible in public tracking data. The +244.4% attention growth (from a near-zero base) suggests early interest but not yet meaningful adoption.
+
+### 9. 42% of GitHub Code Is Already AI-Assisted
+Combining all agents (detected and undetected), approximately 42% of new code on GitHub involves AI assistance as of early 2026. Only 48% of AI-generated code receives human review before merge, raising quality and security questions — AI-assisted commits leak secrets at 2x the rate of human-only commits.
+
 ---
 
-*Sources: OpenAI, Anthropic, Google, GitHub, and Cursor official pricing pages (accessed April 2026). Benchmark data from SWE-Bench Verified, Terminal-Bench 2.0, and LiveCodeBench leaderboards.*
+*Sources: OpenAI, Anthropic, Google, GitHub, and Cursor official pricing pages; Powerset GitHub Coding Agent Tracker; claudescode.dev; botcommits.dev; CoreMention; SemiAnalysis; PR Arena leaderboard (accessed April 2026). Benchmark data from SWE-Bench Verified, Terminal-Bench 2.0, and LiveCodeBench leaderboards.*
