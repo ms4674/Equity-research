@@ -23,11 +23,14 @@ Quarterly time series tracking the Model Context Protocol (MCP) ecosystem from 2
 | File | Description |
 |------|-------------|
 | `data/mcp_ecosystem_quarterly_summary.csv` | Combined summary: commits, downloads, server count, stars, key events |
-| `data/mcp_github_commits_quarterly.csv` | GitHub commits by repository (7 repos) |
+| `data/mcp_github_commits_quarterly.csv` | GitHub commits by repository (7 MCP repos) |
 | `data/mcp_sdk_downloads_quarterly.csv` | SDK downloads: npm (@modelcontextprotocol/sdk) and PyPI (mcp) |
 | `data/mcp_npm_server_downloads_quarterly.csv` | npm downloads for individual MCP reference server packages |
 | `data/mcp_server_count_quarterly.csv` | Public MCP server count with net additions per quarter |
 | `data/mcp_github_stars_quarterly.csv` | GitHub star counts by repository |
+| `data/llm_revenue_run_rate_quarterly.csv` | Revenue run-rate ($M ARR) for OpenAI, Anthropic, Google Cloud AI, Azure AI, Meta, Mistral, Cohere, xAI, DeepSeek, AWS Bedrock |
+| `data/llm_github_commits_quarterly.csv` | GitHub commits for each LLM provider's key repos (14 repos across 8 providers) |
+| `data/llm_token_usage_by_provider_quarterly.csv` | Estimated daily token volume (trillions) by provider |
 
 ## Key Metrics (as of Q1 2026)
 
@@ -39,6 +42,10 @@ Quarterly time series tracking the Model Context Protocol (MCP) ecosystem from 2
 | GitHub stars (all repos) | 169,528 |
 | Total GitHub commits (cumulative) | 13,244 |
 | Contributors (servers repo) | 440 |
+| Total LLM provider ARR (Q1 2026) | ~$105B combined |
+| OpenAI ARR | $25B (Feb 2026) |
+| Anthropic ARR | $19B (Mar 2026) |
+| Industry daily token volume | ~20T/day |
 
 ## Growth Timeline
 
@@ -62,8 +69,12 @@ The **Correlation Analysis** sheet computes Pearson correlations across all MCP 
 | MCP SDK downloads ↔ Hyperscaler capex | **r > 0.90** — Infrastructure spending and MCP adoption ride the same wave |
 | MCP GitHub commits ↔ Downloads | **Negative** — Development peaked Q2 2025 while adoption continued accelerating (typical maturation pattern) |
 | MCP server count ↔ Inference % | **r > 0.95** — More servers deployed as inference dominates compute mix |
+| OpenAI Revenue ↔ MCP Downloads | **r > 0.95** — OpenAI revenue (driven by token consumption) scales with MCP adoption |
+| Anthropic Revenue ↔ MCP Downloads | **r > 0.95** — Same pattern; Anthropic's API-heavy revenue model correlates tightly |
+| Total LLM Revenue ↔ Daily Tokens | **r > 0.95** — Revenue is a derivative of inference token volume × price |
+| LLM GitHub Commits ↔ Revenue | **Weak/Negative** — Model repos have bursty release patterns; SDKs show maintenance mode |
 
-**Interpretation:** MCP is not driving token usage — it is being **pulled forward by the inference scaling wave**. As inference shifts from ~20% (2022) to ~75% (Q1 2026) of total AI compute, standardized tool integration via MCP becomes essential infrastructure for agentic and enterprise deployment.
+**Interpretation:** MCP is not driving token usage — it is being **pulled forward by the inference scaling wave**. LLM provider revenue is essentially a derivative of inference token volume multiplied by price per token. MCP adoption is a derivative of inference deployment breadth. Both are pulled forward by the same macro force: the shift from training to inference as the dominant use of AI compute.
 
 ## Sources
 
