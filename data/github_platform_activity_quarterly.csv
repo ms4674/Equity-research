@@ -1,0 +1,18 @@
+quarter,git_pushes,active_developers,total_repositories,pushes_per_developer,push_yoy_growth,source
+2022-Q1,140572256,89612163,229733614,1.57,,GitHub Innovation Graph (official)
+2022-Q2,149717365,95043584,243339989,1.58,,GitHub Innovation Graph (official)
+2022-Q3,146835949,100334892,256393118,1.46,,GitHub Innovation Graph (official)
+2022-Q4,161464841,105809362,269935545,1.53,,GitHub Innovation Graph (official)
+2023-Q1,172765182,112142497,283851980,1.54,0.229,GitHub Innovation Graph (official)
+2023-Q2,175270480,118863203,298254607,1.47,0.171,GitHub Innovation Graph (official)
+2023-Q3,165466632,125462005,311778148,1.32,0.127,GitHub Innovation Graph (official)
+2023-Q4,178868690,131883095,326068851,1.36,0.108,GitHub Innovation Graph (official)
+2024-Q1,184167232,139575994,340737253,1.32,0.066,GitHub Innovation Graph (official)
+2024-Q2,189331668,145646544,355510606,1.30,0.080,GitHub Innovation Graph (official)
+2024-Q3,179232651,151993922,369639247,1.18,0.083,GitHub Innovation Graph (official)
+2024-Q4,200262211,159142080,385466517,1.26,0.119,GitHub Innovation Graph (official)
+2025-Q1,213071277,167884897,402290482,1.27,0.157,GitHub Innovation Graph (official)
+2025-Q2,247828515,177219553,420993825,1.40,0.309,GitHub Innovation Graph (official)
+2025-Q3,250894326,189778233,440152951,1.32,0.400,GitHub Innovation Graph (official)
+2025-Q4,230201078,198000000,460000000,1.16,0.149,"Estimated from Octoverse 2025 (~1B commits in 2025, +25.1% YoY)"
+2026-Q1,272731234,210000000,482000000,1.30,0.280,"Estimated (~28% YoY growth trajectory; 180M+ developers)"

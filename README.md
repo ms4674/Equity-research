@@ -17,6 +17,10 @@ Quarterly time series tracking the Model Context Protocol (MCP) ecosystem from 2
 | GitHub Stars | Star counts by repo |
 | MCP Server Count | Server ecosystem growth with net additions and sources |
 | Sources & Methodology | Data provenance, APIs used, coverage windows, and caveats |
+| LLM Revenue Run-Rate | Quarterly ARR ($M) for 10 providers with stacked bar chart |
+| LLM GitHub Commits | Quarterly commits for 14 repos across 8 providers with stacked chart |
+| Token Usage by Provider | Daily token volume (T) for 7 provider groups with stacked chart + market share table |
+| **GitHub Platform Activity** | **Total GitHub git pushes, active developers, repositories (Q1 2022 – Q1 2026) with QoQ/YoY growth + chart** |
 
 ## CSV Data Files
 
@@ -31,6 +35,7 @@ Quarterly time series tracking the Model Context Protocol (MCP) ecosystem from 2
 | `data/llm_revenue_run_rate_quarterly.csv` | Revenue run-rate ($M ARR) for OpenAI, Anthropic, Google Cloud AI, Azure AI, Meta, Mistral, Cohere, xAI, DeepSeek, AWS Bedrock |
 | `data/llm_github_commits_quarterly.csv` | GitHub commits for each LLM provider's key repos (14 repos across 8 providers) |
 | `data/llm_token_usage_by_provider_quarterly.csv` | Estimated daily token volume (trillions) by provider |
+| `data/github_platform_activity_quarterly.csv` | Total GitHub platform git pushes, active developers, repositories (Q1 2022 – Q1 2026) |
 
 ## Key Metrics (as of Q1 2026)
 
@@ -46,6 +51,8 @@ Quarterly time series tracking the Model Context Protocol (MCP) ecosystem from 2
 | OpenAI ARR | $25B (Feb 2026) |
 | Anthropic ARR | $19B (Mar 2026) |
 | Industry daily token volume | ~20T/day |
+| GitHub global git pushes (Q1 2026 est.) | ~273M/quarter |
+| GitHub active developers | 210M+ |
 
 ## Growth Timeline
 
@@ -86,6 +93,10 @@ The **Correlation Analysis** sheet computes Pearson correlations across all MCP 
 - **Token volume**: a16z/OpenRouter 100T token study, Google earnings disclosures, OpenAI announcements, industry estimates
 - **Training vs inference**: Oplexa, GPUnex, Deloitte, Epoch AI analyses of compute allocation
 - **Hyperscaler capex**: Epoch AI (SEC EDGAR 10-Q/10-K filings for Amazon, Microsoft, Alphabet, Meta, Oracle)
+- **GitHub platform activity**: GitHub Innovation Graph (`github/innovationgraph` repo; git_pushes.csv, developers.csv, repositories.csv); official Q1 2020 – Q3 2025; Q4 2025 estimated from Octoverse 2025 (~1B commits, +25.1% YoY); Q1 2026 extrapolated at ~28% YoY
+- **LLM revenue**: Reuters, The Information, SaaStr, Bloomberg, SEC filings, CB Insights, company announcements
+- **LLM GitHub commits**: GitHub API (commits list + participation endpoints); 14 repos across 8 providers
+- **Token usage by provider**: Google earnings (1.3Q tokens/mo), OpenAI (8.6T/day), a16z/OpenRouter 100T study, Menlo Ventures market share
 
 ## Notes
 

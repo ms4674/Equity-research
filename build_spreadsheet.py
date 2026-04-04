@@ -1040,6 +1040,174 @@ ws12.add_chart(chart6, "A" + str(len(QUARTERS) + 4))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# SHEET 13: Total GitHub Platform Activity (Quarterly)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+ws13 = wb.create_sheet("GitHub Platform Activity")
+ws13.sheet_properties.tabColor = "333333"
+
+# Official data from GitHub Innovation Graph (github/innovationgraph repo)
+# git_pushes.csv, developers.csv, repositories.csv — aggregated globally
+# Data covers Q1 2020 – Q3 2025; Q4 2025 and Q1 2026 are estimated
+
+github_pushes = {
+    "2020-Q1": 97994203,  "2020-Q2": 117762686,  "2020-Q3": 106047784,  "2020-Q4": 114976006,
+    "2021-Q1": 121278903, "2021-Q2": 127539387,  "2021-Q3": 116148166,  "2021-Q4": 128885786,
+    "2022-Q1": 140572256, "2022-Q2": 149717365,  "2022-Q3": 146835949,  "2022-Q4": 161464841,
+    "2023-Q1": 172765182, "2023-Q2": 175270480,  "2023-Q3": 165466632,  "2023-Q4": 178868690,
+    "2024-Q1": 184167232, "2024-Q2": 189331668,  "2024-Q3": 179232651,  "2024-Q4": 200262211,
+    "2025-Q1": 213071277, "2025-Q2": 247828515,  "2025-Q3": 250894326,  "2025-Q4": 230201078,
+    "2026-Q1": 272731234,
+}
+
+github_developers = {
+    "2020-Q1": 52461829,  "2020-Q2": 57058011,   "2020-Q3": 61242932,   "2020-Q4": 65685946,
+    "2021-Q1": 70120076,  "2021-Q2": 74477448,   "2021-Q3": 78933956,   "2021-Q4": 83655406,
+    "2022-Q1": 89612163,  "2022-Q2": 95043584,   "2022-Q3": 100334892,  "2022-Q4": 105809362,
+    "2023-Q1": 112142497, "2023-Q2": 118863203,  "2023-Q3": 125462005,  "2023-Q4": 131883095,
+    "2024-Q1": 139575994, "2024-Q2": 145646544,  "2024-Q3": 151993922,  "2024-Q4": 159142080,
+    "2025-Q1": 167884897, "2025-Q2": 177219553,  "2025-Q3": 189778233,  "2025-Q4": 198000000,
+    "2026-Q1": 210000000,
+}
+
+github_repos = {
+    "2020-Q1": 140348723,  "2020-Q2": 150403310,  "2020-Q3": 159778379,  "2020-Q4": 170063503,
+    "2021-Q1": 180638575,  "2021-Q2": 192061239,  "2021-Q3": 203587117,  "2021-Q4": 215769457,
+    "2022-Q1": 229733614,  "2022-Q2": 243339989,  "2022-Q3": 256393118,  "2022-Q4": 269935545,
+    "2023-Q1": 283851980,  "2023-Q2": 298254607,  "2023-Q3": 311778148,  "2023-Q4": 326068851,
+    "2024-Q1": 340737253,  "2024-Q2": 355510606,  "2024-Q3": 369639247,  "2024-Q4": 385466517,
+    "2025-Q1": 402290482,  "2025-Q2": 420993825,  "2025-Q3": 440152951,  "2025-Q4": 460000000,
+    "2026-Q1": 482000000,
+}
+
+all_gh_quarters = sorted(github_pushes.keys())
+# Only show 2023-Q1 onward (past 3 years through Q1 2026) as primary focus
+# but include all 2022 data too for the full spreadsheet range
+display_quarters = [q for q in all_gh_quarters if q >= "2022-Q1"]
+
+h13 = [
+    "Quarter",
+    "Git Pushes\n(Global)",
+    "Push QoQ\nGrowth",
+    "Push YoY\nGrowth",
+    "Active\nDevelopers",
+    "Dev QoQ\nGrowth",
+    "Total\nRepositories",
+    "Pushes per\nDeveloper",
+    "Source",
+]
+
+for c, h in enumerate(h13, 1):
+    ws13.cell(row=1, column=c, value=h)
+style_header_row(ws13, 1, len(h13))
+
+src_notes = []
+for q in display_quarters:
+    if q <= "2025-Q3":
+        src_notes.append("GitHub Innovation Graph (official)")
+    elif q == "2025-Q4":
+        src_notes.append("Estimated from Octoverse 2025 (~1B commits, +25.1% YoY)")
+    else:
+        src_notes.append("Estimated (~28% YoY growth trajectory)")
+
+for i, q in enumerate(display_quarters):
+    r = i + 2
+    pushes = github_pushes[q]
+    devs = github_developers[q]
+    repos = github_repos[q]
+    
+    ws13.cell(row=r, column=1, value=q)
+    ws13.cell(row=r, column=2, value=pushes)
+    
+    # QoQ growth
+    prev_q_idx = all_gh_quarters.index(q) - 1
+    if prev_q_idx >= 0:
+        prev_q = all_gh_quarters[prev_q_idx]
+        ws13.cell(row=r, column=3, value=(pushes / github_pushes[prev_q]) - 1)
+        ws13.cell(row=r, column=3).number_format = PCT_FMT
+    
+    # YoY growth
+    yr = int(q[:4])
+    qn = q[-2:]
+    yoy_key = f"{yr-1}-{qn}"
+    if yoy_key in github_pushes:
+        ws13.cell(row=r, column=4, value=(pushes / github_pushes[yoy_key]) - 1)
+        ws13.cell(row=r, column=4).number_format = PCT_FMT
+    
+    ws13.cell(row=r, column=5, value=devs)
+    
+    if prev_q_idx >= 0:
+        prev_q = all_gh_quarters[prev_q_idx]
+        ws13.cell(row=r, column=6, value=(devs / github_developers[prev_q]) - 1)
+        ws13.cell(row=r, column=6).number_format = PCT_FMT
+    
+    ws13.cell(row=r, column=7, value=repos)
+    ws13.cell(row=r, column=8, value=round(pushes / devs, 2))
+    ws13.cell(row=r, column=8).number_format = '0.00'
+    ws13.cell(row=r, column=9, value=src_notes[i])
+
+style_data_area(ws13, 2, len(display_quarters)+1, len(h13))
+for c in range(1, len(h13)+1):
+    ws13.column_dimensions[get_column_letter(c)].width = 16
+ws13.column_dimensions['I'].width = 50
+ws13.column_dimensions['A'].width = 10
+ws13.freeze_panes = "B2"
+
+# Annual summary section
+ann_start = len(display_quarters) + 4
+ws13.cell(row=ann_start, column=1, value="Annual Summary").font = SECTION_FONT
+ws13.merge_cells(start_row=ann_start, start_column=1, end_row=ann_start, end_column=5)
+
+ann_headers = ["Year", "Total Pushes", "YoY Growth", "Active Devs (YE)", "Source"]
+for c, h in enumerate(ann_headers, 1):
+    ws13.cell(row=ann_start+1, column=c, value=h)
+style_header_row(ws13, ann_start+1, len(ann_headers))
+
+annual_data = [
+    (2022, 598590411, None, 105809362, "Innovation Graph"),
+    (2023, 692370984, None, 131883095, "Innovation Graph"),
+    (2024, 752993762, None, 159142080, "Innovation Graph"),
+    (2025, 941995196, None, 198000000, "Octoverse 2025: ~1B commits, +25.1% YoY"),
+]
+for i, (yr, pushes, _, devs, src) in enumerate(annual_data):
+    r = ann_start + 2 + i
+    ws13.cell(row=r, column=1, value=yr)
+    ws13.cell(row=r, column=2, value=pushes)
+    if i > 0:
+        ws13.cell(row=r, column=3, value=(pushes / annual_data[i-1][1]) - 1)
+        ws13.cell(row=r, column=3).number_format = PCT_FMT
+    ws13.cell(row=r, column=4, value=devs)
+    ws13.cell(row=r, column=5, value=src)
+
+style_data_area(ws13, ann_start+2, ann_start+1+len(annual_data), len(ann_headers))
+
+# Chart: Git Pushes quarterly
+chart7 = BarChart()
+chart7.title = "GitHub Global Git Pushes (Quarterly)"
+chart7.style = 10
+chart7.height = 18
+chart7.width = 32
+chart7.y_axis.title = "Git Pushes"
+chart7.y_axis.numFmt = '#,##0,,"M"'
+
+data_pushes = Reference(ws13, min_col=2, min_row=1, max_row=len(display_quarters)+1)
+cats7 = Reference(ws13, min_col=1, min_row=2, max_row=len(display_quarters)+1)
+chart7.add_data(data_pushes, titles_from_data=True)
+chart7.set_categories(cats7)
+chart7.series[0].graphicalProperties.solidFill = "333333"
+
+ws13.add_chart(chart7, "A" + str(ann_start + len(annual_data) + 4))
+
+# Update the Sources sheet
+ws9.cell(row=r_start + len(new_sources), column=1, value="GitHub Platform Activity")
+ws9.cell(row=r_start + len(new_sources), column=2, value="GitHub Innovation Graph + Octoverse")
+ws9.cell(row=r_start + len(new_sources), column=3, value="github/innovationgraph CSV data (git_pushes, developers, repos)")
+ws9.cell(row=r_start + len(new_sources), column=4, value="Q1 2020 – Q3 2025 official; Q4 2025, Q1 2026 estimated")
+ws9.cell(row=r_start + len(new_sources), column=5, value="Git pushes ≈ commits proxy; Q4 2025 derived from Octoverse annual total")
+style_data_area(ws9, r_start + len(new_sources), r_start + len(new_sources), 5)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # Save
 # ═══════════════════════════════════════════════════════════════════════════════
 
