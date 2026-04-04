@@ -1,0 +1,18 @@
+quarter,npm_sdk_downloads,pypi_mcp_downloads,total_sdk_downloads,npm_sdk_monthly_avg,notes
+2022-Q1,0,0,0,0,MCP did not exist
+2022-Q2,0,0,0,0,
+2022-Q3,0,0,0,0,
+2022-Q4,0,0,0,0,
+2023-Q1,0,0,0,0,
+2023-Q2,0,0,0,0,
+2023-Q3,0,0,0,0,
+2023-Q4,0,0,0,0,
+2024-Q1,0,0,0,0,
+2024-Q2,0,0,0,0,
+2024-Q3,0,0,0,0,SDK published but not yet publicly available
+2024-Q4,116673,0,116673,38891,MCP launched Nov 25 2024; @modelcontextprotocol/sdk on npm; mcp on PyPI
+2025-Q1,2401992,0,2401992,800664,Claude Desktop ships built-in MCP; developer adoption accelerates
+2025-Q2,41983661,0,41983661,13994554,OpenAI MCP support drives massive adoption; npm downloads 18x Q1
+2025-Q3,77522633,0,77522633,25840878,Broad ecosystem expansion; enterprise adoption begins
+2025-Q4,105330727,164823166,270153893,35110242,"PyPI 'mcp' package gains major traction from Oct 2025; combined 270M quarterly"
+2026-Q1,263818485,325372781,589191266,87939495,97M monthly SDK downloads milestone (Mar 2026); 4750% growth in 16 months

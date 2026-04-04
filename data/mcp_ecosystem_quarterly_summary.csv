@@ -1,0 +1,18 @@
+quarter,total_github_commits,npm_sdk_downloads,pypi_mcp_downloads,total_sdk_downloads,mcp_server_count,total_github_stars,key_events
+2022-Q1,0,0,0,0,0,0,
+2022-Q2,0,0,0,0,0,0,
+2022-Q3,0,0,0,0,0,0,
+2022-Q4,0,0,0,0,0,0,
+2023-Q1,0,0,0,0,0,0,
+2023-Q2,0,0,0,0,0,0,
+2023-Q3,0,0,0,0,0,0,
+2023-Q4,0,0,0,0,0,0,
+2024-Q1,0,0,0,0,0,0,
+2024-Q2,0,0,0,0,0,0,
+2024-Q3,14,0,0,0,0,0,MCP repos created Sep 24 2024; pre-launch internal development
+2024-Q4,1910,116673,0,116673,50,12000,MCP open-sourced Nov 25 2024; 3 reference servers at launch
+2025-Q1,2308,2401992,0,2401992,1200,42500,Claude Desktop ships MCP; OpenAI announces support Mar 2025
+2025-Q2,3517,41983661,0,41983661,5867,82500,OpenAI full integration; GitHub MCP server launched; peak community commits
+2025-Q3,2073,77522633,0,77522633,6550,118000,Microsoft Copilot MCP support; enterprise adoption wave begins
+2025-Q4,1885,105330727,164823166,270153893,7500,144700,AWS Bedrock and Google DeepMind add MCP; donated to Linux Foundation Dec 2025
+2026-Q1,1537,263818485,325372781,589191266,10500,169528,97M monthly SDK downloads (Mar 2026); 10K+ public servers; MCP v2.0 alpha

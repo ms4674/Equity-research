@@ -1,0 +1,18 @@
+quarter,end_of_quarter_server_count,quarterly_net_new,source
+2022-Q1,0,0,MCP did not exist
+2022-Q2,0,0,
+2022-Q3,0,0,
+2022-Q4,0,0,
+2023-Q1,0,0,
+2023-Q2,0,0,
+2023-Q3,0,0,
+2023-Q4,0,0,
+2024-Q1,0,0,
+2024-Q2,0,0,
+2024-Q3,0,0,
+2024-Q4,50,50,"MCP launched Nov 25 2024 with 3 reference servers; ~50 by year-end (Anthropic, early community)"
+2025-Q1,1200,1150,"Rapid community growth; Glama directory tracks 200 (Jan), 500 (Feb), 1200 (Mar)"
+2025-Q2,5867,4667,"Explosion of community servers; Pulse MCP tracks 2500 (Apr), 4000 (May); Glama reports 5867 (Jun)"
+2025-Q3,6550,683,"Growth decelerates as quality focus increases; Bloomberry analysis identifies 425 company-operated servers"
+2025-Q4,7500,950,"DreamFactory tracking shows 2200% growth since launch; community directory aggregation"
+2026-Q1,10500,3000,"Anthropic confirms 10K+ public MCP servers; MCP Registry grows 407% since Sep 2025 preview"

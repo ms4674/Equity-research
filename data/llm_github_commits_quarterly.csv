@@ -1,0 +1,18 @@
+quarter,openai_commits,anthropic_commits,meta_llama_commits,google_genai_commits,mistral_commits,deepseek_commits,xai_grok_commits,cohere_commits,total_llm_commits,notes
+2022-Q1,19,0,0,0,0,0,0,11,30,"openai-python only active repo; cohere-python early development"
+2022-Q2,12,0,0,0,0,0,0,17,29,
+2022-Q3,44,0,0,0,0,0,0,18,62,Whisper released Sep 2022 (37 commits)
+2022-Q4,36,0,0,0,0,0,0,21,57,ChatGPT launches Dec; tiktoken released
+2023-Q1,111,15,11,0,0,0,0,51,188,"GPT-4 launch Mar; anthropic-sdk starts; llama initial release"
+2023-Q2,46,17,0,47,0,0,0,35,145,Google generative-ai-python launched May
+2023-Q3,32,61,88,14,10,0,0,43,248,Llama 2 release Jul; Mistral inference Sep
+2023-Q4,132,130,23,40,32,0,0,28,385,"GPT-4 Turbo; Claude 2 scaling; heavy SDK development"
+2024-Q1,109,95,19,44,1,0,9,73,350,"Claude 3 Mar; Gemini 1.0; Grok-1 open-source; xAI initial commit"
+2024-Q2,129,105,127,71,46,0,0,40,518,"Llama 3 Apr (121 commits); Mistral large models; Gemini SDK active"
+2024-Q3,138,68,120,86,57,0,0,21,490,"Llama 3.1 Jul; llama-models created; Mistral inference; Claude 3.5 Sonnet"
+2024-Q4,105,100,49,12,9,16,0,20,311,"DeepSeek V3 Dec (16 commits); openai o1; Claude scaling"
+2025-Q1,143,72,33,16,11,79,0,15,369,"DeepSeek R1 Jan (33); V3 updates (46); Claude Code (2 commits); o1 reasoning"
+2025-Q2,119,182,24,3,0,9,0,5,342,"Claude Code explodes (72); Anthropic SDK active (110); MCP peak"
+2025-Q3,143,302,1,1,0,5,0,8,460,"Claude Code dominant (179); Anthropic SDK (123); maturation of other repos"
+2025-Q4,76,192,1,1,2,0,0,5,277,"Claude Code (152); tooling maintenance mode for most providers"
+2026-Q1,89,267,0,0,1,0,0,11,368,"Claude Code (167); Anthropic SDK (100); OpenAI SDK (85); spec-focused work"

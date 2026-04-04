@@ -1,0 +1,18 @@
+quarter,servers,python_sdk,typescript_sdk,specification,inspector,registry,github_mcp_server,total_core,notes
+2022-Q1,0,0,0,0,0,0,0,0,MCP did not exist; protocol conceived internally at Anthropic
+2022-Q2,0,0,0,0,0,0,0,0,
+2022-Q3,0,0,0,0,0,0,0,0,
+2022-Q4,0,0,0,0,0,0,0,0,
+2023-Q1,0,0,0,0,0,0,0,0,
+2023-Q2,0,0,0,0,0,0,0,0,
+2023-Q3,0,0,0,0,0,0,0,0,
+2023-Q4,0,0,0,0,0,0,0,0,
+2024-Q1,0,0,0,0,0,0,0,0,
+2024-Q2,0,0,0,0,0,0,0,0,
+2024-Q3,0,3,7,4,0,0,0,14,Repos created Sep 24 2024; pre-launch development begins
+2024-Q4,716,202,221,486,285,0,0,1910,MCP publicly launched Nov 25 2024; rapid initial development
+2025-Q1,1203,180,235,285,339,1,65,2308,Community adoption accelerates; OpenAI announces MCP support Mar 2025
+2025-Q2,1053,124,603,820,603,104,210,3517,Peak community contributions; OpenAI full MCP integration; GitHub MCP server launched
+2025-Q3,571,100,104,510,470,214,104,2073,Microsoft Copilot adds MCP support; registry grows rapidly
+2025-Q4,365,93,128,813,166,151,169,1885,AWS Bedrock adds MCP; Google DeepMind integration; MCP donated to Linux Foundation
+2026-Q1,85,139,147,783,102,72,209,1537,MCP v2.0 alpha development; 10K+ public servers milestone

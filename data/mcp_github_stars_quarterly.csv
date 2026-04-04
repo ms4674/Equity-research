@@ -1,0 +1,18 @@
+quarter,servers_stars,python_sdk_stars,typescript_sdk_stars,specification_stars,inspector_stars,registry_stars,github_mcp_server_stars,total_stars,notes
+2022-Q1,0,0,0,0,0,0,0,0,MCP did not exist
+2022-Q2,0,0,0,0,0,0,0,0,
+2022-Q3,0,0,0,0,0,0,0,0,
+2022-Q4,0,0,0,0,0,0,0,0,
+2023-Q1,0,0,0,0,0,0,0,0,
+2023-Q2,0,0,0,0,0,0,0,0,
+2023-Q3,0,0,0,0,0,0,0,0,
+2023-Q4,0,0,0,0,0,0,0,0,
+2024-Q1,0,0,0,0,0,0,0,0,
+2024-Q2,0,0,0,0,0,0,0,0,
+2024-Q3,0,0,0,0,0,0,0,0,
+2024-Q4,5000,1500,2000,3000,500,0,0,12000,"Explosive initial starring after Nov 25 launch; servers repo surges"
+2025-Q1,25000,5000,4500,5500,2000,500,0,42500,"MCP goes viral; OpenAI endorsement Mar 2025 drives massive interest"
+2025-Q2,45000,10000,7000,6500,4000,2000,8000,82500,"GitHub MCP server launched; broad developer awareness"
+2025-Q3,60000,14000,9000,7000,6000,4000,18000,118000,"Enterprise adoption drives continued growth"
+2025-Q4,72000,18000,10500,7200,7500,5500,24000,144700,"AWS and Google adoption; MCP donated to Linux Foundation"
+2026-Q1,82828,22477,12087,7701,9307,6629,28499,169528,"Current as of Apr 3 2026; servers repo approaching 100K stars"
