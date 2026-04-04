@@ -1,0 +1,382 @@
+{
+  "reference_slide": {
+    "title": "Will we get new hyperscalers?",
+    "content": "Est. share of NVDA GPUs and share of cloud revenue",
+    "data_points": {
+      "cloud_revenue_market_share_2025E": {
+        "Microsoft": "30%",
+        "Amazon": "44%",
+        "Google": "19%",
+        "Oracle": "5%",
+        "CoreWeave": "2%"
+      },
+      "share_of_NVDA_GPUs_2025E": {
+        "Microsoft": "30%",
+        "Amazon": "19%",
+        "Google": "20%",
+        "Oracle": "11%",
+        "CoreWeave_and_other_new_clouds": "20% (New Clouds 30% total)"
+      }
+    },
+    "key_insight": "New cloud providers (CoreWeave, Oracle, etc.) command disproportionately large share of NVIDIA GPUs (30%) relative to their cloud revenue market share (7%)"
+  },
+  "similar_presentations": [
+    {
+      "source": "SEC EDGAR (S-1)",
+      "company": "CoreWeave, Inc.",
+      "title": "CoreWeave S-1 Registration Statement - IPO Filing",
+      "filing_type": "S-1",
+      "date": "2025-03-03",
+      "url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525044231/d899798ds1.htm",
+      "relevance": "HIGH - CoreWeave's S-1 includes market positioning data showing cloud infrastructure market opportunity, GPU capacity comparisons vs hyperscalers, and TAM analysis positioning CoreWeave alongside AWS, Azure, Google Cloud, and Oracle",
+      "similar_themes": [
+        "Cloud market share",
+        "GPU infrastructure comparison",
+        "Neocloud vs hyperscaler positioning",
+        "Market opportunity sizing"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (EX-99.2)",
+      "company": "CoreWeave, Inc.",
+      "title": "CoreWeave Q1 2025 Earnings Presentation",
+      "filing_type": "EX-99.2",
+      "date": "2025-05-14",
+      "url": "https://s205.q4cdn.com/133937190/files/doc_financials/2025/q1/CoreWeave-Q1-25-Earnings-Presentation.pdf",
+      "relevance": "HIGH - Earnings deck includes slides on cloud market opportunity with infrastructure capacity data, GPU deployment scale (250K+ GPUs), and competitive positioning against hyperscalers",
+      "similar_themes": [
+        "Cloud infrastructure capacity",
+        "GPU deployment scale",
+        "Market positioning vs hyperscalers"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (EX-99.2)",
+      "company": "CoreWeave, Inc.",
+      "title": "CoreWeave Q3 2025 Earnings Presentation",
+      "filing_type": "EX-99.2",
+      "date": "2025-11-10",
+      "url": "https://s205.q4cdn.com/133937190/files/doc_financials/2025/q3/Earnings-Deck-2025-Q3.pdf",
+      "relevance": "HIGH - Contains market positioning slides showing CoreWeave's GPU cloud platform scale relative to hyperscalers, revenue backlog data ($55.6B), and infrastructure buildout metrics",
+      "similar_themes": [
+        "Cloud market share positioning",
+        "GPU infrastructure scale",
+        "Hyperscaler comparison"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (EX-99.2)",
+      "company": "CoreWeave, Inc.",
+      "title": "CoreWeave Q4 2025 Earnings Presentation",
+      "filing_type": "EX-99.2",
+      "date": "2026-02-24",
+      "url": "https://investors.coreweave.com/financials/quarterly-results/default.aspx",
+      "relevance": "HIGH - Q4 deck includes full-year 2025 summary ($5.1B revenue), market opportunity slides with GPU cloud infrastructure TAM, and competitive positioning as 'fastest cloud to $5B'",
+      "similar_themes": [
+        "Cloud revenue comparison",
+        "GPU market positioning",
+        "Hyperscaler competitive landscape"
+      ]
+    },
+    {
+      "source": "Company IR / SEC EDGAR",
+      "company": "Oracle Corporation",
+      "title": "Oracle Financial Analyst Meeting 2025 - Clay Magouyrk (OCI)",
+      "filing_type": "Investor Presentation",
+      "date": "2025-09-18",
+      "url": "https://www.oracle.com/a/ocom/docs/corporate/financial-analyst-meeting-2025-magouyrk.pdf",
+      "relevance": "HIGH - Oracle OCI executive presents cloud infrastructure market share data, GPU capacity expansion (244% AI training growth), and Oracle's positioning as 'fourth hyperscaler' with market share comparisons to AWS, Azure, Google Cloud",
+      "similar_themes": [
+        "Cloud market share",
+        "GPU capacity comparison",
+        "Hyperscaler positioning",
+        "Cloud revenue growth"
+      ]
+    },
+    {
+      "source": "Company IR / SEC EDGAR",
+      "company": "Oracle Corporation",
+      "title": "Oracle Financial Analyst Meeting 2025 - Larry Ellison",
+      "filing_type": "Investor Presentation",
+      "date": "2025-09-18",
+      "url": "https://www.oracle.com/a/ocom/docs/corporate/financial-analyst-meeting-2025-ellison.pdf",
+      "relevance": "HIGH - Larry Ellison presents Oracle's cloud strategy with market comparison slides showing OCI vs AWS/Azure/GCP, GPU capacity and AI infrastructure market positioning, and 'fourth hyperscaler' narrative",
+      "similar_themes": [
+        "Cloud market share comparison",
+        "Hyperscaler competitive positioning",
+        "GPU/AI infrastructure",
+        "Cloud revenue market share"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (10-K/Annual Report)",
+      "company": "NVIDIA Corporation",
+      "title": "NVIDIA 2025 Annual Report",
+      "filing_type": "10-K",
+      "date": "2025-02-26",
+      "url": "https://s201.q4cdn.com/141608511/files/doc_financials/2025/annual/NVIDIA-2025-Annual-Report.pdf",
+      "relevance": "MEDIUM - Contains data center revenue breakdown showing ~50% from cloud service providers, customer concentration data, and GPU shipment information relevant to hyperscaler allocation analysis",
+      "similar_themes": [
+        "GPU customer share",
+        "Data center revenue by segment",
+        "Cloud provider relationship"
+      ]
+    },
+    {
+      "source": "Company IR",
+      "company": "NVIDIA Corporation",
+      "title": "NVIDIA October 2025 Non-Deal Roadshow Presentation",
+      "filing_type": "Investor Presentation",
+      "date": "2025-10-01",
+      "url": "https://s201.q4cdn.com/141608511/files/doc_presentations/2025/10/NVIDIA-2025-NDR-Deck-1.pdf",
+      "relevance": "MEDIUM - NDR deck includes slides on AI infrastructure market ($3-4T by 2030), cloud service provider breakdown (60% of revenue from hyperscalers), and GPU ecosystem data",
+      "similar_themes": [
+        "GPU market allocation",
+        "Cloud provider revenue share",
+        "AI infrastructure TAM"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (10-Q)",
+      "company": "NVIDIA Corporation",
+      "title": "NVIDIA Q4 FY2025 CFO Commentary",
+      "filing_type": "10-Q Supplement",
+      "date": "2025-02-26",
+      "url": "https://investor.nvidia.com/files/doc_financials/2025/Q425/Q4FY25-CFO-Commentary.pdf",
+      "relevance": "MEDIUM - CFO commentary includes data center segment detail with cloud service provider percentage (~50% of Data Center revenue), Blackwell ramp data, and customer concentration metrics",
+      "similar_themes": [
+        "Cloud provider GPU share",
+        "Data center customer breakdown"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (Investor Presentation)",
+      "company": "AMD",
+      "title": "AMD Financial Analyst Day 2025",
+      "filing_type": "Investor Presentation",
+      "date": "2025-03-26",
+      "url": "https://d1io3yog0oux5.cloudfront.net/_0c1c01da5522d07e39f3a045d6ce1c79/amd/db/963/9200/presentation/2.+AMD_FAD+2025_Lisa+Su_OPEN.pdf",
+      "relevance": "MEDIUM - AMD's analyst day includes AI accelerator market sizing, cloud GPU market share data (MI300 vs NVIDIA), hyperscaler adoption metrics, and competitive cloud GPU positioning",
+      "similar_themes": [
+        "GPU market share",
+        "Cloud GPU adoption",
+        "Hyperscaler customer comparison"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (EX-99.2)",
+      "company": "Equinix, Inc.",
+      "title": "Equinix Q4 2025 Investor Presentation",
+      "filing_type": "EX-99.2",
+      "date": "2026-02-12",
+      "url": "https://uk.marketscreener.com/news/equinix-q4-2025-equinix-investor-presentation-ce7e5edcd88ff021",
+      "relevance": "MEDIUM - Equinix presentation includes cloud infrastructure market data, hyperscaler capacity trends, and GPU-dense data center demand analysis relevant to understanding hyperscaler infrastructure allocation",
+      "similar_themes": [
+        "Cloud infrastructure market",
+        "Hyperscaler capacity",
+        "Data center GPU density trends"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (10-K/Annual Report)",
+      "company": "Digital Realty Trust",
+      "title": "Digital Realty Q4 2025 Earnings Presentation",
+      "filing_type": "EX-99.2",
+      "date": "2026-02-13",
+      "url": "https://investor.digitalrealty.com/static-files/3013c6ad-9b3d-4f7c-a103-969fafa23dcd",
+      "relevance": "MEDIUM - Includes cloud market growth projections (23.4% CAGR to $524B by 2028), hyperscale customer data, and GPU infrastructure demand trends",
+      "similar_themes": [
+        "Cloud market sizing",
+        "Hyperscaler infrastructure demand",
+        "Data center capacity trends"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (S-1 / 8-K)",
+      "company": "Nebius Group N.V.",
+      "title": "Nebius Group Investor Presentation",
+      "filing_type": "Investor Presentation",
+      "date": "2024-10-18",
+      "url": "https://cdn.prod.website-files.com/66b32d86d735b995db91246d/671521cacdd7174a21b2b093_Nebius%20Group%20Investor%20Presentation_18.10.24_FINAL_upd.pdf",
+      "relevance": "HIGH - Neocloud investor deck with GPU cloud market positioning, comparison to hyperscalers (AWS, Azure, GCP), market opportunity sizing showing GPU infrastructure share vs cloud revenue share dynamics",
+      "similar_themes": [
+        "GPU cloud market share",
+        "Neocloud vs hyperscaler comparison",
+        "Cloud infrastructure market share",
+        "GPU allocation"
+      ]
+    },
+    {
+      "source": "Company IR (Shareholder Letter)",
+      "company": "Nebius Group N.V.",
+      "title": "Nebius Q2 2025 Letter to Shareholders",
+      "filing_type": "Shareholder Letter",
+      "date": "2025-08-26",
+      "url": "https://assets.nebius.com/assets/98fceb3b-2951-4647-9864-4b0654af057c/Nebius%20-%20Letter%20to%20shareholders%20-%20Q2%202025.pdf",
+      "relevance": "MEDIUM - Contains GPU cloud infrastructure expansion data, revenue growth (625% YoY), and market positioning relative to hyperscalers and other neoclouds",
+      "similar_themes": [
+        "GPU cloud market positioning",
+        "Infrastructure scaling",
+        "Neocloud competitive landscape"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (8-K / EX-99.1)",
+      "company": "Super Micro Computer",
+      "title": "Super Micro Computer FQ1 2026 Earnings Deck",
+      "filing_type": "EX-99.1",
+      "date": "2025-11-05",
+      "url": "https://ir.supermicro.com/files/doc_financials/2026/q1/FQ126-SMCI-Earnings-Deck.pdf",
+      "relevance": "MEDIUM - Contains hyperscaler GPU server delivery data, AI infrastructure market sizing, and cloud provider deployment metrics for NVIDIA Blackwell and AMD MI300",
+      "similar_themes": [
+        "GPU infrastructure deployment",
+        "Hyperscaler server shipments",
+        "Cloud GPU capacity"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (Proxy/10-K)",
+      "company": "Marvell Technology",
+      "title": "Marvell Technology FY2025 Annual Report",
+      "filing_type": "10-K",
+      "date": "2025-03-28",
+      "url": "https://investor.marvell.com/sec-filings/all-sec-filings/content/0001104659-25-043088/0001104659-25-043088.pdf",
+      "relevance": "MEDIUM - Includes data on custom silicon for all four major US hyperscalers, AI infrastructure TAM, and cloud provider GPU/accelerator adoption data",
+      "similar_themes": [
+        "Hyperscaler custom silicon",
+        "Cloud GPU market",
+        "AI accelerator adoption"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (8-K / EX-99.1)",
+      "company": "Arista Networks",
+      "title": "Arista Networks Q3 2025 Highlights",
+      "filing_type": "EX-99.1",
+      "date": "2025-11-04",
+      "url": "https://s21.q4cdn.com/861911615/files/doc_presentations/2025/Nov/04/Arista-2025-Q3-Highlights.pdf",
+      "relevance": "MEDIUM - Contains cloud networking data showing hyperscaler customer revenue concentration (Microsoft 15-20%), AI cluster connectivity, and cloud infrastructure market analysis",
+      "similar_themes": [
+        "Hyperscaler customer concentration",
+        "Cloud infrastructure networking",
+        "AI data center connectivity"
+      ]
+    },
+    {
+      "source": "Company IR",
+      "company": "Vertiv Holdings",
+      "title": "Vertiv 2024 Investor Event Presentation",
+      "filing_type": "Investor Presentation",
+      "date": "2024-11-18",
+      "url": "https://s23.q4cdn.com/959471387/files/doc_presentations/Vertiv-2024-Investor-Event-Presentation.pdf",
+      "relevance": "MEDIUM - Includes data center power and cooling market analysis relevant to GPU infrastructure, hyperscaler capex trends, and AI infrastructure power density requirements",
+      "similar_themes": [
+        "Hyperscaler infrastructure spend",
+        "GPU power requirements",
+        "Data center market sizing"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (8-K / EX-99)",
+      "company": "Blockfusion, Inc.",
+      "title": "Blockfusion Business Combination Presentation",
+      "filing_type": "EX-99.2",
+      "date": "2025-11-12",
+      "url": "https://www.sec.gov/Archives/edgar/data/2059654/000118518525001798/baccex99-2.htm",
+      "relevance": "MEDIUM - GPU infrastructure company presentation with market sizing for AI/GPU cloud, hyperscaler capex data, and competitive positioning in the GPU-as-a-service market",
+      "similar_themes": [
+        "GPU cloud market opportunity",
+        "Hyperscaler capex trends",
+        "AI infrastructure market sizing"
+      ]
+    },
+    {
+      "source": "SEC EDGAR (8-K)",
+      "company": "TeraWulf Inc.",
+      "title": "TeraWulf Q4 2025 Investor Presentation",
+      "filing_type": "8-K",
+      "date": "2026-02-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/1083301/000108330126000026/terawulfq42025investorpr.htm",
+      "relevance": "MEDIUM - Data center/GPU infrastructure company with AI compute market sizing, power capacity analysis, and hyperscaler/neocloud demand data",
+      "similar_themes": [
+        "AI compute infrastructure",
+        "GPU data center capacity",
+        "Cloud market opportunity"
+      ]
+    },
+    {
+      "source": "Third-Party Research",
+      "company": "Synergy Research Group",
+      "title": "Cloud Market Share Trends - Q3/Q4 2025",
+      "filing_type": "Market Research",
+      "date": "2025-11-20",
+      "url": "https://www.srgresearch.com/articles/cloud-market-share-trends-big-three-together-hold-63-while-oracle-and-the-neoclouds-inch-higher",
+      "relevance": "HIGH - Primary source for cloud infrastructure market share data cited by many public filings. Shows AWS 29%, Azure 20%, Google Cloud 13%, Oracle 3% - data used in many investor presentations including the reference slide",
+      "similar_themes": [
+        "Cloud revenue market share",
+        "Hyperscaler comparison",
+        "Market share trends"
+      ]
+    },
+    {
+      "source": "Third-Party Research",
+      "company": "SemiAnalysis",
+      "title": "AI Neocloud Playbook and ClusterMAX Rating",
+      "filing_type": "Research Report",
+      "date": "2025-04-03",
+      "url": "https://newsletter.semianalysis.com/p/ai-neocloud-playbook-and-anatomy",
+      "relevance": "HIGH - GPU cloud market analysis with provider rankings, GPU allocation estimates by cloud provider, and market share projections showing neocloud GPU demand growing to >1/3 of total GPU market",
+      "similar_themes": [
+        "GPU allocation by cloud provider",
+        "Neocloud market share",
+        "Cloud GPU comparison"
+      ]
+    },
+    {
+      "source": "Third-Party Research",
+      "company": "ARPU Intelligence",
+      "title": "Mapping the Neocloud Landscape 2025",
+      "filing_type": "Research Report",
+      "date": "2025-11-01",
+      "url": "https://arpu.hedder.com/content/files/2025/11/Mapping-Neocloud-Landscape-2025.pdf",
+      "relevance": "HIGH - Comprehensive neocloud market analysis including hyperscaler-vs-neocloud dynamics, GPU allocation patterns, and the 'competitors become customers' theme directly relevant to the reference slide",
+      "similar_themes": [
+        "Neocloud vs hyperscaler dynamics",
+        "GPU market allocation",
+        "Cloud infrastructure market share",
+        "New hyperscaler emergence"
+      ]
+    },
+    {
+      "source": "Third-Party Research",
+      "company": "Morgan Stanley",
+      "title": "Morgan Stanley Research on TSMC CoWoS Capacity - NVIDIA GPU Customer Allocation",
+      "filing_type": "Equity Research",
+      "date": "2025-12-09",
+      "url": "https://advisor.morganstanley.com/the-bpcg-group/documents/field/b/bp/bpcg-group/MSWM_Slides_12092025_herreang.pdf",
+      "relevance": "HIGH - Contains NVIDIA GPU allocation estimates by customer: NVIDIA 60% of CoWoS capacity, Broadcom 15%, AMD 11%, with hyperscaler-level GPU share breakdowns",
+      "similar_themes": [
+        "GPU allocation by customer",
+        "Hyperscaler GPU share",
+        "NVIDIA customer concentration"
+      ]
+    },
+    {
+      "source": "Third-Party Research",
+      "company": "SemiAnalysis",
+      "title": "How Oracle Is Winning the AI Compute Market",
+      "filing_type": "Research Report",
+      "date": "2025-06-30",
+      "url": "https://semianalysis.com/2025/06/30/how-oracle-is-winning-the-ai-compute-market/",
+      "relevance": "HIGH - Detailed analysis of Oracle's cloud GPU positioning including ClusterMAX Gold rating, GPU capacity analysis, and comparison to other hyperscalers (AWS, Azure, GCP) and neoclouds",
+      "similar_themes": [
+        "Cloud GPU comparison",
+        "Oracle hyperscaler positioning",
+        "GPU market share"
+      ]
+    }
+  ],
+  "total_results": 25,
+  "high_relevance_count": 12,
+  "medium_relevance_count": 13
+}
