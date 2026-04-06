@@ -33,8 +33,8 @@ GPT-4.1, GPT-4o, Claude Sonnet 4.6, Claude Opus 4.6, Gemini 2.5 Pro, DeepSeek V3
 
 | File | Description |
 |------|-------------|
-| `kv_cache_prefill_analysis.ipynb` | Full analysis notebook with 16 visualizations + interactive dashboard |
-| `kv_cache_prefill_data.xlsx` | All data tables (14 sheets: architectures, pricing, benchmarks, optimizations, frameworks, agents, GPU budget, HBM supply-demand, GPU HBM requirements, installed base memory, KV cache scenarios, agent KV comparison, multi-turn cost model, cost sensitivity) |
+| `kv_cache_prefill_analysis.ipynb` | Full analysis notebook with 18 visualizations + interactive dashboard |
+| `kv_cache_prefill_data.xlsx` | All data tables (16 sheets: architectures, pricing, benchmarks, optimizations, frameworks, agents, GPU budget, HBM supply-demand, GPU HBM requirements, installed base memory, KV cache scenarios, agent KV comparison, KV quantization methods, parameter scaling, multi-turn cost model, cost sensitivity) |
 | `01_kv_cache_memory_scaling.png` | KV cache memory scaling by context length across models |
 | `02_attention_mechanism_kv_impact.png` | MHA vs GQA vs MLA per-token KV cache comparison |
 | `03_prefill_vs_decode_throughput.png` | Prefill and decode throughput by model and framework |
@@ -52,6 +52,8 @@ GPT-4.1, GPT-4o, Claude Sonnet 4.6, Claude Opus 4.6, Gemini 2.5 Pro, DeepSeek V3
 | `14_aggregate_memory_gap.png` | Global installed base memory breakdown and KV cache share |
 | `15_openclaw_cowork_perplexity_comparison.png` | OpenClaw vs Claude Cowork vs Perplexity Computer: prompt size, cache rates, costs, invalidation risks, scorecard |
 | `16_multi_turn_cost_comparison.png` | Multi-turn session cost escalation across the three platforms |
+| `17_turboquant_memory_impact.png` | TurboQuant impact: KV reduction, concurrent users, quantization comparison, HBM demand |
+| `18_parameter_scaling_kv_cache.png` | Parameter scaling vs KV cache: log-log scatter, KV share, decomposition, FP16 vs TurboQuant |
 
 ### Data Sources
 
