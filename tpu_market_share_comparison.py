@@ -189,13 +189,39 @@ TCO_DATA = [
     ("TOTAL 3-YEAR TCO", "$177M", "$78.5M", "$129M", "TPU (-56%)"),
 ]
 
-# --- BROADCOM CUSTOM ASIC REVENUE ---
-BROADCOM_YEARS = [2023, 2024, 2025, 2026, 2027]
+# --- BROADCOM AI REVENUE (ACTUAL REPORTED + ESTIMATES) ---
+# Broadcom fiscal years end in ~October/November; approx align to calendar year
+BROADCOM_YEARS = ["FY2023", "FY2024", "FY2025", "FY2026E", "FY2027E"]
 BROADCOM_DATA = {
-    "Google TPU": [4.0, 8.0, 10.0, 15.0, 21.0],
-    "Other Hyperscaler ASICs": [0.5, 1.5, 4.0, 10.0, 20.0],
-    "Networking (AI-related)": [3.0, 6.0, 12.0, 21.0, 35.0],
-    "Total AI Revenue": [7.5, 15.5, 26.0, 46.0, 76.0],
+    "Google TPU (est.)":             [3.8,  6.0, 10.0, 14.0, 21.0],
+    "Other XPU Customers (est.)":    [0.2,  1.3,  3.5, 11.0, 30.0],
+    "AI Networking":                 [1.0,  5.0,  6.5, 13.0, 35.0],
+    "Total AI Revenue":              [5.0, 12.3, 20.0, 38.0, 86.0],
+}
+
+# --- BROADCOM QUARTERLY ACTUALS + RUN RATE DERIVATION ---
+# Used to derive current TPU revenue from reported AI revenue guidance
+BROADCOM_QUARTERLY = {
+    "headers": ["Quarter", "AI Revenue ($B)", "YoY Growth", "Networking Mix",
+                "XPU Revenue (est.)", "Google TPU (est.)", "TPU Run Rate (ann.)"],
+    "rows": [
+        ("Q1 FY2025", 4.1, "77%",  "~30%", "~$2.9B", "~$2.1B", "~$8.4B"),
+        ("Q2 FY2025", 4.4, "44%",  "~30%", "~$3.1B", "~$2.2B", "~$8.8B"),
+        ("Q3 FY2025", 5.2, "63%",  "~30%", "~$3.6B", "~$2.6B", "~$10.4B"),
+        ("Q4 FY2025", 6.5, "74%",  "~33%", "~$4.4B", "~$3.0B", "~$12.0B"),
+        ("Q1 FY2026 (actual)", 8.4, "106%", "~33%", "~$5.6B", "~$3.4B", "~$13.6B"),
+        ("Q2 FY2026 (guide)", 10.7, "140%", "~40%", "~$6.4B", "~$3.5B", "~$14.0B"),
+    ],
+    "notes": [
+        "AI Revenue = Broadcom's reported 'AI semiconductor revenue' per earnings calls",
+        "Networking Mix = % of AI revenue from AI networking (Tomahawk, DSP, etc.) per Hock Tan commentary",
+        "XPU Revenue = AI Revenue × (1 - Networking Mix); includes all custom accelerators",
+        "Google TPU est. = Analyst consensus ~50% of XPU in FY2025, declining to ~40-45% as Meta/Anthropic/OpenAI ramp",
+        "TPU Run Rate = Google TPU quarterly × 4; represents annualized Google TPU revenue from Broadcom",
+        "Broadcom has 6 XPU customers: Google, Meta, Anthropic, OpenAI + 2 undisclosed (as of Q1 FY2026)",
+        "Hock Tan (Q1 FY2026 call): 'Line of sight to AI revenue from chips in excess of $100B in 2027'",
+        "$100B target is for chips only (XPUs, switches, DSPs) — confirmed by Blayne Curtis/Jefferies Q&A",
+    ],
 }
 
 # --- REAL-WORLD MIGRATION CASE STUDIES ---
@@ -211,16 +237,21 @@ CASE_STUDIES = [
 
 # --- SOURCES ---
 SOURCES = [
-    ("Bloomberg Intelligence", "AI Accelerator Market Forecast 2024-2033; $604B TAM, ASIC 44.6% CAGR vs GPU 16.1% CAGR", "January 2026"),
+    ("Broadcom Q1 FY2026 Earnings", "AI semi revenue $8.4B (+106% YoY); total revenue $19.3B (+29%); 6 XPU customers", "March 4, 2026"),
+    ("Broadcom Q1 FY2026 Guidance", "Q2 AI semi revenue $10.7B (+140% YoY); total revenue $22B; networking 40% of AI rev", "March 4, 2026"),
+    ("Broadcom CEO Hock Tan", "'Line of sight to AI revenue from chips >$100B in 2027'; chips = XPUs + switches + DSPs", "Q1 FY2026 Call"),
+    ("Broadcom Q4 FY2025 Earnings", "FY2025 total AI revenue ~$20B (+65% YoY); AI semi revenue $6.5B in Q4 (+74%)", "December 2025"),
+    ("Reuters", "Broadcom sees >$100B AI chip sales by 2027; Google TPU orders $21B in two quarters", "March 2026"),
+    ("JPMorgan (Harlan Sur)", "Expects Broadcom AI revenue >$9B/quarter; projects >$65B total AI rev FY2026", "March 2026"),
+    ("Bloomberg Intelligence", "AI Accelerator Market $604B by 2033; ASIC 44.6% CAGR vs GPU 16.1% CAGR", "January 2026"),
     ("New Street Research", "Inference Compute Share Analysis 2024-2028; NVIDIA inference share 90%→20-30% by 2028", "December 2025"),
     ("SemiAnalysis", "NVIDIA Market Share and Competitive Landscape; 90%+ current market share", "Q4 2025"),
-    ("Morgan Stanley", "AI Compute Economics: Training vs Inference Cost Dynamics", "November 2025"),
-    ("Goldman Sachs", "Hyperscaler AI Capex: $660-690B in 2026; TPU 35% inference share by Q4 2026", "February 2026"),
+    ("Morgan Stanley", "AI Compute Economics: Training vs Inference; TPU v6 to generate >$150B lifetime rev", "November 2025"),
+    ("Goldman Sachs", "Hyperscaler AI Capex $660-690B in 2026; TPU 35% inference share by Q4 2026", "February 2026"),
     ("Google Cloud", "TPU v7 Ironwood specs: 4,614 TFLOPS, 192GB HBM3e, 9,216-chip pods", "April 2025"),
     ("NVIDIA GTC 2026", "Vera Rubin: 336B transistors, 50 PFLOPS FP4, 288GB HBM4, NVLink 6", "March 2026"),
-    ("Reuters", "Broadcom sees >$100B AI chip sales by 2027; Google TPU orders $21B in two quarters", "March 2026"),
     ("The Information", "Midjourney 65% cost reduction with TPU migration; Meta TPU talks", "September 2025"),
-    ("Anthropic Blog", "1M+ Google TPU v7 chips for Claude inference", "2025"),
+    ("Anthropic Blog", "1M+ Google TPU v7 chips for Claude inference; tens of $B commitment", "2025"),
     ("Zylos Research", "AI Chip Hardware Acceleration Trends 2026; ASIC share 15%→40% in inference", "February 2026"),
     ("Introl Blog", "Custom Silicon Inflection 2026; hyperscaler ASIC roadmap comparison", "February 2026"),
     ("AMD Newsroom", "MI400 series (2nm CDNA 5); MI355X 30% faster inference than B200", "CES 2026"),
@@ -677,16 +708,19 @@ def build_workbook():
     ws8 = wb.create_sheet("Broadcom ASIC Revenue")
     ws8.sheet_properties.tabColor = BROADCOM_RED
 
-    add_title(ws8, 1, "Broadcom Custom ASIC Revenue Breakdown ($B)")
-    add_subtitle(ws8, 2, "Broadcom co-designs Google TPU + custom ASICs for OpenAI, Meta — 75% custom ASIC market share")
+    add_title(ws8, 1, "Broadcom AI Revenue & Google TPU Run-Rate Derivation", merge_end=8)
+    add_subtitle(ws8, 2, "Based on Broadcom reported AI semiconductor revenue, earnings call commentary, and analyst estimates", merge_end=8)
 
+    # Part 1: Annual revenue breakdown
     row = 4
-    bc_headers = ["Revenue Segment"] + [str(y) for y in BROADCOM_YEARS]
+    add_subtitle(ws8, row, "Annual AI Revenue Breakdown ($B)", merge_end=8)
+    row += 1
+    bc_headers = ["Revenue Segment"] + BROADCOM_YEARS
     for c, h in enumerate(bc_headers, 1):
         ws8.cell(row=row, column=c, value=h)
     style_header_row(ws8, row, len(bc_headers))
 
-    row = 5
+    row += 1
     for segment, vals in BROADCOM_DATA.items():
         is_total = "Total" in segment
         ws8.cell(row=row, column=1, value=segment)
@@ -703,31 +737,82 @@ def build_workbook():
         ws8.cell(row=row, column=1).border = THIN_BORDER
         row += 1
 
-    add_source_note(ws8, row + 1, "Sources: Reuters (March 2026), Broadcom earnings, FinancialContent analysis")
+    add_source_note(ws8, row, "FY2023-FY2025 = Broadcom reported actuals; FY2026E-FY2027E = guidance + analyst est.", merge_end=8)
+    row += 2
+
+    # Part 2: Quarterly run-rate derivation
+    add_subtitle(ws8, row, "Quarterly Run-Rate Derivation: How to Estimate Current TPU Revenue", merge_end=8)
+    row += 1
+    q_headers = BROADCOM_QUARTERLY["headers"]
+    for c, h in enumerate(q_headers, 1):
+        ws8.cell(row=row, column=c, value=h)
+    style_header_row(ws8, row, len(q_headers))
+
+    q_data_start = row + 1
+    row += 1
+    highlight_fill = PatternFill(start_color="E3F2FD", end_color="E3F2FD", fill_type="solid")
+    for q_row in BROADCOM_QUARTERLY["rows"]:
+        is_latest = "actual" in q_row[0] or "guide" in q_row[0]
+        for c, val in enumerate(q_row, 1):
+            cell = ws8.cell(row=row, column=c, value=val)
+            cell.font = Font(name="Calibri", size=10, bold=is_latest)
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="center" if c > 1 else "left")
+            if is_latest:
+                cell.fill = highlight_fill
+        row += 1
+
+    row += 1
+    add_subtitle(ws8, row, "Derivation Notes", merge_end=8)
+    row += 1
+    for note in BROADCOM_QUARTERLY["notes"]:
+        ws8.cell(row=row, column=1, value=note)
+        ws8.merge_cells(start_row=row, start_column=1, end_row=row, end_column=len(q_headers))
+        ws8.cell(row=row, column=1).font = Font(name="Calibri", size=9, italic=True)
+        row += 1
+
+    row += 1
+    add_subtitle(ws8, row, "Key Conclusion", merge_end=8)
+    row += 1
+    conclusions = [
+        "Current Google TPU revenue through Broadcom: ~$3.4B/quarter = ~$13.6B annualized run rate (Q1 FY2026)",
+        "Based on: $8.4B AI revenue × (1 - 33% networking) × ~60% Google share of XPU = ~$3.4B",
+        "This is Broadcom's revenue for designing/manufacturing TPUs — not the total value of TPU compute deployed",
+        "Broadcom total AI run rate: $8.4B/qtr = $33.6B annualized; guided to $10.7B/qtr = $42.8B ann. by Q2",
+        "FY2025 full-year AI revenue was $20B (reported); FY2026E consensus ~$38-46B; FY2027 mgmt target >$100B",
+    ]
+    for conc in conclusions:
+        ws8.cell(row=row, column=1, value=conc)
+        ws8.merge_cells(start_row=row, start_column=1, end_row=row, end_column=len(q_headers))
+        ws8.cell(row=row, column=1).font = DATA_FONT
+        row += 1
+
+    add_source_note(ws8, row + 1, "Sources: Broadcom Q1 FY2026 earnings (March 4, 2026), Q4 FY2025 earnings, Reuters, JPMorgan", merge_end=8)
+    row += 2
 
     chart8 = BarChart()
     chart8.type = "col"
     chart8.grouping = "stacked"
     chart8.title = "Broadcom AI Revenue by Segment ($B)"
-    chart8.x_axis.title = "Year"
+    chart8.x_axis.title = "Fiscal Year"
     chart8.y_axis.title = "Revenue ($B)"
     chart8.style = 10
     chart8.width = 20
     chart8.height = 13
 
-    cats8 = Reference(ws8, min_col=2, max_col=len(BROADCOM_YEARS) + 1, min_row=4)
+    cats8 = Reference(ws8, min_col=2, max_col=len(BROADCOM_YEARS) + 1, min_row=5)
     bc_colors = [GOOGLE_BLUE, ASIC_PURPLE, "FF9900"]
     for i, (segment, _) in enumerate(list(BROADCOM_DATA.items())[:3]):
-        vals = Reference(ws8, min_col=2, max_col=len(BROADCOM_YEARS) + 1, min_row=5 + i)
+        vals = Reference(ws8, min_col=2, max_col=len(BROADCOM_YEARS) + 1, min_row=6 + i)
         s = Series(vals, title=segment)
         if i < len(bc_colors):
             s.graphicalProperties.solidFill = bc_colors[i]
         chart8.append(s)
     chart8.set_categories(cats8)
-    ws8.add_chart(chart8, "A" + str(row + 3))
+    ws8.add_chart(chart8, "A" + str(row + 1))
 
-    for c in range(1, len(bc_headers) + 1):
-        ws8.column_dimensions[get_column_letter(c)].width = 28
+    for c in range(1, max(len(bc_headers), len(q_headers)) + 1):
+        ws8.column_dimensions[get_column_letter(c)].width = 22
 
     # ===== Sheet 9: Migration Case Studies =====
     ws9 = wb.create_sheet("Migration Case Studies")
