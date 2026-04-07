@@ -218,6 +218,82 @@ TPU_CUSTOMER_DETAILS = [
      "Original TPU use case; still ~50% of total TPU capacity in 2026"),
 ]
 
+# --- ANTHROPIC TPU DEAL: REVENUE SPLIT BETWEEN BROADCOM AND GOOGLE ---
+# The Anthropic deal illustrates how TPU economics flow to Broadcom vs Google
+# Sources: Broadcom SEC filing (April 2026), The Register, Mizuho, Investing.com,
+# Semi Fundamental channel checks, CNBC, Anthropic blog
+
+ANTHROPIC_DEAL_TIMELINE = {
+    "headers": ["Milestone", "Date", "Details"],
+    "rows": [
+        ("Google invests $300M in Anthropic (Series B)", "2023", "14% equity stake; no board seat"),
+        ("Google Cloud deal announced ('tens of billions')", "Oct 2025", "Up to 1M TPUs; 1 GW capacity in 2026"),
+        ("Broadcom reveals Anthropic as $10B customer", "Dec 2025 (Q4 FY2025 earnings)", "First major direct Broadcom-Anthropic disclosure"),
+        ("Anthropic places additional $11B order with Broadcom", "Q1 FY2026", "Total orders: $21B across two quarters"),
+        ("Broadcom/Google long-term TPU supply agreement", "April 7, 2026", "Next-gen TPUs through 2031; networking + components"),
+        ("Anthropic 3.5 GW deal announced", "April 7, 2026", "3.5 GW next-gen TPU capacity starting 2027"),
+        ("Anthropic reveals $30B run rate", "April 7, 2026", "Up from ~$9B at end 2025; 1,000+ enterprise customers at $1M+"),
+    ],
+}
+
+ANTHROPIC_REVENUE_SPLIT_YEARS = ["2025", "2026E", "2027E", "2028E"]
+
+# Revenue flowing to BROADCOM from Anthropic TPU deal
+# Source: Mizuho analysts estimate $21B in 2026, $42B in 2027 (includes all chip revenue)
+# Note: Broadcom supplies XPU chips + networking components (Tomahawk, DSPs, etc.)
+ANTHROPIC_BROADCOM_REVENUE = {
+    "headers": ["Revenue Component", "2025", "2026E", "2027E", "2028E"],
+    "rows": [
+        ("TPU XPU chips (Ironwood / next-gen)", "$3B", "$12B", "$25B", "$30B"),
+        ("Networking (Tomahawk, DSPs, optics)", "$1B", "$4B", "$10B", "$12B"),
+        ("Other components (substrates, etc.)", "$0.5B", "$1B", "$2B", "$2B"),
+        ("TOTAL Broadcom Revenue from Anthropic", "$4.5B", "$17B", "$37B", "$44B"),
+    ],
+    "notes": [
+        "Broadcom gross margin on XPUs: ~20-30% (shared with Google IP licensing)",
+        "Broadcom builds chips to Google's TPU design; Google retains IP ownership",
+        "Mizuho est.: $21B Broadcom AI revenue from Anthropic in 2026, $42B in 2027",
+        "$21B in orders placed across Q3-Q4 FY2025; delivery through late 2026",
+    ],
+}
+
+# Revenue flowing to GOOGLE from Anthropic TPU deal
+# Source: Morgan Stanley (AWS analogy: $1.28B → $3B → $5.6B); Investing.com analysis;
+# Google captures cloud services, IP licensing, and infrastructure margin
+ANTHROPIC_GOOGLE_REVENUE = {
+    "headers": ["Revenue Component", "2025", "2026E", "2027E", "2028E"],
+    "rows": [
+        ("GCP cloud services (compute, storage, networking)", "$2B", "$6B", "$12B", "$15B"),
+        ("TPU IP licensing fees (est. royalty on Broadcom sales)", "$0.5B", "$1.5B", "$3B", "$4B"),
+        ("Data center hosting / colocation", "$0.5B", "$2B", "$4B", "$5B"),
+        ("TOTAL Google Revenue from Anthropic", "$3B", "$9.5B", "$19B", "$24B"),
+    ],
+    "notes": [
+        "Google Cloud operating margin ~20.7% on cloud services",
+        "Google Cloud RPO includes 'tens of billions' committed from Anthropic",
+        "Morgan Stanley: AWS captures $1.28B→$5.6B from Anthropic (2025-2027) — Google similar or larger",
+        "Cloud providers capture 16-32% of AI startup revenue (Investing.com analysis)",
+        "Google also holds 14% equity in Anthropic ($300M Series B + subsequent rounds)",
+    ],
+}
+
+# Combined value chain summary
+ANTHROPIC_VALUE_CHAIN = {
+    "headers": ["Party", "Role", "2026E Revenue", "2027E Revenue", "Margin", "Economics"],
+    "rows": [
+        ("Broadcom", "Chip design & manufacturing", "$17B", "$37B", "~20-30%",
+         "Builds chips to Google IP; earns design + production fees"),
+        ("Google", "IP owner + Cloud platform", "$9.5B", "$19B", "~20-25%",
+         "Owns TPU design; provides cloud infra; collects IP royalties"),
+        ("TSMC", "Foundry fabrication (3nm)", "$3-5B", "$6-10B", "~50-55%",
+         "Manufactures TPU wafers; receives wafer orders from Broadcom"),
+        ("SK Hynix / Samsung", "HBM3e memory supply", "$2-3B", "$4-6B", "~35-40%",
+         "Supplies high-bandwidth memory for each TPU chip"),
+        ("Anthropic (buyer)", "AI model company", "Spends $26.5B+", "Spends $56B+", "Negative",
+         "$30B run-rate revenue; still unprofitable; venture-backed"),
+    ],
+}
+
 # AMD: MI300X ~400-500K in 2024; MI350 ramp mid-2025; MI400 launch 2026
 # AMD CoWoS: 11% of TSMC 2026 capacity (~105K wafers)
 AMD_UNITS = {
@@ -1286,34 +1362,168 @@ def build_workbook():
     for c in range(1, max(t_merge, len(cust_headers)) + 1):
         wst.column_dimensions[get_column_letter(c)].width = 30
 
-    # ===== Sheet 11: Migration Case Studies =====
-    ws11m = wb.create_sheet("Migration Case Studies")
-    ws11m.sheet_properties.tabColor = "00BCD4"
+    # ===== Sheet 10b: Anthropic Deal Revenue Split =====
+    wsa = wb.create_sheet("Anthropic Deal Split")
+    wsa.sheet_properties.tabColor = "E91E63"
 
-    add_title(ws11m, 1, "Real-World Migration Case Studies: NVIDIA GPU → TPU/ASIC", merge_end=5)
-    add_subtitle(ws11m, 2, "Major AI companies voting with their wallets — inference economics drive migration", merge_end=5)
+    a_merge = 6
+    add_title(wsa, 1, "Anthropic TPU Deal: Revenue Split Between Broadcom and Google", merge_end=a_merge)
+    add_subtitle(wsa, 2, "How Anthropic's $21B+ TPU orders flow to Broadcom (chips) vs Google (cloud + IP)", merge_end=a_merge)
+
+    # Part 1: Deal timeline
+    row = 4
+    add_subtitle(wsa, row, "Deal Timeline", merge_end=a_merge)
+    row += 1
+    for c, h in enumerate(ANTHROPIC_DEAL_TIMELINE["headers"], 1):
+        wsa.cell(row=row, column=c, value=h)
+    style_header_row(wsa, row, len(ANTHROPIC_DEAL_TIMELINE["headers"]))
+    row += 1
+    for tl_row in ANTHROPIC_DEAL_TIMELINE["rows"]:
+        for c, val in enumerate(tl_row, 1):
+            cell = wsa.cell(row=row, column=c, value=val)
+            cell.font = DATA_FONT
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="left" if c != 2 else "center", wrap_text=True)
+        row += 1
+    row += 1
+
+    # Part 2: Broadcom revenue from Anthropic
+    add_subtitle(wsa, row, "Revenue to BROADCOM from Anthropic TPU Deal ($B)", merge_end=a_merge)
+    row += 1
+    bc_fill = PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid")
+    for c, h in enumerate(ANTHROPIC_BROADCOM_REVENUE["headers"], 1):
+        wsa.cell(row=row, column=c, value=h)
+    style_header_row(wsa, row, len(ANTHROPIC_BROADCOM_REVENUE["headers"]))
+    bc_rev_start = row + 1
+    row += 1
+    for br_row in ANTHROPIC_BROADCOM_REVENUE["rows"]:
+        is_total = "TOTAL" in br_row[0]
+        for c, val in enumerate(br_row, 1):
+            cell = wsa.cell(row=row, column=c, value=val)
+            cell.font = Font(name="Calibri", size=10, bold=is_total)
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="center" if c > 1 else "left")
+            if is_total:
+                cell.fill = PatternFill(start_color="FFCDD2", end_color="FFCDD2", fill_type="solid")
+            elif c > 1:
+                cell.fill = bc_fill
+        row += 1
+    for note in ANTHROPIC_BROADCOM_REVENUE["notes"]:
+        wsa.cell(row=row, column=1, value=note)
+        wsa.merge_cells(start_row=row, start_column=1, end_row=row, end_column=len(ANTHROPIC_BROADCOM_REVENUE["headers"]))
+        wsa.cell(row=row, column=1).font = Font(name="Calibri", size=9, italic=True)
+        row += 1
+    row += 1
+
+    # Part 3: Google revenue from Anthropic
+    add_subtitle(wsa, row, "Revenue to GOOGLE from Anthropic TPU Deal ($B)", merge_end=a_merge)
+    row += 1
+    gc_fill = PatternFill(start_color="E3F2FD", end_color="E3F2FD", fill_type="solid")
+    for c, h in enumerate(ANTHROPIC_GOOGLE_REVENUE["headers"], 1):
+        wsa.cell(row=row, column=c, value=h)
+    style_header_row(wsa, row, len(ANTHROPIC_GOOGLE_REVENUE["headers"]))
+    gc_rev_start = row + 1
+    row += 1
+    for gr_row in ANTHROPIC_GOOGLE_REVENUE["rows"]:
+        is_total = "TOTAL" in gr_row[0]
+        for c, val in enumerate(gr_row, 1):
+            cell = wsa.cell(row=row, column=c, value=val)
+            cell.font = Font(name="Calibri", size=10, bold=is_total)
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="center" if c > 1 else "left")
+            if is_total:
+                cell.fill = PatternFill(start_color="BBDEFB", end_color="BBDEFB", fill_type="solid")
+            elif c > 1:
+                cell.fill = gc_fill
+        row += 1
+    for note in ANTHROPIC_GOOGLE_REVENUE["notes"]:
+        wsa.cell(row=row, column=1, value=note)
+        wsa.merge_cells(start_row=row, start_column=1, end_row=row, end_column=len(ANTHROPIC_GOOGLE_REVENUE["headers"]))
+        wsa.cell(row=row, column=1).font = Font(name="Calibri", size=9, italic=True)
+        row += 1
+    row += 1
+
+    # Part 4: Full value chain
+    add_subtitle(wsa, row, "Anthropic TPU Value Chain: Who Gets Paid?", merge_end=a_merge)
+    row += 1
+    for c, h in enumerate(ANTHROPIC_VALUE_CHAIN["headers"], 1):
+        wsa.cell(row=row, column=c, value=h)
+    style_header_row(wsa, row, len(ANTHROPIC_VALUE_CHAIN["headers"]))
+    row += 1
+    vc_fills = [
+        PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid"),
+        PatternFill(start_color="E3F2FD", end_color="E3F2FD", fill_type="solid"),
+        PatternFill(start_color="FFF3E0", end_color="FFF3E0", fill_type="solid"),
+        PatternFill(start_color="F3E5F5", end_color="F3E5F5", fill_type="solid"),
+        PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid"),
+    ]
+    for i, vc_row in enumerate(ANTHROPIC_VALUE_CHAIN["rows"]):
+        fill = vc_fills[i] if i < len(vc_fills) else None
+        for c, val in enumerate(vc_row, 1):
+            cell = wsa.cell(row=row, column=c, value=val)
+            cell.font = DATA_FONT
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="center" if c > 2 else "left", wrap_text=True)
+            if fill:
+                cell.fill = fill
+        row += 1
+    row += 1
+
+    # Part 5: Key takeaways
+    add_subtitle(wsa, row, "Key Takeaways: Broadcom vs Google Economics", merge_end=a_merge)
+    row += 1
+    deal_takeaways = [
+        "Broadcom captures the larger dollar amount ($17B vs $9.5B in 2026E) but at lower margins (~20-30%)",
+        "Google captures less revenue but at higher margins (~20-25% operating) plus strategic benefits (ecosystem lock-in)",
+        "Google also holds 14% equity in Anthropic — upside exposure beyond the infrastructure deal",
+        "Anthropic's $30B run rate means it spends $26.5B+ on compute in 2026E — nearly all revenue goes to infra",
+        "Cloud providers (Google + AWS) capture 16-32% of AI startup revenue as recurring infrastructure spend",
+        "Broadcom's risk disclosure: deal contingent on 'Anthropic's continued commercial success'",
+        "TSMC and HBM suppliers (SK Hynix, Samsung) are also major beneficiaries of the value chain",
+        "By 2027E, the Anthropic deal alone represents ~37% of Broadcom's total AI revenue target ($100B+)",
+    ]
+    for t in deal_takeaways:
+        wsa.cell(row=row, column=1, value=t)
+        wsa.merge_cells(start_row=row, start_column=1, end_row=row, end_column=a_merge)
+        wsa.cell(row=row, column=1).font = DATA_FONT
+        row += 1
+
+    row += 1
+    add_source_note(wsa, row, "Sources: Broadcom SEC filing (April 7, 2026), The Register, Mizuho, Investing.com,", merge_end=a_merge)
+    row += 1
+    add_source_note(wsa, row, "Semi Fundamental, CNBC, Morgan Stanley, Anthropic Blog, Google Cloud Press Corner", merge_end=a_merge)
+
+    for c in range(1, a_merge + 1):
+        wsa.column_dimensions[get_column_letter(c)].width = 28
+
+    # ===== Sheet 12: Migration Case Studies =====
+    ws12m = wb.create_sheet("Migration Case Studies")
+    ws12m.sheet_properties.tabColor = "00BCD4"
+
+    add_title(ws12m, 1, "Real-World Migration Case Studies: NVIDIA GPU → TPU/ASIC", merge_end=5)
+    add_subtitle(ws12m, 2, "Major AI companies voting with their wallets — inference economics drive migration", merge_end=5)
 
     row = 4
     cs_headers = ["Company", "Migration Path", "Cost Impact", "Scale", "Timeline"]
     for c, h in enumerate(cs_headers, 1):
-        ws11m.cell(row=row, column=c, value=h)
-    style_header_row(ws11m, row, len(cs_headers))
+        ws12m.cell(row=row, column=c, value=h)
+    style_header_row(ws12m, row, len(cs_headers))
 
     row = 5
     for cs_row in CASE_STUDIES:
         for c, val in enumerate(cs_row, 1):
-            cell = ws11m.cell(row=row, column=c, value=val)
+            cell = ws12m.cell(row=row, column=c, value=val)
             cell.font = DATA_FONT
             cell.border = THIN_BORDER
             cell.alignment = Alignment(horizontal="center" if c > 1 else "left", wrap_text=True)
         row += 1
 
-    add_source_note(ws11m, row + 1, "Sources: The Information, Anthropic Blog, Reuters, company disclosures (2025-2026)", merge_end=5)
+    add_source_note(ws12m, row + 1, "Sources: The Information, Anthropic Blog, Reuters, company disclosures (2025-2026)", merge_end=5)
 
     for c in range(1, len(cs_headers) + 1):
-        ws11m.column_dimensions[get_column_letter(c)].width = 28
+        ws12m.column_dimensions[get_column_letter(c)].width = 28
 
-    # ===== Sheet 12: Sources =====
+    # ===== Sheet 13: Sources =====
     ws11 = wb.create_sheet("Sources")
     ws11.sheet_properties.tabColor = "607D8B"
 
