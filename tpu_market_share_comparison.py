@@ -155,6 +155,87 @@ def compute_revenue(share_dict, pct_of_total):
     return rev
 
 
+# ---------------------------------------------------------------------------
+# UNIT SHIPMENT DATA (number of chips shipped/deployed annually, in thousands)
+# ---------------------------------------------------------------------------
+UNIT_YEARS = [2022, 2023, 2024, 2025, 2026]
+
+# Nvidia: Epoch AI + Jensen Huang disclosure (4M Hopper + 3M Blackwell thru Oct 2025)
+# 2022: ~1.0M (A100-era tail + early H100); 2023: ~3.76M (Omdia/HPCwire); 2024: ~5.0M;
+# 2025: ~7M (includes Blackwell ramp); 2026E: ~10-12M (Rubin + Blackwell continuing)
+NVIDIA_UNITS = {
+    "A100 / A800":          [600,   400,    50,     0,      0],
+    "H100 / H200 / H800":  [50,   2200,  3500,  1500,    500],
+    "H20 (China)":          [0,       0,  1000,   500,      0],
+    "B200 / B300 (Blackwell)": [0,    0,   200,  4500,   3000],
+    "Vera Rubin":           [0,       0,     0,     0,   5000],
+    "NVIDIA Total":         [650,  2600,  4750,  6500,   8500],
+}
+
+# Google TPU: Epoch AI methodology (Broadcom revenue / est. cost per chip)
+# Zylos Research: 1.6M Trillium v6 in 2025; v7E ~500K in 2026
+# Anthropic: 1M+ TPU deal; Google $185B capex in 2026
+GOOGLE_TPU_UNITS = {
+    "TPU v4":               [200,   400,   200,     0,      0],
+    "TPU v5e / v5p":        [0,     300,   800,   400,    100],
+    "TPU v6 (Trillium)":    [0,       0,   200,  1600,   1000],
+    "TPU v7 (Ironwood)":    [0,       0,     0,   500,   2500],
+    "Google TPU Total":     [200,   700,  1200,  2500,   3600],
+}
+
+# AMD: MI300X ~400-500K in 2024; MI350 ramp mid-2025; MI400 launch 2026
+# AMD CoWoS: 11% of TSMC 2026 capacity (~105K wafers)
+AMD_UNITS = {
+    "MI250 / MI250X":       [30,     50,    20,     0,      0],
+    "MI300X / MI300A":      [0,       0,   400,   200,     50],
+    "MI350X":               [0,       0,     0,   500,    300],
+    "MI400 (MI455X, etc.)": [0,       0,     0,     0,    800],
+    "AMD Total":            [30,     50,   420,   700,   1150],
+}
+
+# Amazon AWS: Trainium/Inferentia deployed
+# TechCrunch: 1-1.4M Trainium total by end 2025; Project Rainier 500K Trainium2
+# Trainium3 launched Dec 2025; 1M-chip UltraClusters
+AWS_UNITS = {
+    "Inferentia 1/2":       [100,   200,   300,   200,    100],
+    "Trainium 1":           [0,      50,   200,   100,      0],
+    "Trainium 2":           [0,       0,   300,  1500,   1000],
+    "Trainium 3":           [0,       0,     0,   200,   1500],
+    "AWS Total":            [100,   250,   800,  2000,   2600],
+}
+
+# Summary table: total units by vendor per year (thousands)
+UNIT_SUMMARY = {
+    "NVIDIA GPUs":          [650,  2600,  4750,  6500,   8500],
+    "Google/Broadcom TPU":  [200,   700,  1200,  2500,   3600],
+    "AMD GPUs":             [30,     50,   420,   700,   1150],
+    "AWS Trainium/Inferentia": [100, 250,  800,  2000,   2600],
+    "Total (4 vendors)":    [980,  3600,  7170, 11700,  15850],
+}
+
+# Unit market share (% of total units across these 4 vendors)
+UNIT_SHARE = {}
+for vendor, units in UNIT_SUMMARY.items():
+    if vendor != "Total (4 vendors)":
+        totals = UNIT_SUMMARY["Total (4 vendors)"]
+        UNIT_SHARE[vendor] = [round(units[i] / totals[i], 3) for i in range(len(UNIT_YEARS))]
+
+# Revenue per unit (ASP proxy, $K per chip) — derived from revenue / units
+REVENUE_PER_UNIT = {
+    "NVIDIA GPUs":          ["~$23K", "~$25K", "~$27K", "~$30K", "~$35K"],
+    "Google/Broadcom TPU":  ["~$6K", "~$7K", "~$8K", "~$10K", "~$12K"],
+    "AMD GPUs":             ["~$10K", "~$12K", "~$15K", "~$18K", "~$20K"],
+    "AWS Trainium/Inferentia": ["~$4K", "~$5K", "~$6K", "~$7K", "~$8K"],
+}
+
+# H100-equivalent compute capacity (normalizing to H100 = 1.0x)
+H100E_MULTIPLIERS = {
+    "NVIDIA (weighted avg)":  [0.5, 0.9, 1.2, 1.8, 3.5],
+    "Google TPU (weighted avg)": [0.6, 0.7, 1.0, 1.5, 2.3],
+    "AMD (weighted avg)":     [0.4, 0.5, 0.8, 1.2, 2.0],
+    "AWS (weighted avg)":     [0.2, 0.3, 0.5, 0.8, 1.3],
+}
+
 # --- ASIC vs GPU CAGR ---
 CAGR_DATA = [
     ("Custom ASICs (Hyperscaler)", "44.6%", "$18B", "$165B", "Inference-optimized"),
@@ -257,6 +338,12 @@ SOURCES = [
     ("AMD Newsroom", "MI400 series (2nm CDNA 5); MI355X 30% faster inference than B200", "CES 2026"),
     ("Silicon Analysts", "NVIDIA GPU Market Share 2024-2026: 87% peak, declining trajectory", "2026"),
     ("Epoch AI", "Inference projected at 75-80% of AI compute by 2030", "2025"),
+    ("Epoch AI - AI Chip Sales", "Open database of AI chip shipments by vendor; Nvidia, Google, AMD, Amazon tracked", "March 2026"),
+    ("Jensen Huang / Nvidia", "Direct disclosure: 4M Hopper + 3M Blackwell GPUs shipped through October 2025 (excl. China)", "Late 2025"),
+    ("HPCwire / Omdia", "Nvidia shipped 3.76M data center GPUs in 2023; 98% market share in DC GPU units", "June 2024"),
+    ("Zylos Research", "TPU v6 Trillium: ~1.6M units expected in 2025; TPU v7E ~500K units in 2026", "February 2026"),
+    ("AMD / WCCFTech", "MI300X: 400-500K units shipped in 2024; 11% of TSMC CoWoS capacity in 2026", "2024-2026"),
+    ("TechCrunch / AWS", "1-1.4M Trainium chips deployed by end 2025; Project Rainier: 500K Trainium2 at single site", "March 2026"),
 ]
 
 
@@ -814,56 +901,224 @@ def build_workbook():
     for c in range(1, max(len(bc_headers), len(q_headers)) + 1):
         ws8.column_dimensions[get_column_letter(c)].width = 22
 
-    # ===== Sheet 9: Migration Case Studies =====
-    ws9 = wb.create_sheet("Migration Case Studies")
-    ws9.sheet_properties.tabColor = "00BCD4"
+    # ===== Sheet 9: Unit Shipments =====
+    wsu = wb.create_sheet("Unit Shipments")
+    wsu.sheet_properties.tabColor = "3F51B5"
 
-    add_title(ws9, 1, "Real-World Migration Case Studies: NVIDIA GPU → TPU/ASIC", merge_end=5)
-    add_subtitle(ws9, 2, "Major AI companies voting with their wallets — inference economics drive migration", merge_end=5)
+    merge_w = len(UNIT_YEARS) + 1
+    add_title(wsu, 1, "AI Accelerator Unit Shipments by Vendor (thousands of chips)", merge_end=merge_w)
+    add_subtitle(wsu, 2, "NVIDIA GPUs vs Google/Broadcom TPU vs AMD GPUs vs AWS Trainium/Inferentia (2022-2026E)", merge_end=merge_w)
+
+    u_headers = ["Chip / Generation"] + [str(y) for y in UNIT_YEARS]
+
+    vendor_sections = [
+        ("NVIDIA GPU Shipments (K units)", NVIDIA_UNITS, PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")),
+        ("Google/Broadcom TPU Shipments (K units)", GOOGLE_TPU_UNITS, PatternFill(start_color="E3F2FD", end_color="E3F2FD", fill_type="solid")),
+        ("AMD GPU Shipments (K units)", AMD_UNITS, PatternFill(start_color="FFEBEE", end_color="FFEBEE", fill_type="solid")),
+        ("AWS Trainium/Inferentia Shipments (K units)", AWS_UNITS, PatternFill(start_color="FFF3E0", end_color="FFF3E0", fill_type="solid")),
+    ]
+
+    row = 4
+    for section_title, data_dict, fill in vendor_sections:
+        add_subtitle(wsu, row, section_title, merge_end=merge_w)
+        row += 1
+        for c, h in enumerate(u_headers, 1):
+            wsu.cell(row=row, column=c, value=h)
+        style_header_row(wsu, row, len(u_headers))
+        row += 1
+        for chip, vals in data_dict.items():
+            is_total = "Total" in chip
+            wsu.cell(row=row, column=1, value=chip)
+            wsu.cell(row=row, column=1).alignment = Alignment(horizontal="left")
+            wsu.cell(row=row, column=1).font = Font(name="Calibri", size=10, bold=is_total)
+            wsu.cell(row=row, column=1).border = THIN_BORDER
+            for c, val in enumerate(vals, 2):
+                cell = wsu.cell(row=row, column=c, value=val)
+                cell.number_format = NUM_FMT
+                cell.font = Font(name="Calibri", size=10, bold=is_total)
+                cell.border = THIN_BORDER
+                cell.alignment = Alignment(horizontal="center")
+                if not is_total:
+                    cell.fill = fill
+                else:
+                    cell.fill = PatternFill(start_color="FFF9C4", end_color="FFF9C4", fill_type="solid")
+            row += 1
+        row += 1
+
+    # Summary comparison table
+    add_subtitle(wsu, row, "Summary: Total Annual Shipments by Vendor (K units)", merge_end=merge_w)
+    row += 1
+    for c, h in enumerate(u_headers, 1):
+        wsu.cell(row=row, column=c, value=("Vendor" if c == 1 else h))
+    style_header_row(wsu, row, len(u_headers))
+    summary_header_row = row
+    row += 1
+    summary_start = row
+    for vendor, units in UNIT_SUMMARY.items():
+        is_total = "Total" in vendor
+        wsu.cell(row=row, column=1, value=vendor)
+        wsu.cell(row=row, column=1).alignment = Alignment(horizontal="left")
+        wsu.cell(row=row, column=1).font = Font(name="Calibri", size=10, bold=is_total)
+        wsu.cell(row=row, column=1).border = THIN_BORDER
+        for c, val in enumerate(units, 2):
+            cell = wsu.cell(row=row, column=c, value=val)
+            cell.number_format = NUM_FMT
+            cell.font = Font(name="Calibri", size=10, bold=is_total)
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="center")
+            if is_total:
+                cell.fill = PatternFill(start_color="FFF9C4", end_color="FFF9C4", fill_type="solid")
+        row += 1
+
+    row += 1
+
+    # Unit market share table
+    add_subtitle(wsu, row, "Unit Market Share (% of total units across 4 vendors)", merge_end=merge_w)
+    row += 1
+    for c, h in enumerate(u_headers, 1):
+        wsu.cell(row=row, column=c, value=("Vendor" if c == 1 else h))
+    style_header_row(wsu, row, len(u_headers))
+    share_header_row = row
+    row += 1
+    share_start = row
+    for vendor, shares in UNIT_SHARE.items():
+        wsu.cell(row=row, column=1, value=vendor)
+        wsu.cell(row=row, column=1).alignment = Alignment(horizontal="left")
+        wsu.cell(row=row, column=1).font = DATA_FONT
+        wsu.cell(row=row, column=1).border = THIN_BORDER
+        for c, val in enumerate(shares, 2):
+            cell = wsu.cell(row=row, column=c, value=val)
+            cell.number_format = PCT_FMT
+            cell.font = DATA_FONT
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="center")
+        row += 1
+
+    row += 1
+
+    # Average selling price table
+    add_subtitle(wsu, row, "Estimated Average Selling Price per Chip ($K)", merge_end=merge_w)
+    row += 1
+    for c, h in enumerate(u_headers, 1):
+        wsu.cell(row=row, column=c, value=("Vendor" if c == 1 else h))
+    style_header_row(wsu, row, len(u_headers))
+    row += 1
+    for vendor, prices in REVENUE_PER_UNIT.items():
+        wsu.cell(row=row, column=1, value=vendor)
+        wsu.cell(row=row, column=1).alignment = Alignment(horizontal="left")
+        wsu.cell(row=row, column=1).font = DATA_FONT
+        wsu.cell(row=row, column=1).border = THIN_BORDER
+        for c, val in enumerate(prices, 2):
+            cell = wsu.cell(row=row, column=c, value=val)
+            cell.font = DATA_FONT
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="center")
+        row += 1
+
+    row += 1
+    add_source_note(wsu, row, "Sources: Epoch AI (ai-chip-sales, March 2026), Jensen Huang (4M Hopper + 3M Blackwell thru Oct 2025),", merge_end=merge_w)
+    row += 1
+    add_source_note(wsu, row, "HPCwire/Omdia (3.76M Nvidia DC GPUs in 2023), Zylos Research (1.6M Trillium in 2025),", merge_end=merge_w)
+    row += 1
+    add_source_note(wsu, row, "AMD (400-500K MI300X in 2024, 11% TSMC CoWoS 2026), TechCrunch/AWS (1-1.4M Trainium by end 2025)", merge_end=merge_w)
+    row += 2
+
+    # Chart 1: Stacked bar chart of unit shipments
+    chart_u1 = BarChart()
+    chart_u1.type = "col"
+    chart_u1.grouping = "stacked"
+    chart_u1.title = "AI Accelerator Unit Shipments by Vendor (K chips, 2022-2026E)"
+    chart_u1.x_axis.title = "Year"
+    chart_u1.y_axis.title = "Chips Shipped (thousands)"
+    chart_u1.style = 10
+    chart_u1.width = 22
+    chart_u1.height = 14
+
+    cats_u = Reference(wsu, min_col=2, max_col=len(UNIT_YEARS) + 1, min_row=summary_header_row)
+    u_colors = [NVIDIA_GREEN, GOOGLE_BLUE, AMD_RED, "FF9900"]
+    for i, (vendor, _) in enumerate(list(UNIT_SUMMARY.items())[:4]):
+        vals = Reference(wsu, min_col=2, max_col=len(UNIT_YEARS) + 1, min_row=summary_start + i)
+        s = Series(vals, title=vendor)
+        if i < len(u_colors):
+            s.graphicalProperties.solidFill = u_colors[i]
+        chart_u1.append(s)
+    chart_u1.set_categories(cats_u)
+    wsu.add_chart(chart_u1, "A" + str(row))
+
+    # Chart 2: Unit market share line chart
+    chart_u2 = LineChart()
+    chart_u2.title = "Unit Market Share by Vendor (2022-2026E)"
+    chart_u2.x_axis.title = "Year"
+    chart_u2.y_axis.title = "Share of Units (%)"
+    chart_u2.y_axis.numFmt = '0%'
+    chart_u2.style = 10
+    chart_u2.width = 22
+    chart_u2.height = 14
+
+    cats_u2 = Reference(wsu, min_col=2, max_col=len(UNIT_YEARS) + 1, min_row=share_header_row)
+    for i, (vendor, _) in enumerate(UNIT_SHARE.items()):
+        vals = Reference(wsu, min_col=2, max_col=len(UNIT_YEARS) + 1, min_row=share_start + i)
+        s = Series(vals, title=vendor)
+        s.graphicalProperties.line.width = 28000
+        if i < len(u_colors):
+            s.graphicalProperties.line.solidFill = u_colors[i]
+        chart_u2.append(s)
+    chart_u2.set_categories(cats_u2)
+    wsu.add_chart(chart_u2, "A" + str(row + 17))
+
+    for c in range(1, len(u_headers) + 1):
+        wsu.column_dimensions[get_column_letter(c)].width = 26
+
+    # ===== Sheet 10: Migration Case Studies =====
+    ws10m = wb.create_sheet("Migration Case Studies")
+    ws10m.sheet_properties.tabColor = "00BCD4"
+
+    add_title(ws10m, 1, "Real-World Migration Case Studies: NVIDIA GPU → TPU/ASIC", merge_end=5)
+    add_subtitle(ws10m, 2, "Major AI companies voting with their wallets — inference economics drive migration", merge_end=5)
 
     row = 4
     cs_headers = ["Company", "Migration Path", "Cost Impact", "Scale", "Timeline"]
     for c, h in enumerate(cs_headers, 1):
-        ws9.cell(row=row, column=c, value=h)
-    style_header_row(ws9, row, len(cs_headers))
+        ws10m.cell(row=row, column=c, value=h)
+    style_header_row(ws10m, row, len(cs_headers))
 
     row = 5
     for cs_row in CASE_STUDIES:
         for c, val in enumerate(cs_row, 1):
-            cell = ws9.cell(row=row, column=c, value=val)
+            cell = ws10m.cell(row=row, column=c, value=val)
             cell.font = DATA_FONT
             cell.border = THIN_BORDER
             cell.alignment = Alignment(horizontal="center" if c > 1 else "left", wrap_text=True)
         row += 1
 
-    add_source_note(ws9, row + 1, "Sources: The Information, Anthropic Blog, Reuters, company disclosures (2025-2026)", merge_end=5)
+    add_source_note(ws10m, row + 1, "Sources: The Information, Anthropic Blog, Reuters, company disclosures (2025-2026)", merge_end=5)
 
     for c in range(1, len(cs_headers) + 1):
-        ws9.column_dimensions[get_column_letter(c)].width = 28
+        ws10m.column_dimensions[get_column_letter(c)].width = 28
 
-    # ===== Sheet 10: Sources =====
-    ws10 = wb.create_sheet("Sources")
-    ws10.sheet_properties.tabColor = "607D8B"
+    # ===== Sheet 11: Sources =====
+    ws11 = wb.create_sheet("Sources")
+    ws11.sheet_properties.tabColor = "607D8B"
 
-    add_title(ws10, 1, "Data Sources and References")
+    add_title(ws11, 1, "Data Sources and References")
 
     row = 3
     src_headers = ["Source", "Data Point / Coverage", "Date"]
     for c, h in enumerate(src_headers, 1):
-        ws10.cell(row=row, column=c, value=h)
-    style_header_row(ws10, row, len(src_headers))
+        ws11.cell(row=row, column=c, value=h)
+    style_header_row(ws11, row, len(src_headers))
 
     row = 4
     for src in SOURCES:
         for c, val in enumerate(src, 1):
-            cell = ws10.cell(row=row, column=c, value=val)
+            cell = ws11.cell(row=row, column=c, value=val)
             cell.font = DATA_FONT
             cell.border = THIN_BORDER
             cell.alignment = Alignment(horizontal="left", wrap_text=True)
         row += 1
 
     for c in range(1, len(src_headers) + 1):
-        ws10.column_dimensions[get_column_letter(c)].width = 45 if c == 2 else 30
+        ws11.column_dimensions[get_column_letter(c)].width = 45 if c == 2 else 30
 
     return wb
 
