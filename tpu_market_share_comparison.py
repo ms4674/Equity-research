@@ -183,6 +183,41 @@ GOOGLE_TPU_UNITS = {
     "Google TPU Total":     [200,   700,  1200,  2500,   3600],
 }
 
+# --- GOOGLE TPU: INTERNAL vs CLOUD vs EXTERNAL DEPLOYMENT ---
+# Source: Semi Fundamental (March 2026) channel checks + industry estimates
+# Internal = Google's own products (Search, YouTube, Ads, Gemini, etc.)
+# Cloud (GCP) = External customers renting TPUs via Google Cloud (incl. Anthropic, Meta rental)
+# External Direct = Customers purchasing TPU racks for their own data centers (Anthropic owned, Apple)
+TPU_DEPLOY_YEARS = [2022, 2023, 2024, 2025, 2026]
+
+TPU_DEPLOYMENT_SPLIT = {
+    "Internal Google (Search, YouTube, Ads, Gemini)": {
+        "units_k": [190, 630, 960, 2000, 1800],
+        "pct":     [0.95, 0.90, 0.80, 0.80, 0.50],
+    },
+    "Google Cloud (GCP) — rental to external customers": {
+        "units_k": [10, 60, 180, 375, 1080],
+        "pct":     [0.05, 0.085, 0.15, 0.15, 0.30],
+    },
+    "External Direct — customer-owned data centers": {
+        "units_k": [0, 10, 60, 125, 720],
+        "pct":     [0.00, 0.015, 0.05, 0.05, 0.20],
+    },
+}
+
+TPU_CUSTOMER_DETAILS = [
+    ("Anthropic", "~1M TPUs committed (mix of owned racks + GCP rental)", "2025-2027",
+     "Largest external TPU customer; 3.5 GW deal for 2027; $21B+ in Broadcom orders"),
+    ("Meta", "Phase 1: TPU rental via GCP for Llama testing (2026)", "2026-2027",
+     "Phase 2: potential TPU purchase for Meta DCs in 2027 if tests succeed"),
+    ("Apple", "~100K TPU v5p in 2024; ~200K in 2025", "2024-2025",
+     "One of largest third-party TPU buyers; reducing NVIDIA reliance"),
+    ("OpenAI", "Early-stage GCP rental for testing", "2025-2026",
+     "Appears more as leverage vs NVIDIA pricing than core infra strategy"),
+    ("Google Internal", "Search, YouTube, Ads, Gmail, Gemini models", "2016-present",
+     "Original TPU use case; still ~50% of total TPU capacity in 2026"),
+]
+
 # AMD: MI300X ~400-500K in 2024; MI350 ramp mid-2025; MI400 launch 2026
 # AMD CoWoS: 11% of TSMC 2026 capacity (~105K wafers)
 AMD_UNITS = {
@@ -344,6 +379,9 @@ SOURCES = [
     ("Zylos Research", "TPU v6 Trillium: ~1.6M units expected in 2025; TPU v7E ~500K units in 2026", "February 2026"),
     ("AMD / WCCFTech", "MI300X: 400-500K units shipped in 2024; 11% of TSMC CoWoS capacity in 2026", "2024-2026"),
     ("TechCrunch / AWS", "1-1.4M Trainium chips deployed by end 2025; Project Rainier: 500K Trainium2 at single site", "March 2026"),
+    ("Semi Fundamental", "TPU internal vs cloud split: ~80% internal in 2025 → ~50% in 2026; channel checks", "March 2026"),
+    ("The Register", "Anthropic $30B run rate; 3.5 GW TPU deal with Google/Broadcom for 2027", "April 2026"),
+    ("Anthropic Blog", "Expanding use of Google Cloud TPUs; up to 1M TPUs committed", "November 2025"),
 ]
 
 
@@ -1069,34 +1107,213 @@ def build_workbook():
     for c in range(1, len(u_headers) + 1):
         wsu.column_dimensions[get_column_letter(c)].width = 26
 
-    # ===== Sheet 10: Migration Case Studies =====
-    ws10m = wb.create_sheet("Migration Case Studies")
-    ws10m.sheet_properties.tabColor = "00BCD4"
+    # ===== Sheet 10: TPU Deployment Split =====
+    wst = wb.create_sheet("TPU Internal vs Cloud")
+    wst.sheet_properties.tabColor = GOOGLE_BLUE
 
-    add_title(ws10m, 1, "Real-World Migration Case Studies: NVIDIA GPU → TPU/ASIC", merge_end=5)
-    add_subtitle(ws10m, 2, "Major AI companies voting with their wallets — inference economics drive migration", merge_end=5)
+    t_merge = len(TPU_DEPLOY_YEARS) + 1
+    add_title(wst, 1, "Google TPU Deployment: Internal vs Cloud Rental vs External Direct", merge_end=t_merge)
+    add_subtitle(wst, 2, "Shift from ~95% internal (2022) to ~50% internal / 30% GCP rental / 20% direct sales (2026E)", merge_end=t_merge)
+
+    # Part 1: Unit volumes by deployment channel
+    row = 4
+    add_subtitle(wst, row, "TPU Units by Deployment Channel (K chips)", merge_end=t_merge)
+    row += 1
+    t_headers = ["Deployment Channel"] + [str(y) for y in TPU_DEPLOY_YEARS]
+    for c, h in enumerate(t_headers, 1):
+        wst.cell(row=row, column=c, value=h)
+    style_header_row(wst, row, len(t_headers))
+
+    deploy_fills = [
+        PatternFill(start_color="C8E6C9", end_color="C8E6C9", fill_type="solid"),
+        PatternFill(start_color="BBDEFB", end_color="BBDEFB", fill_type="solid"),
+        PatternFill(start_color="FFE0B2", end_color="FFE0B2", fill_type="solid"),
+    ]
+
+    units_start_row = row + 1
+    row += 1
+    for i, (channel, data) in enumerate(TPU_DEPLOYMENT_SPLIT.items()):
+        wst.cell(row=row, column=1, value=channel)
+        wst.cell(row=row, column=1).alignment = Alignment(horizontal="left", wrap_text=True)
+        wst.cell(row=row, column=1).font = DATA_FONT
+        wst.cell(row=row, column=1).border = THIN_BORDER
+        fill = deploy_fills[i] if i < len(deploy_fills) else None
+        for c, val in enumerate(data["units_k"], 2):
+            cell = wst.cell(row=row, column=c, value=val)
+            cell.number_format = NUM_FMT
+            cell.font = DATA_FONT
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="center")
+            if fill:
+                cell.fill = fill
+        row += 1
+
+    # Total row
+    wst.cell(row=row, column=1, value="Total TPU Shipments")
+    wst.cell(row=row, column=1).font = Font(name="Calibri", size=10, bold=True)
+    wst.cell(row=row, column=1).border = THIN_BORDER
+    wst.cell(row=row, column=1).alignment = Alignment(horizontal="left")
+    tpu_totals = GOOGLE_TPU_UNITS["Google TPU Total"]
+    for c, val in enumerate(tpu_totals, 2):
+        cell = wst.cell(row=row, column=c, value=val)
+        cell.number_format = NUM_FMT
+        cell.font = Font(name="Calibri", size=10, bold=True)
+        cell.border = THIN_BORDER
+        cell.alignment = Alignment(horizontal="center")
+        cell.fill = PatternFill(start_color="FFF9C4", end_color="FFF9C4", fill_type="solid")
+    row += 2
+
+    # Part 2: Percentage split
+    add_subtitle(wst, row, "Deployment Share (% of total TPU shipments)", merge_end=t_merge)
+    row += 1
+    for c, h in enumerate(t_headers, 1):
+        wst.cell(row=row, column=c, value=("Deployment Channel" if c == 1 else h))
+    style_header_row(wst, row, len(t_headers))
+    pct_header_row = row
+
+    row += 1
+    pct_start = row
+    for i, (channel, data) in enumerate(TPU_DEPLOYMENT_SPLIT.items()):
+        short_name = channel.split("—")[0].strip() if "—" in channel else channel.split("(")[0].strip()
+        wst.cell(row=row, column=1, value=short_name)
+        wst.cell(row=row, column=1).alignment = Alignment(horizontal="left")
+        wst.cell(row=row, column=1).font = DATA_FONT
+        wst.cell(row=row, column=1).border = THIN_BORDER
+        fill = deploy_fills[i] if i < len(deploy_fills) else None
+        for c, val in enumerate(data["pct"], 2):
+            cell = wst.cell(row=row, column=c, value=val)
+            cell.number_format = PCT_FMT
+            cell.font = DATA_FONT
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="center")
+            if fill:
+                cell.fill = fill
+        row += 1
+
+    row += 1
+    add_source_note(wst, row, "Source: Semi Fundamental channel checks (March 2026); internal ~80% in 2025 → ~50% in 2026", merge_end=t_merge)
+    row += 2
+
+    # Part 3: Key external customer details
+    add_subtitle(wst, row, "Key TPU Customers: Internal & External", merge_end=t_merge)
+    row += 1
+    cust_headers = ["Customer", "TPU Usage", "Timeline", "Notes"]
+    for c, h in enumerate(cust_headers, 1):
+        wst.cell(row=row, column=c, value=h)
+    style_header_row(wst, row, len(cust_headers))
+
+    row += 1
+    for cust in TPU_CUSTOMER_DETAILS:
+        for c, val in enumerate(cust, 1):
+            cell = wst.cell(row=row, column=c, value=val)
+            cell.font = DATA_FONT
+            cell.border = THIN_BORDER
+            cell.alignment = Alignment(horizontal="left" if c <= 2 else "center", wrap_text=True)
+        row += 1
+
+    row += 1
+    add_source_note(wst, row, "Sources: Semi Fundamental (March 2026), Anthropic Blog, The Register (April 2026), Reuters, TechCrunch", merge_end=t_merge)
+    row += 1
+    add_source_note(wst, row, "Note: Anthropic's 1M TPU deal is split ~40% owned racks (direct from Broadcom) + ~60% GCP rental", merge_end=t_merge)
+    row += 2
+
+    # Part 4: Key narrative takeaways
+    add_subtitle(wst, row, "Key Takeaways", merge_end=t_merge)
+    row += 1
+    takeaways_tpu = [
+        "2022-2024: TPU was overwhelmingly an internal Google asset (~80-95% for Search, YouTube, Ads, Gemini)",
+        "2025: External demand begins accelerating — Anthropic 1M TPU deal, Apple ~200K units, Meta testing",
+        "2026E: Dramatic shift — internal drops to ~50%, GCP rental rises to ~30%, direct sales reach ~20%",
+        "This transition converts TPU from a Google cost center into a revenue-generating cloud platform",
+        "Anthropic alone may account for 15-20% of all TPU capacity by 2027 (owned + rented combined)",
+        "Google's $185B 2026 capex is justified by this dual demand: internal Gemini + external monetization",
+        "Google's TPU gross margin to external customers is ~20-30%, much lower than Nvidia's ~75%",
+    ]
+    for t in takeaways_tpu:
+        wst.cell(row=row, column=1, value=t)
+        wst.merge_cells(start_row=row, start_column=1, end_row=row, end_column=t_merge)
+        wst.cell(row=row, column=1).font = DATA_FONT
+        row += 1
+
+    row += 1
+
+    # Chart 1: Stacked bar — units by deployment channel
+    chart_t1 = BarChart()
+    chart_t1.type = "col"
+    chart_t1.grouping = "stacked"
+    chart_t1.title = "Google TPU Deployment by Channel (K chips, 2022-2026E)"
+    chart_t1.x_axis.title = "Year"
+    chart_t1.y_axis.title = "TPU Chips (thousands)"
+    chart_t1.style = 10
+    chart_t1.width = 22
+    chart_t1.height = 14
+
+    cats_t = Reference(wst, min_col=2, max_col=len(TPU_DEPLOY_YEARS) + 1, min_row=units_start_row - 1)
+    t_colors = ["4CAF50", GOOGLE_BLUE, "FF9800"]
+    for i, (channel, _) in enumerate(TPU_DEPLOYMENT_SPLIT.items()):
+        vals = Reference(wst, min_col=2, max_col=len(TPU_DEPLOY_YEARS) + 1, min_row=units_start_row + i)
+        short = channel.split("—")[0].strip() if "—" in channel else channel.split("(")[0].strip()
+        s = Series(vals, title=short)
+        if i < len(t_colors):
+            s.graphicalProperties.solidFill = t_colors[i]
+        chart_t1.append(s)
+    chart_t1.set_categories(cats_t)
+    wst.add_chart(chart_t1, "A" + str(row))
+
+    # Chart 2: Stacked bar — percentage split
+    chart_t2 = BarChart()
+    chart_t2.type = "col"
+    chart_t2.grouping = "percentStacked"
+    chart_t2.title = "TPU Deployment Mix (% of total, 2022-2026E)"
+    chart_t2.x_axis.title = "Year"
+    chart_t2.y_axis.title = "Share of TPU Capacity"
+    chart_t2.y_axis.numFmt = '0%'
+    chart_t2.style = 10
+    chart_t2.width = 22
+    chart_t2.height = 14
+
+    cats_t2 = Reference(wst, min_col=2, max_col=len(TPU_DEPLOY_YEARS) + 1, min_row=pct_header_row)
+    for i, (channel, _) in enumerate(TPU_DEPLOYMENT_SPLIT.items()):
+        vals = Reference(wst, min_col=2, max_col=len(TPU_DEPLOY_YEARS) + 1, min_row=pct_start + i)
+        short = channel.split("—")[0].strip() if "—" in channel else channel.split("(")[0].strip()
+        s = Series(vals, title=short)
+        if i < len(t_colors):
+            s.graphicalProperties.solidFill = t_colors[i]
+        chart_t2.append(s)
+    chart_t2.set_categories(cats_t2)
+    wst.add_chart(chart_t2, "A" + str(row + 17))
+
+    for c in range(1, max(t_merge, len(cust_headers)) + 1):
+        wst.column_dimensions[get_column_letter(c)].width = 30
+
+    # ===== Sheet 11: Migration Case Studies =====
+    ws11m = wb.create_sheet("Migration Case Studies")
+    ws11m.sheet_properties.tabColor = "00BCD4"
+
+    add_title(ws11m, 1, "Real-World Migration Case Studies: NVIDIA GPU → TPU/ASIC", merge_end=5)
+    add_subtitle(ws11m, 2, "Major AI companies voting with their wallets — inference economics drive migration", merge_end=5)
 
     row = 4
     cs_headers = ["Company", "Migration Path", "Cost Impact", "Scale", "Timeline"]
     for c, h in enumerate(cs_headers, 1):
-        ws10m.cell(row=row, column=c, value=h)
-    style_header_row(ws10m, row, len(cs_headers))
+        ws11m.cell(row=row, column=c, value=h)
+    style_header_row(ws11m, row, len(cs_headers))
 
     row = 5
     for cs_row in CASE_STUDIES:
         for c, val in enumerate(cs_row, 1):
-            cell = ws10m.cell(row=row, column=c, value=val)
+            cell = ws11m.cell(row=row, column=c, value=val)
             cell.font = DATA_FONT
             cell.border = THIN_BORDER
             cell.alignment = Alignment(horizontal="center" if c > 1 else "left", wrap_text=True)
         row += 1
 
-    add_source_note(ws10m, row + 1, "Sources: The Information, Anthropic Blog, Reuters, company disclosures (2025-2026)", merge_end=5)
+    add_source_note(ws11m, row + 1, "Sources: The Information, Anthropic Blog, Reuters, company disclosures (2025-2026)", merge_end=5)
 
     for c in range(1, len(cs_headers) + 1):
-        ws10m.column_dimensions[get_column_letter(c)].width = 28
+        ws11m.column_dimensions[get_column_letter(c)].width = 28
 
-    # ===== Sheet 11: Sources =====
+    # ===== Sheet 12: Sources =====
     ws11 = wb.create_sheet("Sources")
     ws11.sheet_properties.tabColor = "607D8B"
 
