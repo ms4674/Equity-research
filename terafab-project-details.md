@@ -97,6 +97,102 @@ The project represents a fundamental strategic shift for Musk's companies—movi
 
 ---
 
+## Foundry Capacity Comparison: Wafers per Month
+
+To contextualize Terafab's planned scale, the table below compares monthly wafer capacity across the four major foundries and Terafab's targets. All figures are 300mm (12-inch) equivalent wafer starts per month (WSPM) unless otherwise noted.
+
+### Total Installed Capacity (All Nodes Combined)
+
+| Foundry            | Est. Total Capacity (WSPM) | Foundry Revenue Share (Q4 2025) | Notes                                                                 |
+|--------------------|---------------------------:|---------------------------------|-----------------------------------------------------------------------|
+| **TSMC**           |              ~1,300,000    | 70.4%                           | 23 fabs worldwide; dominant at every advanced node                    |
+| **Samsung**        |                ~350,000    | 7.1%                            | Fabs in Hwaseong, Pyeongtaek (Korea), Austin & Taylor (Texas)        |
+| **Intel**          |                ~250,000    | <1% (external foundry)          | Primarily internal use; Fab 52/62 (AZ), Fab 34 (Ireland), Fab 28 (Israel) |
+| **GlobalFoundries**|                ~185,000    | 3.9%                            | Malta (NY), Dresden (Germany), Singapore, Burlington (VT)            |
+| **Terafab (Initial)** |             100,000     | N/A — captive                   | Planned; production expected 2027                                     |
+| **Terafab (Full-Scale)** |       1,000,000     | N/A — captive                   | Planned; target by 2030                                               |
+
+### Advanced Node Capacity (Sub-5 nm)
+
+This is the more relevant comparison for Terafab since it targets the 2 nm node specifically.
+
+| Foundry            | Node(s)              | Est. Advanced WSPM | Lead Times (Q1 2026) | Status              |
+|--------------------|----------------------|-------------------:|----------------------|---------------------|
+| **TSMC**           | 2 nm (N2/A16)        |      ~50,000–140,000 | 78–104 weeks         | Fully booked        |
+| **TSMC**           | 3 nm (N3/N3E)        |     ~160,000       | 52–78 weeks          | Severely constrained|
+| **TSMC**           | 4/5 nm (N4/N5)       |     ~300,000+      | 39–52 weeks          | Constrained         |
+| **Samsung**        | 2 nm (SF2, GAA)      |      ~7,000–21,000 | Early access         | Ramping in 2026     |
+| **Samsung**        | 3/4 nm               |     ~40,000–60,000 | 26–52 weeks          | Constrained         |
+| **Intel**          | 18A (~2 nm equiv.)   |      ~40,000       | Early access         | Ramping; Fab 52 (AZ)|
+| **GlobalFoundries**| N/A                  |             —      | —                    | No sub-7 nm nodes   |
+| **Terafab (Init.)**| 2 nm                 |     100,000        | —                    | Planned 2027        |
+| **Terafab (Full)** | 2 nm                 |   1,000,000        | —                    | Planned 2030        |
+
+### Facility-Level Breakdown
+
+#### TSMC — Key Fabs (~1.3M WSPM total)
+
+| Fab / Location                    | Node(s)          | Est. WSPM     | Allocation Status (Q1 2026) |
+|-----------------------------------|------------------|---------------|------------------------------|
+| Fab 20 — Hsinchu, Taiwan          | 2 nm             | ~20,000       | Fully booked                 |
+| Fab 22 — Kaohsiung, Taiwan        | 2 nm             | ~15,000       | Fully booked                 |
+| Fab 21 P3 — Phoenix, AZ           | 2 nm (A16)       | ~15,000       | Fully booked                 |
+| Fab 15 — Taichung, Taiwan         | 3 nm             | ~50,000       | Severely constrained         |
+| Fab 18 P4–8 — Tainan, Taiwan      | 3 nm             | ~80,000       | Severely constrained         |
+| Fab 18 P1–3 — Tainan, Taiwan      | 4/5 nm           | ~100,000      | Constrained (hot-run premiums)|
+| Fab 21 P1 — Phoenix, AZ           | 4/5 nm           | ~20,000       | Severely constrained         |
+| JASM — Kumamoto, Japan            | 12/16/22/28 nm   | ~55,000       | Ramping                      |
+| Multiple mature fabs — Taiwan     | 7–28 nm          | ~900,000+     | Generally available          |
+
+#### Samsung Foundry — Key Fabs (~350K WSPM total)
+
+| Fab / Location                    | Node(s)          | Est. WSPM     | Status                       |
+|-----------------------------------|------------------|---------------|------------------------------|
+| Hwaseong S3 — Korea               | 2 nm (GAA)       | ~7,000        | Early access; ramping        |
+| Pyeongtaek P3 — Korea             | 3/4 nm           | ~40,000–60,000| Constrained (26–52 wk)       |
+| Pyeongtaek P4 — Korea             | 2 nm (GAA)       | Early ramp    | Early access                 |
+| Taylor — Texas, USA               | 2 nm (planned)   | ~0 → 50,000   | Equipment install Q1 2026    |
+| Austin — Texas, USA               | 14/11 nm         | ~40,000       | Mature node                  |
+| Hwaseong — Korea (other lines)    | 7–14 nm          | ~100,000+     | Available                    |
+
+#### Intel Foundry — Key Fabs (~250K WSPM total)
+
+| Fab / Location                    | Node(s)          | Est. WSPM     | Status                       |
+|-----------------------------------|------------------|---------------|------------------------------|
+| Fab 52 — Chandler, AZ             | 18A (~2 nm)      | ~40,000       | Ramping (early access)       |
+| Fab 42 — Chandler, AZ             | 18A (~2 nm)      | Under ramp    | Early access                 |
+| Fab 62 — Chandler, AZ (planned)   | Next-gen         | ~0            | Construction; expected 2026+ |
+| Fab 34 — Leixlip, Ireland         | Intel 4/3        | ~30,000–40,000| Production                   |
+| Fab 28 — Kiryat Gat, Israel       | 10/14/22 nm      | ~40,000       | Mature node                  |
+| Ohio One — New Albany, OH          | 18A (planned)    | ~0            | Construction; HVM ~2027      |
+| Other fabs — Oregon, NM, Malaysia | Mature / pkg     | ~100,000+     | Various                      |
+
+#### GlobalFoundries — All Fabs (~185K WSPM total)
+
+| Fab / Location                     | Node(s)          | Est. WSPM (2026)| Status                     |
+|------------------------------------|------------------|-----------------|----------------------------|
+| Fab 8 — Malta, NY                  | 12/14 nm         | ~70,000         | Available                  |
+| Fab 1 — Dresden, Germany           | 22/28/40 nm      | ~50,000         | Available                  |
+| Fab 7 — Singapore                  | 40/55/130 nm     | ~60,000         | Available                  |
+| Fab 9 — Burlington, VT             | 200mm (legacy)   | ~20,000 (equiv) | Available                  |
+
+### Terafab in Context
+
+At its **initial capacity of 100,000 WSPM** at the 2 nm node, Terafab would immediately become the **second-largest source of 2 nm wafers globally**, behind only TSMC's combined 2 nm output. It would exceed Samsung's entire 2 nm ramp and match Intel's 18A output across all of its Arizona fabs.
+
+At **full scale of 1,000,000 WSPM**, Terafab would rival TSMC's entire installed capacity across all nodes and represent approximately **77% of TSMC's current total output** — an unprecedented concentration of cutting-edge capacity in a single facility operated by a non-traditional semiconductor company.
+
+| Metric                                     | Terafab (Full) vs. Competitor          |
+|--------------------------------------------|----------------------------------------|
+| vs. TSMC total (all nodes)                 | ~77% of TSMC's ~1.3M WSPM             |
+| vs. TSMC 2 nm only                         | ~7–20x TSMC's current 2 nm output     |
+| vs. Samsung total (all nodes)              | ~2.9x Samsung's entire foundry         |
+| vs. Intel total (all nodes)                | ~4x Intel's entire fab portfolio       |
+| vs. GlobalFoundries total                  | ~5.4x GlobalFoundries' entire output   |
+| vs. Global 300mm capacity (9.6M WSPM)      | ~10.4% of world total                  |
+
+---
+
 ## Investment Implications and Risk Factors
 
 ### Bull Case
@@ -128,6 +224,8 @@ Companies most directly exposed to Terafab developments:
 
 ## Sources
 
+### Terafab Project
+
 - Wikipedia — Terafab
 - Tom's Hardware — "Elon Musk unveils $20 billion 'TeraFab' chip project" (March 2026)
 - DCPulse — "Terafab Austin: $25B 2nm AI Chip Factory"
@@ -137,3 +235,18 @@ Companies most directly exposed to Terafab developments:
 - The Economy — "The Two Pillars of Tesla's Semiconductor Strategy"
 - TradingKey — "Tesla Officially Advances Terafab"
 - TSN Media — "Who Wins If Tesla Terafab Succeeds? Investment Playbook"
+
+### Foundry Capacity Data
+
+- Silicon Analysts — "Foundry Allocation Status Q1 2026: Where Capacity Is and Isn't" (Mar 2026)
+- Silicon Analysts — Fab Explorer: 64 Global Fabs with Capacity & Node Data
+- WCCFTech — "TSMC's 2nm Wafer Production To Witness Ambitious Growth" (2026)
+- TechPowerUp — "2Q25 Foundry Revenue Surges 14.6% to Record High, TSMC's Market Share Hits 70%"
+- TrendForce — "AI Demand Drives 4Q25 Global Top 10 Foundries Revenue" (Mar 2026)
+- Dataconomy — "TSMC Dominates Foundry Market With 72% Share In Q3 2025"
+- Tom's Hardware — "Samsung's Taylor, Texas fab could herald a breakthrough... targets 50,000 WSPM"
+- Archyde / TechPowerUp — "Intel's Fab 52 Produces Over 40,000 Wafers Monthly"
+- SammyGuru — "Samsung Ramps Up Taylor Fab and P5 Line for Next-Gen Chips"
+- SEMI — "2026 All-Time High in Store for Global 300mm Semiconductor Fab Capacity"
+- UV Netware — "Semiconductor Manufacturing Power Map 2026: $1T Market, 33.7M Wafers"
+- GlobalFoundries — Q4 2025 / FY2025 Earnings Release
