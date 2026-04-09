@@ -1,0 +1,6 @@
+Provider,Deal_Value_Bn,Duration,Announced,Status,Type,Capacity_Start,Key_Terms
+CoreWeave,14.2,Through 2031 (option to 2032),Oct 2025,Signed,Neocloud GPU Cloud,2025-2026,GPU cloud capacity for AI training; part of CoreWeave $55B total backlog
+Nebius Phase 1,3.0,Multi-year,Nov 2025,Signed,Neocloud GPU Cloud,2026,Initial AI infrastructure capacity agreement
+Nebius Phase 2,27.0,5 years,Mar 2026,Signed,Neocloud GPU Cloud,Early 2027,$12B dedicated + $15B optional; NVIDIA Vera Rubin-based; supersedes Phase 1
+Oracle,20.0,Multi-year,Sep 2025,In Negotiation,Cloud,TBD,GPU capacity for AI model training and deployment
+Google Cloud,10.0,Multi-year,2025,Signed,Cloud,2025,Third-party cloud compute arrangement
