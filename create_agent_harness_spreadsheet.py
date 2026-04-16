@@ -467,7 +467,159 @@ def sheet_funding(wb):
     return ws
 
 
-# ── Sheet 7: Sources & Notes ─────────────────────────────────────────────────
+# ── Sheet 7: Token Usage by Harness ──────────────────────────────────────────
+
+def sheet_token_usage(wb):
+    ws = wb.create_sheet("Token Usage by Harness")
+    title = "Token Consumption & Cost Impact by Agent Harness Type"
+    headers = [
+        "Framework / Harness", "Token Overhead vs. Raw API",
+        "Primary Overhead Source",
+        "Cost per 1K Tasks (GPT-4o)", "Multi-Agent Multiplier",
+        "Context Mgmt Strategy", "Token Savings from Mgmt",
+        "Annual Cost (100K tasks/mo)",
+    ]
+    max_col = len(headers)
+    add_title_row(ws, title, max_col)
+
+    for c, h in enumerate(headers, 1):
+        ws.cell(row=2, column=c, value=h)
+    style_header(ws, 2, max_col)
+
+    data = [
+        ["LangGraph", "+9%",
+         "State serialization; minimal wrapper",
+         "$41.70", "3–8× (sub-graphs most efficient)",
+         "Autonomous compression; trimming; summarization; checkpointing",
+         "60–80%", "$135K"],
+        ["CrewAI", "+18%",
+         "Role prompts; delegation instructions; crew coordination",
+         "$48.20", "3–5× (manager + workers)",
+         "Shared context window; manager summarization between handoffs",
+         "20–40%", "$360K"],
+        ["AutoGen (legacy)", "+31%",
+         "Conversational message passing; bilateral agent-to-agent messages",
+         "$67.40", "5–10× (all agents read all messages)",
+         "Full conversation replay; no built-in compression",
+         "0% (none)", "$750K"],
+        ["OpenAI Agents SDK", "~+12% (est.)",
+         "Handoff context; guardrail checks; tracing metadata",
+         "Model-dependent", "1.5–2× (handoff pairs)",
+         "Per-agent context isolation; handoff transfers relevant state",
+         "30–50%", "$210K"],
+        ["Claude Agent SDK", "~+8–15% (est.)",
+         "Tool-use loop; tool results can be large (files, shell output)",
+         "Model-dependent", "1× (primarily single-agent)",
+         "Conversation + tool results; relies on model context window",
+         "0–20%", "Varies"],
+        ["Google ADK", "~+10–15% (est.)",
+         "Model-driven planning; session management overhead",
+         "Model-dependent", "2–4× (A2A protocol)",
+         "Sessions + Memory Bank; automatic session compaction",
+         "40–60%", "Varies"],
+        ["Strands Agents", "~+10% (est.)",
+         "Minimal orchestration; model-driven planning",
+         "Model-dependent", "2–3× (handoffs + swarms)",
+         "Session-based; handoff with condensed context",
+         "30–50%", "Varies"],
+        ["Salesforce Agentforce", "Abstracted",
+         "Token costs hidden; $2/conversation or $0.10/action",
+         "$2.00/conversation", "N/A (managed)",
+         "Managed by platform; no user control",
+         "N/A", "$2.4M (per-conversation)"],
+    ]
+
+    for r, row_data in enumerate(data, 3):
+        for c, val in enumerate(row_data, 1):
+            ws.cell(row=r, column=c, value=val)
+
+    style_body(ws, 3, 2 + len(data), max_col)
+
+    # Add sub-table: Token anatomy breakdown
+    gap_row = 3 + len(data) + 1
+    ws.merge_cells(start_row=gap_row, start_column=1, end_row=gap_row, end_column=max_col)
+    sub_cell = ws.cell(row=gap_row, column=1,
+                       value="Token Anatomy: Where Tokens Go in a Typical 10-Step Agent Task")
+    sub_cell.font = Font(name="Calibri", bold=True, size=12, color="2F5496")
+
+    sub_headers = [
+        "Token Category", "Tokens per Call", "Calls (10-step)",
+        "Total Tokens", "% of Total", "Cost Driver", "", "",
+    ]
+    sub_row = gap_row + 1
+    for c, h in enumerate(sub_headers, 1):
+        ws.cell(row=sub_row, column=c, value=h)
+    style_header(ws, sub_row, max_col)
+
+    sub_data = [
+        ["System prompt", "1,500–4,000", "10", "15,000–40,000", "10–15%",
+         "Repeated every call; fixed cost per framework", "", ""],
+        ["Tool / function schemas", "2,000–5,000", "10", "20,000–50,000", "12–18%",
+         "Grows with number of tools registered", "", ""],
+        ["Conversation history", "2,500 → 26,500", "10", "~145,000", "40–50%",
+         "Quadratic growth; largest cost component", "", ""],
+        ["Tool results", "200–3,000", "10", "2,000–30,000", "5–12%",
+         "Highly variable; file reads / web fetches can be massive", "", ""],
+        ["Thinking / reasoning tokens", "3–10× output", "10", "30,000–100,000+", "15–30%",
+         "Reasoning models only (o3, o4-mini, Opus 4); invisible but billed", "", ""],
+        ["Output tokens", "200–800", "10", "2,000–8,000", "3–5%",
+         "3–8× more expensive per token than input", "", ""],
+    ]
+
+    for r, row_data in enumerate(sub_data, sub_row + 1):
+        for c, val in enumerate(row_data, 1):
+            ws.cell(row=r, column=c, value=val)
+
+    style_body(ws, sub_row + 1, sub_row + len(sub_data), max_col)
+
+    # Add sub-table: Multi-agent multipliers
+    gap2 = sub_row + len(sub_data) + 2
+    ws.merge_cells(start_row=gap2, start_column=1, end_row=gap2, end_column=max_col)
+    sub2_cell = ws.cell(row=gap2, column=1,
+                        value="Multi-Agent Topology Token Multipliers")
+    sub2_cell.font = Font(name="Calibri", bold=True, size=12, color="2F5496")
+
+    topo_headers = [
+        "Topology", "Token Multiplier vs. Single Agent", "Explanation",
+        "Best Framework Fit", "", "", "", "",
+    ]
+    topo_row = gap2 + 1
+    for c, h in enumerate(topo_headers, 1):
+        ws.cell(row=topo_row, column=c, value=h)
+    style_header(ws, topo_row, max_col)
+
+    topo_data = [
+        ["Single agent (tool loop)", "1× (baseline)", "One context window, one loop",
+         "Claude Agent SDK, LangGraph", "", "", "", ""],
+        ["Sequential handoff (2 agents)", "1.5–2×",
+         "Handoff transfers condensed context; second agent builds new history",
+         "OpenAI Agents SDK, Strands", "", "", "", ""],
+        ["Parallel fan-out (3 agents)", "2.5–3.5×",
+         "Each agent runs independently; results merged by orchestrator",
+         "LangGraph, Google ADK", "", "", "", ""],
+        ["Crew with manager (4 agents)", "3–5×",
+         "Manager delegates + reviews; each worker has full context cycle",
+         "CrewAI", "", "", "", ""],
+        ["Conversational swarm (4+ agents)", "5–10×",
+         "All agents read all messages; bilateral token costs; negotiation rounds",
+         "AutoGen (legacy)", "", "", "", ""],
+        ["Hierarchical sub-graphs (nested)", "3–8×",
+         "Sub-graphs encapsulate; parent only sees summaries; most efficient multi-agent",
+         "LangGraph", "", "", "", ""],
+    ]
+
+    for r, row_data in enumerate(topo_data, topo_row + 1):
+        for c, val in enumerate(row_data, 1):
+            ws.cell(row=r, column=c, value=val)
+
+    style_body(ws, topo_row + 1, topo_row + len(topo_data), max_col)
+
+    auto_width(ws, max_col)
+    ws.freeze_panes = "A3"
+    return ws
+
+
+# ── Sheet 8: Sources & Notes ─────────────────────────────────────────────────
 
 def sheet_sources(wb):
     ws = wb.create_sheet("Sources & Notes")
@@ -499,10 +651,23 @@ def sheet_sources(wb):
         ["Enterprise Adoption",
          "Fortune 500 survey data from Marqstats and MarketIntelo reports; "
          "Camunda State of Agentic Orchestration 2026"],
+        ["Token Overhead Benchmarks",
+         "Multi-Agent Orchestration Frameworks Benchmark (agent-harness.ai); "
+         "TokenMix framework comparison 2026; "
+         "AI Cost Check agent cost guide 2026; "
+         "Zylos Research token economics report (Feb 2026)"],
+        ["Token Anatomy & Multipliers",
+         "Context Window Budgeting (gantz.ai); "
+         "ContextBudget paper (arXiv 2604.01664); "
+         "Augment Code loop cost model; "
+         "LangChain autonomous context compression blog; "
+         "Salesforce Agentforce pricing page (salesforce.com)"],
         ["Methodology",
          "Frameworks categorized by: (1) open-source vs. proprietary, "
          "(2) standalone vs. platform-embedded, (3) architecture pattern, "
-         "(4) target user persona. Categories are non-exclusive."],
+         "(4) target user persona. Categories are non-exclusive. "
+         "Token overhead measured vs. equivalent raw API calls on same model. "
+         "Annual cost estimates assume 100K tasks/mo on GPT-4o pricing."],
         ["Disclaimers",
          "Estimates marked (est.) are author projections based on available data. "
          "Market size figures vary widely across analysts due to differing category definitions. "
@@ -533,6 +698,7 @@ def main():
     sheet_benchmarks(wb)
     sheet_market_projections(wb)
     sheet_funding(wb)
+    sheet_token_usage(wb)
     sheet_sources(wb)
 
     output = "Agent_Harness_Types_Comparison.xlsx"

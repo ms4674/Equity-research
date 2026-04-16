@@ -169,7 +169,130 @@ Agentforce is the largest revenue-generating agent harness today:
 
 ---
 
-## 6. Investment Implications
+## 6. Token Usage by Harness Type
+
+Token consumption is the primary cost driver for any agent deployment and varies dramatically by harness architecture. A single agentic task consumes 3–100× more tokens than an equivalent one-shot API call, with the multiplier determined by the harness's orchestration pattern, context management strategy, and multi-agent topology.
+
+### 6.1 The Token Multiplier Effect
+
+Every agent harness introduces overhead above raw model API costs. The overhead compounds across loop iterations because each step appends tool results and reasoning to the context window, causing input tokens to grow quadratically rather than linearly:
+
+| Agent Loop Step | Approx. Input Tokens (Cumulative) | Marginal Cost Behavior |
+|----------------|-----------------------------------|----------------------|
+| Step 1 | ~2,500 | Baseline: system prompt + user query |
+| Step 3 | ~8,500 | Linear growth: tool results accumulating |
+| Step 5 | ~15,000 | Acceleration: prior reasoning + results |
+| Step 10 | ~26,500+ | Near-quadratic: full history re-sent each call |
+| Step 20 | ~55,000+ | Context window pressure; compression needed |
+
+The cost formula follows a triangular number pattern: a naive N-step loop accumulates input costs proportional to N(N+1)/2, not N. A 20-step task can consume 10× the tokens a simple per-step estimate would suggest.
+
+### 6.2 Token Overhead by Framework
+
+Benchmarked token overhead vs. equivalent raw API calls (source: agent-harness.ai, TokenMix, 2026):
+
+| Framework | Token Overhead vs. Raw API | Primary Overhead Source | Cost per 1K Tasks (GPT-4o) |
+|-----------|---------------------------|----------------------|--------------------------|
+| LangGraph | +9% | State serialization; minimal wrapper | $41.70 |
+| CrewAI | +18% | Role prompts; delegation instructions; crew coordination | $48.20 |
+| AutoGen | +31% | Conversational message passing; bilateral agent-to-agent messages; negotiation rounds | $67.40 |
+| OpenAI Agents SDK | ~+12% (est.) | Handoff context; guardrail checks; tracing metadata | Model-dependent |
+| Claude Agent SDK | ~+8–15% (est.) | Tool-use loop; minimal wrapper; but tool results can be large (file contents, shell output) | Model-dependent |
+| Strands Agents | ~+10% (est.) | Minimal orchestration; model-driven planning | Model-dependent |
+| Salesforce Agentforce | Abstracted (per-conversation) | $2/conversation or $0.10/action via Flex Credits; token costs hidden from customer | $2.00/conversation |
+
+**Key insight:** The 3.4× cost gap between LangGraph ($41.70) and AutoGen ($67.40) per 1,000 tasks is driven almost entirely by token overhead, not model costs. The underlying model (GPT-4o) is identical — the harness architecture determines how many tokens are consumed per task.
+
+### 6.3 Where Tokens Go: Anatomy of an Agent Task
+
+A typical 10-step agent task on a reasoning model breaks down as follows:
+
+| Token Category | Tokens per Call | Calls (10-step) | Total Tokens | % of Total | Cost Driver |
+|---------------|----------------|-----------------|-------------|-----------|------------|
+| System prompt | 1,500–4,000 | 10 | 15,000–40,000 | 10–15% | Repeated every call; fixed cost per framework |
+| Tool/function schemas | 2,000–5,000 | 10 | 20,000–50,000 | 12–18% | Grows with number of tools registered |
+| Conversation history | 2,500→26,500 | 10 | ~145,000 | 40–50% | Quadratic growth; largest cost component |
+| Tool results | 200–3,000 | 10 | 2,000–30,000 | 5–12% | Highly variable; file reads and web fetches can be massive |
+| Thinking/reasoning tokens | 3–10× output | 10 | 30,000–100,000+ | 15–30% | Reasoning models (o3, o4-mini, Opus 4) only; invisible but billed |
+| Output tokens | 200–800 | 10 | 2,000–8,000 | 3–5% | 3–8× more expensive per token than input |
+
+**Conversation history is the dominant cost**, accounting for 40–50% of total tokens. This is where harness architecture matters most — frameworks that manage history aggressively (trimming, summarization, compression) can cut this component by 60–80%.
+
+### 6.4 Multi-Agent Token Multipliers
+
+Multi-agent architectures multiply token consumption because each agent maintains its own context and inter-agent communication consumes tokens bilaterally:
+
+| Topology | Token Multiplier vs. Single Agent | Explanation |
+|----------|----------------------------------|-------------|
+| Single agent (tool loop) | 1× (baseline) | One context window, one loop |
+| Sequential handoff (2 agents) | 1.5–2× | Handoff transfers condensed context; second agent builds new history |
+| Parallel fan-out (3 agents) | 2.5–3.5× | Each agent runs independently; results merged by orchestrator |
+| Crew with manager (4 agents) | 3–5× | Manager agent delegates + reviews; each worker has full context cycle |
+| Conversational swarm (4+ agents) | 5–10× | All agents read all messages; bilateral token costs; negotiation rounds |
+| Hierarchical sub-graphs (nested) | 3–8× | Sub-graphs encapsulate; parent only sees summaries; most token-efficient multi-agent pattern |
+
+**CrewAI's role-based crews** typically land at 3–5× because the manager agent adds an orchestration layer that consumes tokens for delegation, status checks, and result synthesis. **AutoGen's conversational model** pushes to 5–10× because every agent reads every message in the shared conversation, creating bilateral token charges.
+
+**LangGraph's sub-graph pattern** is the most token-efficient multi-agent approach because sub-graphs run in isolation with their own state, and only return compact results to the parent graph — avoiding the full-context-sharing problem.
+
+### 6.5 Context Management Strategies by Framework
+
+How each framework handles the context growth problem directly determines token efficiency:
+
+| Framework | Primary Strategy | How It Works | Token Savings | Trade-off |
+|-----------|-----------------|-------------|---------------|-----------|
+| LangGraph 2.0 | Autonomous context compression | Model itself triggers compression at task boundaries; agent decides when to summarize | 60–80% | Requires reasoning model capable of self-assessing context quality |
+| LangGraph | Trimming + checkpointing | `max_token` limit drops oldest messages; checkpointer persists full state externally | 40–60% | Lossy — old messages lost from context (but recoverable from checkpoint) |
+| LangGraph | Summarization | Second LLM call condenses old messages into summary before context overflow | 50–70% | Extra LLM call costs tokens itself; summary quality varies |
+| CrewAI | Shared context window | Crew members share condensed context; manager summarizes between handoffs | 20–40% | Less granular control; manager summarization adds overhead |
+| AutoGen | Full conversation replay | All messages retained in shared conversation; no built-in compression | 0% (none) | Highest token usage; context window fills fastest |
+| OpenAI Agents SDK | Per-agent context isolation | Each agent maintains its own context; handoffs transfer only relevant state | 30–50% | Information loss during handoff if context not carefully structured |
+| Claude Agent SDK | Conversation + tool results | Tool results appended to conversation; no built-in compression; relies on model's context window | 0–20% | Large tool results (file reads) can dominate context |
+| Google ADK | Sessions + Memory Bank | Short-term (session) and long-term (Memory Bank) tiers; session compaction automatic | 40–60% | Memory Bank retrieval adds latency; not all context recoverable |
+
+### 6.6 Cost Modeling: Harness Choice Impact on Annual Spend
+
+To illustrate how harness architecture affects real-world costs, consider an enterprise running 100,000 agent tasks per month on GPT-4o ($2.50/1M input, $10.00/1M output):
+
+| Scenario | Avg. Steps/Task | Tokens/Task | Monthly Token Cost | Annual Cost | Harness Overhead |
+|----------|----------------|------------|-------------------|-------------|-----------------|
+| One-shot API (no agent) | 1 | ~3,000 | $750 | $9,000 | — (baseline) |
+| LangGraph (single agent, compressed) | 8 | ~45,000 | $11,250 | $135,000 | +9% vs. raw agentic |
+| OpenAI Agents SDK (2-agent handoff) | 10 | ~70,000 | $17,500 | $210,000 | ~+12% |
+| CrewAI (3-agent crew) | 12 | ~120,000 | $30,000 | $360,000 | +18% |
+| AutoGen (4-agent swarm) | 15 | ~250,000 | $62,500 | $750,000 | +31% |
+| Salesforce Agentforce | N/A | Abstracted | $200,000 | $2,400,000 | Per-conversation; no token visibility |
+
+**The harness decision is a 5–8× annual cost swing** between the most efficient (LangGraph, $135K) and least efficient (AutoGen, $750K) open-source options for the same task volume. Salesforce Agentforce's per-conversation pricing ($2/conversation) is even more expensive in absolute terms but trades cost for zero engineering effort.
+
+### 6.7 Token Cost Optimization Levers
+
+| Lever | Token Reduction | Applicable Harnesses | Implementation Complexity |
+|-------|----------------|---------------------|--------------------------|
+| Prompt caching (provider-side) | 50–90% on cached input | All (Anthropic, OpenAI, Google offer caching) | Low — enable via API flag |
+| Model tiering (use cheaper model for simple steps) | 60–80% on routed steps | LangGraph, CrewAI, Strands (model-per-node) | Medium — requires step classification |
+| Context window trimming | 40–60% | LangGraph, Google ADK | Low — configuration parameter |
+| Rolling summarization | 50–70% | LangGraph 2.0 (autonomous), manual in others | Medium — extra LLM call per summary |
+| Sub-agent delegation | 50–70% for multi-agent | LangGraph (sub-graphs), Strands (handoffs) | Medium — architecture redesign |
+| Tool result truncation | 10–30% | All (custom implementation) | Low — truncate large tool outputs |
+| Reasoning model → non-reasoning for simple steps | 70–90% on thinking tokens | All (model selection per step) | Medium — requires step classification |
+| Hard token budget caps | Variable (prevents runaways) | All (custom implementation) | Low — but risks task failure |
+
+**The single highest-impact lever is prompt caching**, which reduces repeated system prompt and schema costs by 50–90%. Anthropic and OpenAI both offer automatic prompt caching for recurring prefixes, and this benefit applies regardless of harness choice. The second-highest impact is **model tiering** — using a cheaper model (Haiku, GPT-4o-mini) for simple routing/classification steps and reserving frontier models for complex reasoning.
+
+### 6.8 Implications for Model Providers
+
+Token usage patterns by harness type have direct implications for model provider revenue:
+
+- **Agentic workloads consume 3–100× more tokens per user interaction** than chat or one-shot API calls, making agent adoption the primary growth driver for inference revenue
+- **Reasoning model adoption amplifies this further** — thinking tokens (3–10× output) are billed but invisible, creating a "hidden" revenue multiplier
+- **Context management innovation (LangGraph 2.0 autonomous compression) works against provider revenue** by reducing token consumption per task — this creates a tension between framework efficiency and API revenue
+- **Per-conversation pricing (Salesforce Agentforce at $2/conversation)** decouples customer costs from token consumption, allowing the platform to capture margin on token-efficient implementations while absorbing losses on token-heavy ones
+- **Output token pricing premiums (3–8× vs. input)** disproportionately affect agent workloads because agents generate more structured output (tool calls, reasoning chains) per interaction than chat users
+
+---
+
+## 7. Investment Implications
 
 ### 6.1 Where Value Accrues
 
@@ -184,7 +307,7 @@ The agent harness stack has four layers, each with different competitive dynamic
 
 **Key insight:** Value is migrating to the extremes — the application layer (Salesforce) captures the most revenue today, while the runtime layer (AWS, Google) is positioned for durable margin. The harness/framework layer risks commoditization as model providers ship their own SDKs.
 
-### 6.2 Bull and Bear Cases
+### 7.2 Bull and Bear Cases
 
 **Bull case for open-source harnesses (LangChain, CrewAI):**
 - Enterprise adoption is at 2% penetration → massive runway
@@ -203,7 +326,7 @@ The agent harness stack has four layers, each with different competitive dynamic
 - Interoperability protocols (MCP, A2A) may standardize the tool/agent interface, reducing SDK differentiation
 - Revenue still captured at the model/API layer — SDKs are a cost center, not a profit center
 
-### 6.3 Key Metrics to Track
+### 7.3 Key Metrics to Track
 
 | Metric | Why It Matters | Current Benchmark |
 |--------|---------------|-------------------|
@@ -214,7 +337,7 @@ The agent harness stack has four layers, each with different competitive dynamic
 | MCP / A2A protocol adoption | Interoperability reduces switching costs | MCP: broad; A2A: 50+ partners |
 | Automation budget growth (enterprise survey) | Leading indicator of market expansion | +20% over next 2 years |
 
-### 6.4 Risks
+### 7.4 Risks
 
 1. **Open-source commoditization.** If harness frameworks become commodity infrastructure (like web frameworks), monetization will be extremely difficult. LangChain's $16M revenue on 90M monthly downloads implies low conversion.
 
@@ -228,7 +351,7 @@ The agent harness stack has four layers, each with different competitive dynamic
 
 ---
 
-## 7. Conclusion
+## 8. Conclusion
 
 The agent harness market is fragmenting into five distinct categories, each with different competitive dynamics and investment profiles. The open-source framework layer (LangGraph, CrewAI) has captured developer mindshare but faces monetization challenges and vertical integration pressure from model providers. Platform SDKs (OpenAI, Anthropic, Google) are strategic cost centers designed to drive API consumption rather than standalone revenue generators. Managed runtimes (AWS Bedrock AgentCore) are positioned for durable cloud-like margins. Enterprise SaaS platforms (Salesforce Agentforce at $800M ARR) are capturing the most revenue today by embedding agents into existing workflow lock-in.
 
