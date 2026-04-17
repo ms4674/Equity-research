@@ -1,0 +1,11 @@
+Vendor,Platform,Agentic capability,Banking-relevant features,Notable bank/fintech customers,Source ID
+Microsoft,Microsoft 365 Copilot + Finance Agents + Agent 365,"Agent orchestration, governance ($15/user/mo from May-2026)",Finance Chat over ERP/email; Excel reconciliation; Purview DLP for Copilot/agents (June-2026),Multiple banks via Azure / Copilot,S33
+Microsoft,Azure OpenAI / Foundry,Custom enterprise agents,"Used as backbone for many bank agents (BofA AskGPS, others)","Bank of America, Morgan Stanley, others",S33
+Google Cloud,Gemini Enterprise (formerly Agentspace),"No-code agent build, secure data connections, central governance",Used for bank-wide agent rollouts; powers Wells Fargo agents,"Wells Fargo, HSBC (selected workloads)",S34
+Google Cloud,Agent Payments Protocol (AP2) + UCP,Open standards for agent payments,"Underlies merchant + issuer integrations across Visa, Mastercard, Adyen, PayPal","Visa, Mastercard, PayPal, Adyen",S35
+OpenAI,ChatGPT Enterprise + Agentic Commerce Protocol,Enterprise agents + 'Buy it in ChatGPT' Instant Checkout,ACP open spec (with Stripe); 5 REST endpoints; ChatGPT charges 4% txn fee,"BBVA, Santander, Klarna, Morgan Stanley, NatWest (assistant), Nubank",S36
+Anthropic,Claude for Financial Services + connectors,"Agentic LLM with finance-specific connectors (S&P, FactSet, Morningstar, LSEG, Aiera, Moody's)",Claude for Excel; agent skills for modeling; MCP enterprise expansion,"Goldman Sachs, Citi, Brex, Coinbase",S20
+NVIDIA,"AI Factory stack (NeMo, Nemotron, NIM)",Agentic blueprints for FS,Capital-markets research & trading-signal blueprints (KX); consumer-banking multi-agent reference (Capital One),"Capital One, KX, financial-services partners",S31
+Salesforce,Agentforce for Financial Services,Atlas Reasoning Engine; pre-built FS role agents,"Advisor, banker, service, collections agents; Einstein 1 / Data Cloud integration; $0.10/action or $2/conv",Wealth/insurance/FS customers (large installed base),S37
+AWS,Bedrock Agents + agent payment partnerships,Multi-model agents on Bedrock,Pilot partner for Visa Intelligent Commerce Connect; financial-services Bedrock customers,"Visa (ICC), broad FS customer base",S16
+ServiceNow,AI Agents for FS workflows,Workflow agents + Now Assist,"Service ops, IT, employee workflows in banks (broad enterprise install base)",Multiple unnamed banks,S33

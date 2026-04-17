@@ -1,0 +1,10 @@
+Company,Region,Product,Use case,Underlying tech / partners,Stage (2026),Adoption / Impact,Source ID
+Klarna,Global,OpenAI-powered customer-service agent,Consumer support automation,OpenAI,In production but partial reversal in 2026,2.3M chats/month at peak (~700 FTE equivalent); resolution 11→2 min; targeted ~$40M profit lift in 2024. Partial human re-hiring announced 2026 after CSAT slipped,S25
+Nubank,LatAm,Call-centre co-pilot + AI assistant + search,"Customer support, search, productivity",OpenAI,In production,"Resolves 55% of L1 queries; chat response time -70%; covers 5,000+ employees and 114M+ customers",S26
+Revolut,UK/Europe,AIR (AI by Revolut),"In-app spending, investing, subscriptions, card controls, travel",Internal + partners (zero-retention 3rd party),Launched Apr-2026,13M UK customers in scope; biometric approval for sensitive actions,S26
+Starling Bank,UK,Starling Assistant (agentic),Voice/natural-language banking tasks,Internal,Launched Mar-2026,"First UK agentic financial assistant per coverage; handles savings goals, bill organisation",S26
+Monzo,UK,AI virtual assistant + personalisation,Dynamic support and product personalisation,Internal + partners,Live,Used for support and personalisation across consumer base,S26
+Brex,US,Agents on Brex,"Expense memos, receipt fetch, audit/review",Internal + Anthropic Claude,Live,Auto-approves low-risk expenses; categorises violations; eliminates expense busywork,S27
+Ramp,US,Agentic AP + Expense agents,"Invoice processing, GL coding, fraud detection, approvals",Internal AI,Live,99% OCR accuracy; 2.4x faster invoice processing; 7x fewer clicks per bill,S27
+Slash Financial,US,AI-powered SMB banking platform,Autonomous finance function for online businesses,Internal,Live; raised $100M Series C at $1.4B (2026),"Ribbit, Khosla, Goodwater led round; positioned as 'autonomous finance function'",S28
+Mercury,US,AI-powered banking ops (limited public detail),"Operations, search, support",Internal + partners,Live,Less public agentic detail than peers; focus on AI-assisted UX,S27

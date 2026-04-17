@@ -1,0 +1,17 @@
+Vendor,Product,Category,Target buyer,Notable customers / proof points,Stage / Funding,Source ID
+Hebbia,Matrix + Agent Library,Research/ops agents for finance & legal,"Asset managers, IB, advisory, F500",Serves clients with $30T AUM; 1.5B pages processed; ~200k prompts/day,Raised ~$161M; mid/high six-figure ACVs,S29
+Glean,Enterprise AI assistant,Workplace AI / search across enterprise apps,Cross-industry incl. financial services,Used in financial services among 1000+ customers,Raised ~$765M (Series F),S29
+Harvey,Legal/financial reasoning agent,Legal + financial services workflows,"Law firms, banks, in-house counsel",Used by leading law firms; expanding into FS,Multi-billion valuation per public reporting,S29
+Cohere,Command / North for Banking,Enterprise foundation models + retrieval,"Banks, regulated enterprise",RBC co-developed 'North for Banking',Late-stage scale-up,S13
+Fenergo,FinCrime OS + agent suite,KYC/AML compliance agents,Tier-1 / Tier-2 banks,"Up to 18,300 analyst hrs/yr saved; 95% of screening hits auto-resolved; 50% lower doc processing time",Established vendor,S30
+Bretton,Financial-crime AI agents,"AML, EDD automation","Banks, fintech",70% reduction in EDD queue completion; $5.35M first-year ops savings; 200k+ customer reviews automated,Startup,S30
+StackAI,Compliance agentic platform,"KYC, AML, audit automation",Fintech & SMB banks,Used by fintech startups for audit-ready compliance,Startup,S30
+Temenos,FCM AI Agent,Real-time payments screening,Banks running Temenos core,Reduces false positives in watchlist screening; mimics human reviewer,Public-co vendor,S22
+Dyna.Ai,Agentic banking platform,"Bank ops, AML, customer ops",Banks (esp. APAC),Up to 70% manual workload cut; 65% AML investigation time cut at one client,Raised $50M Series A 2026,S28
+Stacks,Agentic finance ops platform,"Reconciliations, journal entries, close",Enterprise finance teams,30+ enterprise customers; 100k hours saved/year,Raised $23M Series A (Lightspeed) 2026,S28
+EnFi,Agentic credit analyst,Credit analysis & lending,Regional / community banks,Addresses analyst staffing shortages,Raised $15M 2026,S28
+Ralio,Agentic business payments rails,Payments infra for agents,B2B fintechs,Pre-seed product; payments layer for safe agent workflows,Raised £1.8M pre-seed 2026,S28
+KX (FD Tech),"Agentic AI Blueprints (Research Assistant, Trading Signal Agent)",Capital-markets research & signal discovery,Sell-side / asset managers,Built on NVIDIA AI Factory + KX time-series DB; launched at GTC 2026,Public-co vendor,S31
+Cognition,Devin,Autonomous software engineer,Engineering orgs incl. banks,Goldman Sachs deployed across 12k engineers,Late-stage startup,S4
+Skyfire,Agent monetisation / payments,Payment & identity for AI agents,"Agent platforms, fintech",Competes with x402; agent-pay rails,Startup,S32
+Crossmint,Agentic payments + wallets,Stablecoin & wallet infra for agents,"Devs, enterprises","Tracks ACP, AP2, MPP, x402 protocol landscape",Startup,S32
