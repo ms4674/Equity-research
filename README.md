@@ -24,7 +24,9 @@ fintech vendors.
 | 5 | Enterprise Platforms | Microsoft, Google Cloud, OpenAI, Anthropic, NVIDIA, Salesforce, AWS, ServiceNow |
 | 6 | Agentic Payments Protocols | ACP, Visa Trusted Agent Protocol, Mastercard Agent Pay, UCP, AP2, MPP, x402, MCP |
 | 7 | Funding Rounds | Selected 2025-2026 venture rounds for agentic-AI fintech |
-| 8 | Sources | URLs and publications used to compile the tracker |
+| 8 | Coding vs FS Contrast | Side-by-side comparison of coding agents vs banking/payments/FS agents on token consumption, task duration, cost, reliability, tool surface |
+| 9 | Leading Companies | Pick of the leader(s) in each agent category (coding, banking incumbents, payments networks/issuers/processors, fintech, vendors, platforms, protocols) |
+| 10 | Sources | URLs and publications used to compile the tracker |
 
 ### Rebuild
 

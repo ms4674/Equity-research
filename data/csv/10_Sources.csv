@@ -36,3 +36,10 @@ S34,Google Cloud / Promevo / ScaleByTech,Gemini Enterprise (Agentspace) for bank
 S35,Google / Adyen / Crossmint,Universal Commerce Protocol (UCP) + Agent Payments Protocol (AP2),https://www.crossmint.com/learn/agentic-payments-protocols-compared,2026-04-17
 S36,OpenAI / OpenAI Developers / Ekamoira,ChatGPT Instant Checkout + Agentic Commerce Protocol,https://openai.com/index/buy-it-in-chatgpt/,2026-04-17
 S37,Salesforce / Vantage Point,Agentforce for Financial Services,https://www.salesforce.com/financial-services/artificial-intelligence/,2026-04-17
+S38,METR (Model Evaluation & Threat Research),"Time-horizon benchmark for frontier coding agents (v1.1, Jan-2026)",https://metr.org/time-horizons,2026-04-17
+S39,TokenCost / Anthropic GitHub issues,"Claude Code per-session token economics (cache, regressions)",https://tokencost.app/blog/claude-code-cost-per-session,2026-04-17
+S40,Devin docs / vibecoder.me / imseankim.com,"Devin ACU pricing, SWE-bench performance, cost per task",https://docs.devin.ai/admin/billing,2026-04-17
+S41,Cursor docs / AgentCost / Cursor blog,Cursor agent request pricing and team usage patterns,https://cursor.com/docs/account/teams/pricing,2026-04-17
+S42,OpenAI Codex docs / Hypereal AI / TokenCost,Codex token consumption per task; long-horizon 25h / 13M-token run,https://developers.openai.com/codex/cookbook/long_horizon_tasks/,2026-04-17
+S43,GitHub Docs / GitHub features,GitHub Copilot agent-mode / premium-request pricing 2026,https://docs.github.com/en/billing/concepts/product-billing/github-copilot-premium-requests,2026-04-17
+S44,Otera / Medium (S. Boddula) / blogarama / paxrel,"Banking AI agent task durations: KYC in 8s, onboarding in minutes vs days",https://www.otera.ai/solutions/banking-autonomous-kyc-and-onboarding,2026-04-17

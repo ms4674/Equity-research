@@ -62,7 +62,14 @@ OVERVIEW_ROWS = [
     ["7_Funding_Rounds",
      "Selected 2025-2026 venture rounds for agentic-AI fintech.",
      "see sheet"],
-    ["8_Sources",
+    ["8_Coding_vs_FS_Contrast",
+     "Side-by-side: how coding agents differ from banking, payments "
+     "and FS agents on tokens / task duration / cost / reliability.",
+     "see sheet"],
+    ["9_Leading_Companies",
+     "Pick of the leader(s) in each agent category.",
+     "see sheet"],
+    ["10_Sources",
      "URLs and publications used to compile this tracker.",
      "see sheet"],
     [],
@@ -1032,6 +1039,348 @@ SOURCES = [
      "Agentforce for Financial Services",
      "https://www.salesforce.com/financial-services/artificial-intelligence/",
      "2026-04-17"],
+    ["S38", "METR (Model Evaluation & Threat Research)",
+     "Time-horizon benchmark for frontier coding agents (v1.1, Jan-2026)",
+     "https://metr.org/time-horizons",
+     "2026-04-17"],
+    ["S39", "TokenCost / Anthropic GitHub issues",
+     "Claude Code per-session token economics (cache, regressions)",
+     "https://tokencost.app/blog/claude-code-cost-per-session",
+     "2026-04-17"],
+    ["S40", "Devin docs / vibecoder.me / imseankim.com",
+     "Devin ACU pricing, SWE-bench performance, cost per task",
+     "https://docs.devin.ai/admin/billing",
+     "2026-04-17"],
+    ["S41", "Cursor docs / AgentCost / Cursor blog",
+     "Cursor agent request pricing and team usage patterns",
+     "https://cursor.com/docs/account/teams/pricing",
+     "2026-04-17"],
+    ["S42", "OpenAI Codex docs / Hypereal AI / TokenCost",
+     "Codex token consumption per task; long-horizon 25h / 13M-token run",
+     "https://developers.openai.com/codex/cookbook/long_horizon_tasks/",
+     "2026-04-17"],
+    ["S43", "GitHub Docs / GitHub features",
+     "GitHub Copilot agent-mode / premium-request pricing 2026",
+     "https://docs.github.com/en/billing/concepts/product-billing/github-copilot-premium-requests",
+     "2026-04-17"],
+    ["S44", "Otera / Medium (S. Boddula) / blogarama / paxrel",
+     "Banking AI agent task durations: KYC in 8s, onboarding in minutes vs days",
+     "https://www.otera.ai/solutions/banking-autonomous-kyc-and-onboarding",
+     "2026-04-17"],
+]
+
+
+# Coding vs Banking/Payments/FS contrast
+CONTRAST_HEADER = [
+    "Dimension",
+    "Coding agents",
+    "Banking / Payments / FS agents",
+    "Why the gap",
+    "Source ID",
+]
+
+CONTRAST = [
+    ["Primary task type",
+     "Open-ended software engineering: write/refactor code, run tests, "
+     "ship PRs, debug, ops scripting, autonomous research.",
+     "Bounded transactional workflows: customer Q&A, KYC/AML, fraud "
+     "triage, treasury actions, IB document drafting, payments auth.",
+     "Code is unbounded, exploratory and stateful; banking work is "
+     "regulated, schema-heavy and must be auditable.",
+     "S38, S40, S42, S44"],
+    ["Typical task duration",
+     "Minutes to many hours per task. SWE-bench / live work: 1–30 min "
+     "average; complex refactors half-day; documented Codex run was "
+     "25 hours / 30k LOC. METR Time-Horizon 1.1 (Jan-2026) shows Opus "
+     "4.6 ≈14.5h, GPT-5.2 ≈6.6h, Opus 4.5 ≈4.8h at 50% reliability; "
+     "horizon doubling ~every 4 months.",
+     "Seconds to a few minutes per autonomous task: KYC decisions in "
+     "~8s, edge-case review ~2 min, onboarding compressed from 24+ "
+     "days to 'minutes', call-centre answers <30s. Multi-step IB / "
+     "compliance workflows can run minutes to low single-digit hours.",
+     "Coding is long-horizon planning + tool use; FS work is mostly "
+     "short, tightly-scoped retrieval/decision turns under SLAs and "
+     "human-in-loop policy.",
+     "S38, S42, S44"],
+    ["Median tokens per task",
+     "Simple bug fix: ~20–35k total. Medium feature: ~120–140k. "
+     "Half-day refactor: ~500–600k. Multi-agent run: 1.5M+ "
+     "(Haiku/Sonnet mix). Codex long-horizon documented run: ~13M "
+     "tokens.",
+     "Self-service chat turn: low thousands of tokens. Agentic "
+     "workflow turn (KYC, fraud, IB pitch slide): tens of thousands. "
+     "End-to-end compliance case: ~100k–300k. Rare multi-agent "
+     "research run reaches low millions.",
+     "Coding agents iterate on full repos with long context; FS "
+     "agents stitch short structured retrievals + policy checks.",
+     "S39, S40, S42, S44"],
+    ["Cost per task (list price)",
+     "Claude Code: $0.07–$3 per typical session; multi-agent runs "
+     "$3–$7+. Devin ACUs ~$2.25 each; complex tasks $3–$15. Cursor "
+     "Sonnet ~$0.09/request; heavy refactor session ~$20. Codex "
+     "small task ~$0.16; medium ~$1–$3.",
+     "Per-conversation cost generally well under $1; even "
+     "Salesforce Agentforce lists $2/conversation or $0.10/action. "
+     "Compliance vendors price per case (e.g., Fenergo claims 95% "
+     "screening hits auto-resolved at low marginal cost).",
+     "Coding tasks burn long, exploratory contexts; FS tasks reuse "
+     "templated prompts + RAG hits.",
+     "S37, S39, S40, S41, S42"],
+    ["Tokens / month, leading deployments",
+     "Per-engineer: a daily Claude Code user can spend $20–$100/day "
+     "→ tens of millions of tokens/day; Goldman's 12k Devin seats "
+     "and any 10k+ engineer Copilot/Cursor base imply >>10B tokens/"
+     "month at the firm level.",
+     "Per-customer: a BBVA / Santander seat is hundreds of "
+     "thousands–low millions tokens/month; consumer chat (Erica, "
+     "Klarna, Nubank, Revolut AIR) at tens of millions of users "
+     "still aggregates into multi-billion tokens/month, but with "
+     "much smaller per-event tokens.",
+     "Coding = few users × very heavy per-user usage. FS = many "
+     "users × light per-user usage. Both can land at 'Very High' "
+     "tier but via different shapes.",
+     "S39, S40, S41, S42"],
+    ["Reliability requirement",
+     "Tolerant of failure: PRs reviewed by humans; failed runs are "
+     "cheap to retry. Benchmarks reported at 50% / 80% reliability.",
+     "Strict: regulated decisions (KYC, lending, payment auth) need "
+     "explainability, audit, low false-positive rates. Frameworks "
+     "like Barclays / HSBC 'tiered autonomy', DBS PURE, NatWest "
+     "human-in-loop.",
+     "Asymmetric cost of error: a wrong code change is reversible; a "
+     "wrong AML decision is a regulatory event.",
+     "S7, S12, S30, S44"],
+    ["Tool surface",
+     "IDE + shell + browser + git + cloud: very wide tool-use "
+     "surface, often dozens of tools per session.",
+     "Closed enterprise stack: core banking, CRM (Salesforce), data "
+     "warehouse, screening DBs, ERP. Mediated by MCP / Agent 365 / "
+     "Agentforce / Agentspace.",
+     "Coding agents need general-purpose tool use; FS agents need "
+     "governed connectors with RBAC and DLP.",
+     "S33, S34, S37"],
+    ["Pricing / monetisation model",
+     "Per-seat unlimited (Copilot $10–$39/mo) increasingly replaced "
+     "by usage-based ACU / token / request pricing (Devin, Cursor, "
+     "Codex API).",
+     "Mostly bundled into enterprise contracts with the bank's "
+     "platform vendor (Salesforce, Microsoft, Google, Anthropic, "
+     "OpenAI). Some action-based pricing emerging (Agentforce "
+     "$0.10/action, $2/conversation).",
+     "Coding usage is metered because elastic; FS usage is "
+     "negotiated because procurement-led and capacity-planned.",
+     "S37, S40, S41, S42, S43"],
+    ["Front-end vs back-end mix",
+     "Almost entirely back-end (developer-facing). Devin, Codex, "
+     "Cursor, Claude Code, Copilot all run inside the engineering "
+     "org.",
+     "Roughly balanced: Front-end (Erica, Fargo, Cora, AIR, Klarna, "
+     "Nubank, Capital One Chat Concierge, network rails) plus heavy "
+     "Back-end (LLM Suite, GS Claude ops, Stylus, Hebbia, Fenergo).",
+     "Coding is an internal productivity vector; FS spans CX, "
+     "distribution and ops.",
+     "S1–S37"],
+]
+
+# Leading companies per category
+LEADERS_HEADER = [
+    "Category",
+    "Sub-category",
+    "Leader",
+    "Why leader",
+    "Source ID",
+]
+
+LEADERS = [
+    ["Coding agents", "Autonomous SWE (long-horizon)",
+     "Cognition (Devin)",
+     "First major-bank-scale deployment (Goldman Sachs, 12k engineers); "
+     "ACU-based pricing; 67% PR merge rate; 25h-class runs documented "
+     "elsewhere in category.",
+     "S4, S40"],
+    ["Coding agents", "IDE-embedded coding agent",
+     "Cursor",
+     "$2k–$5k/team/month observed agent spend; Sonnet ~$0.09/request "
+     "default; widely adopted by banks' engineering orgs.",
+     "S41"],
+    ["Coding agents", "Coding agent CLI / inline",
+     "Anthropic (Claude Code)",
+     "Long-context, cache-optimised sessions; the de-facto choice for "
+     "long-horizon back-end runs at finance customers (Brex, "
+     "Coinbase, Citi via Claude FS).",
+     "S20, S39"],
+    ["Coding agents", "Cloud SWE agent (asynchronous)",
+     "OpenAI (Codex)",
+     "GA pricing on gpt-5.2-codex; documented 25h / 13M-token "
+     "long-horizon runs; native to ChatGPT Enterprise stack used at "
+     "BBVA, Santander, NatWest.",
+     "S42"],
+    ["Coding agents", "DevOps / git platform agent",
+     "GitHub (Copilot agent mode + Workspace)",
+     "Most widely distributed coding agent (Free→Enterprise tiers); "
+     "1M+ token Workspace context; embedded in Microsoft FS stack.",
+     "S43"],
+    ["Coding agents", "Frontier-model autonomy benchmark leader",
+     "Anthropic Claude Opus 4.6",
+     "~14.5h on METR Time-Horizon 1.1 (50% reliability) – longest "
+     "sustained autonomy in early 2026.",
+     "S38"],
+    ["Banking — incumbent rollout", "Enterprise productivity at scale",
+     "JPMorgan Chase (LLM Suite + 450+ agentic use cases)",
+     "230k–250k seat reach; targets 1,000 production agents; 3–6 "
+     "hr/wk per-user productivity claim; backed by $18B tech budget.",
+     "S1"],
+    ["Banking — incumbent rollout", "Investment banking agentic ops",
+     "Goldman Sachs (Claude Opus + Devin + GS AI Assistant)",
+     "Most aggressive front-to-back agentic deployment among bulge "
+     "brackets: trade accounting, compliance, surveillance, IB "
+     "pitchbooks, 12k engineers on Devin.",
+     "S4, S20"],
+    ["Banking — incumbent rollout", "Consumer agentic banking",
+     "Wells Fargo (Fargo + Agentspace) and Bank of America (Erica)",
+     "Wells: 215k employees + Gemini-Enterprise consumer agents. "
+     "BofA: 42M consumer users, ~11k FTE-equivalent throughput.",
+     "S2, S6"],
+    ["Banking — incumbent rollout", "Wealth management",
+     "Morgan Stanley (AI @ MS Assistant + Debrief)",
+     "98% advisor-team adoption; ~15k advisors; 1M Zoom calls/yr "
+     "automated; reference for OpenAI in FS.",
+     "S5"],
+    ["Banking — Europe", "Most aggressive agentic rollout",
+     "ING Bank (agentic mortgage origination + voice agents)",
+     "Live agentic mortgages (NL, DE) targeted 2026; €350M cost "
+     "savings, 1,250 ops job exits projected.",
+     "S11"],
+    ["Banking — Europe", "Largest enterprise OpenAI deployment",
+     "BBVA (ChatGPT Enterprise to 120k staff)",
+     "10x scale-up in 2025; 20k+ custom GPTs; 83% weekly active in "
+     "pilot; pairs with Blue customer assistant.",
+     "S10"],
+    ["Banking — Asia/EM", "Production-grade agentic bank",
+     "DBS Bank (DBS Joy + CodeBuddy)",
+     "S$1B AI-driven economic value FY25; agentic governance via "
+     "PURE framework.",
+     "S12"],
+    ["Banking — Canada", "Agentic strategy leader",
+     "Royal Bank of Canada (RBC AI Group + Cohere 'North for "
+     "Banking')",
+     "Dedicated AI Group reporting to CEO; targets up to C$1B value "
+     "by 2027; #3 globally for FS AI maturity per coverage.",
+     "S13"],
+    ["Payments — networks", "Agentic commerce platform leader",
+     "Visa (Intelligent Commerce Connect)",
+     "Apr-2026 launch; supports four protocols (Visa TAP, MPP, ACP, "
+     "UCP); positioned as neutral payment rail for agents.",
+     "S16"],
+    ["Payments — networks", "Agentic commerce framework leader",
+     "Mastercard (Agent Suite, Agent Pay, Verifiable Intent)",
+     "Q2-2026 launch; cryptographic dispute trail; integrated with "
+     "Fiserv US merchant base.",
+     "S16"],
+    ["Payments — issuers", "Agentic issuer SDK",
+     "American Express (ACE developer kit + Agent Purchase "
+     "Protection)",
+     "Apr-2026 launch; first issuer to add explicit purchase "
+     "protection for agent errors.",
+     "S17"],
+    ["Payments — wallets / acceptance", "Agentic checkout reach",
+     "PayPal (Agent Ready + Store Sync)",
+     "Live Oct-2025; instantly enables tens of millions of merchants "
+     "across OpenAI, Google, Microsoft Copilot, Perplexity.",
+     "S18"],
+    ["Payments — acquiring infra", "Open agentic checkout protocol",
+     "Stripe (Agentic Commerce Suite + ACP with OpenAI)",
+     "Co-author of ACP; powers ChatGPT Instant Checkout; Shared "
+     "Payment Tokens reduce fraud.",
+     "S19"],
+    ["Payments — processors", "Agentic merchant processing",
+     "Fiserv",
+     "Routes Mastercard Agent Pay through millions of US merchants; "
+     "also integrated with Visa Trusted Agent Protocol.",
+     "S20"],
+    ["Payments — issuing tech", "Agentic core for banks",
+     "FIS (agentic commerce issuing platform)",
+     "First issuer-side enablement: KYA + agent-aware auth, fraud, "
+     "dispute frameworks; partnered with Visa + Mastercard.",
+     "S22"],
+    ["FS — neobanks / fintech", "Agentic consumer assistant",
+     "Revolut (AIR)",
+     "Apr-2026 launch to 13M UK customers; spending, investing, "
+     "subscriptions, card controls, travel — single multimodal agent.",
+     "S26"],
+    ["FS — neobanks / fintech", "Agentic customer service at scale",
+     "Klarna + Nubank (OpenAI)",
+     "Klarna: 700-FTE-equivalent at peak, even after 2026 partial "
+     "reversal. Nubank: 55% L1 resolution, -70% chat response time, "
+     "covers 114M+ customers.",
+     "S25, S26"],
+    ["FS — neobanks / fintech", "Agentic finance ops (B2B)",
+     "Brex + Ramp",
+     "Brex: Anthropic-powered expense / audit agents. Ramp: 99% OCR, "
+     "2.4x faster invoice processing, agentic AP.",
+     "S27"],
+    ["FS — vendors", "Finance research agents",
+     "Hebbia",
+     "Clients with $30T AUM; 1.5B pages processed; ~200k prompts/day; "
+     "deepest finance-specific agent library.",
+     "S29"],
+    ["FS — vendors", "Compliance / financial-crime agents",
+     "Fenergo (FinCrime OS) + Bretton",
+     "Fenergo: 95% of screening hits auto-resolved, up to 18.3k "
+     "analyst hrs/yr saved. Bretton: 70% EDD queue cut, $5.35M "
+     "first-year savings.",
+     "S30"],
+    ["FS — vendors", "Capital-markets agentic blueprint",
+     "KX (with NVIDIA)",
+     "Two GTC-2026 blueprints: Research Assistant + Trading Signal "
+     "Agent on NVIDIA AI Factory + KX time-series DB.",
+     "S31"],
+    ["FS — platforms", "Foundation model for FS agents (US/Europe)",
+     "OpenAI",
+     "Backbone for BBVA, Santander, NatWest assistant, Klarna, "
+     "Nubank, Morgan Stanley; co-author of ACP for agentic commerce.",
+     "S36"],
+    ["FS — platforms", "Foundation model for back-office FS agents",
+     "Anthropic (Claude for Financial Services)",
+     "Goldman Sachs core ops, Citi, Brex, Coinbase; Claude for "
+     "Excel; finance-specific connectors (S&P, FactSet, Morningstar, "
+     "LSEG).",
+     "S20"],
+    ["FS — platforms", "Hyperscaler enterprise agentic platform",
+     "Google Cloud (Gemini Enterprise / Agentspace)",
+     "Bank-wide rollouts: Wells Fargo (215k staff), HSBC selected "
+     "workloads; powers Citi Stylus alongside Anthropic.",
+     "S34"],
+    ["FS — platforms", "CRM-anchored agentic platform",
+     "Salesforce (Agentforce for Financial Services)",
+     "Pre-built advisor / banker / service / collections agents; "
+     "Atlas Reasoning Engine; large FS install base.",
+     "S37"],
+    ["Coding-agent infra", "Frontier coding model",
+     "Anthropic Claude (Sonnet/Opus) — chosen by Cursor, Claude "
+     "Code, Brex, Goldman Sachs",
+     "Default model for highest-reliability coding sessions; longest "
+     "METR autonomy horizon at Opus 4.6.",
+     "S20, S38, S39"],
+    ["Agentic-payments protocols",
+     "Open consumer-checkout standard",
+     "Agentic Commerce Protocol (OpenAI + Stripe)",
+     "Powers ChatGPT Instant Checkout; adopted by Etsy, Shopify "
+     "(1M+ merchants), URBN, Coach, Kate Spade, PayPal MCP server.",
+     "S36"],
+    ["Agentic-payments protocols",
+     "Network-rail standard",
+     "Visa Trusted Agent Protocol",
+     "Live in Visa ICC; supported by AWS, Aldar, Firmly, Nekuda, "
+     "Fiserv, Adyen.",
+     "S16"],
+    ["Agentic-payments protocols",
+     "Crypto / stablecoin native",
+     "x402 (Coinbase + Linux Foundation)",
+     "Apr-2026 launch; sub-cent micropayments in stablecoins; "
+     "backed by Stripe, Cloudflare, AWS, Google, Microsoft, Visa, "
+     "Mastercard via X402 Foundation.",
+     "S32"],
 ]
 
 
@@ -1111,7 +1460,9 @@ def main():
         ("5_Enterprise_Platforms", PLATFORMS_HEADER, PLATFORMS),
         ("6_Agentic_Payments_Protocols", PROTOCOLS_HEADER, PROTOCOLS),
         ("7_Funding_Rounds", FUNDING_HEADER, FUNDING),
-        ("8_Sources", SOURCES_HEADER, SOURCES),
+        ("8_Coding_vs_FS_Contrast", CONTRAST_HEADER, CONTRAST),
+        ("9_Leading_Companies", LEADERS_HEADER, LEADERS),
+        ("10_Sources", SOURCES_HEADER, SOURCES),
     ]
     for name, header, rows in sheets:
         write_sheet(wb, name, header, rows)
