@@ -1,0 +1,1476 @@
+"""Build the Agentic AI in Banking & Payments spreadsheet.
+
+Generates:
+  data/agentic_ai_banking_payments.xlsx  (multi-sheet workbook)
+  data/csv/<sheet_name>.csv              (one CSV per sheet for easy diffing)
+
+Data is hand-curated from public reporting (Q4 2025 - Q2 2026); see the
+"Sources" sheet for citations.
+"""
+
+from __future__ import annotations
+
+import csv
+import os
+from pathlib import Path
+
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
+
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT_XLSX = ROOT / "data" / "agentic_ai_banking_payments.xlsx"
+OUT_CSV_DIR = ROOT / "data" / "csv"
+
+
+# ---------------------------------------------------------------------------
+# Sheet data
+# ---------------------------------------------------------------------------
+
+OVERVIEW_ROWS = [
+    ["Agentic AI in Banking & Payments — Aggregated Tracker"],
+    [],
+    ["Last updated", "2026-04-17"],
+    ["Maintainer", "Equity-research repo"],
+    ["Scope", "Public-domain reporting on agentic AI applications, "
+              "platforms, protocols and funding events touching banks, "
+              "card networks, processors, neobanks and fintech."],
+    [],
+    ["Sheet", "Description", "Row count (data)"],
+    ["1_Bank_Deployments",
+     "Agentic / generative AI rollouts at large incumbent banks.",
+     "see sheet"],
+    ["2_Payments_Networks_Processors",
+     "Card networks, acquirers and processors building agentic-commerce "
+     "rails.",
+     "see sheet"],
+    ["3_Fintechs_Neobanks",
+     "Neobanks, BNPL and digital-first issuers shipping agentic features.",
+     "see sheet"],
+    ["4_Vendors_Startups",
+     "Independent vendors and startups selling agentic AI software into "
+     "banks and payment companies.",
+     "see sheet"],
+    ["5_Enterprise_Platforms",
+     "Hyperscaler / model-provider platforms used by financial "
+     "institutions to build agentic apps.",
+     "see sheet"],
+    ["6_Agentic_Payments_Protocols",
+     "Open or industry standards being defined for AI-agent payments.",
+     "see sheet"],
+    ["7_Funding_Rounds",
+     "Selected 2025-2026 venture rounds for agentic-AI fintech.",
+     "see sheet"],
+    ["8_Coding_vs_FS_Contrast",
+     "Side-by-side: how coding agents differ from banking, payments "
+     "and FS agents on tokens / task duration / cost / reliability.",
+     "see sheet"],
+    ["9_Leading_Companies",
+     "Pick of the leader(s) in each agent category.",
+     "see sheet"],
+    ["10_Sources",
+     "URLs and publications used to compile this tracker.",
+     "see sheet"],
+    [],
+    ["Definitions"],
+    ["Agentic AI",
+     "AI systems that plan and execute multi-step tasks across tools and "
+     "data, with limited human prompting (vs. single-turn chat or "
+     "copilot)."],
+    ["Agentic commerce",
+     "Purchases initiated by an AI agent on behalf of a consumer or "
+     "business, using tokenised credentials and intent attestations."],
+    ["KYA",
+     "Know-Your-Agent — analogue of KYC where the network/issuer "
+     "authenticates the AI agent itself."],
+    ["Role: Front-end",
+     "Agent interacts directly with external counterparties — retail or "
+     "wholesale customers, merchants, dealers, or third-party AI surfaces "
+     "(e.g., ChatGPT). Drives revenue, CX or distribution."],
+    ["Role: Back-end",
+     "Agent runs inside the institution — employee productivity, ops, "
+     "compliance, software engineering, treasury, finance, risk. Drives "
+     "cost, throughput or control."],
+    ["Role: Both",
+     "Same product line spans customer-facing and internal-facing "
+     "surfaces (e.g., a contact-centre platform that powers both bot "
+     "self-service and agent assist)."],
+    ["Token consumption tiers",
+     "Qualitative monthly token-usage estimate based on scale (users × "
+     "interactions × avg tokens). Buckets: Very High (>1B tokens/mo), "
+     "High (100M–1B), Medium (10M–100M), Low (<10M), N/A (not LLM-based "
+     "or pure infra), N/D (not disclosed). Estimates are illustrative — "
+     "vendors rarely publish exact figures."],
+]
+
+# Bank deployments
+BANK_DEPLOYMENTS_HEADER = [
+    "Institution",
+    "Region",
+    "Product / Initiative",
+    "Use case area",
+    "Role (Front-end / Back-end)",
+    "Underlying models / partners",
+    "Stage (2026)",
+    "Scale / Adoption",
+    "Reported impact",
+    "Token consumption (tier)",
+    "Announced",
+    "Source ID",
+]
+
+BANK_DEPLOYMENTS = [
+    ["JPMorgan Chase", "Global", "LLM Suite + agentic workflows",
+     "Enterprise productivity, IB pitchbooks, research, ops",
+     "Back-end",
+     "OpenAI, Anthropic (multi-model)", "In production",
+     "230k–250k employees with access (~50% daily); 450+ agentic use cases live, target 1,000",
+     "3–6 hrs/week saved per user; Nvidia IB deck generated in ~30s; $18B annual tech budget supports build",
+     "Very High",
+     "2024-2026", "S1"],
+    ["JPMorgan Chase", "Global", "COiN (Contract Intelligence)",
+     "Commercial loan / contract review",
+     "Back-end",
+     "Internal NLP + LLM Suite", "In production",
+     "Bank-wide in commercial banking",
+     "~360,000 lawyer/analyst hours saved per year; 150+ data attributes extracted",
+     "Medium",
+     "2017 (re-platformed 2025-26)", "S1"],
+    ["Bank of America", "US", "Erica virtual assistant",
+     "Consumer self-service, intent routing",
+     "Both",
+     "Proprietary small language model + NLU", "In production",
+     "42M consumers, 40k business clients, 95% of 213k staff",
+     "~2M interactions/day; work equivalent of ~11,000 FTE",
+     "Low (small model, intent classifier)",
+     "2018 (continual)", "S2"],
+    ["Bank of America", "US", "AskGPS (Global Payments Solutions)",
+     "Treasury / payments client servicing",
+     "Both (employee assist + client-facing answers)",
+     "Internal genAI + Azure OpenAI", "In production",
+     "Global Payments Solutions client teams",
+     "Faster RFP / payments-product responses; part of $4B 2025 AI budget",
+     "Medium",
+     "Sep-2025", "S2"],
+    ["Citigroup", "Global", "Citi Stylus Workspaces (agentic)",
+     "Cross-system research, multistep workflows",
+     "Back-end",
+     "Google Gemini, Anthropic Claude", "Pilot → staged rollout",
+     "5,000-user pilot then thousands more across firm",
+     "Compresses multi-step research into single prompts; example: top-5 branded card analysis + Spanish translation in one prompt",
+     "High",
+     "Sep-2025", "S3"],
+    ["Goldman Sachs", "Global", "GS AI Assistant",
+     "Document summarisation, drafting, data analysis",
+     "Back-end",
+     "GPT-5, Gemini, Claude, Llama (router)", "In production",
+     "~10k pilot Jan-2025; firm-wide June-2025",
+     "Routes prompts to best-fit model in firewalled environment",
+     "High",
+     "Jun-2025", "S4"],
+    ["Goldman Sachs", "Global", "Devin (autonomous SWE)",
+     "Software engineering",
+     "Back-end",
+     "Cognition Devin", "In production",
+     "12,000 developers",
+     "Reported 3-4x productivity vs. previous tools",
+     "Very High (long-horizon coding agent runs)",
+     "2025", "S4"],
+    ["Goldman Sachs", "Global", "Claude agents in core ops",
+     "Trade accounting, compliance, surveillance, IB pitchbooks",
+     "Back-end",
+     "Anthropic Claude Opus 4.6", "Production rollout",
+     "Touches portion of $2.5T AUS; embedded Anthropic engineers",
+     "First major bank deploying autonomous agents in trade ops",
+     "Very High (trade-ops + surveillance volume)",
+     "Feb-2026", "S4, S20"],
+    ["Goldman Sachs", "Global", "Louisa relationship intelligence",
+     "M&A deal team matching",
+     "Back-end",
+     "Internal", "In production",
+     "Investment banking division",
+     "Pairs deal-makers with internal expertise for complex deals",
+     "Low",
+     "2025", "S4"],
+    ["Morgan Stanley", "US/Global", "AI @ Morgan Stanley Assistant",
+     "Wealth advisor knowledge retrieval",
+     "Back-end (advisor-facing)",
+     "OpenAI GPT-4 family", "In production",
+     "98% of advisor teams adopted; ~15k advisors",
+     "Standardises advisor research access",
+     "Medium",
+     "2023-2024", "S5"],
+    ["Morgan Stanley", "US/Global", "AI @ Morgan Stanley Debrief",
+     "Meeting note + email automation",
+     "Back-end (advisor-facing)",
+     "OpenAI Whisper + GPT-4", "In production",
+     "Wealth advisors firm-wide; ~1M Zoom calls/year",
+     "~30 min saved per meeting; auto-drafts saved to Salesforce",
+     "High (1M call transcripts/yr)",
+     "Jul-2024", "S5"],
+    ["Wells Fargo", "US", "Fargo virtual assistant",
+     "Consumer self-service, balance forecasting, payments",
+     "Front-end",
+     "Google Cloud (PaLM/Gemini)", "In production",
+     "Mobile-app users",
+     "30-day balance / 14-day txn forecasts; subscription tracking",
+     "High",
+     "2023 (expanded 2026)", "S6"],
+    ["Wells Fargo", "US", "Agentspace / Gemini Enterprise rollout",
+     "FX inquiries, contract analysis, customer service",
+     "Both",
+     "Google Agentspace, NotebookLM, Deep Research", "Bank-wide rollout",
+     "215,000 employees in scope",
+     "Custom agents query ~250k vendor contracts; automates routine service",
+     "Very High (215k seats + customer agents)",
+     "2026", "S6"],
+    ["HSBC", "Global", "Agentic AI in trade finance & retail",
+     "Document processing, exception handling, fraud response",
+     "Both",
+     "Multi-vendor (incl. Google Cloud, Microsoft)", "Scaling",
+     "Global trade finance + retail divisions",
+     "Framework of tiered autonomy with human oversight",
+     "High",
+     "2026", "S7"],
+    ["Barclays", "UK/Global", "GenAI colleague assistant + BarxBot",
+     "Call-centre handle time; FX trading workflow",
+     "Both (BarxBot front-end on FX; colleague assistant back-end)",
+     "Internal + partners", "In production",
+     "Barclays UK call centres; Markets FX desks",
+     "Reduced call handling times; emerging agentic patterns being deployed",
+     "High",
+     "2025-2026", "S7"],
+    ["UBS", "Global", "Agentic AI Center of Excellence",
+     "Front + back office redesign",
+     "Both",
+     "Multi-model", "Scaling",
+     "300+ AI use cases launched 2025; new Chief AI Officer Jan-2026",
+     "Architectural shifts: agent marketplaces, multi-agent systems",
+     "High",
+     "2025-2026", "S8"],
+    ["Deutsche Bank", "Global", "Agentic IB & cross-border ops",
+     "KYC, sanctions screening, document extraction, case mgmt",
+     "Back-end",
+     "Multi-vendor", "Scaling pilots",
+     "Investment banking & cross-border payments",
+     "Coordination layer maintains audit trail",
+     "Medium",
+     "2026", "S8"],
+    ["Lloyds Banking Group", "UK", "Agentic AI mobile financial assistant",
+     "Personalised guidance in retail app",
+     "Front-end",
+     "Internal + partners", "Customer rollout in 2026",
+     "Retail customer base",
+     "Targets >£100M ($127M) 2026 value; 50+ GenAI solutions live",
+     "High",
+     "2026", "S9"],
+    ["NatWest Group", "UK", "Cora + agentic financial assistant",
+     "Spending Q&A, fraud reporting, voice agent",
+     "Front-end",
+     "OpenAI", "Q1-2026 rollout to 25k customers",
+     "25,000 customers initial; voice-to-voice + agentic fraud later 2026",
+     "£1.2B AI invest in 2025; 10x productivity in financial-crime ops; 70k staff hours saved",
+     "Medium (will scale to High with voice GA)",
+     "Q1-2026", "S9"],
+    ["Santander", "Global", "ChatGPT Enterprise + agentic banking",
+     "Productivity + conversational banking",
+     "Both",
+     "OpenAI", "Scaling 2026-27",
+     "~15k licenses → 30k (15% of workforce)",
+     "Targets €1B AI value by 2028; mandatory AI training 2026",
+     "Very High",
+     "2025-2026", "S9"],
+    ["BBVA", "Global", "ChatGPT Enterprise + Blue assistant",
+     "Productivity + customer assistant",
+     "Both",
+     "OpenAI", "Production",
+     "120,000 employees across 25 countries",
+     "83% weekly active in pilot; 20k+ custom GPTs; ~3 hrs/week saved",
+     "Very High (120k seats + Blue customer agent)",
+     "Dec-2025", "S10"],
+    ["ING Bank", "Europe", "Agentic mortgage origination",
+     "End-to-end mortgage workflow",
+     "Front-end",
+     "Internal + partners", "Launch 2026 (NL, DE)",
+     "Retail mortgage customers in NL/DE first",
+     "Eliminates need to talk to staff; ~€350M cost saves; 1,250 ops job exits",
+     "High (multi-step workflow per applicant)",
+     "2026", "S11"],
+    ["ING Bank", "Europe", "Voice agents in call centres",
+     "Routine call-centre tasks",
+     "Front-end",
+     "Internal + partners", "Live in ES, DE",
+     "Call centres",
+     "Routine queries handled autonomously",
+     "Medium",
+     "2026", "S11"],
+    ["DBS Bank", "Singapore/Asia", "DBS Joy + CodeBuddy",
+     "SME chat; developer productivity",
+     "Both (Joy front-end; CodeBuddy back-end)",
+     "Internal LLMs + partners", "In production",
+     "20k+ corporate/SME customers using Joy",
+     "+23% CSAT; 20% time saved on coding; AI generated ~S$1B value FY25",
+     "Medium",
+     "2025", "S12"],
+    ["Royal Bank of Canada (RBC)", "Canada", "RBC AI Group + 'North for Banking'",
+     "Cross-bank agentic apps",
+     "Both",
+     "Cohere", "Scaling",
+     "Bank-wide; new dedicated AI Group reporting to CEO",
+     "Targets up to C$1B AI value by 2027",
+     "High",
+     "Feb-2026", "S13"],
+    ["TD Bank Group", "Canada/US", "Agentic AI in back-office",
+     "Operations automation",
+     "Back-end",
+     "Multi-vendor", "Scaling",
+     "Enterprise back office",
+     "Part of plan to cut C$2-2.5B expenses; Vector Institute training partnership",
+     "High",
+     "2026", "S13"],
+    ["Scotiabank", "Canada", "Scene+ AI personalisation",
+     "Loyalty, marketing, branch staffing",
+     "Front-end (offer surface)",
+     "Internal", "In production",
+     "Scene+ loyalty members",
+     "+18% YoY redemption rate",
+     "Low (recommendation models, limited LLM tokens)",
+     "2025", "S13"],
+    ["Capital One", "US", "Chat Concierge",
+     "Auto dealer / car-buying conversational agent",
+     "Front-end",
+     "NVIDIA stack + internal", "In production",
+     "Dealer network customers",
+     "Multi-agent system with master orchestrator; 24/7 service",
+     "Medium (dealer-network scale)",
+     "2025-2026", "S14"],
+    ["U.S. Bank", "US", "GenAI developer-portal assistant",
+     "Embedded-banking API discovery",
+     "Front-end (developer / partner facing)",
+     "Internal", "Live (agentic features planned)",
+     "Embedded-banking partners",
+     "Helps biz clients discover/implement APIs; agentic features on roadmap",
+     "Low",
+     "Oct-2025", "S15"],
+    ["Truist", "US", "AI-enabled receivables platform",
+     "Cash application, remittance capture, ERP linkage",
+     "Back-end (delivered to clients)",
+     "Internal + partners", "Live",
+     "Commercial / corporate clients",
+     "Auto-matches payments to invoices; reduces exceptions",
+     "Medium",
+     "Feb-2026", "S15"],
+    ["PNC Financial", "US", "Working-capital agentic AI",
+     "Cash sweeps, credit-line draws, liquidity monitoring",
+     "Back-end (treasury workflow)",
+     "Internal + partners", "Live",
+     "Treasury clients",
+     "Predictive + prescriptive automation of treasury actions",
+     "Medium",
+     "2026", "S15"],
+]
+
+# Payment networks & processors
+PAYMENTS_HEADER = [
+    "Company",
+    "Product / Service",
+    "Category",
+    "Role (Front-end / Back-end)",
+    "Supported protocols",
+    "Key partners",
+    "Stage (2026)",
+    "Notable details",
+    "Token consumption (tier)",
+    "Announced",
+    "Source ID",
+]
+
+PAYMENTS = [
+    ["Visa", "Intelligent Commerce Connect (ICC)",
+     "Network platform for agent payments",
+     "Front-end (rails consumed by external AI agents)",
+     "Visa Trusted Agent Protocol; supports MPP, ACP, UCP",
+     "AWS, Aldar, Firmly, Nekuda, Fiserv",
+     "Launched Apr-2026",
+     "Tokenises card numbers; verifies agent obeys consumer instructions; routes across networks",
+     "N/A (infrastructure; tokens consumed by partner LLMs)",
+     "Apr-2026", "S16"],
+    ["Mastercard", "Agent Suite (Agent Pay + Verifiable Intent)",
+     "Agent payments platform & dispute framework",
+     "Front-end (powers AI checkout) + Back-end (dispute audit)",
+     "Open agent framework",
+     "Fiserv (US merchant integration), 4,000+ advisors",
+     "Launched Q2-2026",
+     "Cryptographic audit trail linking identity, instructions, outcome; integrated with Fiserv merchant base",
+     "N/A (infra) + Low for Verifiable Intent reasoning",
+     "Jan-2026 (suite); Q2-2026 (Agent Pay)", "S16"],
+    ["American Express", "Agentic Commerce Experiences (ACE) developer kit",
+     "Issuer SDK + Agent Purchase Protection",
+     "Front-end (issuer rails for external AI agents)",
+     "Industry-standard tokens",
+     "AI platform partners (unnamed)",
+     "Launched Apr-2026",
+     "Five components: agent registration, account enablement, purchase intent, tokenised credentials, cart context. Adds purchase protection if agent errs",
+     "N/A (infra; tokens spent on partner platforms)",
+     "Apr-2026", "S17"],
+    ["PayPal", "Agent Ready + Store Sync",
+     "Acceptance + product feed for AI surfaces",
+     "Front-end (merchants reachable from ChatGPT/Copilot/etc.)",
+     "OpenAI ACP, Google UCP, Agent Payments Protocol",
+     "OpenAI, Google, Perplexity, Microsoft Copilot, Wix, Cymbio, Shopware",
+     "Live Oct-2025",
+     "MCP servers since Apr-2025; gives PP merchants instant agentic acceptance with fraud + buyer protection",
+     "Low (MCP server traffic; tokens external)",
+     "Oct-2025", "S18"],
+    ["Stripe", "Agentic Commerce Suite",
+     "Acceptance, checkout, agentic payments tokens",
+     "Front-end (rails for external agents like ChatGPT)",
+     "Agentic Commerce Protocol (ACP); MPP",
+     "OpenAI (co-author of ACP), URBN, Etsy, Coach, Kate Spade, Wix, BigCommerce",
+     "Beta 2025-2026",
+     "Shared Payment Tokens reduce fraud; modular product discovery + checkout APIs",
+     "N/A (infra)",
+     "2025 (beta); 2026 GA in progress", "S19"],
+    ["Fiserv", "Agentic commerce integration",
+     "Merchant processing + KYA",
+     "Front-end (acceptance for AI agents)",
+     "Mastercard Agent Pay framework; Visa Trusted Agent Protocol",
+     "Mastercard, Visa",
+     "Live Mar-2026",
+     "Routes AI-initiated transactions through standard card-processing infrastructure",
+     "N/A (infra)",
+     "Mar-2026", "S20"],
+    ["Adyen", "Universal Token Vault + Merchant Control Framework",
+     "Bank-grade tokenisation for AI agents; merchant guardrails",
+     "Front-end (merchant-facing) + Back-end (merchant guardrails)",
+     "Google UCP, AP2, Visa Trusted Agent Protocol",
+     "Google, Visa; Agentic AI Foundation member",
+     "Live (joined foundation Dec-2025)",
+     "Tokenisation cost claimed -30%; framework keeps merchants in control of relationship/data",
+     "N/A (infra) + Low for control-framework reasoning",
+     "Dec-2025 → 2026", "S21"],
+    ["FIS", "Agentic commerce issuing platform",
+     "Issuing-side enablement for AI-agent payments",
+     "Back-end (issuer enablement) + Front-end (auth flows)",
+     "Visa Trusted Agent Protocol, Mastercard Agent Pay",
+     "Mastercard, Visa",
+     "GA end Q1-2026",
+     "Adds KYA + agent-aware authorisation, fraud, dispute frameworks for issuing banks",
+     "N/A (infra)",
+     "Jan-2026", "S22"],
+    ["Synchrony", "Synchrony Agent + Agentic Commerce team",
+     "Issuer experimentation in agentic shopping",
+     "Front-end (consumer-facing marketplace agent)",
+     "Multi-protocol; partners with Visa, Mastercard, Google",
+     "Visa, Mastercard, Google, top retailers",
+     "Pilot",
+     "Redesigning loyalty & financing to be AI-readable; running own marketplace agent",
+     "Low (pilot scale)",
+     "2026", "S23"],
+    ["Block (Square / Cash App)", "Agentic merchant tooling (early)",
+     "Acquiring + consumer wallet",
+     "Both (potential)",
+     "Industry protocols (early integration)",
+     "n/a public",
+     "Exploration",
+     "Bernstein names Block among fintechs positioned for agentic-commerce upside; specific shipping product not yet public",
+     "N/D",
+     "2026", "S24"],
+]
+
+# Fintechs & neobanks
+FINTECHS_HEADER = [
+    "Company",
+    "Region",
+    "Product",
+    "Use case",
+    "Role (Front-end / Back-end)",
+    "Underlying tech / partners",
+    "Stage (2026)",
+    "Adoption / Impact",
+    "Token consumption (tier)",
+    "Source ID",
+]
+
+FINTECHS = [
+    ["Klarna", "Global", "OpenAI-powered customer-service agent",
+     "Consumer support automation",
+     "Front-end",
+     "OpenAI",
+     "In production but partial reversal in 2026",
+     "2.3M chats/month at peak (~700 FTE equivalent); resolution 11→2 min; targeted ~$40M profit lift in 2024. Partial human re-hiring announced 2026 after CSAT slipped",
+     "Very High (28M+ chats/yr)",
+     "S25"],
+    ["Nubank", "LatAm", "Call-centre co-pilot + AI assistant + search",
+     "Customer support, search, productivity",
+     "Both (call-centre co-pilot back-end; consumer assistant front-end)",
+     "OpenAI",
+     "In production",
+     "Resolves 55% of L1 queries; chat response time -70%; covers 5,000+ employees and 114M+ customers",
+     "Very High (114M+ customers)",
+     "S26"],
+    ["Revolut", "UK/Europe", "AIR (AI by Revolut)",
+     "In-app spending, investing, subscriptions, card controls, travel",
+     "Front-end",
+     "Internal + partners (zero-retention 3rd party)",
+     "Launched Apr-2026",
+     "13M UK customers in scope; biometric approval for sensitive actions",
+     "Very High (13M UK customers; multimodal)",
+     "S26"],
+    ["Starling Bank", "UK", "Starling Assistant (agentic)",
+     "Voice/natural-language banking tasks",
+     "Front-end",
+     "Internal",
+     "Launched Mar-2026",
+     "First UK agentic financial assistant per coverage; handles savings goals, bill organisation",
+     "High",
+     "S26"],
+    ["Monzo", "UK", "AI virtual assistant + personalisation",
+     "Dynamic support and product personalisation",
+     "Front-end",
+     "Internal + partners",
+     "Live",
+     "Used for support and personalisation across consumer base",
+     "Medium",
+     "S26"],
+    ["Brex", "US", "Agents on Brex",
+     "Expense memos, receipt fetch, audit/review",
+     "Both (employee-facing in customer companies; back-end in Brex)",
+     "Internal + Anthropic Claude",
+     "Live",
+     "Auto-approves low-risk expenses; categorises violations; eliminates expense busywork",
+     "High (per-transaction reasoning at scale)",
+     "S27"],
+    ["Ramp", "US", "Agentic AP + Expense agents",
+     "Invoice processing, GL coding, fraud detection, approvals",
+     "Back-end (finance ops) + Front-end touch (employee chat)",
+     "Internal AI",
+     "Live",
+     "99% OCR accuracy; 2.4x faster invoice processing; 7x fewer clicks per bill",
+     "High",
+     "S27"],
+    ["Slash Financial", "US", "AI-powered SMB banking platform",
+     "Autonomous finance function for online businesses",
+     "Both",
+     "Internal",
+     "Live; raised $100M Series C at $1.4B (2026)",
+     "Ribbit, Khosla, Goodwater led round; positioned as 'autonomous finance function'",
+     "Medium",
+     "S28"],
+    ["Mercury", "US", "AI-powered banking ops (limited public detail)",
+     "Operations, search, support",
+     "Back-end (mostly)",
+     "Internal + partners",
+     "Live",
+     "Less public agentic detail than peers; focus on AI-assisted UX",
+     "Low / N/D",
+     "S27"],
+]
+
+# Vendors / Startups
+VENDORS_HEADER = [
+    "Vendor",
+    "Product",
+    "Category",
+    "Target buyer",
+    "Role (Front-end / Back-end)",
+    "Notable customers / proof points",
+    "Stage / Funding",
+    "Token consumption (tier)",
+    "Source ID",
+]
+
+VENDORS = [
+    ["Hebbia", "Matrix + Agent Library",
+     "Research/ops agents for finance & legal",
+     "Asset managers, IB, advisory, F500",
+     "Back-end (analyst-facing)",
+     "Serves clients with $30T AUM; 1.5B pages processed; ~200k prompts/day",
+     "Raised ~$161M; mid/high six-figure ACVs",
+     "Very High (long-context document agents)",
+     "S29"],
+    ["Glean", "Enterprise AI assistant",
+     "Workplace AI / search across enterprise apps",
+     "Cross-industry incl. financial services",
+     "Back-end",
+     "Used in financial services among 1000+ customers",
+     "Raised ~$765M (Series F)",
+     "High",
+     "S29"],
+    ["Harvey", "Legal/financial reasoning agent",
+     "Legal + financial services workflows",
+     "Law firms, banks, in-house counsel",
+     "Back-end",
+     "Used by leading law firms; expanding into FS",
+     "Multi-billion valuation per public reporting",
+     "High",
+     "S29"],
+    ["Cohere", "Command / North for Banking",
+     "Enterprise foundation models + retrieval",
+     "Banks, regulated enterprise",
+     "Both (model layer for either)",
+     "RBC co-developed 'North for Banking'",
+     "Late-stage scale-up",
+     "Very High (foundation model provider)",
+     "S13"],
+    ["Fenergo", "FinCrime OS + agent suite",
+     "KYC/AML compliance agents",
+     "Tier-1 / Tier-2 banks",
+     "Back-end",
+     "Up to 18,300 analyst hrs/yr saved; 95% of screening hits auto-resolved; 50% lower doc processing time",
+     "Established vendor",
+     "High",
+     "S30"],
+    ["Bretton", "Financial-crime AI agents",
+     "AML, EDD automation",
+     "Banks, fintech",
+     "Back-end",
+     "70% reduction in EDD queue completion; $5.35M first-year ops savings; 200k+ customer reviews automated",
+     "Startup",
+     "Medium",
+     "S30"],
+    ["StackAI", "Compliance agentic platform",
+     "KYC, AML, audit automation",
+     "Fintech & SMB banks",
+     "Back-end",
+     "Used by fintech startups for audit-ready compliance",
+     "Startup",
+     "Medium",
+     "S30"],
+    ["Temenos", "FCM AI Agent",
+     "Real-time payments screening",
+     "Banks running Temenos core",
+     "Back-end",
+     "Reduces false positives in watchlist screening; mimics human reviewer",
+     "Public-co vendor",
+     "Medium",
+     "S22"],
+    ["Dyna.Ai", "Agentic banking platform",
+     "Bank ops, AML, customer ops",
+     "Banks (esp. APAC)",
+     "Both",
+     "Up to 70% manual workload cut; 65% AML investigation time cut at one client",
+     "Raised $50M Series A 2026",
+     "High",
+     "S28"],
+    ["Stacks", "Agentic finance ops platform",
+     "Reconciliations, journal entries, close",
+     "Enterprise finance teams",
+     "Back-end",
+     "30+ enterprise customers; 100k hours saved/year",
+     "Raised $23M Series A (Lightspeed) 2026",
+     "Medium",
+     "S28"],
+    ["EnFi", "Agentic credit analyst",
+     "Credit analysis & lending",
+     "Regional / community banks",
+     "Back-end",
+     "Addresses analyst staffing shortages",
+     "Raised $15M 2026",
+     "Medium",
+     "S28"],
+    ["Ralio", "Agentic business payments rails",
+     "Payments infra for agents",
+     "B2B fintechs",
+     "Front-end (rails consumed by external agents)",
+     "Pre-seed product; payments layer for safe agent workflows",
+     "Raised £1.8M pre-seed 2026",
+     "N/A (infra)",
+     "S28"],
+    ["KX (FD Tech)", "Agentic AI Blueprints (Research Assistant, Trading Signal Agent)",
+     "Capital-markets research & signal discovery",
+     "Sell-side / asset managers",
+     "Back-end",
+     "Built on NVIDIA AI Factory + KX time-series DB; launched at GTC 2026",
+     "Public-co vendor",
+     "High",
+     "S31"],
+    ["Cognition", "Devin",
+     "Autonomous software engineer",
+     "Engineering orgs incl. banks",
+     "Back-end",
+     "Goldman Sachs deployed across 12k engineers",
+     "Late-stage startup",
+     "Very High (long-horizon coding agent)",
+     "S4"],
+    ["Skyfire", "Agent monetisation / payments",
+     "Payment & identity for AI agents",
+     "Agent platforms, fintech",
+     "Front-end (rails consumed by external agents)",
+     "Competes with x402; agent-pay rails",
+     "Startup",
+     "N/A (infra)",
+     "S32"],
+    ["Crossmint", "Agentic payments + wallets",
+     "Stablecoin & wallet infra for agents",
+     "Devs, enterprises",
+     "Front-end (rails consumed by external agents)",
+     "Tracks ACP, AP2, MPP, x402 protocol landscape",
+     "Startup",
+     "N/A (infra)",
+     "S32"],
+]
+
+# Enterprise platforms
+PLATFORMS_HEADER = [
+    "Vendor",
+    "Platform",
+    "Agentic capability",
+    "Banking-relevant features",
+    "Notable bank/fintech customers",
+    "Source ID",
+]
+
+PLATFORMS = [
+    ["Microsoft", "Microsoft 365 Copilot + Finance Agents + Agent 365",
+     "Agent orchestration, governance ($15/user/mo from May-2026)",
+     "Finance Chat over ERP/email; Excel reconciliation; Purview DLP for Copilot/agents (June-2026)",
+     "Multiple banks via Azure / Copilot",
+     "S33"],
+    ["Microsoft", "Azure OpenAI / Foundry",
+     "Custom enterprise agents",
+     "Used as backbone for many bank agents (BofA AskGPS, others)",
+     "Bank of America, Morgan Stanley, others",
+     "S33"],
+    ["Google Cloud", "Gemini Enterprise (formerly Agentspace)",
+     "No-code agent build, secure data connections, central governance",
+     "Used for bank-wide agent rollouts; powers Wells Fargo agents",
+     "Wells Fargo, HSBC (selected workloads)",
+     "S34"],
+    ["Google Cloud", "Agent Payments Protocol (AP2) + UCP",
+     "Open standards for agent payments",
+     "Underlies merchant + issuer integrations across Visa, Mastercard, Adyen, PayPal",
+     "Visa, Mastercard, PayPal, Adyen",
+     "S35"],
+    ["OpenAI", "ChatGPT Enterprise + Agentic Commerce Protocol",
+     "Enterprise agents + 'Buy it in ChatGPT' Instant Checkout",
+     "ACP open spec (with Stripe); 5 REST endpoints; ChatGPT charges 4% txn fee",
+     "BBVA, Santander, Klarna, Morgan Stanley, NatWest (assistant), Nubank",
+     "S36"],
+    ["Anthropic", "Claude for Financial Services + connectors",
+     "Agentic LLM with finance-specific connectors (S&P, FactSet, Morningstar, LSEG, Aiera, Moody's)",
+     "Claude for Excel; agent skills for modeling; MCP enterprise expansion",
+     "Goldman Sachs, Citi, Brex, Coinbase",
+     "S20"],
+    ["NVIDIA", "AI Factory stack (NeMo, Nemotron, NIM)",
+     "Agentic blueprints for FS",
+     "Capital-markets research & trading-signal blueprints (KX); consumer-banking multi-agent reference (Capital One)",
+     "Capital One, KX, financial-services partners",
+     "S31"],
+    ["Salesforce", "Agentforce for Financial Services",
+     "Atlas Reasoning Engine; pre-built FS role agents",
+     "Advisor, banker, service, collections agents; Einstein 1 / Data Cloud integration; $0.10/action or $2/conv",
+     "Wealth/insurance/FS customers (large installed base)",
+     "S37"],
+    ["AWS", "Bedrock Agents + agent payment partnerships",
+     "Multi-model agents on Bedrock",
+     "Pilot partner for Visa Intelligent Commerce Connect; financial-services Bedrock customers",
+     "Visa (ICC), broad FS customer base",
+     "S16"],
+    ["ServiceNow", "AI Agents for FS workflows",
+     "Workflow agents + Now Assist",
+     "Service ops, IT, employee workflows in banks (broad enterprise install base)",
+     "Multiple unnamed banks",
+     "S33"],
+]
+
+# Protocols
+PROTOCOLS_HEADER = [
+    "Protocol",
+    "Sponsor(s)",
+    "Type",
+    "Status (2026)",
+    "Backers / Adopters",
+    "Notes",
+    "Source ID",
+]
+
+PROTOCOLS = [
+    ["Agentic Commerce Protocol (ACP)",
+     "OpenAI + Stripe",
+     "Open spec for agent-initiated commerce (REST + MCP)",
+     "Beta; iterating (capability negotiation Jan-16-2026; payment handlers Jan-30-2026)",
+     "Etsy, Shopify (1M+ merchants), URBN, Coach, Kate Spade, PayPal (server)",
+     "Powers ChatGPT Instant Checkout; uses Shared Payment Tokens",
+     "S36"],
+    ["Visa Trusted Agent Protocol",
+     "Visa",
+     "Network protocol for KYA + tokenised agent payments",
+     "Live within Intelligent Commerce Connect (Apr-2026)",
+     "AWS, Aldar, Firmly, Nekuda, Fiserv, Adyen",
+     "Routes through Visa rails; verifies agent obeys consumer rules",
+     "S16"],
+    ["Mastercard Agent Pay Acceptance Framework",
+     "Mastercard",
+     "Acceptance/dispute framework + Verifiable Intent open-source",
+     "Live Q2-2026",
+     "Fiserv (US merchant base), Synchrony",
+     "Cryptographic audit trails for AI-initiated transactions",
+     "S16"],
+    ["Universal Commerce Protocol (UCP)",
+     "Google",
+     "Open commerce protocol for agents",
+     "Live and integrating with PayPal, Adyen",
+     "PayPal, Adyen, retailers via Google",
+     "Sits alongside AP2 for payments",
+     "S35"],
+    ["Agent Payments Protocol (AP2)",
+     "Google",
+     "Open agent payments protocol",
+     "Live 2026",
+     "Adyen, PayPal (collab)",
+     "Pairs with UCP for end-to-end agentic commerce",
+     "S35"],
+    ["Machine Payments Protocol (MPP)",
+     "Stripe (with Tempo)",
+     "Spec for machine-to-machine payments",
+     "Beta",
+     "Visa supports as one of four protocols in ICC",
+     "Targets agent-to-agent / programmatic payments",
+     "S16"],
+    ["x402",
+     "Coinbase + Linux Foundation",
+     "HTTP-native crypto payment standard",
+     "Launched Apr-2026",
+     "Stripe, Cloudflare, AWS, Google, Microsoft, Visa, Mastercard via X402 Foundation",
+     "Revives HTTP 402 status; sub-cent micropayments in stablecoins; <2s settlement",
+     "S32"],
+    ["MCP (Model Context Protocol)",
+     "Anthropic (open)",
+     "Tool/data-source protocol for LLM agents",
+     "Widely adopted in 2025-2026",
+     "PayPal MCP servers; many banks for internal connectors",
+     "Underlying plumbing for many agentic deployments incl. ACP variant",
+     "S18, S20"],
+]
+
+# Funding rounds
+FUNDING_HEADER = [
+    "Company",
+    "Round",
+    "Amount",
+    "Valuation",
+    "Lead investors",
+    "Date",
+    "Use of proceeds",
+    "Source ID",
+]
+
+FUNDING = [
+    ["Slash Financial", "Series C", "$100M", "$1.4B",
+     "Ribbit Capital, Khosla Ventures, Goodwater Capital", "2026",
+     "Scale AI-powered SMB banking platform", "S28"],
+    ["Dyna.Ai", "Series A", "$50M", "n/d",
+     "n/d", "2026",
+     "Deploy agentic AI across banks (esp. APAC); production scaling", "S28"],
+    ["Stacks", "Series A", "$23M", "n/d",
+     "Lightspeed", "2026",
+     "Agentic finance ops platform expansion", "S28"],
+    ["EnFi", "Series A", "$15M", "n/d",
+     "n/d", "2026",
+     "Agentic credit analyst at regional/community banks", "S28"],
+    ["Ralio", "Pre-seed", "£1.8M", "n/d",
+     "n/d", "Apr-2026",
+     "Agentic business payments infra", "S28"],
+    ["Hebbia", "Series B (cumulative ~$161M)", "n/a (latest)", "n/d",
+     "Andreessen Horowitz, Index, Peter Thiel (prior rounds)", "2024-2025",
+     "Finance-specific agent library and workflow engine", "S29"],
+    ["Glean", "Series F (cumulative ~$765M)", "n/a (latest)", "n/d",
+     "Multiple growth funds", "2024-2025",
+     "Enterprise AI workplace assistant", "S29"],
+]
+
+# Sources
+SOURCES_HEADER = [
+    "Source ID",
+    "Publisher",
+    "Title",
+    "URL",
+    "Accessed",
+]
+
+SOURCES = [
+    ["S1", "CeFPro / The Digital Banker / aibmag.com / emerj",
+     "JPMorgan LLM Suite & agentic AI rollout coverage",
+     "https://connect.cefpro.com/article/view/inside-jpmorgan-llm-suite-as-ai-agents-spread-across-the-bank",
+     "2026-04-17"],
+    ["S2", "American Banker / Fortune / BofA Newsroom / CIO",
+     "Bank of America Erica + AskGPS coverage",
+     "https://newsroom.bankofamerica.com/content/newsroom/press-releases/2025/09/bofa-s-new-genai-assistant-transforms-global-payments-solutions.html",
+     "2026-04-17"],
+    ["S3", "Citi / FinancialIT / The Register / pymnts / CIO Dive",
+     "Citi Stylus Workspaces with agentic AI",
+     "https://www.citigroup.com/global/news/press-release/2025/citi-unveils-citi-stylus-workspaces-agentic-ai-turbocharging-productivity",
+     "2026-04-17"],
+    ["S4", "Economic Times / FinancialContent / Bankers' Magazine / Observer",
+     "Goldman Sachs GS AI Assistant, Devin, Anthropic deployment",
+     "https://m.economictimes.com/tech/artificial-intelligence/goldman-sachs-launches-ai-assistant-firmwide-memo-shows/articleshow/122031424.cms",
+     "2026-04-17"],
+    ["S5", "Morgan Stanley / OpenAI / Nasdaq / CNBC",
+     "AI @ Morgan Stanley Assistant + Debrief",
+     "https://www.morganstanley.com/press-releases/ai-at-morgan-stanley-debrief-launch",
+     "2026-04-17"],
+    ["S6", "Wells Fargo / Google Cloud / National Mortgage News / American Banker",
+     "Wells Fargo Fargo + Agentspace deployment",
+     "https://cloud.google.com/blog/topics/financial-services/wells-fargo-agentic-ai-agentspace-empowering-workers",
+     "2026-04-17"],
+    ["S7", "Stack-ai / Barclays Private Bank / Barclays.com",
+     "HSBC and Barclays agentic AI deployment notes",
+     "https://privatebank.barclays.com/insights/ai-outlook-2026-11-2025/agentic-ai-a-little-less-conversation-a-little-more-action-pleas/",
+     "2026-04-17"],
+    ["S8", "UBS / Yahoo Finance / Stack-ai",
+     "UBS & Deutsche Bank agentic AI strategy",
+     "https://www.ubs.com/global/en/careers/about-us/stories/2025/agentic-ai.html",
+     "2026-04-17"],
+    ["S9", "The Asian Banker / FStech / National Technology",
+     "Lloyds, NatWest, Santander agentic AI plans 2026",
+     "https://www.theasianbanker.com/press-releases/lloyds-scales-genai-and-agentic-ai-targets-127m-in-value-creation-for-2026",
+     "2026-04-17"],
+    ["S10", "OpenAI / opentools.ai",
+     "BBVA + OpenAI ChatGPT Enterprise rollout",
+     "https://openai.com/index/bbva-collaboration-expansion/",
+     "2026-04-17"],
+    ["S11", "Computer Weekly / FStech / Dutch IT Leaders",
+     "ING agentic AI mortgages and voice agents",
+     "https://www.computerweekly.com/news/366626743/ING-Bank-transforming-operations-through-agentic-AI",
+     "2026-04-17"],
+    ["S12", "DBS / Computer Weekly / Business Times / Yahoo Finance",
+     "DBS Bank agentic AI (DBS Joy, CodeBuddy)",
+     "https://www.dbs.com/artificial-intelligence-machine-learning/artificial-intelligence/agentic-ai-is-here-are-we-ready-to-govern-it.html",
+     "2026-04-17"],
+    ["S13", "Cedar Report / Newswire / Fintech.ca / RBCCM",
+     "Canadian banks agentic AI (RBC, TD, Scotia, BMO, CIBC)",
+     "https://www.cedarreport.com/guides/how-canadian-banks-are-using-ai-in-2026-rbc-td-bmo-and-more",
+     "2026-04-17"],
+    ["S14", "The Financial Brand / Capital One / TechCrunch / NVIDIA On-Demand",
+     "Capital One Chat Concierge + agentic AI",
+     "https://thefinancialbrand.com/news/banking-products/capital-ones-chat-concierge-puts-agentic-ai-on-car-dealers-websites-187128",
+     "2026-04-17"],
+    ["S15", "Truist IR / PNC / American Banker / FinancialContent",
+     "Truist receivables, PNC working capital, US Bank developer assistant",
+     "https://ir.truist.com/2026-02-03-Truist-launches-AI-enabled-receivables-platform-to-accelerate-cash-application-and-minimize-exceptions",
+     "2026-04-17"],
+    ["S16", "TheLetterTwo / Digital Commerce 360 / American Banker / ClearingPost / adwaitx",
+     "Visa Intelligent Commerce Connect, Mastercard Agent Suite/Pay",
+     "https://thelettertwo.com/2026/04/08/visa-wants-to-be-the-payment-rail-for-the-agentic-economy",
+     "2026-04-17"],
+    ["S17", "Digital Commerce 360 / Fortune",
+     "American Express ACE developer kit + Agent Purchase Protection",
+     "https://www.digitalcommerce360.com/2026/04/14/american-express-agentic-commerce-developer-kit-purchase-protection/",
+     "2026-04-17"],
+    ["S18", "PayPal Newsroom / PayPal Tech Blog / PayPal.ai",
+     "PayPal Agent Ready, Store Sync, MCP servers",
+     "https://newsroom.paypal-corp.com/2025-10-28-PayPal-Launches-Agentic-Commerce-Services-to-Power-AI-Driven-Shopping",
+     "2026-04-17"],
+    ["S19", "Stripe blog / Stripe docs / agenticcommerce.expert / GitHub",
+     "Stripe Agentic Commerce Suite + ACP",
+     "http://www.stripe.com/blog/agentic-commerce-suite",
+     "2026-04-17"],
+    ["S20", "Anthropic / Economic Times / ETCFO / ClaudeReadiness",
+     "Claude for Financial Services + Goldman Sachs deployment",
+     "https://www.anthropic.com/solutions/financial-services",
+     "2026-04-17"],
+    ["S21", "Adyen / Major Matters",
+     "Adyen agentic-commerce strategy + Universal Token Vault",
+     "https://www.adyen.com/knowledge-hub/adyen-joins-agentic-ai-foundation",
+     "2026-04-17"],
+    ["S22", "FIS press / Temenos",
+     "FIS agentic commerce platform + Temenos FCM AI Agent",
+     "https://www.fisglobal.com/about-us/media-room/press-release/2026/fis-launches-industry-first-ai-transaction-platform-to-help-banks-lead",
+     "2026-04-17"],
+    ["S23", "Synchrony Newsroom",
+     "Synchrony agentic-commerce strategy",
+     "https://www.synchrony.com/contenthub/insights/blog-post-by-mike-storiale.html",
+     "2026-04-17"],
+    ["S24", "Markets Insider (Bernstein note)",
+     "Bernstein bullish on Fiserv, Block, Adyen for agentic commerce",
+     "https://markets.businessinsider.com/news/stocks/fiserv-block-and-adyen-here-s-why-bernstein-is-bullish-on-these-3-fintech-stocks-1035185068",
+     "2026-04-17"],
+    ["S25", "OpenAI / ad-hoc-news / myaskai / Klarna",
+     "Klarna AI assistant plus 2026 reversal coverage",
+     "https://www.ad-hoc-news.de/boerse/news/ueberblick/klarna-s-ai-pivot-reversing-course-after-customer-service-setbacks/69026000",
+     "2026-04-17"],
+    ["S26", "FStech / FinTech Weekly / Marcel van Oost / Fintyle",
+     "Nubank, Revolut AIR, Starling Assistant, Monzo coverage",
+     "https://www.fintechweekly.com/news/revolut-air-ai-assistant-uk-customers-launch-2026",
+     "2026-04-17"],
+    ["S27", "Brex.ai / Ramp blog / Stack-ai",
+     "Brex Agents + Ramp agentic AP and expense",
+     "https://www.brex.ai/",
+     "2026-04-17"],
+    ["S28", "SiliconANGLE / aihaberleri / theoutpost / stacks.ai / uktech.news",
+     "2026 agentic-AI fintech funding rounds (Slash, Dyna.Ai, Stacks, EnFi, Ralio)",
+     "https://siliconangle.com/2026/04/16/slash-raises-100m-1-4b-valuation-expand-ai-powered-banking-platform-online-businesses/",
+     "2026-04-17"],
+    ["S29", "Hebbia / V7Labs / CB Insights",
+     "Hebbia, Glean, Harvey product + funding profiles",
+     "https://www.hebbia.com/blog/whats-new-april-disclosure-2026",
+     "2026-04-17"],
+    ["S30", "Fenergo / Bretton / Stack-ai / dev.to",
+     "Compliance / financial-crime agentic vendors",
+     "https://fenergo.com/agentic-ai-agents",
+     "2026-04-17"],
+    ["S31", "KX / NVIDIA On-Demand / NVIDIA blog",
+     "KX agentic AI blueprints + Capital One GTC 2026 talk + NVIDIA FS survey",
+     "https://kx.com/news-room/kx-launches-agentic-ai-blueprints-powered-by-nvidia-at-gtc-2026-featuring-a-capital-markets-research-assistant-and-trading-signal-agent/",
+     "2026-04-17"],
+    ["S32", "Coinbase / Linux Foundation / Crossmint / aiagentstore",
+     "x402 protocol launch + Skyfire / Crossmint comparison",
+     "https://blog.crossmint.com/what-is-x402/",
+     "2026-04-17"],
+    ["S33", "Microsoft Learn / Microsoft Industry Blog / myabt / Microsoft Adoption",
+     "Microsoft Finance Agents + Agent 365 + Copilot for FS",
+     "https://www.microsoft.com/en-us/industry/blog/financial-services/banking/2026/02/26/the-agentic-moment-in-banking-a-blueprint-for-better-customer-experiences/",
+     "2026-04-17"],
+    ["S34", "Google Cloud / Promevo / ScaleByTech",
+     "Gemini Enterprise (Agentspace) for banking",
+     "https://cloud.google.com/products/agentspace",
+     "2026-04-17"],
+    ["S35", "Google / Adyen / Crossmint",
+     "Universal Commerce Protocol (UCP) + Agent Payments Protocol (AP2)",
+     "https://www.crossmint.com/learn/agentic-payments-protocols-compared",
+     "2026-04-17"],
+    ["S36", "OpenAI / OpenAI Developers / Ekamoira",
+     "ChatGPT Instant Checkout + Agentic Commerce Protocol",
+     "https://openai.com/index/buy-it-in-chatgpt/",
+     "2026-04-17"],
+    ["S37", "Salesforce / Vantage Point",
+     "Agentforce for Financial Services",
+     "https://www.salesforce.com/financial-services/artificial-intelligence/",
+     "2026-04-17"],
+    ["S38", "METR (Model Evaluation & Threat Research)",
+     "Time-horizon benchmark for frontier coding agents (v1.1, Jan-2026)",
+     "https://metr.org/time-horizons",
+     "2026-04-17"],
+    ["S39", "TokenCost / Anthropic GitHub issues",
+     "Claude Code per-session token economics (cache, regressions)",
+     "https://tokencost.app/blog/claude-code-cost-per-session",
+     "2026-04-17"],
+    ["S40", "Devin docs / vibecoder.me / imseankim.com",
+     "Devin ACU pricing, SWE-bench performance, cost per task",
+     "https://docs.devin.ai/admin/billing",
+     "2026-04-17"],
+    ["S41", "Cursor docs / AgentCost / Cursor blog",
+     "Cursor agent request pricing and team usage patterns",
+     "https://cursor.com/docs/account/teams/pricing",
+     "2026-04-17"],
+    ["S42", "OpenAI Codex docs / Hypereal AI / TokenCost",
+     "Codex token consumption per task; long-horizon 25h / 13M-token run",
+     "https://developers.openai.com/codex/cookbook/long_horizon_tasks/",
+     "2026-04-17"],
+    ["S43", "GitHub Docs / GitHub features",
+     "GitHub Copilot agent-mode / premium-request pricing 2026",
+     "https://docs.github.com/en/billing/concepts/product-billing/github-copilot-premium-requests",
+     "2026-04-17"],
+    ["S44", "Otera / Medium (S. Boddula) / blogarama / paxrel",
+     "Banking AI agent task durations: KYC in 8s, onboarding in minutes vs days",
+     "https://www.otera.ai/solutions/banking-autonomous-kyc-and-onboarding",
+     "2026-04-17"],
+]
+
+
+# Coding vs Banking/Payments/FS contrast
+CONTRAST_HEADER = [
+    "Dimension",
+    "Coding agents",
+    "Banking / Payments / FS agents",
+    "Why the gap",
+    "Source ID",
+]
+
+CONTRAST = [
+    ["Primary task type",
+     "Open-ended software engineering: write/refactor code, run tests, "
+     "ship PRs, debug, ops scripting, autonomous research.",
+     "Bounded transactional workflows: customer Q&A, KYC/AML, fraud "
+     "triage, treasury actions, IB document drafting, payments auth.",
+     "Code is unbounded, exploratory and stateful; banking work is "
+     "regulated, schema-heavy and must be auditable.",
+     "S38, S40, S42, S44"],
+    ["Typical task duration",
+     "Minutes to many hours per task. SWE-bench / live work: 1–30 min "
+     "average; complex refactors half-day; documented Codex run was "
+     "25 hours / 30k LOC. METR Time-Horizon 1.1 (Jan-2026) shows Opus "
+     "4.6 ≈14.5h, GPT-5.2 ≈6.6h, Opus 4.5 ≈4.8h at 50% reliability; "
+     "horizon doubling ~every 4 months.",
+     "Seconds to a few minutes per autonomous task: KYC decisions in "
+     "~8s, edge-case review ~2 min, onboarding compressed from 24+ "
+     "days to 'minutes', call-centre answers <30s. Multi-step IB / "
+     "compliance workflows can run minutes to low single-digit hours.",
+     "Coding is long-horizon planning + tool use; FS work is mostly "
+     "short, tightly-scoped retrieval/decision turns under SLAs and "
+     "human-in-loop policy.",
+     "S38, S42, S44"],
+    ["Median tokens per task",
+     "Simple bug fix: ~20–35k total. Medium feature: ~120–140k. "
+     "Half-day refactor: ~500–600k. Multi-agent run: 1.5M+ "
+     "(Haiku/Sonnet mix). Codex long-horizon documented run: ~13M "
+     "tokens.",
+     "Self-service chat turn: low thousands of tokens. Agentic "
+     "workflow turn (KYC, fraud, IB pitch slide): tens of thousands. "
+     "End-to-end compliance case: ~100k–300k. Rare multi-agent "
+     "research run reaches low millions.",
+     "Coding agents iterate on full repos with long context; FS "
+     "agents stitch short structured retrievals + policy checks.",
+     "S39, S40, S42, S44"],
+    ["Cost per task (list price)",
+     "Claude Code: $0.07–$3 per typical session; multi-agent runs "
+     "$3–$7+. Devin ACUs ~$2.25 each; complex tasks $3–$15. Cursor "
+     "Sonnet ~$0.09/request; heavy refactor session ~$20. Codex "
+     "small task ~$0.16; medium ~$1–$3.",
+     "Per-conversation cost generally well under $1; even "
+     "Salesforce Agentforce lists $2/conversation or $0.10/action. "
+     "Compliance vendors price per case (e.g., Fenergo claims 95% "
+     "screening hits auto-resolved at low marginal cost).",
+     "Coding tasks burn long, exploratory contexts; FS tasks reuse "
+     "templated prompts + RAG hits.",
+     "S37, S39, S40, S41, S42"],
+    ["Tokens / month, leading deployments",
+     "Per-engineer: a daily Claude Code user can spend $20–$100/day "
+     "→ tens of millions of tokens/day; Goldman's 12k Devin seats "
+     "and any 10k+ engineer Copilot/Cursor base imply >>10B tokens/"
+     "month at the firm level.",
+     "Per-customer: a BBVA / Santander seat is hundreds of "
+     "thousands–low millions tokens/month; consumer chat (Erica, "
+     "Klarna, Nubank, Revolut AIR) at tens of millions of users "
+     "still aggregates into multi-billion tokens/month, but with "
+     "much smaller per-event tokens.",
+     "Coding = few users × very heavy per-user usage. FS = many "
+     "users × light per-user usage. Both can land at 'Very High' "
+     "tier but via different shapes.",
+     "S39, S40, S41, S42"],
+    ["Reliability requirement",
+     "Tolerant of failure: PRs reviewed by humans; failed runs are "
+     "cheap to retry. Benchmarks reported at 50% / 80% reliability.",
+     "Strict: regulated decisions (KYC, lending, payment auth) need "
+     "explainability, audit, low false-positive rates. Frameworks "
+     "like Barclays / HSBC 'tiered autonomy', DBS PURE, NatWest "
+     "human-in-loop.",
+     "Asymmetric cost of error: a wrong code change is reversible; a "
+     "wrong AML decision is a regulatory event.",
+     "S7, S12, S30, S44"],
+    ["Tool surface",
+     "IDE + shell + browser + git + cloud: very wide tool-use "
+     "surface, often dozens of tools per session.",
+     "Closed enterprise stack: core banking, CRM (Salesforce), data "
+     "warehouse, screening DBs, ERP. Mediated by MCP / Agent 365 / "
+     "Agentforce / Agentspace.",
+     "Coding agents need general-purpose tool use; FS agents need "
+     "governed connectors with RBAC and DLP.",
+     "S33, S34, S37"],
+    ["Pricing / monetisation model",
+     "Per-seat unlimited (Copilot $10–$39/mo) increasingly replaced "
+     "by usage-based ACU / token / request pricing (Devin, Cursor, "
+     "Codex API).",
+     "Mostly bundled into enterprise contracts with the bank's "
+     "platform vendor (Salesforce, Microsoft, Google, Anthropic, "
+     "OpenAI). Some action-based pricing emerging (Agentforce "
+     "$0.10/action, $2/conversation).",
+     "Coding usage is metered because elastic; FS usage is "
+     "negotiated because procurement-led and capacity-planned.",
+     "S37, S40, S41, S42, S43"],
+    ["Front-end vs back-end mix",
+     "Almost entirely back-end (developer-facing). Devin, Codex, "
+     "Cursor, Claude Code, Copilot all run inside the engineering "
+     "org.",
+     "Roughly balanced: Front-end (Erica, Fargo, Cora, AIR, Klarna, "
+     "Nubank, Capital One Chat Concierge, network rails) plus heavy "
+     "Back-end (LLM Suite, GS Claude ops, Stylus, Hebbia, Fenergo).",
+     "Coding is an internal productivity vector; FS spans CX, "
+     "distribution and ops.",
+     "S1–S37"],
+]
+
+# Leading companies per category
+LEADERS_HEADER = [
+    "Category",
+    "Sub-category",
+    "Leader",
+    "Why leader",
+    "Source ID",
+]
+
+LEADERS = [
+    ["Coding agents", "Autonomous SWE (long-horizon)",
+     "Cognition (Devin)",
+     "First major-bank-scale deployment (Goldman Sachs, 12k engineers); "
+     "ACU-based pricing; 67% PR merge rate; 25h-class runs documented "
+     "elsewhere in category.",
+     "S4, S40"],
+    ["Coding agents", "IDE-embedded coding agent",
+     "Cursor",
+     "$2k–$5k/team/month observed agent spend; Sonnet ~$0.09/request "
+     "default; widely adopted by banks' engineering orgs.",
+     "S41"],
+    ["Coding agents", "Coding agent CLI / inline",
+     "Anthropic (Claude Code)",
+     "Long-context, cache-optimised sessions; the de-facto choice for "
+     "long-horizon back-end runs at finance customers (Brex, "
+     "Coinbase, Citi via Claude FS).",
+     "S20, S39"],
+    ["Coding agents", "Cloud SWE agent (asynchronous)",
+     "OpenAI (Codex)",
+     "GA pricing on gpt-5.2-codex; documented 25h / 13M-token "
+     "long-horizon runs; native to ChatGPT Enterprise stack used at "
+     "BBVA, Santander, NatWest.",
+     "S42"],
+    ["Coding agents", "DevOps / git platform agent",
+     "GitHub (Copilot agent mode + Workspace)",
+     "Most widely distributed coding agent (Free→Enterprise tiers); "
+     "1M+ token Workspace context; embedded in Microsoft FS stack.",
+     "S43"],
+    ["Coding agents", "Frontier-model autonomy benchmark leader",
+     "Anthropic Claude Opus 4.6",
+     "~14.5h on METR Time-Horizon 1.1 (50% reliability) – longest "
+     "sustained autonomy in early 2026.",
+     "S38"],
+    ["Banking — incumbent rollout", "Enterprise productivity at scale",
+     "JPMorgan Chase (LLM Suite + 450+ agentic use cases)",
+     "230k–250k seat reach; targets 1,000 production agents; 3–6 "
+     "hr/wk per-user productivity claim; backed by $18B tech budget.",
+     "S1"],
+    ["Banking — incumbent rollout", "Investment banking agentic ops",
+     "Goldman Sachs (Claude Opus + Devin + GS AI Assistant)",
+     "Most aggressive front-to-back agentic deployment among bulge "
+     "brackets: trade accounting, compliance, surveillance, IB "
+     "pitchbooks, 12k engineers on Devin.",
+     "S4, S20"],
+    ["Banking — incumbent rollout", "Consumer agentic banking",
+     "Wells Fargo (Fargo + Agentspace) and Bank of America (Erica)",
+     "Wells: 215k employees + Gemini-Enterprise consumer agents. "
+     "BofA: 42M consumer users, ~11k FTE-equivalent throughput.",
+     "S2, S6"],
+    ["Banking — incumbent rollout", "Wealth management",
+     "Morgan Stanley (AI @ MS Assistant + Debrief)",
+     "98% advisor-team adoption; ~15k advisors; 1M Zoom calls/yr "
+     "automated; reference for OpenAI in FS.",
+     "S5"],
+    ["Banking — Europe", "Most aggressive agentic rollout",
+     "ING Bank (agentic mortgage origination + voice agents)",
+     "Live agentic mortgages (NL, DE) targeted 2026; €350M cost "
+     "savings, 1,250 ops job exits projected.",
+     "S11"],
+    ["Banking — Europe", "Largest enterprise OpenAI deployment",
+     "BBVA (ChatGPT Enterprise to 120k staff)",
+     "10x scale-up in 2025; 20k+ custom GPTs; 83% weekly active in "
+     "pilot; pairs with Blue customer assistant.",
+     "S10"],
+    ["Banking — Asia/EM", "Production-grade agentic bank",
+     "DBS Bank (DBS Joy + CodeBuddy)",
+     "S$1B AI-driven economic value FY25; agentic governance via "
+     "PURE framework.",
+     "S12"],
+    ["Banking — Canada", "Agentic strategy leader",
+     "Royal Bank of Canada (RBC AI Group + Cohere 'North for "
+     "Banking')",
+     "Dedicated AI Group reporting to CEO; targets up to C$1B value "
+     "by 2027; #3 globally for FS AI maturity per coverage.",
+     "S13"],
+    ["Payments — networks", "Agentic commerce platform leader",
+     "Visa (Intelligent Commerce Connect)",
+     "Apr-2026 launch; supports four protocols (Visa TAP, MPP, ACP, "
+     "UCP); positioned as neutral payment rail for agents.",
+     "S16"],
+    ["Payments — networks", "Agentic commerce framework leader",
+     "Mastercard (Agent Suite, Agent Pay, Verifiable Intent)",
+     "Q2-2026 launch; cryptographic dispute trail; integrated with "
+     "Fiserv US merchant base.",
+     "S16"],
+    ["Payments — issuers", "Agentic issuer SDK",
+     "American Express (ACE developer kit + Agent Purchase "
+     "Protection)",
+     "Apr-2026 launch; first issuer to add explicit purchase "
+     "protection for agent errors.",
+     "S17"],
+    ["Payments — wallets / acceptance", "Agentic checkout reach",
+     "PayPal (Agent Ready + Store Sync)",
+     "Live Oct-2025; instantly enables tens of millions of merchants "
+     "across OpenAI, Google, Microsoft Copilot, Perplexity.",
+     "S18"],
+    ["Payments — acquiring infra", "Open agentic checkout protocol",
+     "Stripe (Agentic Commerce Suite + ACP with OpenAI)",
+     "Co-author of ACP; powers ChatGPT Instant Checkout; Shared "
+     "Payment Tokens reduce fraud.",
+     "S19"],
+    ["Payments — processors", "Agentic merchant processing",
+     "Fiserv",
+     "Routes Mastercard Agent Pay through millions of US merchants; "
+     "also integrated with Visa Trusted Agent Protocol.",
+     "S20"],
+    ["Payments — issuing tech", "Agentic core for banks",
+     "FIS (agentic commerce issuing platform)",
+     "First issuer-side enablement: KYA + agent-aware auth, fraud, "
+     "dispute frameworks; partnered with Visa + Mastercard.",
+     "S22"],
+    ["FS — neobanks / fintech", "Agentic consumer assistant",
+     "Revolut (AIR)",
+     "Apr-2026 launch to 13M UK customers; spending, investing, "
+     "subscriptions, card controls, travel — single multimodal agent.",
+     "S26"],
+    ["FS — neobanks / fintech", "Agentic customer service at scale",
+     "Klarna + Nubank (OpenAI)",
+     "Klarna: 700-FTE-equivalent at peak, even after 2026 partial "
+     "reversal. Nubank: 55% L1 resolution, -70% chat response time, "
+     "covers 114M+ customers.",
+     "S25, S26"],
+    ["FS — neobanks / fintech", "Agentic finance ops (B2B)",
+     "Brex + Ramp",
+     "Brex: Anthropic-powered expense / audit agents. Ramp: 99% OCR, "
+     "2.4x faster invoice processing, agentic AP.",
+     "S27"],
+    ["FS — vendors", "Finance research agents",
+     "Hebbia",
+     "Clients with $30T AUM; 1.5B pages processed; ~200k prompts/day; "
+     "deepest finance-specific agent library.",
+     "S29"],
+    ["FS — vendors", "Compliance / financial-crime agents",
+     "Fenergo (FinCrime OS) + Bretton",
+     "Fenergo: 95% of screening hits auto-resolved, up to 18.3k "
+     "analyst hrs/yr saved. Bretton: 70% EDD queue cut, $5.35M "
+     "first-year savings.",
+     "S30"],
+    ["FS — vendors", "Capital-markets agentic blueprint",
+     "KX (with NVIDIA)",
+     "Two GTC-2026 blueprints: Research Assistant + Trading Signal "
+     "Agent on NVIDIA AI Factory + KX time-series DB.",
+     "S31"],
+    ["FS — platforms", "Foundation model for FS agents (US/Europe)",
+     "OpenAI",
+     "Backbone for BBVA, Santander, NatWest assistant, Klarna, "
+     "Nubank, Morgan Stanley; co-author of ACP for agentic commerce.",
+     "S36"],
+    ["FS — platforms", "Foundation model for back-office FS agents",
+     "Anthropic (Claude for Financial Services)",
+     "Goldman Sachs core ops, Citi, Brex, Coinbase; Claude for "
+     "Excel; finance-specific connectors (S&P, FactSet, Morningstar, "
+     "LSEG).",
+     "S20"],
+    ["FS — platforms", "Hyperscaler enterprise agentic platform",
+     "Google Cloud (Gemini Enterprise / Agentspace)",
+     "Bank-wide rollouts: Wells Fargo (215k staff), HSBC selected "
+     "workloads; powers Citi Stylus alongside Anthropic.",
+     "S34"],
+    ["FS — platforms", "CRM-anchored agentic platform",
+     "Salesforce (Agentforce for Financial Services)",
+     "Pre-built advisor / banker / service / collections agents; "
+     "Atlas Reasoning Engine; large FS install base.",
+     "S37"],
+    ["Coding-agent infra", "Frontier coding model",
+     "Anthropic Claude (Sonnet/Opus) — chosen by Cursor, Claude "
+     "Code, Brex, Goldman Sachs",
+     "Default model for highest-reliability coding sessions; longest "
+     "METR autonomy horizon at Opus 4.6.",
+     "S20, S38, S39"],
+    ["Agentic-payments protocols",
+     "Open consumer-checkout standard",
+     "Agentic Commerce Protocol (OpenAI + Stripe)",
+     "Powers ChatGPT Instant Checkout; adopted by Etsy, Shopify "
+     "(1M+ merchants), URBN, Coach, Kate Spade, PayPal MCP server.",
+     "S36"],
+    ["Agentic-payments protocols",
+     "Network-rail standard",
+     "Visa Trusted Agent Protocol",
+     "Live in Visa ICC; supported by AWS, Aldar, Firmly, Nekuda, "
+     "Fiserv, Adyen.",
+     "S16"],
+    ["Agentic-payments protocols",
+     "Crypto / stablecoin native",
+     "x402 (Coinbase + Linux Foundation)",
+     "Apr-2026 launch; sub-cent micropayments in stablecoins; "
+     "backed by Stripe, Cloudflare, AWS, Google, Microsoft, Visa, "
+     "Mastercard via X402 Foundation.",
+     "S32"],
+]
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+HEADER_FILL = PatternFill("solid", fgColor="1F4E78")
+HEADER_FONT = Font(bold=True, color="FFFFFF")
+TITLE_FONT = Font(bold=True, size=14, color="1F4E78")
+WRAP = Alignment(wrap_text=True, vertical="top")
+
+
+def add_header(ws, header):
+    ws.append(header)
+    for col_idx, _ in enumerate(header, start=1):
+        c = ws.cell(row=ws.max_row, column=col_idx)
+        c.fill = HEADER_FILL
+        c.font = HEADER_FONT
+        c.alignment = Alignment(wrap_text=True, vertical="center")
+
+
+def autosize(ws, max_width=60):
+    for col in ws.columns:
+        col_letter = get_column_letter(col[0].column)
+        longest = 0
+        for cell in col:
+            v = "" if cell.value is None else str(cell.value)
+            longest = max(longest, min(max_width, max(len(s) for s in v.splitlines() or [""])))
+        ws.column_dimensions[col_letter].width = min(max_width, max(12, longest + 2))
+
+
+def write_sheet(wb, name, header, rows, freeze=True):
+    ws = wb.create_sheet(name)
+    add_header(ws, header)
+    for r in rows:
+        ws.append(r)
+        for cell in ws[ws.max_row]:
+            cell.alignment = WRAP
+    if freeze:
+        ws.freeze_panes = "A2"
+    autosize(ws)
+    return ws
+
+
+def write_csv(name, header, rows):
+    OUT_CSV_DIR.mkdir(parents=True, exist_ok=True)
+    path = OUT_CSV_DIR / f"{name}.csv"
+    with path.open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(header)
+        w.writerows(rows)
+
+
+def main():
+    OUT_XLSX.parent.mkdir(parents=True, exist_ok=True)
+    wb = Workbook()
+    # Replace default sheet with overview
+    ws = wb.active
+    ws.title = "0_Overview"
+    for row in OVERVIEW_ROWS:
+        ws.append(row)
+    ws["A1"].font = TITLE_FONT
+    for r in ws.iter_rows():
+        for c in r:
+            c.alignment = WRAP
+    ws.column_dimensions["A"].width = 32
+    ws.column_dimensions["B"].width = 70
+    ws.column_dimensions["C"].width = 22
+    ws.freeze_panes = "A2"
+
+    sheets = [
+        ("1_Bank_Deployments", BANK_DEPLOYMENTS_HEADER, BANK_DEPLOYMENTS),
+        ("2_Payments_Networks_Processors", PAYMENTS_HEADER, PAYMENTS),
+        ("3_Fintechs_Neobanks", FINTECHS_HEADER, FINTECHS),
+        ("4_Vendors_Startups", VENDORS_HEADER, VENDORS),
+        ("5_Enterprise_Platforms", PLATFORMS_HEADER, PLATFORMS),
+        ("6_Agentic_Payments_Protocols", PROTOCOLS_HEADER, PROTOCOLS),
+        ("7_Funding_Rounds", FUNDING_HEADER, FUNDING),
+        ("8_Coding_vs_FS_Contrast", CONTRAST_HEADER, CONTRAST),
+        ("9_Leading_Companies", LEADERS_HEADER, LEADERS),
+        ("10_Sources", SOURCES_HEADER, SOURCES),
+    ]
+    for name, header, rows in sheets:
+        write_sheet(wb, name, header, rows)
+        write_csv(name, header, rows)
+
+    wb.save(OUT_XLSX)
+    print(f"Wrote {OUT_XLSX} and {len(sheets)} CSVs in {OUT_CSV_DIR}")
+
+
+if __name__ == "__main__":
+    main()

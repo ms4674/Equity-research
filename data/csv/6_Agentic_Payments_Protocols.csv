@@ -1,0 +1,9 @@
+Protocol,Sponsor(s),Type,Status (2026),Backers / Adopters,Notes,Source ID
+Agentic Commerce Protocol (ACP),OpenAI + Stripe,Open spec for agent-initiated commerce (REST + MCP),Beta; iterating (capability negotiation Jan-16-2026; payment handlers Jan-30-2026),"Etsy, Shopify (1M+ merchants), URBN, Coach, Kate Spade, PayPal (server)",Powers ChatGPT Instant Checkout; uses Shared Payment Tokens,S36
+Visa Trusted Agent Protocol,Visa,Network protocol for KYA + tokenised agent payments,Live within Intelligent Commerce Connect (Apr-2026),"AWS, Aldar, Firmly, Nekuda, Fiserv, Adyen",Routes through Visa rails; verifies agent obeys consumer rules,S16
+Mastercard Agent Pay Acceptance Framework,Mastercard,Acceptance/dispute framework + Verifiable Intent open-source,Live Q2-2026,"Fiserv (US merchant base), Synchrony",Cryptographic audit trails for AI-initiated transactions,S16
+Universal Commerce Protocol (UCP),Google,Open commerce protocol for agents,"Live and integrating with PayPal, Adyen","PayPal, Adyen, retailers via Google",Sits alongside AP2 for payments,S35
+Agent Payments Protocol (AP2),Google,Open agent payments protocol,Live 2026,"Adyen, PayPal (collab)",Pairs with UCP for end-to-end agentic commerce,S35
+Machine Payments Protocol (MPP),Stripe (with Tempo),Spec for machine-to-machine payments,Beta,Visa supports as one of four protocols in ICC,Targets agent-to-agent / programmatic payments,S16
+x402,Coinbase + Linux Foundation,HTTP-native crypto payment standard,Launched Apr-2026,"Stripe, Cloudflare, AWS, Google, Microsoft, Visa, Mastercard via X402 Foundation",Revives HTTP 402 status; sub-cent micropayments in stablecoins; <2s settlement,S32
+MCP (Model Context Protocol),Anthropic (open),Tool/data-source protocol for LLM agents,Widely adopted in 2025-2026,PayPal MCP servers; many banks for internal connectors,Underlying plumbing for many agentic deployments incl. ACP variant,"S18, S20"
