@@ -37,6 +37,22 @@ The script regenerates both the `.xlsx` workbook and the per-sheet CSVs
 from the curated data inside the script. Edit the script to add rows or
 sources, then re-run.
 
+### Role and token-consumption columns
+
+Every row in sheets 1–4 is tagged with two extra dimensions:
+
+- **Role (Front-end / Back-end)** — whether the agent faces external
+  counterparties (customers, merchants, third-party AI surfaces) or runs
+  inside the institution (employee productivity, ops, compliance,
+  engineering, treasury). `Both` is used when one product line spans
+  both. Network-level rails (Visa ICC, Mastercard Agent Pay, etc.) are
+  classed as Front-end because their consumers are external AI agents.
+- **Token consumption (tier)** — qualitative monthly LLM-token usage
+  estimated from disclosed scale (users × interactions × avg context):
+  Very High (>1B/mo), High (100M–1B), Medium (10M–100M), Low (<10M),
+  N/A (pure infrastructure / non-LLM), N/D (not disclosed). These are
+  illustrative — issuers and vendors rarely publish exact token numbers.
+
 ### Caveats
 
 Data is hand-curated from public reporting (Q4 2025 - Q2 2026) including
