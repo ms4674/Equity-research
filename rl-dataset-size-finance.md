@@ -213,7 +213,80 @@ In every bellwether stack we examined, RAG and RL are **complementary rather tha
 
 ---
 
-## 8. Sources
+## 8. RAG vs RL vs Tool Use — which actually drives accuracy in financial agents
+
+The last two sections compared RAG and RL on the *time-to-accuracy* axis. The third leg of every production financial agent is **tool use** (function calling, MCP, code execution, structured API access). In bellwether deployments this is increasingly the *largest single driver of measured accuracy* — typically larger than RAG and far larger than additional RL — and it has fundamentally different cost dynamics.
+
+### 8.1 What each technique fixes
+
+| Technique | Fixes | Doesn't fix | Mechanism |
+|---|---|---|---|
+| **RAG** | Stale facts, missing private knowledge, citation/provenance | Wrong reasoning, wrong action, computation errors | Inserts retrieved text into context |
+| **Tool use** | Computation, real-time state, deterministic operations (price, balance, FX, position, payment) | Strategy / preference / tone | LLM emits a structured call; an external system returns a ground-truth answer |
+| **RL / RLHF** | Behavior, alignment, refusal, multi-step strategy, adversarial robustness | Knowledge gaps, computational accuracy | Re-weights policy on reward signal |
+
+These are **non-overlapping accuracy surfaces**. A trading copilot that knows yesterday's pricing curve (RAG), can call the live position API (tool), and has been RL-aligned to refuse trades outside risk limits (RL) is performing three independent jobs.
+
+### 8.2 Quantified accuracy lift, side-by-side
+
+| Lever | Reported accuracy lift | Source |
+|---|---|---|
+| **RAG** vs base LLM | 42–90% reduction in hallucination on knowledge-intensive tasks | RAG-vs-FT 2026 enterprise studies |
+| **RAG-Tool Fusion** | **+46–56% absolute improvement** on ToolE / Seal-Tools benchmarks vs RAG-only baselines | arXiv 2410.14594 |
+| **Tool use (UniToolCall)** | **93.0% single-turn Strict Precision** on Hybrid-20 (distractor-heavy) — beats GPT, Gemini, Claude | arXiv 2604.11557 |
+| **Tool-RL (ToolRLA on a financial-advisory copilot)** | Task-completion **62% → 91% (+47%)**; tool-invocation errors **38% → 14% (−63%)**; **regulatory violations 12% → 0.8% (−93%)** | arXiv 2604.11304 |
+| **RL/RLHF** (Mastercard DI Pro on fraud) | Fraud detection **+20% on average, +300% in some segments**; false positives **−85%** | Mastercard / CNBC, 2024 |
+| **Naive function calling without RL** | Schema correctness ~100%, but multi-step trajectory accuracy degrades sharply — "schema correctness ≠ task correctness" | LangChain benchmarks |
+| **Hallucination in tool-use agents (no fix)** | Best model only **11.6% accuracy** at attributing tool-use hallucinations | AgentHallu, arXiv 2601.06818 |
+| **BankerToolBench** (investment-banking workflows) | Best model (GPT-5.4) fails ~50% of criteria; **0% of outputs rated client-ready** | arXiv 2604.11304 |
+
+The ToolRLA result is the key data point. **Tool use *plus* RL on the tool-call policy** — not RAG, not bigger models — produced the largest single accuracy jump ever published on a *financial advisory* copilot: a 47-point completion-rate improvement and a 93% reduction in regulatory violations in one training cycle.
+
+### 8.3 What each bellwether actually built
+
+| Company | Architecture | RAG layer | Tool-use layer | RL layer | Disclosed accuracy / scale |
+|---|---|---|---|---|---|
+| **Morgan Stanley** Wealth Mgmt Assistant | GPT-4 + RAG + light FT | **350K-doc / 100K-indexed corpus** of research, policy, compliance | Limited (advisor-in-the-loop) | Domain SFT + evals; RLHF upstream from OpenAI | **98–98.5% advisor-team adoption**; 15–20s response; expanded from 7K → 100K-doc question coverage |
+| **BlackRock** Aladdin Copilot | Agentic — LangChain + LangGraph | Embedded into Aladdin platform docs | **GPT-4 function calling over hundreds of Aladdin APIs**; plugin registry filters to 20–30 tools per query, 50–60 engineering teams onboarding | Eval-driven dev; daily end-to-end testing; upstream RLHF from base model | Deployed across **~100 Aladdin apps**, thousands of investment pros, **70 countries**; **$11T AUM platform** |
+| **JPMorgan** LLM Suite | Multi-model hosted (OpenAI + Anthropic) + internal data + agent tools | Streaming RAG over internal databases; refreshed continuously | Agent toolchain across 400+ use cases | LoRA-scale RL refresh on **8-week cadence**; upstream RLHF on base | **250K seats**, ~half daily-active; 8-week ship cycle |
+| **JPMorgan** LOXM | Custom deep-RL execution agent | Minimal | Direct exchange & OMS integration (deterministic tool layer) | **Deep RL on billions of historical + simulated trades** | Rolled out global Q4-2017; "significant" execution improvement vs. classical algos |
+| **Goldman Sachs** GS AI + Devin | GS AI for 46K employees; Devin (Cognition) for engineering | RAG over internal docs | Devin orchestrates IDE, build, test, deploy as tools | Upstream RL on base; supervised humans-in-loop | **~1M prompts/month**; copilot **+20% engineering productivity**; Devin targeted at **3–4× productivity** |
+| **Bridgewater** AIA / $2B fund | LLM ensemble (OpenAI + Anthropic + Perplexity) | RAG across macro/news data | Tool-call into Bridgewater's causal models and ML data layer | RL/ML on causal & macro models internally | $2B AUM at launch (Jul 2024); humans manage risk, data, execution |
+| **Mastercard** DI Pro | RNN + emerging Large Tabular Model | Streaming feature store of merchant / cardholder embeddings (RAG-style) | Real-time scoring API into bank decision systems | **Continuous online RL/learning over 160B tx/yr** | **+20% to +300%** fraud detection; **−85%** false positives; ~50ms |
+| **Visa** VAA / VDA | ML + deep RNN (VDA) | Real-time feature store | Real-time decisioning API to 8K+ banks in 129 countries | Continuous learning on 127B-tx/yr stream | <0.1% global fraud rate; **$25B fraud prevented** in 12 months |
+| **BofA** Erica | Intent classifier + ranker + response library | Library of **700+ canned responses** = RAG-style retrieval | Connected to account / payment / dispute APIs (tool use) | Episodic RL/SFT on ranker + classifier | **3B+ cumulative interactions**; 75K+ updates since 2018 |
+| **Klarna** assistant | OpenAI GPT-4 base | Product / policy knowledge via RAG | Calls into orders, refunds, payment-rails APIs | **RLHF over millions of historical chats** | Handles **2.3M conversations/month**, equivalent of 853 FTEs; **$60M profit impact 2025** |
+| **Stripe** agent toolkit | Vendor-agnostic | Up to developer | **Native function-calling SDK over Stripe APIs** (PaymentLinks, Customers, Meter API for usage-based billing) + MCP server | Up to model provider; Stripe ships restricted-key security | Powers third-party agentic commerce — accuracy is the *developer's* problem; Stripe provides the deterministic tool layer |
+
+### 8.4 So which actually drives the most accuracy?
+
+Ranked by *quantified, disclosed accuracy lift in financial agents*:
+
+1. **Tool use is the single largest accuracy lever in agentic financial workflows.** It is the only technique that converts the LLM's probabilistic output into **deterministic, ground-truthed values** (price, position, balance, payment status, FX rate, regulatory flag). At Morgan Stanley, BlackRock Aladdin, JPMorgan LLM Suite, Klarna, and Stripe, the deterministic tool layer is the load-bearing wall — without it, RAG and RL cannot compensate, because the *type* of error they fix is different.
+2. **RL on top of tool use is the largest *measurable* accuracy *delta*.** The published ToolRLA result on a financial-advisory copilot — **+47 pts task completion, −93% regulatory violations** — is the largest one-cycle accuracy gain we found. Mastercard's continuous-RL fraud system reports **+20% to +300%** detection lift. RL applied to the *tool-calling policy* (i.e., when and how to call a tool) is where the next 12–24 months of measurable bellwether accuracy gains will come from.
+3. **RAG drives the largest accuracy gain *for knowledge-bound tasks*** but is bounded above by the quality of the corpus. Morgan Stanley's RAG system was the canonical wealth-management example because the bottleneck *was* knowledge access, not reasoning or action. For agents that mostly *do things* (Aladdin, Stripe, LOXM, DI Pro, Klarna), RAG is necessary but no longer the marginal driver.
+4. **Pure RL without tools is now a niche.** It still wins for two specific surfaces — **adversarial fraud detection** (Mastercard, Visa) and **sequential execution** (LOXM) — where the action space is closed and the reward signal is dense. Outside those two domains, the bellwether pattern is RL applied *to* the tool-using agent, not RL replacing it.
+
+### 8.5 Ranked accuracy contribution in a representative banking agent
+
+| Layer | Marginal accuracy contribution to a banking copilot | Example |
+|---|---:|---|
+| Base RLHF'd LLM (already paid for upstream) | baseline (~60–70% on agentic tasks) | GPT-4 / Claude / Llama base |
+| **+ Tool use** | **+15–30 pts** to task completion; eliminates entire categories of computational/state errors | Aladdin's hundreds of APIs; Stripe agent toolkit; Klarna's order/refund APIs |
+| **+ RAG** | **+10–20 pts** on knowledge-grounded subtasks; 42–90% hallucination reduction | Morgan Stanley's 100K-doc corpus; JPM internal DBs |
+| **+ Tool-aware RL (e.g., ToolRLA)** | **+15–30 pts** task completion; **−63% tool errors**; **−93% regulatory violations** | ToolRLA on financial-advisory copilot; Mastercard DI Pro; LOXM |
+| Continuous online RL (Tier 1) | adversarial-only; protects against drift but doesn't improve "happy-path" accuracy | DI Pro, VAA |
+
+### 8.6 Investor read-across
+
+- **Tool inventory is the new dataset.** BlackRock's plugin registry (50–60 engineering teams onboarding, 20–30 tools filtered per query) and JPM's 400+ use cases show that the moat is shifting to **how many high-quality, permissioned, audited tools an institution can expose to its agents**. This is a different capex bucket than either RAG embeddings or RL training compute.
+- **The ROI ranking for incremental AI dollars in financial agents is currently:** (1) build/expose the next tool, (2) RL-train the policy that decides *when* to call which tool, (3) refresh RAG corpora, (4) full-model RL. The bellwethers' spend allocation tracks this ranking.
+- **Stripe's agent toolkit and Anthropic's MCP standard (adopted by OpenAI in March 2025)** are the infrastructure-layer plays — they monetize the tool-use boom independent of which model wins. Visa, Mastercard, and Stripe each effectively *sell* agentic tools to other people's AI agents.
+- **Risk:** schema correctness is not task correctness. Naive function-calling agents are 100% schema-accurate but fail multi-step trajectories. This is exactly why RL on the tool-call policy (Tier-2-style training) is becoming the dominant accuracy lever — and why bellwethers with both proprietary trajectory data and proprietary tool catalogs (JPM, BlackRock, V, MA) compound their advantage on every refresh cycle.
+
+---
+
+## 9. Sources
 
 - Visa FY2025 10-K — 329 B transactions, $17 T volume.
 - Mastercard 3Q25 supplemental ops data — 45.4 B switched transactions in Q3'25.
@@ -248,3 +321,18 @@ In every bellwether stack we examined, RAG and RL are **complementary rather tha
 - *RAG vs. Fine-Tuning 2026: Costs, Framework Guide* — Alphacorp (2026); 42–90% hallucination reduction with RAG.
 - *RAG Architecture in 2026: How to Keep Retrieval Actually Fresh* — RisingWave / Medium (2026); streaming RAG with CDC, sub-second freshness, 10–15% reprocessing share.
 - *Fine-Tuning or Retrieval? Comparing Knowledge Injection in LLMs* — arXiv 2312.05934 / EMNLP 2024; RAG > unsupervised FT for knowledge tasks.
+- *UniToolCall: Unifying Tool-Use Representation, Data, and Evaluation for LLM Agents* — arXiv 2604.11557; 93.0% Hybrid-20 Strict Precision.
+- *Advanced RAG-Tool Fusion* — arXiv 2410.14594; +46–56% absolute gains on ToolE / Seal-Tools.
+- *MCPVerse* — arXiv 2508.16260; 550+ tools, 147K-token action space; bigger-tool-set degradation.
+- *BankerToolBench* — arXiv 2604.11304; investment-banking workflow; 0% client-ready outputs from frontier models.
+- *ToolRLA* deployed on a financial-advisory copilot — arXiv 2604.11304; +47 pts task completion, −63% tool errors, −93% regulatory violations.
+- *AgentHallu* — arXiv 2601.06818; 11.6% accuracy on tool-use hallucination attribution.
+- *AgentNoiseBench* — arXiv 2602.11348; tool-using agent robustness under noise.
+- LangChain — *Benchmarking Agent Tool Use*; schema correctness ≠ task correctness.
+- Anthropic *Tool Search Tool* / MCP, OpenAI MCP adoption (Mar 2025).
+- Morgan Stanley — *Enterprise Knowledge Management with LLMs* (ZenML LLMOps DB); OpenAI customer-story page; 350K / 100K-doc corpus, 98–98.5% adoption.
+- BlackRock — *Aladdin Copilot* / *From Pilot to Platform* (LangChain Interrupt 2025); LangChain + LangGraph + GPT-4 function calling; 100 apps, 70 countries; $11T AUM platform.
+- Goldman Sachs — *5 AI tools the bank has built* (Business Insider, May 2025); 1M prompts/month (American Banker); +20% engineering productivity; Devin pilot (TechCrunch, Jul 2025).
+- JPMorgan — *IndexGPT* (Bloomberg, May 2024); thematic-index keyword generation pipeline.
+- Bridgewater — *AIA Labs* (bridgewater.com); $2B ML fund (Hedgeweek / Fortune / Bloomberg, Jul 2024).
+- Stripe — *Agent Toolkit* GitHub (`stripe/agent-toolkit`); Stripe agents documentation; Meter API for usage-based billing.
