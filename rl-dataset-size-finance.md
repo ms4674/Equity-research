@@ -94,7 +94,79 @@ The table below quantifies each layer.
 
 ---
 
-## 5. Sources
+## 5. How many parameters does the RL stage actually *add*?
+
+The RL stage in modern agentic systems rarely introduces new structural parameters into the deployed model — it predominantly **re-weights** an existing pre-trained network. The "parameter cost" is therefore best read in three layers: training-time scaffolding, deployed-time delta, and the production scale of the underlying model.
+
+### 5.1 Training-time scaffolding (transient, lives only in the GPU job)
+
+Classical PPO-RLHF requires up to **four co-resident networks**:
+
+| Component | Typical size vs. policy | Persists into deployment? |
+|---|---:|---|
+| Policy / actor (the LLM) | 1.0× | Yes |
+| Reference / frozen policy (KL anchor) | 1.0× | No |
+| Value / critic head | base + small MLP head (a few M params) | Discarded |
+| Reward model (preference scorer) | 0.3–1.0× | Used in training only |
+
+For a 7 B-parameter policy this resolves to ~**4 × 7 B = ~28 B trainable + frozen parameters** in memory during training, which is why naive full-precision PPO on a 7 B model needs **~220 GB of GPU memory**. ([HF Efficient-RLHF paper](https://www.huggingface.co/papers/2309.00754))
+
+**GRPO (DeepSeek-R1's algorithm) eliminates the value model entirely**, dropping training memory by ~25–30% and removing one full-size network from the scaffolding. This is why DeepSeek could RL-train a **671 B-parameter MoE backbone (37 B active)** without adding *any* new architectural parameters. ([Epoch AI breakdown](https://epoch.ai/gradient-updates/what-went-into-training-deepseek-r1))
+
+### 5.2 Deployed-time delta (what actually ships to production)
+
+The number of *new, persistent* parameters added by the RL stage falls into three regimes:
+
+| Method | New trainable parameters | Memory footprint vs. base | Used by |
+|---|---:|---:|---|
+| **Full-parameter RLHF** | 100% of base (re-weights everything) | 1.0× (no new params, just new weights) | OpenAI / Anthropic frontier models |
+| **LoRA-PPO / PEFT-RLHF** | **~0.1–0.6%** (e.g. ~40 M new params on a 7 B model at rank 16) | +0.6% on disk; **~3.2× less GPU mem in training** (68 GB vs 220 GB) | Most enterprise fine-tunes; verl-style banking deployments |
+| **GRPO (DeepSeek-R1 paradigm)** | 100% (re-weight) but **no value-network parameters** at all | 1.0× weights, 0.7–0.75× training memory | DeepSeek-R1 (671 B / 37 B active) |
+| **Reward-model-only stack (DPO, RLAIF)** | 0% post-training (preference loss applied directly) | 1.0× | Many cost-sensitive Tier-3 deployments |
+
+**Concrete bellwether read-across:**
+
+- **Mastercard DI Pro (RNN with "inverse recommender" head):** the RL/learning component sits as an **incremental head** on a much larger embedding table; in the new "Large Tabular Model" rollout, the *foundation* is being scaled to **hundreds of billions of parameters' worth of training capacity**, not the policy head itself.
+- **JPMorgan LOXM-class execution agents:** policy networks are typically **<10 M parameters** (small CNN/MLP over LOB features). RL adds essentially zero new structural parameters; the cost is in the simulator and reward shaping.
+- **JPMorgan LLM Suite / Klarna OpenAI assistant:** built on hosted frontier models (OpenAI, Anthropic). The *enterprise* RL/alignment delta is almost always a **LoRA adapter or system-prompt + retrieval layer** measured in **tens of MB**, not GBs. The base 100B–1T-parameter model is unchanged.
+- **BofA Erica:** classic intent-classifier + response-library architecture (700-response library, 2,200-term vocabulary per intent). The "RL surface" is effectively a small ranker on top of a frozen NLU stack — single-digit-million-parameter delta per update.
+
+**Bottom line:** in production financial agents, RL almost never *adds* >1% to the parameter count of the deployed model. It either (a) re-weights an existing frontier model (0% net new params), or (b) bolts on a **0.1–0.6% LoRA adapter**, or (c) trains a tiny task-specific head (<10 M params) on top of a large frozen embedding/foundation model.
+
+---
+
+## 6. How often does the RL stage have to be re-run?
+
+Refresh cadence varies by **decay velocity** of the underlying environment, which differs by 4–5 orders of magnitude across the four tiers. Bellwether disclosures pin the cadence:
+
+| Tier | Driver of decay | Observed bellwether cadence | RL refresh trigger |
+|---|---|---|---|
+| 1. Network-scale fraud / authorization | Adversarial — fraud rings reverse-engineer thresholds in days | Mastercard DI Pro: continuous online learning over a 160 B-tx/yr stream; LTM "continuously improves as it trains on more data" | Drift / new attack vector — new labels propagate within **hours** |
+| 2. Trading execution agents | Regime change, microstructure shifts | Drift-triggered retraining when **rolling 30-day Sharpe < 0.5** or daily P&L < −5%; Kolmogorov-Smirnov tests on feature distributions | Statistical drift detection, not a calendar |
+| 3. Conversational RLHF (banking copilots) | Product changes, policy changes, new intents, language drift | BofA Erica: **>75,000 model updates since 2018** (~25/day average; ~10/day adjusted for early-build period); JPM LLM Suite: **every 8 weeks** | Scheduled release train + hot-fixes for safety/quality regressions |
+| 4. Reasoning-agent post-training | New reasoning patterns, new tool APIs | DeepSeek-R1-style multi-stage RL: **one-shot** post-training per base-model revision; refreshed when the base model is upgraded | Tied to base-model release cadence (quarterly to semi-annual) |
+
+### 6.1 Why the cadence diverges so sharply
+
+- **Stale-model decay is empirically violent in fraud.** The most-cited production case shows a model holding **94.2% accuracy for six weeks**, then collapsing to **61%** in a single week as adversaries discovered a $500 transaction-amount threshold. Online learning recovered detection to **88% in 48 hours and 93.7% within a week** — proving that a *weekly* batch RL refresh is already too slow at network scale and continuous online learning is the production norm.
+- **Trading agents are drift-paced, not calendar-paced.** RL retrains are triggered by Sharpe / win-rate thresholds rather than fixed schedules; many shops use *self-healing* adapter layers (Tier-2 LoRA-style updates) to avoid full RL refreshes during live regimes.
+- **Conversational copilots are release-paced.** JPMorgan's confirmed **8-week** LLM Suite cadence is now the de facto standard cadence for enterprise agentic AI: long enough to A/B-test with rollback plans, short enough to absorb policy changes and base-model upgrades.
+- **Reasoning agents are model-paced.** Because GRPO-style RL is run *once* per base-model revision (DeepSeek-R1, OpenAI o-series, Anthropic Claude reasoning variants), a finance-specific reasoning agent typically gets a *full* RL refresh on the order of **2–4× per year**, with smaller LoRA-adapter or DPO updates between releases.
+
+### 6.2 Implied operating cost
+
+- **Tier 1 (continuous online RL on 10¹¹ events/yr):** thousands of GPU-hours per day at the network operators (V, MA) — already capitalized.
+- **Tier 2 (drift-triggered):** dozens of GPU-hours per retrain event, ~1–10 events/yr per strategy.
+- **Tier 3 (8-week scheduled):** **6–7 RL/RLHF refreshes per year** per major agent surface; at LoRA scale a single refresh is **<$10K of compute** — explaining why JPM can run 400+ use cases simultaneously.
+- **Tier 4 (model-paced):** **2–4 full RL post-training rounds per year** per reasoning agent, dominated by base-model rather than fine-tune compute.
+
+### 6.3 Investor implication
+
+The "AI moat" in finance is **not** the parameter count of the RL-tuned model — it is the **rate at which proprietary feedback can be looped back into the policy**. V/MA are running an effectively continuous loop on 10¹¹ events/yr; JPM ships every 8 weeks across 400 surfaces; mid-tier banks running 6-month batch retrains will visibly degrade against this cadence. Capex differentiates not on training FLOPs, but on the **labeling, governance, and online-RL pipeline** that converts raw transactions into a re-weighted policy.
+
+---
+
+## 7. Sources
 
 - Visa FY2025 10-K — 329 B transactions, $17 T volume.
 - Mastercard 3Q25 supplemental ops data — 45.4 B switched transactions in Q3'25.
@@ -115,3 +187,13 @@ The table below quantifies each layer.
 - FinRL-DeepSeek — arXiv 2502.07393; FNSPID 15 M articles, 2 M-record working set.
 - JaxMARL-HFT — arXiv 2511.02136 (GPU-accelerated multi-agent RL for HFT).
 - *Reinforcement learning with graph neural network (RL-GNN) fusion for real-time financial fraud detection* — Nature Sci. Reports 2025; IEEE-CIS at 5 × 10⁵ tx scale.
+- *Efficient RLHF: Reducing the Memory Usage of PPO* — Santacroce et al., HF papers 2309.00754; LoRA-PPO at 68 GB vs full PPO at 220 GB on 7B model.
+- *Secrets of RLHF in Large Language Models, Part I: PPO* — arXiv 2307.04964; four-network PPO scaffolding (policy, reference, value, reward).
+- verl documentation — *RL(HF) algorithms with LoRA Support*; lora_rank=32 for 0.5 B model and lora_rank=128 for 32 B model match non-LoRA convergence.
+- Unsloth / Databricks LoRA hyperparameter guides — 0.1–0.6% trainable parameter share, 90–95% of full-FT quality.
+- Mastercard *Inside Mastercard's new gen AI engine* (2026) — DI Pro at 160 B tx/yr, 70K TPS peak; LTM continuously trained.
+- *A High-Recall Cost-Sensitive ML Framework for Real-Time Online Banking Transaction Fraud Detection* — arXiv 2601.07276; online-learning recovery from 61% → 93.7% in 1 week after concept drift.
+- Inside JPMorgan LLM Suite (CeFPro / CompleteAITraining 2025) — 8-week refresh cadence confirmed.
+- BofA Erica 3 B-interaction milestone (Aug 2025) — 75,000+ model updates since launch, 700-response library.
+- *Background: Model Drift and Retraining Strategies* (Wayland Z., 2025) — 30-day Sharpe < 0.5 / KS-test triggers for trading-RL retrain.
+- Epoch AI — *What went into training DeepSeek-R1?* (2025) — GRPO eliminates value model; 671 B / 37 B-active MoE.
