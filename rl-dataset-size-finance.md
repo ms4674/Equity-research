@@ -166,7 +166,54 @@ The "AI moat" in finance is **not** the parameter count of the RL-tuned model �
 
 ---
 
-## 7. Sources
+## 7. RL vs RAG — time-to-accuracy in financial agents
+
+RAG (Retrieval-Augmented Generation) and RL/RLHF are not substitutes; they sit on different axes of an agent's accuracy budget. The right question for an investor is **how many engineering-hours convert into one percentage point of accuracy improvement** — and on that axis the two techniques look almost nothing alike.
+
+### 7.1 Where the time actually goes
+
+| Phase | RAG | RL / RLHF |
+|---|---|---|
+| Initial setup | **2–4 weeks** to first production system (vector DB + embeddings + retriever + reranker) | **4–8 weeks minimum**; data preparation alone is routinely **3–5× over budget** |
+| Per-update unit of work | Re-embed changed documents only (~10–15% of corpus) | Re-collect trajectories, re-train policy, run safety/eval suite, A/B-test |
+| Update wall-clock | **Sub-second to minutes** (streaming RAG with CDC); minutes-to-hours for nightly batch | **Hours to days** of GPU time per refresh; **8 weeks** of engineering cycle in JPM-class deployments |
+| Per-update cost | Maintenance ~**5–10 engineering hours/month** + **$5–$50** of embeddings | **$500–$5,000+** per training cycle (LoRA); **$2,400–$18,000** per full FT run; full re-RL on a frontier reasoning agent: 6–7 figures |
+| Failure mode when stale | Wrong/missing facts → easy to spot (citations don't resolve) | Silent behavioral drift → hard to spot, requires offline eval suite |
+| Accuracy lift profile | **42–90% hallucination reduction** vs. base; *factual* accuracy with citations | **0–2 pt MMLU regression risk**, but 10–30% lift on *behavioral* metrics (tool use, tone, reward-aligned actions) |
+
+### 7.2 What each technique actually buys you
+
+- **RAG buys *recency and citability*.** It changes what the model *sees* at inference time, not what it *is*. A new Fed announcement, a new fee schedule, or an updated AML rule can be reflected in the agent's answers within **seconds** of being indexed. The empirical research is clear: for *knowledge-intensive* tasks, **RAG consistently outperforms unsupervised fine-tuning**, because LLMs are slow to absorb new factual information through gradient updates.
+- **RL buys *behavior*.** It changes what the model *prefers to do* — order routing strategy, tone in customer chat, refusal behavior on sanctioned counterparties, escalation policy in fraud disputes. None of these are retrievable; they have to be baked into policy weights. RL is also what closes the loop on **adversarial drift** in fraud (Tier 1) and **regime shifts** in execution (Tier 2), where the right *action* matters more than the right *fact*.
+
+### 7.3 Cycle-time gap, quantified for financial agents
+
+| Dimension | RAG cycle | RL cycle | Ratio |
+|---|---:|---:|---:|
+| Time from new info → live in agent | **seconds–minutes** (streaming) to **hours** (nightly batch) | **8 weeks** (JPM LLM Suite cadence) for behavioral copilots; **hours** (online learning) for Tier-1 fraud only | **~1,000–10,000×** slower for behavioral RL |
+| Engineering hours per accuracy refresh | 5–10 hrs/month maintenance | 100s–1,000s of hrs per major refresh | **~50–200×** more engineering per cycle |
+| $/refresh at LoRA scale | **<$50** (re-embed only changed docs) | **$500–$5,000** | **~10–100×** more capital |
+| First time-to-prod | 2–4 weeks | 4–8 weeks (often 3–5× over budget) | **~2–4×** longer initial build |
+
+### 7.4 Why financial agents end up running both
+
+In every bellwether stack we examined, RAG and RL are **complementary rather than competitive**:
+
+- **JPMorgan LLM Suite:** the *base* OpenAI/Anthropic models are RL-aligned upstream; JPM's 8-week cycle is dominated by **RAG over internal databases** and prompt/agent-tool changes, with episodic LoRA-scale RL refreshes on the side. This is why the cadence is 8 weeks (RL-feasible) not nightly (pure-RAG-feasible) — they do both, paced by the slower one.
+- **Mastercard DI Pro:** the **ranker** is RL-trained continuously (Tier 1, hours), while the *feature store* (merchant embeddings, cardholder histories) is refreshed on a streaming-RAG-style CDC pipeline. The two pipelines run on completely different clocks.
+- **BofA Erica:** the **response library** (700+ canned responses) is RAG-style retrieval at inference; the **intent classifier and ranker** are episodically RL/SFT-trained. The 75,000 model updates since 2018 split heavily toward retrieval-side updates.
+- **Klarna assistant:** built on a frontier RLHF'd base, with **policy/product knowledge injected via RAG** so that policy changes do not require re-running RLHF on millions of conversations.
+
+### 7.5 The investor read-across
+
+1. **The marginal accuracy point is much cheaper from RAG than from RL.** For factual or policy-driven errors, expect **~10–100× lower $/percentage-point** improvement from RAG, and **1,000–10,000× faster** propagation into production.
+2. **RL is the only lever for behavioral and adversarial accuracy.** Fraud-loss reduction (Mastercard's 20–300% lift), execution slippage (LOXM), and tool-use reliability are not retrievable — they require policy updates.
+3. **Time-to-accuracy at the bellwethers is paced by the slower of the two pipelines.** JPM's confirmed 8-week LLM Suite cadence is the *RL clock*; the *RAG clock* underneath it is essentially continuous. Mid-tier banks running quarterly RAG refreshes and 6-month RL cycles are 3–5× slower on both axes simultaneously — the gap compounds.
+4. **Total cost of ownership for the AI agent stack is dominated by RL, not RAG.** RAG monthly run-rate is **$350–$2,850**; an enterprise RL stack runs **$50K–$500K+** per major model surface. The economic moat scales with *which* problems an institution chooses to solve with RL versus RAG — and the bellwethers are clearly using RL only where it earns its keep (fraud, execution, alignment) while leaving everything else to RAG.
+
+---
+
+## 8. Sources
 
 - Visa FY2025 10-K — 329 B transactions, $17 T volume.
 - Mastercard 3Q25 supplemental ops data — 45.4 B switched transactions in Q3'25.
@@ -197,3 +244,7 @@ The "AI moat" in finance is **not** the parameter count of the RL-tuned model �
 - BofA Erica 3 B-interaction milestone (Aug 2025) — 75,000+ model updates since launch, 700-response library.
 - *Background: Model Drift and Retraining Strategies* (Wayland Z., 2025) — 30-day Sharpe < 0.5 / KS-test triggers for trading-RL retrain.
 - Epoch AI — *What went into training DeepSeek-R1?* (2025) — GRPO eliminates value model; 671 B / 37 B-active MoE.
+- *RAG vs Fine-Tuning Cost in April 2026: $350/mo vs $18K* — PE Collective (2026); RAG $350–$2,850/mo, FT $2,400–$18,000/run.
+- *RAG vs. Fine-Tuning 2026: Costs, Framework Guide* — Alphacorp (2026); 42–90% hallucination reduction with RAG.
+- *RAG Architecture in 2026: How to Keep Retrieval Actually Fresh* — RisingWave / Medium (2026); streaming RAG with CDC, sub-second freshness, 10–15% reprocessing share.
+- *Fine-Tuning or Retrieval? Comparing Knowledge Injection in LLMs* — arXiv 2312.05934 / EMNLP 2024; RAG > unsupervised FT for knowledge tasks.
