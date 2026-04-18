@@ -17,6 +17,11 @@ Two CSVs are provided:
 | --- | --- |
 | `data/revenue_arr_timeseries.csv` | Date-stamped ARR / annualized run-rate observations for each company. |
 | `data/monthly_token_consumption.csv` | API tokens-per-minute and converted tokens-per-month for OpenAI & Anthropic, with reference rows for Google, Microsoft Foundry, Together.ai and OpenRouter. |
+| `ai_revenue_tokens.xlsx` | Multi-sheet Excel workbook with raw + pivoted data and embedded native bar charts (built by `build_spreadsheet.py`). |
+| `charts/revenue_bar.png` | Grouped bar chart of ARR by company across snapshot dates. |
+| `charts/tokens_bar.png` | Grouped bar chart of monthly token throughput by provider across snapshot dates. |
+| `build_spreadsheet.py` | Generates the workbook and bar-chart PNGs from the CSVs. |
+| `plot_timeseries.py` | Generates log-scale line charts from the CSVs. |
 
 All figures are sourced from public disclosures (earnings calls,
 DevDay keynotes, press releases, Reuters/The Information/Sacra
