@@ -8,13 +8,18 @@ A small repository of equity / thematic research notes.
 - [Where Are AI Agents Most Effective in Banking and Financial Services?](research/where-ai-agents-are-most-effective-in-bfsi.md) — April 2026
   - Aggregated spreadsheet: [`data/bfsi_ai_agent_effectiveness.xlsx`](data/bfsi_ai_agent_effectiveness.xlsx)
   - Generator script: [`scripts/build_bfsi_ai_agents_workbook.py`](scripts/build_bfsi_ai_agents_workbook.py)
+- [Verifiable Tasks: BFSI AI Agents vs General Coding Agents](research/verifiable-tasks-bfsi-vs-coding.md) — April 2026
+  - Aggregated spreadsheet: [`data/bfsi_vs_coding_agent_verifiability.xlsx`](data/bfsi_vs_coding_agent_verifiability.xlsx)
+  - Generator script: [`scripts/build_verifiability_workbook.py`](scripts/build_verifiability_workbook.py)
 
-## Reproducing the spreadsheet
+## Reproducing the spreadsheets
 
 ```bash
 pip install openpyxl
 python3 scripts/build_bfsi_ai_agents_workbook.py
+python3 scripts/build_verifiability_workbook.py
 # -> writes data/bfsi_ai_agent_effectiveness.xlsx
+#    writes data/bfsi_vs_coding_agent_verifiability.xlsx
 ```
 
 > All notes in this repository are for educational and discussion purposes only and are **not investment advice**.
