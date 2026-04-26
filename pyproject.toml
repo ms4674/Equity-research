@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modestproposal-bloomberg-archiver"
+version = "0.1.0"
+description = "Archive Bloomberg-style screenshots posted by @modestproposal1 on X."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Equity Research" }]
+dependencies = [
+    "tweepy>=4.14.0",
+    "requests>=2.32.0",
+    "Pillow>=10.0.0",
+    "pytesseract>=0.3.13",
+    "click>=8.1.0",
+    "python-dateutil>=2.9.0",
+]
+
+[project.scripts]
+modestproposal-bloomberg = "modestproposal_bloomberg.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
