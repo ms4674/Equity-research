@@ -20,6 +20,8 @@ A 1 GW AI datacenter represents the frontier of hyperscale infrastructure, with 
 
 Inference datacenters carry **higher total memory content per facility** because they allocate less power to networking (no all-reduce fabric), freeing capacity for more GPU racks and dedicated context-memory storage (NVIDIA CMX). Training facilities consume more NAND in shared storage tiers (checkpointing, training datasets) while inference facilities concentrate NAND in per-GPU context-memory tiers. HBM content per GPU is identical across workloads since it is fixed in silicon.
 
+**Networking vs. memory:** Total networking equipment spend (NVSwitch, NICs, scale-out switches, optics, cables) slightly exceeds memory semiconductor content for training (~1.2x, driven by the expensive all-reduce fabric) but falls below memory for inference (~0.9x). On an end-product basis (including SSD controllers, DIMM packaging, etc.), memory spend exceeds networking for both workloads.
+
 The transition to NVIDIA Vera Rubin (HBM4, shipping 2026) increases memory semiconductor content per facility by an estimated ~35%, to ~$2.6B for a 1 GW inference build.
 
 ---
@@ -266,6 +268,86 @@ The NAND composition tells a sharply different story despite similar totals:
 - **Inference** concentrates NAND in per-GPU context-memory tiers (CMX/ICMS for KV cache)
 
 This distinction matters for NAND suppliers: training storage favors high-capacity, throughput-oriented enterprise SSDs (61.44 TB+ form factors), while CMX favors lower-latency, write-endurance-optimized drives in E1.S form factor.
+
+---
+
+## Networking vs. Memory Spend
+
+A critical question for semiconductor investors: does total networking equipment spend exceed memory semiconductor content in a 1 GW AI build? The answer depends on the workload and how "networking" is defined.
+
+### Networking Cost Components
+
+The GB300 NVL72 rack contains substantial networking hardware both within the rack (scale-up) and requires additional inter-rack fabric (scale-out).
+
+**Intra-rack (scale-up) — fixed per rack regardless of workload:**
+
+| Component | Per Rack | Per GPU | Notes |
+|---|---|---|---|
+| NVSwitch trays (18 per rack) | ~$72K | ~$1,000 | NVSwitch5 ASICs connecting 72 GPUs via NVLink |
+| NVLink copper cables (~5,184) | ~$100K | ~$1,400 | ~2 miles of internal copper cabling per rack |
+| ConnectX-8 SuperNICs (72) | ~$108K | ~$1,500 | One 800 Gbps NIC per GPU for scale-out |
+| BlueField-3 DPUs (36) | ~$54K | ~$750 | Front-end Ethernet, one per CPU |
+| **Subtotal scale-up** | **~$334K** | **~$4,650** | |
+
+**Inter-rack (scale-out) — varies dramatically by workload:**
+
+| Component | Training $/GPU | Inference $/GPU | Notes |
+|---|---|---|---|
+| Spine/leaf switches (IB or Ethernet) | ~$1,200 | ~$350 | Training needs fat-tree for all-reduce; inference uses simpler topology |
+| Optical transceivers (800G OSFP) | ~$800 | ~$250 | ~$400-600 per 800G optic; training needs more per-GPU uplinks |
+| Fiber / cables | ~$300 | ~$100 | |
+| **Subtotal scale-out** | **~$2,300** | **~$700** | 3.3x more inter-rack spend for training |
+
+### Total Networking vs. Memory (per GPU)
+
+| Category | Training $/GPU | Inference $/GPU |
+|---|---|---|
+| **Memory semiconductor** | | |
+| HBM3e | $2,949 | $2,944 |
+| DRAM | $913 | $884 |
+| NAND | $2,071 | $2,130 |
+| **Memory subtotal** | **$5,933** | **$5,959** |
+| **Networking equipment** | | |
+| Scale-up (NVSwitch, NVLink, NICs) | $4,650 | $4,650 |
+| Scale-out (switches, optics, cables) | $2,300 | $700 |
+| **Networking subtotal** | **$6,950** | **$5,350** |
+
+### Total Networking vs. Memory (1 GW facility)
+
+| | Training | Inference |
+|---|---|---|
+| **Total memory semiconductor $** | **$1,746M** | **$1,927M** |
+| **Total networking equipment $** | **$2,049M** | **$1,728M** |
+| **Networking / Memory ratio** | **1.17x** | **0.90x** |
+
+### Key Takeaway
+
+**For training, networking spend slightly exceeds memory semiconductor content (~1.2x).** The all-reduce communication pattern in distributed training demands a massive InfiniBand or Ethernet scale-out fabric — thousands of high-radix switches, hundreds of thousands of optical transceivers, and extensive cabling. This inter-rack fabric adds ~$2,300/GPU on top of the ~$4,650/GPU of intra-rack networking already embedded in the NVL72 rack.
+
+**For inference, memory spend exceeds networking (~1.1x).** Inference workloads are embarrassingly parallel at the request level — individual GPU racks can serve independent queries with minimal inter-rack communication. The inter-rack fabric collapses to simple load-balancing and request routing (~$700/GPU), while the CMX context-memory tier drives NAND content higher.
+
+### Why This Understates Memory's Importance
+
+The memory figures above represent **die-level semiconductor content** (raw NAND, DRAM, and HBM die cost). End-product pricing — what the datacenter operator actually pays for SSDs, DIMMs, and HBM modules including controllers, packaging, PCBs, and vendor margins — is typically 1.4-1.8x higher than die content:
+
+| | Die Content | Est. End-Product | Markup |
+|---|---|---|---|
+| Training memory | $1,746M | ~$2,600-2,800M | 1.5-1.6x |
+| Inference memory | $1,927M | ~$2,900-3,100M | 1.5-1.6x |
+
+On an end-product basis, **memory spend exceeds networking for both training and inference** — by ~1.3x for training and ~1.7x for inference.
+
+### Networking Spend Sensitivity: InfiniBand vs. Ethernet
+
+Meta has publicly noted that InfiniBand's TCO is 2.3x higher than Ethernet across their 600K+ GPU fleet, despite InfiniBand delivering a ~15% performance advantage. This choice significantly impacts the networking cost estimate:
+
+| Fabric Choice | Training $/GPU (scale-out) | Impact on Total Networking |
+|---|---|---|
+| InfiniBand (NDR/XDR) | ~$2,300 | Baseline |
+| Ethernet (Spectrum-X 800G) | ~$1,400 | -13% total networking spend |
+| Ultra Ethernet (emerging) | ~$1,200 | -16% total networking spend |
+
+Under an all-Ethernet training scenario, networking spend falls closer to parity with memory semiconductor content (~1.04x), and the networking premium over memory largely disappears.
 
 ---
 
