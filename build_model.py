@@ -1366,6 +1366,352 @@ def build_workbook():
         else:
             ws.cell(row=r, column=1).font = DATA_FONT
 
+    # ─────────────────────────────────────────────────────────────────────
+    # SHEET 13: SpaceX — Competitive Analysis & Segment Margins
+    # ─────────────────────────────────────────────────────────────────────
+    ws = wb.create_sheet("SpaceX Competitive & Margins")
+    ws.sheet_properties.tabColor = "1F3864"
+    ws.column_dimensions['A'].width = 40
+    ws.column_dimensions['B'].width = 18
+    ws.column_dimensions['C'].width = 18
+    ws.column_dimensions['D'].width = 18
+    ws.column_dimensions['E'].width = 18
+    ws.column_dimensions['F'].width = 18
+    ws.column_dimensions['G'].width = 18
+    ws.column_dimensions['H'].width = 22
+
+    # ── LAUNCH SERVICES ──────────────────────────────────────────────────
+    r = 1
+    ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=8)
+    ws.cell(row=r, column=1, value="SpaceX — Competitive Landscape & Segment Margin Analysis")
+    style_header_row(ws, r, 8); r += 2
+
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="1. LAUNCH SERVICES — COMPETITIVE POSITIONING")
+    r += 1
+
+    # Competitive comparison table
+    comp_headers = ["Metric", "SpaceX (Falcon 9/Heavy)", "ULA (Vulcan)", "Arianespace (Ariane 6)", "Rocket Lab (Neutron)", "Blue Origin (New Glenn)", "China (Long March)"]
+    write_row(ws, r, comp_headers)
+    style_sub_header_row(ws, r, 7); r += 1
+
+    launch_comp_data = [
+        ["Price to LEO ($/kg)", "$2,700", "$15,000 - $20,000", "$12,000 - $15,000", "$5,500 (est.)", "$8,000 (est.)", "$4,000 - $8,000"],
+        ["Price to GTO ($M, full)", "$67M", "$110 - $150M", "$90 - $115M", "$55M (est.)", "$80M (est.)", "$60 - $70M"],
+        ["Reusability", "Booster: 20+ flights", "Expendable", "Expendable", "Planned (booster)", "Planned (booster)", "Expendable"],
+        ["Payload to LEO (kg)", "22,800", "27,200", "21,650", "13,000", "45,000", "25,000 (CZ-5)"],
+        ["2024 Launch Cadence", "134 (actual)", "3", "3", "15 (Electron)", "0 (development)", "67"],
+        ["2025E Launch Cadence", "~155", "~10", "~8", "~18 + Neutron test", "~3-5", "~75"],
+        ["Manifest Backlog ($B)", ">$5B", "~$3B (NatSec)", "~$2B", "<$1B", "~$2B (Kuiper)", "n/a (state)"],
+        ["Key Competitive Advantage", "Cost + cadence + reliability", "NatSec assured access", "EU sovereignty", "Smallsat niche", "Payload capacity", "State subsidy"],
+        ["Key Vulnerability", "Regulatory / concentration", "Cost structure", "Delayed timeline", "Scale limitations", "Unproven", "Geopolitical risk"],
+    ]
+    for row_data in launch_comp_data:
+        write_row(ws, r, row_data)
+        ws.cell(row=r, column=1).font = DATA_FONT
+        r += 1
+
+    r += 1
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="LAUNCH SERVICES — MARGIN EXPECTATIONS")
+    r += 1
+
+    margin_headers = ["", "2022A", "2023A", "2024A", "2025E", "2026E", "2027E", "Long-Term Target"]
+    write_row(ws, r, margin_headers)
+    style_sub_header_row(ws, r, 8); r += 1
+
+    launch_margin_data = [
+        ["Segment Revenue ($M)", 2928, 4410, 5896, 6665, 7140, 7770, ""],
+        ["  Launch Revenue", 2928, 4410, 5896, 6665, 7140, 7770, ""],
+        ["Segment COGS ($M)", 1318, 1764, 2358, 2533, 2570, 2720, ""],
+        ["  Propellant & consumables", 150, 220, 300, 330, 350, 370, ""],
+        ["  Refurbishment & recovery", 300, 400, 500, 480, 460, 440, ""],
+        ["  Manufacturing (fairings, 2nd stage)", 500, 700, 900, 950, 950, 960, ""],
+        ["  Launch operations & range fees", 200, 280, 380, 430, 460, 490, ""],
+        ["  Insurance & other", 168, 164, 278, 343, 350, 460, ""],
+        ["Segment Gross Profit ($M)", 1610, 2646, 3538, 4132, 4570, 5050, ""],
+        ["Segment Gross Margin %", "55%", "60%", "60%", "62%", "64%", "65%", "68-72%"],
+        ["", "", "", "", "", "", "", ""],
+        ["Margin Drivers:", "", "", "", "", "", "", ""],
+        ["  Booster reuse (avg flights/booster)", 8, 12, 16, 18, 20, 22, "30+"],
+        ["  Fairing reuse rate", "60%", "75%", "85%", "90%", "92%", "95%", "98%"],
+        ["  Fixed-cost leverage (launches/pad)", 20, 30, 40, 45, 48, 50, "60+"],
+        ["  Internal vs. external mix", "30% int.", "35% int.", "40% int.", "42% int.", "45% int.", "48% int.", "50%+"],
+    ]
+    for row_data in launch_margin_data:
+        row_vals = row_data
+        write_row(ws, r, row_vals)
+        if "Gross Profit" in str(row_data[0]) or "Gross Margin" in str(row_data[0]):
+            for c in range(1, 9):
+                ws.cell(row=r, column=c).font = TOTAL_FONT
+        r += 1
+
+    r += 1
+    ws.cell(row=r, column=1, value="Thesis: SpaceX launch margins expand as reuse amortizes fixed manufacturing costs across more flights.").font = Font(name="Calibri", italic=True, size=9, color="808080")
+    ws.cell(row=r, column=1).alignment = Alignment(wrap_text=True)
+    r += 1
+    ws.cell(row=r, column=1, value="Moat = cadence (reliability track record → insurance discounts) + cost (reuse) + capacity (only provider with >100 annual launches).").font = Font(name="Calibri", italic=True, size=9, color="808080")
+    ws.cell(row=r, column=1).alignment = Alignment(wrap_text=True)
+    r += 2
+
+    # ── STARLINK ─────────────────────────────────────────────────────────
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="2. STARLINK — COMPETITIVE POSITIONING")
+    r += 1
+
+    sl_comp_headers = ["Metric", "SpaceX (Starlink)", "Amazon (Kuiper)", "OneWeb (Eutelsat)", "Telesat (Lightspeed)", "Viasat (GEO+LEO)", "Traditional Telcos (fiber/4G)"]
+    write_row(ws, r, sl_comp_headers)
+    style_sub_header_row(ws, r, 7); r += 1
+
+    starlink_comp_data = [
+        ["Constellation Size (2025E)", "6,500+ operational", "0 (first launch 2025)", "650 satellites", "~300 (planned)", "3 GEO + LEO planned", "n/a (terrestrial)"],
+        ["Subscribers (2024)", "4.5M", "0", "~200K (est.)", "0", "~800K", "n/a"],
+        ["Consumer Price ($/month)", "$120 (US)", "TBD (~$100 est.)", "$50-80 (B2B focus)", "B2B only", "$100-200", "$50-80 (fiber)"],
+        ["Download Speed (Mbps)", "50-250", "Target: 100-400", "40-80", "Target: 100+", "25-100", "100-1,000 (fiber)"],
+        ["Latency (ms)", "20-40", "Target: <30", "40-70", "Target: <50", "600+ (GEO)", "5-20 (fiber)"],
+        ["Capex Invested ($B)", ">$10B cumulative", "$10B+ committed", "~$3B", "~$5B", "~$4B", "varies"],
+        ["Launch Cost Advantage", "Internal (~$15M/launch)", "Blue Origin dependency", "3rd party ($50M+)", "3rd party", "3rd party", "n/a"],
+        ["Coverage (% land mass)", "~60-70%", "0% (pre-launch)", "~40%", "0%", "~50%", "~30% (fiber)"],
+        ["Key Differentiator", "Scale + vertical integration", "AWS bundle + capital", "Govt contracts", "Enterprise focus", "Installed base", "Low latency"],
+        ["Key Risk", "Spectrum congestion, ARPU dilution", "Execution delay", "Capital constraints", "Scale", "Technology age", "Rural economics"],
+    ]
+    for row_data in starlink_comp_data:
+        write_row(ws, r, row_data)
+        ws.cell(row=r, column=1).font = DATA_FONT
+        r += 1
+
+    r += 1
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="STARLINK — MARGIN EXPECTATIONS")
+    r += 1
+
+    write_row(ws, r, margin_headers)
+    style_sub_header_row(ws, r, 8); r += 1
+
+    starlink_margin_data = [
+        ["Segment Revenue ($M)", 831, 2678, 5022, 7560, 10440, 13770, ""],
+        ["  Consumer residential", 700, 2200, 4000, 5800, 7800, 10000, ""],
+        ["  Business / Maritime / Aviation", 100, 350, 800, 1400, 2100, 3000, ""],
+        ["  Government / Starshield", 31, 128, 222, 360, 540, 770, ""],
+        ["Segment COGS ($M)", 581, 1607, 2511, 3326, 4176, 5094, ""],
+        ["  Satellite manufacturing & launch", 250, 600, 900, 1100, 1300, 1500, ""],
+        ["  User terminal (CPE) subsidy", 200, 600, 800, 900, 1000, 1100, ""],
+        ["  Ground station & network ops", 80, 200, 400, 600, 800, 1000, ""],
+        ["  Spectrum & licensing fees", 31, 107, 211, 326, 476, 694, ""],
+        ["  Customer support & logistics", 20, 100, 200, 400, 600, 800, ""],
+        ["Segment Gross Profit ($M)", 250, 1071, 2511, 4234, 6264, 8676, ""],
+        ["Segment Gross Margin %", "30%", "40%", "50%", "56%", "60%", "63%", "70-75%"],
+        ["", "", "", "", "", "", "", ""],
+        ["Margin Drivers:", "", "", "", "", "", "", ""],
+        ["  CPE cost per terminal", "$1,300", "$800", "$500", "$400", "$350", "$300", "$200"],
+        ["  CPE sale price", "$599", "$599", "$599", "$599", "$599", "$599", "$499"],
+        ["  CPE subsidy per unit", "($701)", "($201)", "$99", "$199", "$249", "$299", "$299"],
+        ["  Sat manufacturing cost (Gen2)", "$500K", "$400K", "$300K", "$250K", "$220K", "$200K", "$150K"],
+        ["  Sat lifespan (years)", 5, 5, 5, 5.5, 6, 6, "7+"],
+        ["  Sats per launch (Starlink)", 22, 23, 23, 25, 28, 30, "40+ (Starship)"],
+        ["  Internal launch cost allocation", "$15M", "$15M", "$15M", "$14M", "$12M", "$10M", "$5M (Starship)"],
+        ["  Revenue / sat / year ($K)", 130, 380, 770, 1080, 1044, 1377, ""],
+    ]
+    for row_data in starlink_margin_data:
+        row_vals = row_data
+        write_row(ws, r, row_vals)
+        if "Gross Profit" in str(row_data[0]) or "Gross Margin" in str(row_data[0]):
+            for c in range(1, 9):
+                ws.cell(row=r, column=c).font = TOTAL_FONT
+        r += 1
+
+    r += 1
+    ws.cell(row=r, column=1, value="Thesis: Starlink margins expand rapidly as CPE subsidy disappears (2024+), sat costs decline, and Starship slashes launch costs per sat by ~80%.").font = Font(name="Calibri", italic=True, size=9, color="808080")
+    ws.cell(row=r, column=1).alignment = Alignment(wrap_text=True)
+    r += 1
+    ws.cell(row=r, column=1, value="Risk: Amazon Kuiper launches 2025-2026 with $10B+ war chest; could pressure pricing in key markets. However, SpaceX has 3-4 year head start and vertical integration.").font = Font(name="Calibri", italic=True, size=9, color="808080")
+    ws.cell(row=r, column=1).alignment = Alignment(wrap_text=True)
+    r += 2
+
+    # ── STARSHIP / HLS ───────────────────────────────────────────────────
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="3. STARSHIP — COMPETITIVE POSITIONING")
+    r += 1
+
+    ss_comp_headers = ["Metric", "SpaceX (Starship)", "Blue Origin (New Glenn)", "ULA (Vulcan Heavy)", "NASA SLS", "China (CZ-9)", "Relativity (Terran R)"]
+    write_row(ws, r, ss_comp_headers)
+    style_sub_header_row(ws, r, 7); r += 1
+
+    starship_comp_data = [
+        ["Payload to LEO (kg)", "100,000 - 150,000", "45,000", "27,200", "95,000 (Block 1)", "150,000 (planned)", "20,000"],
+        ["Payload to GTO (kg)", "~21,000 (expendable)", "13,000", "10,060", "n/a (crew)", "50,000 (planned)", "n/a"],
+        ["Target Cost / Launch", "$10-50M (reusable)", "$80-100M (partial reuse)", "$110-150M", "$2.2B (per launch)", "n/a", "$55M (target)"],
+        ["Target Cost / kg to LEO", "$10-50", "$2,000-3,000", "$5,500-8,000", "$23,000", "TBD", "$2,750"],
+        ["Reusability", "Fully reusable (both stages)", "Booster only", "Expendable", "Expendable (SRBs reuse planned)", "Planned partial", "Planned"],
+        ["First Orbital Flight", "2024 (test)", "2025 (target)", "2024 (achieved)", "2022", "2030 (target)", "2026+ (target)"],
+        ["Revenue Contracts Secured", "NASA HLS $4B, DOD, commercial", "NASA, Kuiper", "DOD NSSL Phase 2", "NASA Artemis only", "State program", "Minimal"],
+        ["Key Advantage", "Full reuse + mass to orbit", "Orbital reef / Kuiper synergy", "NatSec track record", "Crew-rated, deep space", "State backing", "3D printing"],
+        ["Status (2025)", "Iterating toward operational", "Pre-first-flight", "Early operations", "Artemis II pending", "Development", "Development"],
+    ]
+    for row_data in starship_comp_data:
+        write_row(ws, r, row_data)
+        ws.cell(row=r, column=1).font = DATA_FONT
+        r += 1
+
+    r += 1
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="STARSHIP — MARGIN EXPECTATIONS (nascent, highly uncertain)")
+    r += 1
+
+    write_row(ws, r, margin_headers)
+    style_sub_header_row(ws, r, 8); r += 1
+
+    starship_margin_data = [
+        ["Segment Revenue ($M)", 0, 0, 200, 800, 2000, 3500, ""],
+        ["  NASA HLS milestones", 0, 0, 150, 400, 600, 800, ""],
+        ["  DOD / NatSec contracts", 0, 0, 30, 150, 400, 800, ""],
+        ["  Commercial (sat deployment)", 0, 0, 10, 150, 600, 1200, ""],
+        ["  Point-to-point / cargo", 0, 0, 0, 0, 100, 300, ""],
+        ["  Internal (Starlink v3 deployment)", 0, 0, 10, 100, 300, 400, ""],
+        ["Segment COGS ($M)", 0, 0, 200, 640, 1400, 2100, ""],
+        ["  Vehicle manufacturing", 0, 0, 100, 300, 600, 800, ""],
+        ["  Propellant & ops", 0, 0, 30, 100, 200, 350, ""],
+        ["  Ground infrastructure", 0, 0, 50, 150, 300, 450, ""],
+        ["  R&D amortization", 0, 0, 20, 90, 300, 500, ""],
+        ["Segment Gross Profit ($M)", 0, 0, 0, 160, 600, 1400, ""],
+        ["Segment Gross Margin %", "n/a", "n/a", "0%", "20%", "30%", "40%", "60-70%"],
+        ["", "", "", "", "", "", "", ""],
+        ["Margin Drivers:", "", "", "", "", "", "", ""],
+        ["  Flights per Starship vehicle (target)", "n/a", "n/a", 1, 3, 8, 15, "100+"],
+        ["  Manufacturing cost / vehicle ($M)", "n/a", "n/a", 200, 150, 100, 80, "30-50"],
+        ["  Cost per flight at reuse target ($M)", "n/a", "n/a", 200, 50, 12.5, 5.3, "~$2-3"],
+        ["  Revenue per flight ($M)", "n/a", "n/a", 200, 267, 250, 233, "varies"],
+    ]
+    for row_data in starship_margin_data:
+        row_vals = row_data
+        write_row(ws, r, row_vals)
+        if "Gross Profit" in str(row_data[0]) or "Gross Margin" in str(row_data[0]):
+            for c in range(1, 9):
+                ws.cell(row=r, column=c).font = TOTAL_FONT
+        r += 1
+
+    r += 1
+    ws.cell(row=r, column=1, value="Thesis: Starship is the most disruptive margin story — if full reuse works at cadence, cost/kg drops 100x vs. Falcon 9, creating a new market.").font = Font(name="Calibri", italic=True, size=9, color="808080")
+    ws.cell(row=r, column=1).alignment = Alignment(wrap_text=True)
+    r += 1
+    ws.cell(row=r, column=1, value="Bull case: airline-like economics (vehicle flies daily, marginal cost = propellant + ops). Bear case: reliability issues delay full reuse, margins stay thin through 2027.").font = Font(name="Calibri", italic=True, size=9, color="808080")
+    ws.cell(row=r, column=1).alignment = Alignment(wrap_text=True)
+    r += 2
+
+    # ── GOVERNMENT & OTHER ───────────────────────────────────────────────
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="4. GOVERNMENT & OTHER (Dragon, ISS, NatSec) — COMPETITIVE POSITIONING")
+    r += 1
+
+    gov_comp_headers = ["Metric", "SpaceX (Dragon/Crew)", "Boeing (Starliner)", "Sierra Space (Dream Chaser)", "Northrop (Cygnus)", "Axiom Space", "International (Soyuz)"]
+    write_row(ws, r, gov_comp_headers)
+    style_sub_header_row(ws, r, 7); r += 1
+
+    gov_comp_data = [
+        ["Crew Capacity", "4-7 astronauts", "4-7 astronauts", "7 crew (planned)", "Cargo only", "4 (ISS missions)", "3 crew"],
+        ["Cargo to ISS (kg)", "6,000 (pressurized)", "n/a", "5,500 (planned)", "3,700", "n/a", "2,500"],
+        ["NASA Contract Value ($B)", "$3.5B (Crew) + Cargo", "$4.2B (Crew)", "~$1B (Cargo)", "~$3B (Cargo)", "$1.3B (ISS modules)", "n/a (retired)"],
+        ["Cost / Seat (crew, $M)", "~$55M", "~$90M (est.)", "n/a", "n/a", "$55M (commercial)", "$85-90M"],
+        ["Operational Status", "Operational (10+ crew missions)", "1 crewed test (issues)", "First flight 2025", "Operational (cargo)", "2 missions completed", "Retired (US crew)"],
+        ["Reliability Track Record", "Excellent (100% crew)", "Troubled development", "Unflown", "Good (cargo)", "Good (2/2)", "Mixed (Soyuz MS)"],
+        ["Key Revenue Streams", "Crew + cargo + commercial", "NASA crew only", "NASA cargo", "NASA cargo", "ISS private + modules", "n/a"],
+    ]
+    for row_data in gov_comp_data:
+        write_row(ws, r, row_data)
+        ws.cell(row=r, column=1).font = DATA_FONT
+        r += 1
+
+    r += 1
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="GOVERNMENT & OTHER — MARGIN EXPECTATIONS")
+    r += 1
+
+    write_row(ws, r, margin_headers)
+    style_sub_header_row(ws, r, 8); r += 1
+
+    govt_margin_data = [
+        ["Segment Revenue ($M)", 1200, 1400, 1600, 1800, 2000, 2200, ""],
+        ["  NASA Crew Dragon", 400, 500, 550, 550, 550, 500, ""],
+        ["  NASA Cargo Dragon", 200, 200, 200, 200, 200, 200, ""],
+        ["  Commercial Crew (Axiom, etc.)", 50, 100, 150, 250, 350, 500, ""],
+        ["  DOD / NatSec (classified)", 400, 450, 500, 550, 600, 650, ""],
+        ["  Other government", 150, 150, 200, 250, 300, 350, ""],
+        ["Segment COGS ($M)", 720, 770, 832, 900, 960, 1012, ""],
+        ["  Dragon vehicle manufacturing", 250, 260, 270, 270, 260, 250, ""],
+        ["  Mission operations & crew support", 200, 220, 250, 280, 300, 320, ""],
+        ["  NatSec program costs", 200, 220, 240, 270, 310, 340, ""],
+        ["  Other", 70, 70, 72, 80, 90, 102, ""],
+        ["Segment Gross Profit ($M)", 480, 630, 768, 900, 1040, 1188, ""],
+        ["Segment Gross Margin %", "40%", "45%", "48%", "50%", "52%", "54%", "55-60%"],
+        ["", "", "", "", "", "", "", ""],
+        ["Margin Drivers:", "", "", "", "", "", "", ""],
+        ["  Dragon capsule reuse (flights/capsule)", 2, 3, 4, 5, 5, 5, "6+"],
+        ["  Fixed-price vs. cost-plus mix", "60/40", "65/35", "70/30", "75/25", "75/25", "80/20", "85/15"],
+        ["  ISS retirement impact (2030)", "n/a", "n/a", "n/a", "n/a", "n/a", "Transition begins", "Post-ISS commercial"],
+        ["  Commercial crew growth rate", "n/a", "100%", "50%", "67%", "40%", "43%", "steady"],
+    ]
+    for row_data in govt_margin_data:
+        row_vals = row_data
+        write_row(ws, r, row_vals)
+        if "Gross Profit" in str(row_data[0]) or "Gross Margin" in str(row_data[0]):
+            for c in range(1, 9):
+                ws.cell(row=r, column=c).font = TOTAL_FONT
+        r += 1
+
+    r += 1
+    ws.cell(row=r, column=1, value="Thesis: Government segment is a stable, high-margin annuity. Dragon reuse + shift to fixed-price contracts drives margin expansion.").font = Font(name="Calibri", italic=True, size=9, color="808080")
+    ws.cell(row=r, column=1).alignment = Alignment(wrap_text=True)
+    r += 1
+    ws.cell(row=r, column=1, value="Risk: ISS retirement (2030) creates a gap; offset by commercial space station demand (Axiom, Orbital Reef) and DOD spending growth.").font = Font(name="Calibri", italic=True, size=9, color="808080")
+    ws.cell(row=r, column=1).alignment = Alignment(wrap_text=True)
+    r += 2
+
+    # ── CONSOLIDATED MARGIN SUMMARY ──────────────────────────────────────
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="CONSOLIDATED SEGMENT MARGIN SUMMARY")
+    r += 1
+
+    summ_headers = ["Segment", "2022A GM%", "2024A GM%", "2026E GM%", "2028E GM%", "LT Target", "Key Margin Driver"]
+    write_row(ws, r, summ_headers)
+    style_sub_header_row(ws, r, 7); r += 1
+
+    summ_data = [
+        ["Launch Services", "55%", "60%", "64%", "68%", "68-72%", "Booster reuse cadence (amortization)"],
+        ["Starlink", "30%", "50%", "60%", "70%", "70-75%", "CPE cost reduction + Starship launch savings"],
+        ["Starship", "n/a", "0%", "30%", "55%", "60-70%", "Full vehicle reusability + flight rate"],
+        ["Government & Other", "40%", "48%", "52%", "56%", "55-60%", "Dragon reuse + fixed-price contracts"],
+        ["", "", "", "", "", "", ""],
+        ["Blended Company GM%", "43%", "50%", "56%", "60%", "62-68%", "Mix shift toward Starlink (highest scale)"],
+    ]
+    for row_data in summ_data:
+        write_row(ws, r, row_data)
+        if "Blended" in str(row_data[0]):
+            for c in range(1, 8):
+                ws.cell(row=r, column=c).font = TOTAL_FONT
+        r += 1
+
+    r += 2
+    style_section_row(ws, r, 8)
+    ws.cell(row=r, column=1, value="COMPETITIVE MOAT ASSESSMENT")
+    r += 1
+
+    moat_data = [
+        ["Factor", "Strength", "Durability", "Notes"],
+        ["Vertical Integration (launch + payload)", "Very High", "10+ years", "Only operator that manufactures rockets AND payload (Starlink); eliminates margin stacking"],
+        ["Reusability IP", "Very High", "5-10 years", "20+ reuses proven; competitors 3-5 years behind on booster recovery alone"],
+        ["Manufacturing Scale", "High", "5-8 years", "Falcon 9 factory: ~1 booster/month; Starlink: 6 sats/day; drives cost curve advantages"],
+        ["Cadence & Reliability Track Record", "Very High", "Cumulative", "134 launches in 2024; flight heritage reduces insurance costs and wins commercial contracts"],
+        ["Spectrum & Orbital Slots (Starlink)", "High", "Regulatory", "First-mover ITU filings; Gen2 constellation approved; spectrum is finite"],
+        ["Customer Lock-in (Starlink)", "Medium", "3-5 years", "CPE investment + service contracts; but low switching costs for consumers vs. fiber"],
+        ["Government Relationships", "High", "Ongoing", "NASA dependency + growing DOD role; but diversified customer base reduces single-customer risk"],
+        ["Starship Optionality", "Transformational", "15+ years", "If Starship achieves cost targets, it's a platform shift — new markets (point-to-point, space manufacturing)"],
+    ]
+    for i, row_data in enumerate(moat_data):
+        write_row(ws, r, row_data)
+        if i == 0:
+            style_sub_header_row(ws, r, 4)
+        r += 1
+
     # ─── Freeze panes and print setup on key sheets ──────────────────────
     for sheet_name in wb.sheetnames:
         ws = wb[sheet_name]
