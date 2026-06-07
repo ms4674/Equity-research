@@ -1,0 +1,33 @@
+AREA,SUB-SEGMENT,GLOBAL MARKET SIZE 2025 (USD bn),GLOBAL MARKET SIZE 2026E (USD bn),EU MARKET SIZE 2025 (USD bn),EU MARKET SIZE 2026E (USD bn),EU AS % OF GLOBAL (2025),EU AS % OF GLOBAL (2026E),EU REVENUE CAPTURED BY EU-HQ COMPANIES (USD bn 2025),EU REVENUE CAPTURED BY NON-EU COMPANIES (USD bn 2025),% CAPTURED BY EU COMPANIES,% CAPTURED BY NON-EU COMPANIES,KEY EU COMPANIES (Revenue 2025),KEY NON-EU COMPANIES (Share of EU Market),SOURCE / NOTES
+
+SEMICONDUCTORS,Total Semiconductor Market,791.7,975.0,54.5,60.4,6.9%,6.2%,16.0,38.5,29%,71%,"Infineon (EUR14.7bn global), NXP ($12.3bn global), STMicro ($11.8bn global); combined EU-market share ~30%","Intel, TSMC, Samsung, Qualcomm, Broadcom, Texas Instruments supply ~70% of EU chip consumption","SIA/WSTS 2025 actuals; WSTS Autumn 2026 forecast ($975bn); ESIA Europe data ($54.5bn)"
+
+SEMICONDUCTORS,AI Chips (Logic + AI Memory),200.0,280.0,5.0,8.0,2.5%,2.9%,0.0,5.0,0%,100%,No scaled EU AI chip company; Axelera AI and SiPearl are pre-scale (<$50M combined),"NVIDIA ($130bn+ DC rev), AMD ($10bn+), Google/AWS/Meta custom silicon ($15bn+); 100% of EU AI chip supply",Silicon Analysts; Deloitte 2026 Outlook; AI chips ~50% of total semi revenue by value
+
+SEMICONDUCTORS,Semiconductor Equipment,110.0,125.0,38.0,43.0,34.5%,34.4%,36.0,2.0,95%,5%,"ASML (EUR32.7bn / ~$35.5bn global rev); Zeiss, BESI, ASM Intl (~$2.5bn combined EU rev)","Applied Materials, Lam Research, Tokyo Electron, KLA, Screen (~$2bn EU-origin rev)",ASML Annual Report 2025; EU dominates via ASML EUV monopoly; equipment is EU strength area
+
+SEMICONDUCTORS,Power / Automotive / Industrial Chips,95.0,102.0,28.0,30.0,29.5%,29.4%,16.8,11.2,60%,40%,"Infineon (~$10bn EU auto/industrial), NXP (~$5bn EU), STMicro (~$4bn EU); ~60% of EU segment","Texas Instruments, ON Semi, Renesas, Microchip; ~40% of EU power/auto segment",Company annual reports; EU has strong position in automotive/power semis
+
+SEMICONDUCTORS,High Bandwidth Memory (HBM),28.0,45.0,1.5,2.5,5.4%,5.6%,0.0,1.5,0%,100%,No EU HBM producer,"SK Hynix (~50% global), Samsung (~40%), Micron (~10%); 100% of EU HBM is imported",Deloitte; industry estimates; HBM critical for AI training/inference
+
+CLOUD,Cloud Infrastructure Services (IaaS/PaaS/Hosted Private Cloud),350.0,435.0,87.0,108.0,24.9%,24.8%,13.1,73.9,15%,85%,"OVHcloud (~$1bn), SAP (~$1.7bn cloud infra), Deutsche Telekom/T-Systems (~$1.7bn), Scaleway, STACKIT, others (~$8.7bn)","AWS (~30%), Azure (~25%), Google Cloud (~15%); combined ~70% of EU cloud infra = ~$61bn","Synergy Research Group 2025; EU market ~EUR61bn ($70bn) in 2024, growing 24% YoY; EU providers at 15% share"
+
+CLOUD,SaaS (Software as a Service),430.0,500.0,86.0,100.0,20.0%,20.0%,8.6,77.4,10%,90%,"SAP ($8bn+ EU SaaS), Dassault Systemes, Sage, TeamViewer, others; ~10% of EU SaaS spend","Microsoft 365, Salesforce, Google Workspace, ServiceNow, Oracle; ~90% of EU SaaS spend",Grand View Research; Fortune BI; SAP is largest EU SaaS provider; US dominance even more acute than IaaS
+
+CLOUD,Sovereign Cloud Services,5.0,8.0,3.5,5.6,70.0%,70.0%,2.8,0.7,80%,20%,"OVHcloud, T-Systems, STACKIT, Scaleway, S3NS (Thales-Google JV); ~80% of EU sovereign cloud","AWS Sovereign Cloud (GA Jan 2026), Azure sovereign controls; ~20% via US sovereign offerings",Broadcom sovereign cloud report; EC EUR180M tender Apr 2026; EU sovereign cloud projected to reach EUR100bn by 2031
+
+AI DATACENTERS,"Data Center Market (Total: colocation, hyperscale, enterprise)",270.0,301.0,69.0,77.0,25.6%,25.6%,17.3,51.8,25%,75%,"Equinix (US-HQ, ~$5bn EU rev), Digital Realty (US-HQ, ~$2bn EU rev), EU telecoms, Interxion; ~25% EU-HQ","AWS, Microsoft, Google build ~60% of new EU capacity; US-HQ operators dominate hyperscale segment",Fortune BI; Mordor Intel; EU at ~25.6% of global; hyperscale self-built fastest growing at 19% CAGR
+
+AI DATACENTERS,Data Center Colocation (EU only),N/A,N/A,24.1,28.3,N/A,N/A,6.0,18.1,25%,75%,"Interxion/Digital Realty (US-HQ), DATA4, AtosOrigin, EU telecoms; ~25% EU-HQ operators","Equinix (US), Digital Realty (US), CyrusOne (US), NTT (Japan) dominate EU colocation; ~75% non-EU HQ",Research & Markets Q2 2026; growing 17.3% YoY; AI/GPU workloads key driver
+
+AI DATACENTERS,AI Accelerator / GPU Market,160.0,200.0,16.0,22.0,10.0%,11.0%,0.0,16.0,0%,100%,No EU AI accelerator at scale; Axelera AI (<$50M) and SiPearl (<$20M) are early-stage,"NVIDIA (~80% share = ~$12.8bn EU), AMD (~7%), Google TPU, AWS Trainium, Broadcom ASICs",Silicon Analysts; EU ~10% of global AI accelerator consumption; 100% imported; US export control risk
+
+LLMs,"LLM Market (Models, APIs, Enterprise SW)",10.0,12.0,2.0,2.5,20.0%,20.8%,0.5,1.5,25%,75%,"Mistral AI ($400M ARR, ~60% from EU = ~$240M EU); Aleph Alpha (~$30M EU); others ~$230M","OpenAI (~29% share), Anthropic (~31% share), Google, Meta, xAI; ~75% of EU LLM spend goes to US providers",AllTechMagazine; Precedence Research; Mistral targeting $1bn rev 2026; EU ~20% of global LLM market
+
+LLMs,AI Infrastructure Spend (Training + Inference Compute),581.7,700.0,58.0,70.0,10.0%,10.0%,5.8,52.2,10%,90%,"EuroHPC (EUR7bn budget), Mistral Compute JV, EU national AI compute; ~10% of EU AI infra spend is EU-controlled","NVIDIA, US hyperscalers (AWS/Azure/GCP), AMD provide ~90% of EU AI compute infrastructure",Gartner 2026; AllTechMagazine; EU ~10% of global; mostly consumed via US cloud platforms
+
+QUANTUM,"Quantum Computing (Hardware, Software, Services)",1.9,2.5,0.48,0.63,25.0%,25.0%,0.20,0.28,42%,58%,"IQM ($36M / ~EUR31M global), Pasqal (EUR16.5M commercial), AQT, QuiX (~$10M combined); ~42% EU-HQ share of EU market","IBM Quantum, Google, Amazon Braket, IonQ ($130M global), Quantinuum, D-Wave; ~58% of EU quantum spend",QED-C 2026 Report; Precedence Research; Europe ~25% of global quantum market; EU companies competitive
+
+QUANTUM,Quantum Sensing & Communications,0.47,0.60,0.14,0.18,30.0%,30.0%,0.08,0.06,57%,43%,"ID Quantique (Swiss), Thales, Airbus Defence, EU quantum startups; ~57% EU-HQ share","US defence contractors, Toshiba (Japan) in QKD; ~43% non-EU",QED-C 2026 Report; EU strong in quantum sensing/comms esp. QKD; grows to $1.1bn globally by 2028
+
+QUANTUM,Cryogenic & Quantum Enabling Equipment,0.30,0.38,0.15,0.19,50.0%,50.0%,0.12,0.03,80%,20%,"Bluefors (Finland, global leader in dilution refrigerators ~$100M+), EU cryo/control electronics startups; ~80% EU-HQ","US enabling tech companies; ~20% non-EU",Industry estimates; Bluefors is dominant global cryogenics supplier; EU strength area
