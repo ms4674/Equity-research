@@ -1,0 +1,72 @@
+SpaceX IPO Roadshow Long-Term Forecasts: Goldman Sachs vs Morgan Stanley,,,,,,,,,,
+Sources: Financial Times (Jun 4 2026); Wall Street Journal (Jun 5 2026); SpaceX S-1 Prospectus,,,,,,,,,,
+All figures in USD billions unless otherwise noted,,,,,,,,,,
+,,,,,,,,,,
+=== TOTAL COMPANY REVENUE ===,,,,,,,,,,
+Metric,Source,2024 (Actual),2025 (Actual),2026E,2027E,2028E,2029E,2030E,2031E,2040E
+Total Revenue,Goldman Sachs,$14.0,$18.7,--,--,~$160,--,$474,--,--
+Total Revenue,Morgan Stanley,$14.0,$18.7,--,--,~$160,--,~$330,--,$3400
+,,,,,,,,,,
+=== REVENUE BY SEGMENT ===,,,,,,,,,,
+Metric,Source,2024 (Actual),2025 (Actual),2026E,2027E,2028E,2029E,2030E,2031E,2040E
+AI (xAI / Grok) Revenue,Goldman Sachs,--,$3.2,$15.6,$34.5,--,--,$322,--,--
+AI (xAI / Grok) Revenue,Morgan Stanley,--,$3.2,--,--,--,--,~$190,--,--
+Starlink (Connectivity) Revenue,Goldman Sachs,--,$11.4,--,--,--,--,$144,--,--
+Starlink (Connectivity) Revenue,Morgan Stanley,--,$11.4,--,--,--,--,--,--,--
+Launch (Space) Revenue,Goldman Sachs,--,$4.1,--,--,--,--,$8.3,--,--
+Launch (Space) Revenue,Morgan Stanley,--,$4.1,--,--,--,--,--,--,--
+,,,,,,,,,,
+=== AI SEGMENT AS % OF TOTAL REVENUE ===,,,,,,,,,,
+Metric,Source,2024 (Actual),2025 (Actual),2026E,2027E,2028E,2029E,2030E,2031E,2040E
+AI % of Total Revenue,Goldman Sachs,--,17%,--,--,--,--,68%,--,--
+AI % of Total Revenue,Morgan Stanley,--,17%,--,--,--,--,~58%,--,--
+,,,,,,,,,,
+=== PROFITABILITY METRICS ===,,,,,,,,,,
+Metric,Source,2024 (Actual),2025 (Actual),2026E,2027E,2028E,2029E,2030E,2031E,2040E
+Adjusted EBITDA (Total),Goldman Sachs,$5.4,$6.6,--,--,--,--,$352,--,--
+Adjusted EBITDA (Total),Morgan Stanley,$5.4,$6.6,--,--,--,--,~$230,--,$2700
+EBITDA Margin,Goldman Sachs,39%,35%,--,--,--,--,74%,--,--
+EBITDA Margin,Morgan Stanley,39%,35%,--,--,--,--,~70%,--,~79%
+Net Income (Loss),Actual,$0.8,($4.9),--,--,--,--,--,--,--
+Free Cash Flow,Goldman Sachs,--,($13.8),--,--,--,--,--,$72,--
+,,,,,,,,,,
+=== SEGMENT ADJUSTED EBITDA (ACTUAL) ===,,,,,,,,,,
+Metric,Source,2023 (Actual),2024 (Actual),2025 (Actual),Q1 2026 (Actual),,,,,
+Space Segment EBITDA,S-1 Prospectus,$1.0,$1.2,$0.7,($0.4),,,,,
+Connectivity (Starlink) EBITDA,S-1 Prospectus,$1.6,$3.8,$7.2,$2.1,,,,,
+AI Segment EBITDA,S-1 Prospectus,$1.2,$0.3,($1.2),($0.6),,,,,
+Total Adjusted EBITDA,S-1 Prospectus,$3.8,$5.4,$6.6,$1.1,,,,,
+,,,,,,,,,,
+=== VALUATION & IPO DETAILS ===,,,,,,,,,,
+Metric,Value,,,,,,,,,
+Target IPO Valuation,$1.75-1.78 Trillion,,,,,,,,,
+IPO Share Price,$135 per share,,,,,,,,,
+IPO Raise Target,$75-86 Billion,,,,,,,,,
+Ticker,SPCX (Nasdaq),,,,,,,,,
+Roadshow Start,June 4 2026,,,,,,,,,
+Expected Pricing,June 11 2026,,,,,,,,,
+Expected First Trading Day,June 12 2026,,,,,,,,,
+Lead Underwriters,"Goldman Sachs, Morgan Stanley, BofA Securities, Citigroup, J.P. Morgan",,,,,,,,,
+Total Syndicate Banks,21,,,,,,,,,
+Morningstar Fair Value Estimate,~$780 Billion,,,,,,,,,
+,,,,,,,,,,
+=== KEY COMPARISON: GOLDMAN SACHS vs MORGAN STANLEY ===,,,,,,,,,,
+Metric,Goldman Sachs,Morgan Stanley,Delta,,,,,,
+2025 Total Revenue (Actual),$18.7B,$18.7B,Aligned,,,,,,
+2028 Total Revenue,~$160B,~$160B,Aligned,,,,,,
+2030 Total Revenue,$474B,~$330B,GS +44% higher,,,,,,
+2030 AI Revenue,$322B,~$190B,GS +69% higher,,,,,,
+2030 Adj. EBITDA,$352B,~$230B,GS +53% higher,,,,,,
+2040 Total Revenue,Not disclosed,$3400B,--,,,,,,
+2040 Adj. EBITDA,Not disclosed,$2700B,--,,,,,,
+2031 Free Cash Flow,$72B,Not disclosed,--,,,,,,
+,,,,,,,,,,
+=== NOTES ===,,,,,,,,,,
+"1. Goldman Sachs forecasts were reported by the Financial Times on June 4, 2026, based on materials shared with a prospective investor during the roadshow.",,,,,,,,,,
+"2. Morgan Stanley forecasts were reported by the Wall Street Journal on June 5, 2026, citing people familiar with the matter.",,,,,,,,,,
+"3. Both banks are lead underwriters on the SpaceX IPO, which represents a material conflict of interest in their projections.",,,,,,,,,,
+"4. The AI segment includes xAI (Grok AI model), X platform revenue, and related AI infrastructure businesses, consolidated into SpaceX following the Feb 2026 merger.",,,,,,,,,,
+"5. '--' indicates data not publicly disclosed by the respective bank for that year.",,,,,,,,,,
+"6. 2024 and 2025 actuals are from the SpaceX S-1 prospectus filed with the SEC.",,,,,,,,,,
+"7. Morningstar's independent fair value estimate of ~$780B is roughly half the IPO target valuation.",,,,,,,,,,
+"8. SpaceX's 2025 net loss of $4.9B was driven by the AI segment's $6.4B operating loss, which offset Starlink's $4.4B operating profit.",,,,,,,,,,
