@@ -93,35 +93,51 @@ wb = Workbook()
 # ======================================================================================
 REGIONS_4 = ["US & Canada", "Europe", "Asia-Pacific", "Rest of World"]
 
+# The under-16 exposure model is now based on FY2025 actuals (latest full year).
+# FY2024 actuals are retained for the growth comparison on the Financials tab.
+
 # ---- Meta (advertising revenue by USER geography; regional split is an estimate) ----
-META_AD = 160633.0          # FY2024 advertising revenue, $M (10-K)
-META_TOTAL = 164501.0
-META_FOA = 162355.0
-# Estimated user-geography ad-revenue shares (documented assumption)
-META_REGION_SHARE = {"US & Canada": 0.44, "Europe": 0.23, "Asia-Pacific": 0.22, "Rest of World": 0.11}
+META_AD = 196175.0          # FY2025 advertising revenue, $M (10-K)
+META_AD_2024 = 160633.0
+META_TOTAL = 200966.0
+META_TOTAL_2024 = 164501.0
+META_FOA = 198759.0
+META_FOA_2024 = 162355.0
+# Estimated user-geography ad-revenue shares (documented assumption; APAC nudged up as
+# Meta cited Asia-Pacific as the fastest-growing region for ad impressions in 2025)
+META_REGION_SHARE = {"US & Canada": 0.43, "Europe": 0.23, "Asia-Pacific": 0.23, "Rest of World": 0.11}
 META_ARPP = {"US & Canada": 233.42, "Europe": 68.12, "Asia-Pacific": 21.28, "Rest of World": 14.00}
 
-# ---- Alphabet / Google ----
-GOOG_TOTAL = 350018.0
-GOOG_ADV = 264590.0
-YT_ADS = 36147.0
-GOOG_SEARCH = 198084.0
-GOOG_NETWORK = 30359.0
+# ---- Alphabet / Google (FY2025) ----
+GOOG_TOTAL = 402836.0
+GOOG_TOTAL_2024 = 350018.0
+GOOG_ADV = 294691.0
+GOOG_ADV_2024 = 264590.0
+YT_ADS = 40367.0
+YT_ADS_2024 = 36147.0
+GOOG_SEARCH = 224532.0
+GOOG_SEARCH_2024 = 198084.0
+GOOG_NETWORK = 29792.0
+GOOG_NETWORK_2024 = 30359.0
 # YouTube ad-revenue regional split (estimate: YouTube monetises internationally more
 # than Alphabet's overall US-billed geographic mix implies)
 YT_REGION_SHARE = {"US & Canada": 0.35, "Europe": 0.30, "Asia-Pacific": 0.23, "Rest of World": 0.12}
-# Alphabet total-revenue geographic mix (10-K, ex-hedging) used for Search & Network
-GOOG_GEO = {"US & Canada": 0.487, "Europe": 0.292, "Asia-Pacific": 0.162, "Rest of World": 0.058}
+# Alphabet total-revenue geographic mix (FY2025 10-K) used for Search & Network
+GOOG_GEO = {"US & Canada": 0.482, "Europe": 0.291, "Asia-Pacific": 0.168, "Rest of World": 0.059}
 
 # ---- Snap (total revenue by region, exact from press release, $M) ----
-SNAP_TOTAL = 5361.0
-SNAP_REGION = {"North America": 3337.3, "Europe": 961.6, "Rest of World": 1062.5}
-SNAP_DAU = {"North America": 100.0, "Europe": 99.0, "Rest of World": 254.0}  # Q4-24 millions
+SNAP_TOTAL = 5931.0
+SNAP_TOTAL_2024 = 5361.0
+SNAP_REGION = {"North America": 3575.6, "Europe": 1128.4, "Rest of World": 1227.4}   # FY2025 (TTM Q4-25)
+SNAP_REGION_2024 = {"North America": 3337.3, "Europe": 961.6, "Rest of World": 1062.5}
+SNAP_DAU = {"North America": 94.0, "Europe": 98.0, "Rest of World": 282.0}  # Q4-25 millions
 
-# ---- Pinterest (total revenue; regional split estimated from disclosed Q4 mix) ----
-PINS_TOTAL = 3646.0
-PINS_REGION = {"US & Canada": 2860.0, "Europe": 610.0, "Rest of World": 176.0}
-PINS_MAU = {"US & Canada": 101.0, "Europe": 145.0, "Rest of World": 307.0}  # Q4-24 millions
+# ---- Pinterest (total revenue; FY2025 full-year regional revenue, as reported) ----
+PINS_TOTAL = 4222.0
+PINS_TOTAL_2024 = 3646.0
+PINS_REGION = {"US & Canada": 3173.0, "Europe": 775.0, "Rest of World": 274.0}     # FY2025 (reported)
+PINS_REGION_2024 = {"US & Canada": 2884.0, "Europe": 593.0, "Rest of World": 169.0}  # FY2024 (reported)
+PINS_MAU = {"US & Canada": 105.0, "Europe": 158.0, "Rest of World": 356.0}  # Q4-25 millions
 
 # ---- Harvard (Raffoul et al. 2023, PLOS ONE) US 2022 anchors ----
 # under-18 ad-revenue SHARE of each platform's US ad revenue, and 0-12 dollar split
@@ -147,7 +163,7 @@ ws_m = wb.create_sheet("Methodology")
 # ======================================================================================
 # SHEET — FINANCIALS
 # ======================================================================================
-ws_f = wb.create_sheet("Financials (FY2024)")
+ws_f = wb.create_sheet("Financials")
 
 # ======================================================================================
 # SHEET — YOUTH USAGE EVIDENCE
@@ -165,6 +181,7 @@ ws_goog = wb.create_sheet("Model - Google")
 ws_snap = wb.create_sheet("Model - Snap")
 ws_pins = wb.create_sheet("Model - Pinterest")
 ws_agg = wb.create_sheet("Aggregate by Region")
+ws_reg = wb.create_sheet("Regulatory Headwind")
 ws_src = wb.create_sheet("Sources")
 
 # --------------------------------------------------------------------------------------
@@ -337,8 +354,8 @@ def model_table_header(ws, r, rev_label="Regional revenue ($M)"):
 # MODEL — META
 # ======================================================================================
 r = model_sheet_header(ws_meta, "Meta Platforms (Facebook + Instagram + Messenger)", [
-    ("FY2024 total revenue ($M)", META_TOTAL, FMT_USD_M),
-    ("FY2024 advertising revenue ($M)", META_AD, FMT_USD_M),
+    ("FY2025 total revenue ($M)", META_TOTAL, FMT_USD_M),
+    ("FY2025 advertising revenue ($M)", META_AD, FMT_USD_M),
     ("Meta blended US under-16 ad-revenue share", f"={META_US_SHARE}", FMT_PCT2),
 ])
 hdr_r = model_table_header(ws_meta, r)
@@ -373,8 +390,8 @@ META_TOTAL_REF = (ws_meta.title, meta_tot)
 # MODEL — GOOGLE  (YouTube + Search&other + Network, each x 4 regions)
 # ======================================================================================
 r = model_sheet_header(ws_goog, "Google / Alphabet (YouTube + Search + Network)", [
-    ("FY2024 Alphabet total revenue ($M)", GOOG_TOTAL, FMT_USD_M),
-    ("FY2024 Google advertising revenue ($M)", GOOG_ADV, FMT_USD_M),
+    ("FY2025 Alphabet total revenue ($M)", GOOG_TOTAL, FMT_USD_M),
+    ("FY2025 Google advertising revenue ($M)", GOOG_ADV, FMT_USD_M),
     ("  of which YouTube ads ($M)", YT_ADS, FMT_USD_M),
     ("  of which Google Search & other ($M)", GOOG_SEARCH, FMT_USD_M),
     ("  of which Google Network ($M)", GOOG_NETWORK, FMT_USD_M),
@@ -460,8 +477,8 @@ NET_ROW = net_r
 # MODEL — SNAP
 # ======================================================================================
 r = model_sheet_header(ws_snap, "Snap Inc. (Snapchat)", [
-    ("FY2024 total revenue ($M)", SNAP_TOTAL, FMT_USD_M),
-    ("Q4-2024 global DAU (millions)", 453, FMT_NUM),
+    ("FY2025 total revenue ($M)", SNAP_TOTAL, FMT_USD_M),
+    ("Q4-2025 global DAU (millions)", 474, FMT_NUM),
     ("Snapchat US under-16 ad-revenue share", f"={SHARE_SNAP}", FMT_PCT2),
 ])
 put(ws_snap, r - 1, 4, "Highest under-16 exposure of the four (Harvard: 41% of Snap US ad rev from <18)", ITALIC, LFT)
@@ -496,8 +513,8 @@ SNAP_TOTAL_REF = (ws_snap.title, snap_tot)
 # MODEL — PINTEREST
 # ======================================================================================
 r = model_sheet_header(ws_pins, "Pinterest, Inc.", [
-    ("FY2024 total revenue ($M)", PINS_TOTAL, FMT_USD_M),
-    ("Q4-2024 global MAU (millions)", 553, FMT_NUM),
+    ("FY2025 total revenue ($M)", PINS_TOTAL, FMT_USD_M),
+    ("Q4-2025 global MAU (millions)", 619, FMT_NUM),
     ("Pinterest US under-16 ad-revenue share", f"={SHARE_PINS}", FMT_PCT2),
 ])
 put(ws_pins, r - 1, 4, "Lowest exposure: 13–17 ≈ 4% of users; personalised ads restricted for under-18s", ITALIC, LFT)
@@ -611,7 +628,7 @@ c = s.cell(row=1, column=1, value="Revenue Exposure to Teens Under 16  —  Meta
 c.fill = hfill(NAVY); c.font = TITLE_FONT; c.alignment = Alignment("left", "center")
 s.row_dimensions[1].height = 30
 s.merge_cells("A2:H2")
-c = s.cell(row=2, column=1, value="Estimation model · FY2024 financials · base case unless ranged · figures in US$ millions")
+c = s.cell(row=2, column=1, value="Estimation model · FY2025 financials · base case unless ranged · figures in US$ millions")
 c.fill = hfill(BLUE); c.font = Font(size=10, italic=True, color=WHITE); c.alignment = Alignment("left", "center")
 
 s.merge_cells("A4:H4")
@@ -621,7 +638,7 @@ s.row_dimensions[4].height = 28
 
 # headline table
 hr = 6
-heads = ["Company", "FY2024 revenue\nbase ($M)", "Under-16 share\n(blended)", "Under-16 rev\nBASE ($M)",
+heads = ["Company", "FY2025 revenue\nbase ($M)", "Under-16 share\n(blended)", "Under-16 rev\nBASE ($M)",
          "Low ($M)", "High ($M)", "Primary youth\nsurface"]
 for i, h in enumerate(heads):
     put(s, hr, 1 + i, h, HDR_FONT, CTR, fill=BLUE, border=True)
@@ -665,11 +682,11 @@ notes = [
     "• 'Under-16 revenue' = the slice of each platform's advertising revenue attributable to users aged under 16.",
     "• It is an ESTIMATE. No platform discloses age-specific revenue; this is a transparent, source-anchored model.",
     "• The driver is each platform's US under-16 ad-revenue SHARE (anchored to the Harvard 2023 study), scaled by",
-    "   region (multipliers) and applied to disclosed FY2024 regional revenue. See 'Assumptions' to flex any input.",
+    "   region (multipliers) and applied to disclosed FY2025 regional revenue. See 'Assumptions' to flex any input.",
     "• Low / Base / High apply scenario scalars (0.65 / 1.00 / 1.35) reflecting Harvard's uncertainty intervals and",
     "   the well-documented under-reporting of age by younger users (Meta 10-K; Ofcom: 40% of 8–17s give a fake age).",
     "• Snap shows the highest exposure (teen-core app); Pinterest the lowest (older, female-skewed, <18 ad limits).",
-    "• Tabs: Methodology · Financials (FY2024) · Youth Usage Evidence · Assumptions · Model-<Company> · Aggregate · Sources.",
+    "• Tabs: Methodology · Financials · Youth Usage Evidence · Assumptions · Model-<Company> · Aggregate · Regulatory Headwind · Sources.",
 ]
 for i, n in enumerate(notes):
     put(s, g + 1 + i, 1, n, NORMAL, LFT)
@@ -721,7 +738,7 @@ para = [
     ("h", "Step 3 — Regionalise"),
     ("p", "The US anchor share is scaled by regional multipliers (US/NA 1.00, Europe 0.95, Asia-Pacific 1.05, "
           "Rest of World 1.15) reflecting younger populations outside the West versus stronger child-data regulation "
-          "in the EU. The scaled share is applied to each platform's disclosed FY2024 regional revenue."),
+          "in the EU. The scaled share is applied to each platform's disclosed FY2025 regional revenue."),
     ("h", "Step 4 — Surfaces"),
     ("p", "Meta is modelled as a weighted blend of Instagram (50%), Facebook (40%) and Messenger/other (10%) of US ad "
           "revenue. Google is split into YouTube ads (the principal youth surface), Google Search & other, and Google "
@@ -752,58 +769,66 @@ f = ws_f
 f.sheet_view.showGridLines = False
 for col, w in {"A": 30, "B": 16, "C": 16, "D": 16, "E": 16, "F": 16}.items():
     f.column_dimensions[col].width = w
-band(f, 1, 1, 6, "HARD FINANCIAL DATA — FY2024 (as reported)   $M unless noted")
+band(f, 1, 1, 4, "HARD FINANCIAL DATA — FY2024 vs FY2025 (as reported)   $M unless noted")
 f.row_dimensions[1].height = 22
 
-def fin_block(ws, r, title, headers, rows, src):
-    band(ws, r, 1, 6, title, fill=BLUE, font=H2_FONT_)
+def fin_block(ws, r, title, rows, src):
+    band(ws, r, 1, 4, title, fill=BLUE, font=H2_FONT_)
     r += 1
-    for i, h in enumerate(headers):
+    for i, h in enumerate(["Item", "FY2024", "FY2025", "YoY %"]):
         put(ws, r, 1 + i, h, HDR_FONT, CTR, fill=BLUE, border=True)
     r += 1
-    for row in rows:
-        for i, v in enumerate(row):
-            fmt = None if i == 0 else (FMT_PCT1 if isinstance(v, float) and v < 1 and i == len(row)-0 else FMT_USD_M)
-            al = LFT if i == 0 else RGT
-            put(ws, r, 1 + i, v, NORMAL if i else BOLD, al, FMT_USD_M if i and not (isinstance(v,str)) else None, border=True)
+    for label, v24, v25 in rows:
+        put(ws, r, 1, label, BOLD, LFT, border=True)
+        num = not (isinstance(v24, str) or isinstance(v25, str))
+        put(ws, r, 2, v24, NORMAL, RGT, FMT_USD_M if num else None, border=True)
+        put(ws, r, 3, v25, NORMAL, RGT, FMT_USD_M if num else None, border=True)
+        if num and v24:
+            put(ws, r, 4, f"=C{r}/B{r}-1", NORMAL, CTR, FMT_PCT1, border=True)
+        else:
+            put(ws, r, 4, "", NORMAL, CTR, border=True)
         r += 1
     put(ws, r, 1, src, SRC_FONT, TOP)
-    ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+    ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=4)
     return r + 2
 
 r = 3
 r = fin_block(f, r, "Meta Platforms",
-              ["Item", "Value"],
-              [["Total revenue", META_TOTAL], ["Family of Apps revenue", META_FOA],
-               ["Advertising revenue", META_AD],
-               ["US&Canada ad rev (est. user-geography)", round(META_AD*0.44,0)],
-               ["Europe ad rev (est.)", round(META_AD*0.23,0)],
-               ["Asia-Pacific ad rev (est.)", round(META_AD*0.22,0)],
-               ["Rest of World ad rev (est.)", round(META_AD*0.11,0)],
-               ["Annual ARPP worldwide ($)", 49.63]],
-              "Source: Meta FY2024 10-K / Q4-24 press release. Regional ad-revenue split is estimated (user geography).")
+              [["Total revenue", META_TOTAL_2024, META_TOTAL],
+               ["Family of Apps revenue", META_FOA_2024, META_FOA],
+               ["Advertising revenue", META_AD_2024, META_AD],
+               ["US & Canada ad rev (est. user-geography)", round(META_AD_2024*0.44), round(META_AD*0.43)],
+               ["Europe ad rev (est.)", round(META_AD_2024*0.23), round(META_AD*0.23)],
+               ["Asia-Pacific ad rev (est.)", round(META_AD_2024*0.22), round(META_AD*0.23)],
+               ["Rest of World ad rev (est.)", round(META_AD_2024*0.11), round(META_AD*0.11)]],
+              "Source: Meta FY2024 & FY2025 10-Ks. Regional ad-revenue split is estimated (user geography).")
 r = fin_block(f, r, "Google / Alphabet",
-              ["Item", "Value"],
-              [["Alphabet total revenue", GOOG_TOTAL], ["Google advertising", GOOG_ADV],
-               ["Google Search & other", GOOG_SEARCH], ["YouTube ads", YT_ADS],
-               ["Google Network", GOOG_NETWORK],
-               ["Geo mix: US&Canada", round(GOOG_TOTAL*0.487,0)],
-               ["Geo mix: Europe/EMEA", round(GOOG_TOTAL*0.292,0)],
-               ["Geo mix: Asia-Pacific", round(GOOG_TOTAL*0.162,0)],
-               ["Geo mix: Other Americas (RoW)", round(GOOG_TOTAL*0.058,0)]],
-              "Source: Alphabet FY2024 10-K. YouTube regional split estimated; Search/Network use Alphabet geo mix.")
+              [["Alphabet total revenue", GOOG_TOTAL_2024, GOOG_TOTAL],
+               ["Google advertising", GOOG_ADV_2024, GOOG_ADV],
+               ["Google Search & other", GOOG_SEARCH_2024, GOOG_SEARCH],
+               ["YouTube ads", YT_ADS_2024, YT_ADS],
+               ["Google Network", GOOG_NETWORK_2024, GOOG_NETWORK],
+               ["Geo: United States", round(GOOG_TOTAL_2024*0.487), round(GOOG_TOTAL*0.482)],
+               ["Geo: EMEA", round(GOOG_TOTAL_2024*0.292), round(GOOG_TOTAL*0.291)],
+               ["Geo: APAC", round(GOOG_TOTAL_2024*0.162), round(GOOG_TOTAL*0.168)],
+               ["Geo: Other Americas", round(GOOG_TOTAL_2024*0.058), round(GOOG_TOTAL*0.059)]],
+              "Source: Alphabet FY2024 & FY2025 10-Ks. YouTube regional split estimated; Search/Network use Alphabet geo mix.")
 r = fin_block(f, r, "Snap Inc.",
-              ["Item", "Value"],
-              [["Total revenue", SNAP_TOTAL], ["North America revenue", SNAP_REGION['North America']],
-               ["Europe revenue", SNAP_REGION['Europe']], ["Rest of World revenue", SNAP_REGION['Rest of World']],
-               ["Global DAU Q4 (m)", 453], ["NA / EU / RoW DAU Q4 (m)", "100 / 99 / 254"]],
-              "Source: Snap FY2024 press release / investor letter. Regional figures are total revenue by user region.")
+              [["Total revenue", SNAP_TOTAL_2024, SNAP_TOTAL],
+               ["North America revenue", SNAP_REGION_2024['North America'], SNAP_REGION['North America']],
+               ["Europe revenue", SNAP_REGION_2024['Europe'], SNAP_REGION['Europe']],
+               ["Rest of World revenue", SNAP_REGION_2024['Rest of World'], SNAP_REGION['Rest of World']],
+               ["Global DAU Q4 (m)", 453, 474],
+               ["NA / EU / RoW DAU Q4 (m)", "100 / 99 / 254", "94 / 98 / 282"]],
+              "Source: Snap FY2024 & FY2025 press releases. Regional figures are total revenue by user region.")
 r = fin_block(f, r, "Pinterest, Inc.",
-              ["Item", "Value"],
-              [["Total revenue", PINS_TOTAL], ["US&Canada revenue (est.)", PINS_REGION['US & Canada']],
-               ["Europe revenue (est.)", PINS_REGION['Europe']], ["Rest of World revenue (est.)", PINS_REGION['Rest of World']],
-               ["Global MAU Q4 (m)", 553], ["UCAN / EU / RoW MAU Q4 (m)", "101 / 145 / 307"]],
-              "Source: Pinterest FY2024 press release. Regional revenue split estimated from disclosed Q4 mix.")
+              [["Total revenue", PINS_TOTAL_2024, PINS_TOTAL],
+               ["US & Canada revenue", PINS_REGION_2024['US & Canada'], PINS_REGION['US & Canada']],
+               ["Europe revenue", PINS_REGION_2024['Europe'], PINS_REGION['Europe']],
+               ["Rest of World revenue", PINS_REGION_2024['Rest of World'], PINS_REGION['Rest of World']],
+               ["Global MAU Q4 (m)", 553, 619],
+               ["UCAN / EU / RoW MAU Q4 (m)", "101 / 145 / 307", "105 / 158 / 356"]],
+              "Source: Pinterest FY2024 & FY2025 press releases (full-year regional revenue, as reported).")
 print("Methodology & Financials done.")
 
 
@@ -902,15 +927,18 @@ sc.row_dimensions[1].height = 22
 for i, h in enumerate(["#", "Source", "URL / reference"]):
     put(sc, 2, 1 + i, h, HDR_FONT, CTR, fill=BLUE, border=True)
 sources = [
-    ("Meta FY2024 results (10-K / Q4 press release)", "sec.gov/Archives/edgar/data/1326801/000132680125000014/meta-12312024xexhibit991.htm"),
-    ("Meta FY2024 10-K (age-data reliability caveat; ARPP)", "sec.gov/Archives/edgar/data/1326801/000132680125000017/meta-20241231.htm"),
-    ("Alphabet FY2024 results (segment & geography)", "sec.gov/Archives/edgar/data/1652044/000165204425000014/"),
-    ("Snap FY2024 results / investor letter (regional rev, DAU, ARPU)", "investor.snap.com — Q4 & FY2024 press release"),
-    ("Pinterest FY2024 results (revenue, MAU, ARPU, regional)", "investor.pinterestinc.com — Q4 & FY2024 press release"),
+    ("Meta FY2025 results (10-K / Q4-25 press release, Jan 2026)", "sec.gov/Archives/edgar/data/1326801/000162828026003832/meta-12312025xexhibit991.htm"),
+    ("Meta FY2024 results (prior-year comparison)", "sec.gov/Archives/edgar/data/1326801/000132680125000014/meta-12312024xexhibit991.htm"),
+    ("Alphabet FY2025 results (segment & geography, Feb 2026)", "sec.gov/Archives/edgar/data/1652044/000165204426000018/"),
+    ("Snap FY2025 results (regional rev, DAU, ARPU, Feb 2026)", "investor.snap.com — Q4 & FY2025 press release"),
+    ("Pinterest FY2025 results (full-year regional revenue, MAU, Feb 2026)", "investor.pinterestinc.com — Q4 & FY2025 press release"),
     ("Raffoul, Ward, Santoso, Kavanaugh, Austin (2023). Social media platforms generate billions from US youth. PLOS ONE 18(12): e0295337.", "journals.plos.org/plosone/article?id=10.1371/journal.pone.0295337"),
     ("Harvard T.H. Chan School news release on the above study", "hsph.harvard.edu/news/social-media-platforms-generate-billions-in-annual-ad-revenue-from-u-s-youth/"),
     ("Ofcom — Children and parents: media use and attitudes 2024", "ofcom.org.uk — Children's Media Literacy Report 2024"),
-    ("Pew Research — Teens, Social Media and Technology", "pewresearch.org/internet (teen platform usage)"),
+    ("eSafety Commissioner (AU) — Social Media Minimum Age: which platforms are age-restricted", "esafety.gov.au/.../social-media-age-restrictions/which-platforms-are-age-restricted"),
+    ("eSafety Commissioner (AU) — Social Media Minimum Age FAQ (penalties, excluded services)", "esafety.gov.au/.../social-media-age-restrictions/faqs"),
+    ("AVPA — EU countries / US state age-assurance trackers (2026)", "avpassociation.com — EU & US state age-assurance laws"),
+    ("TechCrunch / Wired-Parents — global under-16 social-media ban trackers (2026)", "techcrunch.com/2026/04/23/social-media-ban-children-countries-list/"),
     ("DataReportal / Pinterest ad-audience age profile", "datareportal.com/essential-pinterest-stats"),
 ]
 rr = 3
@@ -920,9 +948,212 @@ for i, (name, url) in enumerate(sources, 1):
     put(sc, rr, 3, url, SRC_FONT, TOP, border=True)
     sc.row_dimensions[rr].height = 28
     rr += 1
-put(sc, rr + 1, 2, "All financial figures are as-reported FY2024. All age-specific revenue figures are MODELLED estimates "
-                   "(no issuer discloses revenue by user age).", ITALIC, TOP)
+put(sc, rr + 1, 2, "All financial figures are as-reported FY2024/FY2025. All age-specific revenue and ban-headwind "
+                   "figures are MODELLED estimates (no issuer discloses revenue by user age or by jurisdiction at this granularity).", ITALIC, TOP)
 sc.merge_cells(start_row=rr + 1, start_column=2, end_row=rr + 1, end_column=3)
+
+# ======================================================================================
+# REGULATORY HEADWIND SHEET
+# ======================================================================================
+rg = ws_reg
+rg.sheet_view.showGridLines = False
+for col, w in {"A": 26, "B": 34, "C": 11, "D": 10, "E": 10, "F": 9, "G": 13, "H": 13}.items():
+    rg.column_dimensions[col].width = w
+band(rg, 1, 1, 8, "REGULATORY HEADWIND — UNDER-16 SOCIAL-MEDIA AGE BANS")
+rg.row_dimensions[1].height = 22
+rg.merge_cells("A2:H2")
+put(rg, 2, 1, "Quantifies the revenue / growth headwind from under-16 bans. 'At-risk' revenue = the slice of "
+              "under-16 revenue a ban is estimated to remove. All inputs (blue) are editable.", ITALIC, LFT)
+rg.row_dimensions[2].height = 26
+
+# ---- 1. Australia coverage ----
+band(rg, 4, 1, 8, "1.  Australia — Social Media Minimum Age Act (in force 10 Dec 2025; minimum age 16; fines up to A$49.5m)",
+     fill=BLUE, font=H2_FONT_)
+for i, h in enumerate(["Issuer", "In scope?", "Covered surface(s)", "Excluded / note"]):
+    put(rg, 5, 1 + i if i < 3 else 4, h, HDR_FONT, CTR, fill=BLUE, border=True)
+rg.merge_cells("D5:H5")
+cov = [
+    ("Meta", "YES", "Facebook, Instagram, Threads", "Messenger & WhatsApp are excluded (messaging)"),
+    ("Google", "YES", "YouTube", "YouTube Kids, Search and Network are out of scope"),
+    ("Snap", "YES", "Snapchat", "Entire app in scope — most exposed"),
+    ("Pinterest", "NO", "— (excluded)", "eSafety: not an 'age-restricted social media platform'"),
+]
+rr = 6
+for name, scope, surf, note in cov:
+    put(rg, rr, 1, name, BOLD, LFT, border=True)
+    put(rg, rr, 2, scope, BOLD, CTR, fill=(GREEN if scope == "YES" else GREY), border=True)
+    put(rg, rr, 3, surf, NORMAL, LFT, border=True)
+    put(rg, rr, 4, note, ITALIC, LFT, border=True)
+    rg.merge_cells(start_row=rr, start_column=4, end_row=rr, end_column=8)
+    rr += 1
+
+# ---- 2. Inputs ----
+ir = rr + 1
+band(rg, ir, 1, 8, "2.  Headwind model inputs (editable)", fill=BLUE, font=H2_FONT_)
+ir += 1
+inputs = [
+    ("Developed-market under-16 multiplier (vs US anchor)", 0.97, "Ban markets (AU/UK/EU/US) skew developed"),
+    ("Cohort factor — under-16 regime (AU, UK, ES, PT)", 1.00, "Full under-16 cohort"),
+    ("Cohort factor — under-15 regime (DK, FR, GR, NL...)", 0.82, "Removes only 0–14 (keeps 15s)"),
+    ("Cohort factor — US (under-14 / parental-consent)", 0.55, "Narrower cohort, consent not a full ban"),
+    ("Enforcement effectiveness — Australia (in force)", 0.60, "Age assurance imperfect; VPN/evasion leakage"),
+    ("Enforcement effectiveness — EU/UK pipeline", 0.55, "Similar assurance regime once enacted"),
+    ("Enforcement effectiveness — US (incl. litigation discount)", 0.25, "Many state laws enjoined on 1st-Amendment grounds"),
+]
+input_cell = {}
+keys = ["devmult", "c16", "c15", "cUS", "eAU", "ePIPE", "eUS"]
+for j, (label, val, note) in enumerate(inputs):
+    rrr = ir + j
+    put(rg, rrr, 1, label, BOLD, LFT, border=True)
+    rg.merge_cells(start_row=rrr, start_column=1, end_row=rrr, end_column=2)
+    put(rg, rrr, 3, val, NORMAL, CTR, FMT_X, AMBER, True)
+    put(rg, rrr, 4, note, ITALIC, LFT, border=True)
+    rg.merge_cells(start_row=rrr, start_column=4, end_row=rrr, end_column=8)
+    input_cell[keys[j]] = f"$C${rrr}"
+DEV = input_cell["devmult"]
+
+# ---- 3 & 4. Per-company at-risk blocks ----
+baskets = [
+    # name, status, revshare{company}, cohort_key, enf_key, pinterest_covered
+    ("Australia", "In force (10 Dec 2025)",
+     {"Meta": 0.018, "Google": 0.020, "Snap": 0.025, "Pinterest": 0.020}, "c16", "eAU", 0),
+    ("United Kingdom", "Consulting; target ~2027",
+     {"Meta": 0.055, "Google": 0.060, "Snap": 0.040, "Pinterest": 0.040}, "c16", "ePIPE", 1),
+    ("EU pipeline", "DK/FR/GR/PT passed; ES/NO/NL/IT advancing",
+     {"Meta": 0.060, "Google": 0.060, "Snap": 0.050, "Pinterest": 0.050}, "c15", "ePIPE", 1),
+    ("US states", "FL/UT/TN enforceable; many enjoined",
+     {"Meta": 0.040, "Google": 0.040, "Snap": 0.050, "Pinterest": 0.030}, "cUS", "eUS", 1),
+]
+
+companies = [
+    # name, exposure_base_ref, exposure_label, total_rev, u16_ref
+    ("Meta", f"'Model - Meta'!B{meta_tot}", "ad revenue (FB+IG+Messenger)", META_TOTAL, META_US_SHARE),
+    ("Google", f"'Model - Google'!B{yt_tot}", "YouTube ads (only covered surface)", GOOG_TOTAL, SHARE_YT),
+    ("Snap", f"'Model - Snap'!B{snap_tot}", "total revenue", SNAP_TOTAL, SHARE_SNAP),
+    ("Pinterest", f"'Model - Pinterest'!B{pins_tot}", "total revenue", PINS_TOTAL, SHARE_PINS),
+]
+
+cur = ir + len(inputs) + 1
+atrisk = {c[0]: {} for c in companies}  # company -> basket -> cell
+totalrev_cell = {}
+for name, exp_ref, exp_label, total_rev, u16_ref in companies:
+    band(rg, cur, 1, 8, f"3.  {name} — exposure base = {exp_label}; FY2025 total revenue ${total_rev:,.0f}m",
+         fill=BLUE, font=H2_FONT_)
+    cur += 1
+    for i, h in enumerate(["Jurisdiction basket", "Status", "Rev share", "Cohort", "Enforce",
+                           "Covered", "At-risk ($M)", "bps of rev"]):
+        put(rg, cur, 1 + i, h, HDR_FONT, CTR, fill=BLUE, border=True)
+    rg.row_dimensions[cur].height = 26
+    cur += 1
+    block_first = cur
+    for bname, status, shares, ck, ek, pcov in baskets:
+        covered = pcov if name == "Pinterest" else 1
+        put(rg, cur, 1, bname, BOLD, LFT, border=True)
+        put(rg, cur, 2, status, ITALIC, LFT, border=True)
+        put(rg, cur, 3, shares[name], NORMAL, CTR, FMT_PCT1, AMBER, True)
+        put(rg, cur, 4, f"={input_cell[ck]}", NORMAL, CTR, FMT_X, border=True)
+        put(rg, cur, 5, f"={input_cell[ek]}", NORMAL, CTR, FMT_X, border=True)
+        put(rg, cur, 6, covered, NORMAL, CTR, FMT_X, (GREY if covered else "F4CCCC"), True)
+        # at-risk = expbase * revshare * u16 * devmult * cohort * enforce * covered
+        put(rg, cur, 7, f"={exp_ref}*C{cur}*{u16_ref}*{DEV}*D{cur}*E{cur}*F{cur}",
+            BOLD, RGT, FMT_USD_M1, GREEN, True)
+        put(rg, cur, 8, f"=G{cur}/{total_rev}*10000", NORMAL, CTR, '#,##0"bp"', border=True)
+        atrisk[name][bname] = cur
+        cur += 1
+    # subtotal across all baskets (= broad scenario)
+    put(rg, cur, 1, "All baskets (broad-adoption scenario)", BOLD, LFT, fill=LIGHT, border=True)
+    rg.merge_cells(start_row=cur, start_column=1, end_row=cur, end_column=6)
+    put(rg, cur, 7, f"=SUM(G{block_first}:G{cur-1})", BOLD, RGT, FMT_USD_M1, LIGHT, True)
+    put(rg, cur, 8, f"=G{cur}/{total_rev}*10000", BOLD, CTR, '#,##0"bp"', LIGHT, True)
+    totalrev_cell[name] = total_rev
+    cur += 2
+
+# ---- 5. Scenario summary ----
+band(rg, cur, 1, 8, "4.  Scenario summary — under-16-ban headwind by company (At-risk $M  /  bps of FY2025 revenue)",
+     fill=NAVY, font=H1_FONT)
+cur += 1
+scen_defs = [
+    ("A. In force today", ["Australia"], "Australia ban only"),
+    ("B. Legislated + advancing", ["Australia", "United Kingdom", "EU pipeline"], "+ UK & EU pipeline (~2026–27)"),
+    ("C. Broad global adoption", ["Australia", "United Kingdom", "EU pipeline", "US states"], "+ US states"),
+]
+hdr_cols = ["Scenario", "Meta", "Google", "Snap", "Pinterest", "TOTAL $M", "", "Note"]
+for i, h in enumerate(hdr_cols):
+    put(rg, cur, 1 + i, h, HDR_FONT, CTR, fill=BLUE, border=True)
+cur += 1
+scen_first = cur
+for sname, blist, note in scen_defs:
+    put(rg, cur, 1, sname, BOLD, LFT, border=True)
+    comp_cols = {"Meta": 2, "Google": 3, "Snap": 4, "Pinterest": 5}
+    for cname, col in comp_cols.items():
+        terms = "+".join(f"G{atrisk[cname][b]}" for b in blist)
+        put(rg, cur, col, f"={terms}", NORMAL, RGT, FMT_USD_M1, border=True)
+    put(rg, cur, 6, f"=SUM(B{cur}:E{cur})", BOLD, RGT, FMT_USD_M1, GREEN, True)
+    put(rg, cur, 8, note, ITALIC, LFT, border=True)
+    rg.merge_cells(start_row=cur, start_column=8, end_row=cur, end_column=8)
+    cur += 1
+# bps row for each scenario (vs each company's total revenue)
+put(rg, cur, 1, "Headwind in bps of FY2025 revenue", H2_FONT, LFT)
+rg.merge_cells(start_row=cur, start_column=1, end_row=cur, end_column=8)
+cur += 1
+for i, (sname, blist, note) in enumerate(scen_defs):
+    srow = scen_first + i
+    put(rg, cur, 1, sname, NORMAL, LFT, border=True)
+    for cname, col, tr in [("Meta", 2, META_TOTAL), ("Google", 3, GOOG_TOTAL),
+                           ("Snap", 4, SNAP_TOTAL), ("Pinterest", 5, PINS_TOTAL)]:
+        put(rg, cur, col, f"={get_column_letter(col)}{srow}/{tr}*10000", NORMAL, CTR, '#,##0"bp"', border=True)
+    put(rg, cur, 8, "Google bps vs Alphabet total; YouTube-only exposure", ITALIC, LFT, border=True)
+    cur += 1
+
+# ---- 6. Interpretation ----
+cur += 1
+band(rg, cur, 1, 8, "5.  Interpretation", fill=BLUE, font=H2_FONT_)
+cur += 1
+interp = [
+    "• Direct Australia impact is small for the giants (Meta low-single-digit bps; Google ~2–3bps of Alphabet) and",
+    "   ZERO for Pinterest (excluded). It is most material for Snap (~30–40bps of revenue), whose user base is teen-core.",
+    "• Even under broad global adoption (Australia + UK + EU + US states), the headwind is ~tens of bps for Meta/Google",
+    "   but can reach ~150bps+ for Snap — set against FY2025 revenue growth of Meta +22%, Google +15%, Snap +11%, Pins +16%.",
+    "• The larger risk is not the immediate revenue line but (a) regulatory CONTAGION (40+ countries now active) and",
+    "   (b) erosion of the youth USER FUNNEL: losing under-16s removes the top of the future-ARPU pipeline, a multi-year drag.",
+    "• Mitigants: bans target accounts, not viewing (logged-out YouTube continues); ad budgets/engagement partly redistribute",
+    "   to older users; messaging surfaces (WhatsApp/Messenger) and Pinterest are largely carved out.",
+]
+for n in interp:
+    put(rg, cur, 1, n, NORMAL, LFT)
+    rg.merge_cells(start_row=cur, start_column=1, end_row=cur, end_column=8)
+    cur += 1
+REG_SCEN_FIRST = scen_first  # for Summary reference (rows: A,B,C at scen_first..+2; TOTAL col F)
+
+# ======================================================================================
+# SUMMARY — append regulatory-headwind callout
+# ======================================================================================
+gr = cav + 1 + len(cavs) + 2
+band(s, gr, 1, 8, "Regulatory headwind — under-16 social-media bans (see 'Regulatory Headwind' tab)",
+     fill=BLUE, font=H1_FONT)
+gr += 1
+reg_tab = "'Regulatory Headwind'"
+reg_notes = [
+    ("Australia's under-16 ban (in force Dec 2025) covers Facebook, Instagram, Snapchat and YouTube; "
+     "Pinterest, Messenger and WhatsApp are EXCLUDED.", None),
+    ("Estimated at-risk revenue — Scenario A (Australia, in force today):",
+     f"={reg_tab}!F{scen_first}"),
+    ("Estimated at-risk revenue — Scenario B (+ UK & EU pipeline, ~2026–27):",
+     f"={reg_tab}!F{scen_first+1}"),
+    ("Estimated at-risk revenue — Scenario C (+ US states, broad adoption):",
+     f"={reg_tab}!F{scen_first+2}"),
+]
+for i, (txt, ref) in enumerate(reg_notes):
+    put(s, gr + i, 1, txt, NORMAL, LFT)
+    s.merge_cells(start_row=gr + i, start_column=1, end_row=gr + i, end_column=6)
+    if ref:
+        put(s, gr + i, 7, ref, BOLD, RGT, FMT_USD_M1, AMBER)
+        put(s, gr + i, 8, "$M / yr", ITALIC, LFT)
+gr += len(reg_notes)
+put(s, gr, 1, "Most exposed: Snap (teen-core). Least: Pinterest (excluded in AU, older audience). "
+              "FY2025 growth for context: Meta +22%, Google +15%, Snap +11%, Pinterest +16%.", ITALIC, LFT)
+s.merge_cells(start_row=gr, start_column=1, end_row=gr, end_column=8)
+print("Regulatory headwind sheet done.")
 
 # order tabs
 wb.move_sheet("Summary", -wb.sheetnames.index("Summary"))
