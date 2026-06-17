@@ -13,10 +13,16 @@ vendor/equipment-lease financing), with an off-balance-sheet SPV/JV memo line.
 | Sheet | Description |
 |-------|-------------|
 | Cover & Methodology | Scope, definitions, debt-bucket taxonomy, caveats |
-| Summary (by Company) | Equity / internal funding vs. total debt, % debt-funded, chart |
+| Summary (by Company) | Funding = operating cash flow (self-funded) + external equity + total debt; % debt-funded, chart |
 | Debt by Type | Main table — total debt split into mutually-exclusive instrument buckets |
+| Cash-Flow Bridge | Operating cash flow → free cash flow → external-funding gap (separates OCF & FCF from equity) |
 | Capex Projections | Annual AI-infrastructure capex 2025–2030 by company |
 | Key Deals & Sources | Notable disclosed transactions with citations |
+
+Funding sources are split three ways: **operating cash flow (self-funded)**, **external equity**
+(IPOs, strategic stakes, ATM, sovereign equity, mandatory convertible preferred), and **total debt**.
+The Cash-Flow Bridge sheet shows operating cash flow (CFO), the portion paid out as
+dividends/buybacks, the self-funded capex, and **free cash flow = CFO − AI capex**.
 
 ### Companies / segments covered
 - **Hyperscalers:** Microsoft, Amazon (AWS), Alphabet (Google), Meta, Oracle (OCI)
@@ -30,8 +36,11 @@ vendor/equipment-lease financing), with an off-balance-sheet SPV/JV memo line.
   EU/France (Mistral), India (IndiaAI Mission), and an "Other sovereign AI" aggregate.
 
 ### Headline figures (research estimates, US$bn)
-- Total (gross) financing ≈ **$6,084bn**; equity/internal ≈ **$3,870bn**, total debt ≈ **$2,214bn**
-- By segment (equity + debt): Hyperscalers **$4,708** · Neoclouds **$666** · Colocation **$460** ·
+- Total (gross) financing ≈ **$6,084bn**: operating cash flow (self-funded) ≈ **$3,372bn** +
+  external equity ≈ **$498bn** + total debt ≈ **$2,214bn**
+- Cumulative operating cash flow (CFO) ≈ **$5,069bn**; aggregate free cash flow (CFO − capex) ≈ **−$1,015bn**
+  (the structural gap that drives external equity + debt issuance)
+- By segment (total financing): Hyperscalers **$4,708** · Neoclouds **$666** · Colocation **$460** ·
   Sovereign **$250**
 - Debt mix: corporate bonds $863bn · private credit $426bn · bank/syndicated loans $332bn ·
   insurance-linked lending $204bn · securitization/ABS $203bn · vendor/lease $160bn · convertibles $26bn

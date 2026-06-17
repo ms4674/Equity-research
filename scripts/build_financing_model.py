@@ -233,6 +233,53 @@ COMPANIES = [
          "Vendor & equipment-lease financing": 1}, 4),
 ]
 
+# The 3rd field of each COMPANIES entry is TOTAL equity / internal funding
+# (operating cash flow self-funded + external equity). The two dicts below split
+# it and add a cumulative operating-cash-flow (CFO) estimate so we can derive
+# free cash flow and the external-funding gap. (US$bn, cumulative 2025-2030.)
+#   operating cash flow self-funded into AI capex = total equity - external equity
+EXTERNAL_EQUITY = {
+    # Hyperscalers self-fund from CFO; Oracle uses ATM + mandatory convertible preferred.
+    "Microsoft": 0, "Amazon (AWS)": 0, "Alphabet (Google)": 0, "Meta Platforms": 0,
+    "Oracle (OCI)": 30,
+    # Neoclouds: VC / IPO / strategic (NVIDIA) / SPV equity dominate.
+    "CoreWeave": 22, "SpaceX / xAI (Colossus)": 90, "Nebius": 16, "IREN": 7,
+    "Crusoe": 7, "Lambda": 7, "Fluidstack": 4, "Nscale": 5,
+    "Other neoclouds & AI-native DCs": 16,
+    # Colocation: sponsor / infra equity + REIT equity issuance.
+    "Equinix": 10, "Digital Realty": 8, "QTS (Blackstone)": 16, "Vantage Data Centers": 13,
+    "Aligned Data Centers (MGX/BlackRock)": 10, "CyrusOne (KKR/GIP)": 10,
+    "Switch (DigitalBridge)": 7, "Stack Infrastructure": 7,
+    "Other colo & powered-shell owners": 22,
+    # Sovereign: essentially all sovereign-wealth / state equity.
+    "HUMAIN (Saudi PIF)": 80, "MGX / Mubadala (UAE)": 30, "Stargate UAE / G42 / Khazna": 22,
+    "Qatar (QIA / Qai + Brookfield JV)": 14, "EU / France (Mistral, sovereign cloud)": 12,
+    "India (IndiaAI Mission)": 8, "Other sovereign AI (Japan, Korea, Singapore, etc.)": 25,
+}
+
+# Cumulative operating cash flow (CFO) generated 2025-2030 (US$bn, est.). For
+# hyperscalers CFO >> self-funded capex because much CFO goes to dividends/buybacks;
+# for others CFO is set = self-funded capex (they reinvest ~all internal cash).
+CFO_TOTAL = {
+    "Microsoft": 1300, "Amazon (AWS)": 1100, "Alphabet (Google)": 1350,
+    "Meta Platforms": 1000, "Oracle (OCI)": 210,
+    "CoreWeave": 3, "SpaceX / xAI (Colossus)": 50, "Nebius": 2, "IREN": 3,
+    "Crusoe": 1, "Lambda": 1, "Fluidstack": 0, "Nscale": 0,
+    "Other neoclouds & AI-native DCs": 4,
+    "Equinix": 15, "Digital Realty": 12, "QTS (Blackstone)": 2, "Vantage Data Centers": 2,
+    "Aligned Data Centers (MGX/BlackRock)": 2, "CyrusOne (KKR/GIP)": 2,
+    "Switch (DigitalBridge)": 1, "Stack Infrastructure": 1,
+    "Other colo & powered-shell owners": 8,
+    "HUMAIN (Saudi PIF)": 0, "MGX / Mubadala (UAE)": 0, "Stargate UAE / G42 / Khazna": 0,
+    "Qatar (QIA / Qai + Brookfield JV)": 0, "EU / France (Mistral, sovereign cloud)": 0,
+    "India (IndiaAI Mission)": 0, "Other sovereign AI (Japan, Korea, Singapore, etc.)": 0,
+}
+
+
+def ocf_self(name, total_equity):
+    """Operating cash flow self-funded into AI capex = total equity - external equity."""
+    return total_equity - EXTERNAL_EQUITY[name]
+
 # Annual AI-infrastructure capex projections (US$B); cumulative ~= total financing
 CAPEX = {
     "Microsoft":          [95, 140, 165, 185, 200, 215],
@@ -348,10 +395,15 @@ def build_cover(wb):
             "   and lease them to hyperscalers / neoclouds; heavy users of ABS/CMBS securitization & infra equity.",
             "• Sovereign clouds: state / sovereign-wealth-funded national AI infrastructure (HUMAIN-Saudi PIF,",
             "   MGX/Mubadala, Stargate UAE/G42/Khazna, Qatar QIA, EU/France, India, + 'Other'); mostly equity-funded.",
-            "• 'Equity / internal funding' = operating cash flow / free cash flow allocated to AI capex",
-            "   PLUS external equity (IPOs, strategic stakes e.g. NVIDIA, ATM programs, mandatory",
-            "   convertible PREFERRED treated as equity). Hyperscalers self-fund the majority via FCF.",
-            "• 'Debt financing' = external borrowing, split by instrument (see below).",
+            "• Funding sources now split three ways:  Capex = Operating cash flow (self-funded) +",
+            "   External equity + Total debt.",
+            "   - Operating cash flow (self-funded): internally-generated cash (CFO) reinvested into AI capex.",
+            "   - External equity: IPOs, secondaries, strategic stakes (e.g. NVIDIA), ATM programs, sovereign-",
+            "     wealth equity and mandatory convertible PREFERRED (treated as equity).",
+            "   - Total debt: external borrowing, split by instrument (see below).",
+            "• The 'Cash-Flow Bridge' sheet separates OPERATING CASH FLOW (CFO) and FREE CASH FLOW from the",
+            "   equity portion:  CFO - dividends/buybacks/other = self-funded capex; FREE CASH FLOW = CFO -",
+            "   AI capex (negative for most builders, which is what drives external equity + debt issuance).",
         ]),
         ("Debt instrument buckets (mutually exclusive — they sum to total debt)", AMBER, [
             "1. Corporate bonds (public IG/HY) — on-balance-sheet senior notes sold in public markets.",
@@ -423,15 +475,18 @@ def total_debt(debt: dict) -> int:
 def build_summary(wb):
     ws = wb.create_sheet("Summary (by Company)")
     ws.sheet_view.showGridLines = False
-    title_cell(ws, "A1", "Summary — Equity vs. Debt Financing, Cumulative 2025-2030 (US$bn)")
-    ws["A2"] = "Sorted within segment by total financing. % Debt = total debt / total financing."
+    title_cell(ws, "A1", "Summary — Funding Sources, Cumulative 2025-2030 (US$bn)")
+    ws["A2"] = ("Funding = Operating cash flow (self-funded) + External equity + Total debt. "
+                "Sorted within segment by total financing. % Debt = total debt / total financing.")
     ws["A2"].font = Font(italic=True, size=9, color=GREY)
 
-    cols = ["Company", "Segment", "Equity / internal\nfunding", "Total debt\nfinancing",
-            "Total financing", "% Debt-\nfunded", "Off-B/S SPV/JV\n(memo)"]
+    # columns: 1 Company 2 Segment 3 OCF 4 ExtEquity 5 Debt 6 Total 7 %Debt 8 SPV memo
+    cols = ["Company", "Segment", "Operating cash\nflow (self-funded)", "External\nequity",
+            "Total debt\nfinancing", "Total\nfinancing", "% Debt-\nfunded", "Off-B/S SPV/JV\n(memo)"]
+    NCOL = len(cols)
     hdr = 4
     header_row(ws, hdr, 1, cols)
-    ws.row_dimensions[hdr].height = 30
+    ws.row_dimensions[hdr].height = 32
 
     r = hdr + 1
     seg_rows = {s[0]: [] for s in SEGMENTS}
@@ -439,16 +494,25 @@ def build_summary(wb):
     def write_company(name, seg, equity, debt, spv, fill):
         nonlocal r
         td = total_debt(debt)
+        ocf = ocf_self(name, equity)
+        ext = EXTERNAL_EQUITY[name]
         tot = equity + td
         ws.cell(row=r, column=1, value=name).font = Font(bold=False, size=10)
-        ws.cell(row=r, column=2, value=seg)
-        for col, val in [(3, equity), (4, td), (5, tot), (7, spv)]:
-            cc = ws.cell(row=r, column=col, value=val)
-            num_fmt(cc)
-        pct = ws.cell(row=r, column=6, value=td / tot if tot else 0)
+        ws.cell(row=r, column=2, value=seg).font = Font(size=9, color=GREY)
+        num_fmt(ws.cell(row=r, column=3, value=ocf))
+        ws.cell(row=r, column=3).font = Font(color=TEAL)
+        num_fmt(ws.cell(row=r, column=4, value=ext))
+        ws.cell(row=r, column=4).font = Font(color="2E7D32")
+        num_fmt(ws.cell(row=r, column=5, value=td))
+        cc = ws.cell(row=r, column=6, value=f"=C{r}+D{r}+E{r}")
+        num_fmt(cc)
+        cc.font = Font(bold=True)
+        pct = ws.cell(row=r, column=7, value=f"=E{r}/F{r}")
         pct.number_format = "0%"
         pct.alignment = Alignment(horizontal="right")
-        for col in range(1, 8):
+        num_fmt(ws.cell(row=r, column=8, value=spv))
+        ws.cell(row=r, column=8).font = Font(italic=True, color=GREY)
+        for col in range(1, NCOL + 1):
             cell = ws.cell(row=r, column=col)
             cell.border = BORDER
             if cell.fill.patternType is None:
@@ -456,11 +520,11 @@ def build_summary(wb):
         seg_rows[seg].append(r)
         r += 1
 
-    # group + section headers
+    sum_cols = [3, 4, 5, 6, 8]  # columns to SUM in subtotal/grand-total
     for seg, fill in SEGMENTS:
         sect = ws.cell(row=r, column=1, value=seg.upper())
         sect.font = Font(bold=True, color=WHITE, size=10)
-        for col in range(1, 8):
+        for col in range(1, NCOL + 1):
             ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=NAVY)
         r += 1
         members = [c for c in COMPANIES if c[1] == seg]
@@ -471,16 +535,16 @@ def build_summary(wb):
         sub = ws.cell(row=r, column=1, value=f"{seg} subtotal")
         sub.font = Font(bold=True, size=10, color=NAVY)
         rows = seg_rows[seg]
-        for col, letter in [(3, "C"), (4, "D"), (5, "E"), (7, "G")]:
-            cc = ws.cell(row=r, column=col,
-                         value=f"=SUM({letter}{rows[0]}:{letter}{rows[-1]})")
+        for col in sum_cols:
+            letter = get_column_letter(col)
+            cc = ws.cell(row=r, column=col, value=f"=SUM({letter}{rows[0]}:{letter}{rows[-1]})")
             num_fmt(cc)
             cc.font = Font(bold=True, color=NAVY)
-        pc = ws.cell(row=r, column=6, value=f"=D{r}/E{r}")
+        pc = ws.cell(row=r, column=7, value=f"=E{r}/F{r}")
         pc.number_format = "0%"
         pc.font = Font(bold=True, color=NAVY)
         pc.alignment = Alignment(horizontal="right")
-        for col in range(1, 8):
+        for col in range(1, NCOL + 1):
             ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=LIGHT_GREY)
             ws.cell(row=r, column=col).border = BORDER
         r += 1
@@ -488,58 +552,51 @@ def build_summary(wb):
     # grand total
     gt = ws.cell(row=r, column=1, value="GRAND TOTAL — all companies")
     gt.font = Font(bold=True, size=11, color=WHITE)
-    first_company = hdr + 2
-    for col, letter in [(3, "C"), (4, "D"), (5, "E"), (7, "G")]:
-        # sum only company rows (exclude section/subtotal rows) via explicit cell list
-        comp_rows = [rr for lst in seg_rows.values() for rr in lst]
+    comp_rows = [rr for lst in seg_rows.values() for rr in lst]
+    for col in sum_cols:
+        letter = get_column_letter(col)
         ref = ",".join(f"{letter}{rr}" for rr in comp_rows)
         cc = ws.cell(row=r, column=col, value=f"=SUM({ref})")
         num_fmt(cc)
         cc.font = Font(bold=True, color=WHITE)
-    pc = ws.cell(row=r, column=6, value=f"=D{r}/E{r}")
+    pc = ws.cell(row=r, column=7, value=f"=E{r}/F{r}")
     pc.number_format = "0%"
     pc.font = Font(bold=True, color=WHITE)
     pc.alignment = Alignment(horizontal="right")
-    for col in range(1, 8):
+    for col in range(1, NCOL + 1):
         ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=BLUE)
         ws.cell(row=r, column=col).border = BORDER
     grand_row = r
 
-    set_widths(ws, {"A": 32, "B": 20, "C": 14, "D": 13, "E": 14, "F": 11, "G": 15})
+    set_widths(ws, {"A": 32, "B": 19, "C": 15, "D": 11, "E": 13, "F": 12, "G": 10, "H": 14})
     ws.freeze_panes = "A5"
 
-    # Chart: equity vs debt by company
+    # Chart: OCF / external equity / debt by company (stacked)
     chart = BarChart()
     chart.type = "col"
     chart.grouping = "stacked"
     chart.overlap = 100
-    chart.title = "Equity vs. Debt Financing by Company (2025-2030, $bn)"
+    chart.title = "Funding Mix by Company (2025-2030, $bn)"
     chart.height = 9
-    chart.width = 26
-    comp_rows = [rr for lst in seg_rows.values() for rr in lst]
-    # build contiguous data range: company rows are contiguous except section/subtotal rows.
-    # Simpler: reference the whole block and rely on user; instead place a helper table.
-    # We'll create a clean helper table to the right for the chart.
-    hx = 9  # column I
-    ws.cell(row=hdr, column=hx, value="Company").font = Font(bold=True, size=9, color=GREY)
-    ws.cell(row=hdr, column=hx + 1, value="Equity").font = Font(bold=True, size=9, color=GREY)
-    ws.cell(row=hdr, column=hx + 2, value="Debt").font = Font(bold=True, size=9, color=GREY)
+    chart.width = 28
+    hx = 10  # helper table column J
+    labels = ["Company", "Op. cash flow", "External equity", "Debt"]
+    for i, lab in enumerate(labels):
+        ws.cell(row=hdr, column=hx + i, value=lab).font = Font(bold=True, size=9, color=GREY)
     hr = hdr + 1
     for name, s, equity, debt, spv in COMPANIES:
         ws.cell(row=hr, column=hx, value=name)
-        ws.cell(row=hr, column=hx + 1, value=equity).number_format = "#,##0"
-        ws.cell(row=hr, column=hx + 2, value=total_debt(debt)).number_format = "#,##0"
+        ws.cell(row=hr, column=hx + 1, value=ocf_self(name, equity)).number_format = "#,##0"
+        ws.cell(row=hr, column=hx + 2, value=EXTERNAL_EQUITY[name]).number_format = "#,##0"
+        ws.cell(row=hr, column=hx + 3, value=total_debt(debt)).number_format = "#,##0"
         hr += 1
-    data = Reference(ws, min_col=hx + 1, max_col=hx + 2, min_row=hdr, max_row=hr - 1)
+    data = Reference(ws, min_col=hx + 1, max_col=hx + 3, min_row=hdr, max_row=hr - 1)
     cats = Reference(ws, min_col=hx, max_col=hx, min_row=hdr + 1, max_row=hr - 1)
     chart.add_data(data, titles_from_data=True)
     chart.set_categories(cats)
-    chart.x_axis.delete = False
-    chart.y_axis.delete = False
     chart.y_axis.title = "US$bn"
     ws.add_chart(chart, f"A{grand_row + 3}")
-    # de-emphasize helper table (data rows only; leave header labels as set)
-    for row in ws.iter_rows(min_row=hdr + 1, max_row=hr - 1, min_col=hx, max_col=hx + 2):
+    for row in ws.iter_rows(min_row=hdr + 1, max_row=hr - 1, min_col=hx, max_col=hx + 3):
         for cell in row:
             cell.font = Font(size=8, color="BBBBBB")
 
@@ -555,7 +612,8 @@ def build_debt_breakdown(wb):
                 "'Off-B/S SPV/JV' is a memo (overlaps the buckets; not added).")
     ws["A2"].font = Font(italic=True, size=9, color=GREY)
 
-    cols = ["Company", "Segment"] + DEBT_COLS + ["Total debt", "Off-B/S SPV/JV\n(memo)", "Equity /\ninternal"]
+    cols = ["Company", "Segment"] + DEBT_COLS + ["Total debt", "Off-B/S SPV/JV\n(memo)",
+                                                 "Op. cash flow\n(self-funded)", "External\nequity"]
     hdr = 4
     header_row(ws, hdr, 1, cols)
     ws.row_dimensions[hdr].height = 46
@@ -565,7 +623,9 @@ def build_debt_breakdown(wb):
     last_debt_col = first_debt_col + n_debt - 1
     total_col = last_debt_col + 1            # Total debt
     spv_col = total_col + 1                   # SPV memo
-    equity_col = spv_col + 1                  # Equity
+    ocf_col = spv_col + 1                     # Operating cash flow (self-funded)
+    ext_col = ocf_col + 1                     # External equity
+    equity_col = ext_col                      # last column (alias for layout loops)
 
     r = hdr + 1
     seg_rows = {s[0]: [] for s in SEGMENTS}
@@ -590,8 +650,10 @@ def build_debt_breakdown(wb):
             tcell.font = Font(bold=True)
             num_fmt(ws.cell(row=r, column=spv_col, value=spv))
             ws.cell(row=r, column=spv_col).font = Font(italic=True, color=GREY)
-            num_fmt(ws.cell(row=r, column=equity_col, value=equity))
-            ws.cell(row=r, column=equity_col).font = Font(color=TEAL)
+            num_fmt(ws.cell(row=r, column=ocf_col, value=ocf_self(name, equity)))
+            ws.cell(row=r, column=ocf_col).font = Font(color=TEAL)
+            num_fmt(ws.cell(row=r, column=ext_col, value=EXTERNAL_EQUITY[name]))
+            ws.cell(row=r, column=ext_col).font = Font(color="2E7D32")
             for col in range(1, equity_col + 1):
                 cell = ws.cell(row=r, column=col)
                 cell.border = BORDER
@@ -646,7 +708,8 @@ def build_debt_breakdown(wb):
         widths[get_column_letter(first_debt_col + i)] = 15
     widths[get_column_letter(total_col)] = 11
     widths[get_column_letter(spv_col)] = 13
-    widths[get_column_letter(equity_col)] = 11
+    widths[get_column_letter(ocf_col)] = 14
+    widths[get_column_letter(ext_col)] = 11
     set_widths(ws, widths)
     ws.freeze_panes = "C5"
 
@@ -666,7 +729,110 @@ def build_debt_breakdown(wb):
 
 
 # ---------------------------------------------------------------------------
-# Sheet 4: Capex Projections
+# Sheet 4: Cash-Flow Bridge (operating cash flow -> free cash flow -> funding gap)
+# ---------------------------------------------------------------------------
+def build_cashflow_bridge(wb):
+    ws = wb.create_sheet("Cash-Flow Bridge")
+    ws.sheet_view.showGridLines = False
+    title_cell(ws, "A1", "Cash-Flow Bridge — Operating Cash Flow to Funding Gap, 2025-2030 (US$bn)")
+    ws["A2"] = ("Operating cash flow (CFO) less shareholder returns/other = self-funded capex; the "
+                "remaining AI capex is met by external equity + debt. Free cash flow = CFO - AI capex.")
+    ws["A2"].font = Font(italic=True, size=9, color=GREY)
+
+    cols = ["Company", "Segment", "Operating cash\nflow (CFO)",
+            "Less: dividends,\nbuybacks & other", "= Op. cash flow\nself-funded",
+            "External\nequity", "Total debt", "= AI-infra capex\nfunded",
+            "Memo: Free cash\nflow (CFO - capex)"]
+    NCOL = len(cols)
+    hdr = 4
+    header_row(ws, hdr, 1, cols)
+    ws.row_dimensions[hdr].height = 34
+
+    r = hdr + 1
+    seg_rows = {s[0]: [] for s in SEGMENTS}
+    sum_cols = [3, 4, 5, 6, 7, 8, 9]
+
+    def style_row(row, fill, border=True):
+        for col in range(1, NCOL + 1):
+            cell = ws.cell(row=row, column=col)
+            if border:
+                cell.border = BORDER
+            if cell.fill.patternType is None:
+                cell.fill = PatternFill("solid", fgColor=fill)
+
+    for seg, fill in SEGMENTS:
+        ws.cell(row=r, column=1, value=seg.upper()).font = Font(bold=True, color=WHITE, size=10)
+        for col in range(1, NCOL + 1):
+            ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=NAVY)
+        r += 1
+        members = [c for c in COMPANIES if c[1] == seg]
+        members.sort(key=lambda c: c[2] + total_debt(c[3]), reverse=True)
+        for name, s, equity, debt, spv in members:
+            cfo = CFO_TOTAL[name]
+            ocf = ocf_self(name, equity)
+            ext = EXTERNAL_EQUITY[name]
+            td = total_debt(debt)
+            ws.cell(row=r, column=1, value=name).font = Font(size=10)
+            ws.cell(row=r, column=2, value=s).font = Font(size=9, color=GREY)
+            num_fmt(ws.cell(row=r, column=3, value=cfo))
+            num_fmt(ws.cell(row=r, column=4, value=f"=C{r}-E{r}"))
+            num_fmt(ws.cell(row=r, column=5, value=ocf))
+            ws.cell(row=r, column=5).font = Font(color=TEAL)
+            num_fmt(ws.cell(row=r, column=6, value=ext))
+            ws.cell(row=r, column=6).font = Font(color="2E7D32")
+            num_fmt(ws.cell(row=r, column=7, value=td))
+            cc = ws.cell(row=r, column=8, value=f"=E{r}+F{r}+G{r}")
+            num_fmt(cc); cc.font = Font(bold=True)
+            fcf = ws.cell(row=r, column=9, value=f"=C{r}-H{r}")
+            num_fmt(fcf)
+            fcf.font = Font(color="B00020")  # red-ish; negatives shown in parens via format
+            fcf.number_format = "#,##0;(#,##0)"
+            style_row(r, fill)
+            seg_rows[seg].append(r)
+            r += 1
+        # subtotal
+        ws.cell(row=r, column=1, value=f"{seg} subtotal").font = Font(bold=True, color=NAVY)
+        rows = seg_rows[seg]
+        for col in sum_cols:
+            letter = get_column_letter(col)
+            cc = ws.cell(row=r, column=col, value=f"=SUM({letter}{rows[0]}:{letter}{rows[-1]})")
+            num_fmt(cc); cc.font = Font(bold=True, color=NAVY)
+            if col == 9:
+                cc.number_format = "#,##0;(#,##0)"
+        style_row(r, LIGHT_GREY)
+        r += 1
+
+    # grand total
+    ws.cell(row=r, column=1, value="GRAND TOTAL").font = Font(bold=True, color=WHITE, size=11)
+    comp_rows = [rr for lst in seg_rows.values() for rr in lst]
+    for col in sum_cols:
+        letter = get_column_letter(col)
+        ref = ",".join(f"{letter}{rr}" for rr in comp_rows)
+        cc = ws.cell(row=r, column=col, value=f"=SUM({ref})")
+        num_fmt(cc); cc.font = Font(bold=True, color=WHITE)
+        if col == 9:
+            cc.number_format = "#,##0;(#,##0)"
+    for col in range(1, NCOL + 1):
+        ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=BLUE)
+        ws.cell(row=r, column=col).border = BORDER
+
+    set_widths(ws, {"A": 32, "B": 19, "C": 13, "D": 14, "E": 14, "F": 11,
+                    "G": 11, "H": 14, "I": 15})
+    ws.freeze_panes = "C5"
+
+    note = ("Note: hyperscaler CFO greatly exceeds self-funded capex because much CFO is paid out as "
+            "dividends/buybacks — which is why even FCF-positive names still issue debt. Neoclouds, "
+            "colo and sovereigns generate little/no operating cash flow yet, so capex is met almost "
+            "entirely by external equity + debt (deeply negative free cash flow during the buildout).")
+    nr = r + 2
+    ws.cell(row=nr, column=1, value=note).font = Font(size=9, italic=True, color=GREY)
+    ws.merge_cells(start_row=nr, start_column=1, end_row=nr, end_column=NCOL)
+    ws.cell(row=nr, column=1).alignment = Alignment(wrap_text=True, vertical="top")
+    ws.row_dimensions[nr].height = 42
+
+
+# ---------------------------------------------------------------------------
+# Sheet 5: Capex Projections
 # ---------------------------------------------------------------------------
 def build_capex(wb):
     ws = wb.create_sheet("Capex Projections")
@@ -809,6 +975,7 @@ def main():
     build_cover(wb)
     build_summary(wb)
     build_debt_breakdown(wb)
+    build_cashflow_bridge(wb)
     build_capex(wb)
     build_deals(wb)
 
