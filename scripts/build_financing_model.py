@@ -40,6 +40,8 @@ WHITE = "FFFFFF"
 TOTAL_FILL = "FCEFC7"
 HYPER_FILL = "E8EEF7"
 NEO_FILL = "E6F2EF"
+COLO_FILL = "F4E9DA"
+SOV_FILL = "EDE4F4"
 
 THIN = Side(style="thin", color="BFBFBF")
 MED = Side(style="medium", color="808080")
@@ -57,6 +59,14 @@ DEBT_COLS = [
     "Securitization / ABS / CMBS",
     "Convertibles / equity-linked",
     "Vendor & equipment-lease financing",
+]
+
+# Segment display order + row fill colors
+SEGMENTS = [
+    ("Hyperscaler", HYPER_FILL),
+    ("Neocloud / AI-native", NEO_FILL),
+    ("Colocation / data-center REIT", COLO_FILL),
+    ("Sovereign cloud", SOV_FILL),
 ]
 
 # ---------------------------------------------------------------------------
@@ -137,6 +147,90 @@ COMPANIES = [
          "Alternate private credit": 18, "Insurance-linked lending": 6,
          "Securitization / ABS / CMBS": 6, "Convertibles / equity-linked": 2,
          "Vendor & equipment-lease financing": 2}, 25),
+    # ---------------- COLOCATION / WHOLESALE DATA-CENTER REITs ----------------
+    # (own powered shells / campuses leased to hyperscalers & neoclouds; heavy
+    #  users of ABS/CMBS securitization, infra equity, green bonds & private credit)
+    ("Equinix", "Colocation / data-center REIT", 25,
+        {"Corporate bonds (public IG/HY)": 18, "Bank & syndicated loans": 6,
+         "Alternate private credit": 3, "Insurance-linked lending": 2,
+         "Securitization / ABS / CMBS": 14, "Convertibles / equity-linked": 1,
+         "Vendor & equipment-lease financing": 1}, 20),
+    ("Digital Realty", "Colocation / data-center REIT", 20,
+        {"Corporate bonds (public IG/HY)": 16, "Bank & syndicated loans": 5,
+         "Alternate private credit": 3, "Insurance-linked lending": 2,
+         "Securitization / ABS / CMBS": 12, "Convertibles / equity-linked": 1,
+         "Vendor & equipment-lease financing": 1}, 18),
+    ("QTS (Blackstone)", "Colocation / data-center REIT", 18,
+        {"Corporate bonds (public IG/HY)": 2, "Bank & syndicated loans": 8,
+         "Alternate private credit": 8, "Insurance-linked lending": 4,
+         "Securitization / ABS / CMBS": 19, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 1}, 35),
+    ("Vantage Data Centers", "Colocation / data-center REIT", 15,
+        {"Corporate bonds (public IG/HY)": 3, "Bank & syndicated loans": 8,
+         "Alternate private credit": 7, "Insurance-linked lending": 3,
+         "Securitization / ABS / CMBS": 13, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 1}, 28),
+    ("Aligned Data Centers (MGX/BlackRock)", "Colocation / data-center REIT", 12,
+        {"Corporate bonds (public IG/HY)": 1, "Bank & syndicated loans": 6,
+         "Alternate private credit": 7, "Insurance-linked lending": 3,
+         "Securitization / ABS / CMBS": 10, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 1}, 22),
+    ("CyrusOne (KKR/GIP)", "Colocation / data-center REIT", 12,
+        {"Corporate bonds (public IG/HY)": 2, "Bank & syndicated loans": 6,
+         "Alternate private credit": 6, "Insurance-linked lending": 3,
+         "Securitization / ABS / CMBS": 10, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 1}, 22),
+    ("Switch (DigitalBridge)", "Colocation / data-center REIT", 8,
+        {"Corporate bonds (public IG/HY)": 1, "Bank & syndicated loans": 4,
+         "Alternate private credit": 5, "Insurance-linked lending": 2,
+         "Securitization / ABS / CMBS": 9, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 1}, 16),
+    ("Stack Infrastructure", "Colocation / data-center REIT", 8,
+        {"Corporate bonds (public IG/HY)": 1, "Bank & syndicated loans": 4,
+         "Alternate private credit": 4, "Insurance-linked lending": 2,
+         "Securitization / ABS / CMBS": 6, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 0}, 12),
+    ("Other colo & powered-shell owners", "Colocation / data-center REIT", 30,
+        {"Corporate bonds (public IG/HY)": 6, "Bank & syndicated loans": 14,
+         "Alternate private credit": 12, "Insurance-linked lending": 6,
+         "Securitization / ABS / CMBS": 15, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 2}, 30),
+    # ---------------- SOVEREIGN CLOUDS (state / SWF-funded national AI infra) ----------------
+    ("HUMAIN (Saudi PIF)", "Sovereign cloud", 80,
+        {"Corporate bonds (public IG/HY)": 4, "Bank & syndicated loans": 8,
+         "Alternate private credit": 4, "Insurance-linked lending": 1,
+         "Securitization / ABS / CMBS": 0, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 3}, 10),
+    ("MGX / Mubadala (UAE)", "Sovereign cloud", 30,
+        {"Corporate bonds (public IG/HY)": 1, "Bank & syndicated loans": 3,
+         "Alternate private credit": 4, "Insurance-linked lending": 1,
+         "Securitization / ABS / CMBS": 0, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 1}, 8),
+    ("Stargate UAE / G42 / Khazna", "Sovereign cloud", 22,
+        {"Corporate bonds (public IG/HY)": 1, "Bank & syndicated loans": 3,
+         "Alternate private credit": 2, "Insurance-linked lending": 0,
+         "Securitization / ABS / CMBS": 0, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 2}, 6),
+    ("Qatar (QIA / Qai + Brookfield JV)", "Sovereign cloud", 14,
+        {"Corporate bonds (public IG/HY)": 1, "Bank & syndicated loans": 2,
+         "Alternate private credit": 2, "Insurance-linked lending": 1,
+         "Securitization / ABS / CMBS": 0, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 0}, 4),
+    ("EU / France (Mistral, sovereign cloud)", "Sovereign cloud", 12,
+        {"Corporate bonds (public IG/HY)": 1, "Bank & syndicated loans": 2,
+         "Alternate private credit": 1, "Insurance-linked lending": 0,
+         "Securitization / ABS / CMBS": 0, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 1}, 3),
+    ("India (IndiaAI Mission)", "Sovereign cloud", 8,
+        {"Corporate bonds (public IG/HY)": 0, "Bank & syndicated loans": 1,
+         "Alternate private credit": 0, "Insurance-linked lending": 0,
+         "Securitization / ABS / CMBS": 0, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 1}, 1),
+    ("Other sovereign AI (Japan, Korea, Singapore, etc.)", "Sovereign cloud", 25,
+        {"Corporate bonds (public IG/HY)": 2, "Bank & syndicated loans": 3,
+         "Alternate private credit": 2, "Insurance-linked lending": 0,
+         "Securitization / ABS / CMBS": 0, "Convertibles / equity-linked": 0,
+         "Vendor & equipment-lease financing": 1}, 4),
 ]
 
 # Annual AI-infrastructure capex projections (US$B); cumulative ~= total financing
@@ -147,6 +241,8 @@ CAPEX = {
     "Meta Platforms":     [72, 125, 150, 165, 180, 195],
     "Oracle (OCI)":       [25, 50, 65, 75, 85, 90],
     "Neoclouds / AI-native (aggregate)": [70, 110, 125, 115, 120, 126],
+    "Colocation / data-center REITs (aggregate)": [55, 70, 80, 85, 85, 85],
+    "Sovereign clouds (aggregate)": [20, 35, 45, 50, 50, 50],
 }
 CAPEX_YEARS = [2025, 2026, 2027, 2028, 2029, 2030]
 
@@ -175,6 +271,15 @@ DEALS = [
     ("Nscale", "$1.4bn term loan", "2026", "$1.4bn", "Bank loan", "theaiinsider"),
     ("Fluidstack", "Facility backed by ~$6.7bn Google-contracted revenue (Google lease backstop)", "2026", "~$6.7bn", "SPV / private credit", "theaiinsider"),
     ("Applied Digital", "$1.59bn high-yield bond (7%) for CoreWeave-leased campus (Polaris Forge 1)", "2026", "$1.59bn", "Securitization / HY bond", "TNW"),
+    ("Aligned Data Centers", "$12bn capital raise ($5bn+ new equity + $7bn debt commitments) led by Macquarie (early 2025); later acquired by MGX/BlackRock consortium (~$40bn)", "2025", "$12bn / $40bn", "Infra equity + debt", "SFA; NYU DRI"),
+    ("QTS (Blackstone)", "BX 2025-VOLT SASB CMBS $3.5bn (~10 QTS DCs); + Phoenix ABS (QTS Issuer 2025-1)", "2025", "$3.5bn+", "Securitization (CMBS/ABS)", "CREFC; SFA"),
+    ("Switch (DigitalBridge)", "$2.4bn SASB CMBS (SWCH 2025-DATA) + $1.1bn ABS — green bonds", "2024-25", "$3.5bn", "Securitization (CMBS/ABS)", "SFA; CREFC"),
+    ("Vantage Data Centers", "First public data-center ABS (2024); ongoing multi-billion securitization & infra-equity program", "2024-26", "multi-$bn", "Securitization / equity", "Dentons"),
+    ("Colocation sector", "US data-center ABS+CMBS issuance ~$26bn in 2025 (~10x 2020); ~$57bn since 2021; Morgan Stanley ~$130bn securitized net issuance 2026-28; ~$150bn permanent financing need 2026-27", "2025-28", "~$130bn", "Securitization (ABS/CMBS)", "Impax; CREFC; Morgan Stanley"),
+    ("HUMAIN (Saudi PIF)", "PIF national AI champion (announced 13 May 2025): ~$100bn across 11 data centers / 2.2 GW; ~600k NVIDIA GPUs; ALLAM Arabic LLM", "2025-30", "~$100bn", "Sovereign equity", "Presenc AI; NYU DRI"),
+    ("Stargate UAE / G42", "$30bn+ 5GW Abu Dhabi campus (Khazna/G42 w/ OpenAI, Oracle, NVIDIA, Cisco, SoftBank); Phase 1 200MW Q3 2026; Microsoft ~$1.5bn equity", "2025-30", "~$30bn+", "Sovereign equity + JV", "Khaleej Times; dcpulse"),
+    ("MGX / Mubadala (UAE)", "Anchored Stargate; co-led ~$40bn Aligned Data Centers acquisition w/ BlackRock; AIP (BlackRock-Microsoft) targets up to $100bn global AI infra", "2025-26", "~$40bn+", "Sovereign equity / infra", "NYU DRI"),
+    ("Qatar (QIA / Qai)", "~$20bn AI-infrastructure JV with Brookfield (late 2025); earlier positions in xAI & Databricks", "2025", "~$20bn", "Sovereign equity + JV", "NYU DRI"),
     ("Sector-wide", "HY/unrated AI-infra issuers raised ~$107bn funded+committed debt by ~May 2026 ($68.7bn neoclouds / $38.7bn AI-native DCs)", "to 2026", "~$107bn", "All debt", "Octus"),
     ("Sector-wide", "Insurance-linked platforms deployed ~$180bn into private credit in 2025 (~25% of global private credit AUM)", "2025", "~$180bn", "Insurance / private credit", "McKinsey; ABF Journal"),
     ("Sector-wide", "Goldman Sachs: ~$5.3tn AI + data-center capex 2025-2030; Morgan Stanley: ~$800bn private credit for AI DCs 2025-28", "2025-30", "$5.3tn capex", "Context", "Goldman; Morgan Stanley"),
@@ -238,6 +343,11 @@ def build_cover(wb):
             "   SpaceX/xAI, Nebius, IREN, Crusoe, Lambda, Fluidstack, Nscale, + an 'Other' aggregate).",
             "• SpaceX acquired xAI (effective 2 Feb 2026), so Colossus I & II are now SpaceX-owned; the two",
             "   are shown as one consolidated 'SpaceX / xAI' line to avoid double-counting the same clusters.",
+            "• Colocation / data-center REITs: wholesale & retail colo / powered-shell owners (Equinix,",
+            "   Digital Realty, QTS, Vantage, Aligned, CyrusOne, Switch, Stack, + 'Other') that build campuses",
+            "   and lease them to hyperscalers / neoclouds; heavy users of ABS/CMBS securitization & infra equity.",
+            "• Sovereign clouds: state / sovereign-wealth-funded national AI infrastructure (HUMAIN-Saudi PIF,",
+            "   MGX/Mubadala, Stargate UAE/G42/Khazna, Qatar QIA, EU/France, India, + 'Other'); mostly equity-funded.",
             "• 'Equity / internal funding' = operating cash flow / free cash flow allocated to AI capex",
             "   PLUS external equity (IPOs, strategic stakes e.g. NVIDIA, ATM programs, mandatory",
             "   convertible PREFERRED treated as equity). Hyperscalers self-fund the majority via FCF.",
@@ -265,6 +375,13 @@ def build_cover(wb):
             "• Aggregate cross-check: total financing ≈ $5.25tn, consistent with Goldman Sachs' ~$5.3tn",
             "  2025-2030 AI + data-center capex estimate; aggregate debt ≈ $1.8tn, consistent with Morgan",
             "  Stanley / BofA projections of $1-2tn of debt financing for the buildout.",
+            "• CROSS-SEGMENT OVERLAP: hyperscalers LEASE much colocation capacity (so colo financing partly",
+            "  funds the same capacity hyperscalers report as off-B/S leases), and sovereign-wealth funds",
+            "  (MGX, PIF, QIA) also INVEST in neoclouds/labs and colo (e.g. MGX/BlackRock bought Aligned; PIF",
+            "  put ~$3bn into xAI). The all-segment 'grand total' is therefore a GROSS figure of capital raised",
+            "  across distinct balance sheets and is not strictly additive; treat it as an upper-bound view.",
+            "  Hyperscaler + Neocloud financing (~$5.4tn) ties to Goldman's ~$5.3tn big-tech capex; adding",
+            "  third-party colo + sovereign brings the gross total toward broader ~$6-7tn AI-infra estimates.",
             "• Insurance-linked lending double counts with private credit/bonds at the capital-source level;",
             "  to avoid inflating totals, each dollar of debt is classified ONCE by its primary instrument and",
             "  the insurance bucket captures only directly insurer-originated / insurance-balance-sheet debt.",
@@ -317,7 +434,7 @@ def build_summary(wb):
     ws.row_dimensions[hdr].height = 30
 
     r = hdr + 1
-    seg_rows = {"Hyperscaler": [], "Neocloud / AI-native": []}
+    seg_rows = {s[0]: [] for s in SEGMENTS}
 
     def write_company(name, seg, equity, debt, spv, fill):
         nonlocal r
@@ -340,7 +457,7 @@ def build_summary(wb):
         r += 1
 
     # group + section headers
-    for seg, fill in [("Hyperscaler", HYPER_FILL), ("Neocloud / AI-native", NEO_FILL)]:
+    for seg, fill in SEGMENTS:
         sect = ws.cell(row=r, column=1, value=seg.upper())
         sect.font = Font(bold=True, color=WHITE, size=10)
         for col in range(1, 8):
@@ -451,9 +568,9 @@ def build_debt_breakdown(wb):
     equity_col = spv_col + 1                  # Equity
 
     r = hdr + 1
-    seg_rows = {"Hyperscaler": [], "Neocloud / AI-native": []}
+    seg_rows = {s[0]: [] for s in SEGMENTS}
 
-    for seg, fill in [("Hyperscaler", HYPER_FILL), ("Neocloud / AI-native", NEO_FILL)]:
+    for seg, fill in SEGMENTS:
         sect = ws.cell(row=r, column=1, value=seg.upper())
         sect.font = Font(bold=True, color=WHITE, size=10)
         for col in range(1, equity_col + 1):
@@ -566,6 +683,16 @@ def build_capex(wb):
 
     r = hdr + 1
     hyper = ["Microsoft", "Amazon (AWS)", "Alphabet (Google)", "Meta Platforms", "Oracle (OCI)"]
+
+    def capex_fill(name):
+        if name in hyper:
+            return HYPER_FILL
+        if name.startswith("Colocation"):
+            return COLO_FILL
+        if name.startswith("Sovereign"):
+            return SOV_FILL
+        return NEO_FILL
+
     data_rows = []
     for name, vals in CAPEX.items():
         ws.cell(row=r, column=1, value=name).font = Font(size=10)
@@ -576,7 +703,7 @@ def build_capex(wb):
                      value=f"=SUM({get_column_letter(2)}{r}:{get_column_letter(last)}{r})")
         num_fmt(cc)
         cc.font = Font(bold=True)
-        fill = HYPER_FILL if name in hyper else NEO_FILL
+        fill = capex_fill(name)
         for col in range(1, last + 2):
             ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=fill)
             ws.cell(row=r, column=col).border = BORDER
