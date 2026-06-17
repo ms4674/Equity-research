@@ -280,18 +280,53 @@ def ocf_self(name, total_equity):
     """Operating cash flow self-funded into AI capex = total equity - external equity."""
     return total_equity - EXTERNAL_EQUITY[name]
 
-# Annual AI-infrastructure capex projections (US$B); cumulative ~= total financing
-CAPEX = {
+CAPEX_YEARS = [2025, 2026, 2027, 2028, 2029, 2030]
+
+# Annual AI-infrastructure capex (US$B). Hyperscalers have explicit annual paths;
+# every other company's cumulative capex (= its total financing) is distributed
+# across the years using a segment ramp profile (see build_capex_rows()).
+HYPER_CAPEX = {
     "Microsoft":          [95, 140, 165, 185, 200, 215],
     "Amazon (AWS)":       [100, 200, 225, 240, 250, 255],
     "Alphabet (Google)":  [91, 180, 200, 215, 230, 245],
     "Meta Platforms":     [72, 125, 150, 165, 180, 195],
     "Oracle (OCI)":       [25, 50, 65, 75, 85, 90],
-    "Neoclouds / AI-native (aggregate)": [70, 110, 125, 115, 120, 126],
-    "Colocation / data-center REITs (aggregate)": [55, 70, 80, 85, 85, 85],
-    "Sovereign clouds (aggregate)": [20, 35, 45, 50, 50, 50],
 }
-CAPEX_YEARS = [2025, 2026, 2027, 2028, 2029, 2030]
+# Ramp weights (share of cumulative spend per year, 2025-2030) by segment.
+SEGMENT_RAMP = {
+    "Neocloud / AI-native":         [0.10, 0.16, 0.19, 0.18, 0.18, 0.19],
+    "Colocation / data-center REIT": [0.12, 0.15, 0.17, 0.18, 0.19, 0.19],
+    "Sovereign cloud":              [0.08, 0.14, 0.18, 0.20, 0.20, 0.20],
+}
+
+
+def _distribute(total, weights):
+    """Split an integer `total` across years per `weights`, summing exactly to total."""
+    raw = [total * w for w in weights]
+    floored = [int(x) for x in raw]
+    rem = total - sum(floored)
+    order = sorted(range(len(weights)), key=lambda i: raw[i] - floored[i], reverse=True)
+    for i in range(rem):
+        floored[order[i % len(order)]] += 1
+    return floored
+
+
+def build_capex_rows():
+    """Return ordered [(segment, [(name, [annual...]), ...]), ...] for every company."""
+    out = []
+    for seg, _fill in SEGMENTS:
+        rows = []
+        members = [c for c in COMPANIES if c[1] == seg]
+        members.sort(key=lambda c: c[2] + total_debt(c[3]), reverse=True)
+        for name, s, equity, debt, spv in members:
+            cumulative = equity + total_debt(debt)
+            if name in HYPER_CAPEX:
+                annual = HYPER_CAPEX[name]
+            else:
+                annual = _distribute(cumulative, SEGMENT_RAMP[seg])
+            rows.append((name, annual))
+        out.append((seg, rows))
+    return out
 
 # Notable transactions feeding the estimates
 DEALS = [
@@ -842,68 +877,87 @@ def build_capex(wb):
                 "networking, power). Cumulative ≈ total financing on the Summary sheet.")
     ws["A2"].font = Font(italic=True, size=9, color=GREY)
 
-    cols = ["Company"] + [str(y) for y in CAPEX_YEARS] + ["Cumulative\n2025-30"]
+    cols = ["Company", "Segment"] + [str(y) for y in CAPEX_YEARS] + ["Cumulative\n2025-30"]
+    NCOL = len(cols)
+    yr0 = 3                       # first year column (C)
+    yrN = yr0 + len(CAPEX_YEARS) - 1
+    cum_col = yrN + 1
     hdr = 4
     header_row(ws, hdr, 1, cols)
     ws.row_dimensions[hdr].height = 28
 
     r = hdr + 1
-    hyper = ["Microsoft", "Amazon (AWS)", "Alphabet (Google)", "Meta Platforms", "Oracle (OCI)"]
+    seg_rows = {s[0]: [] for s in SEGMENTS}
+    subtotal_rows = []
 
-    def capex_fill(name):
-        if name in hyper:
-            return HYPER_FILL
-        if name.startswith("Colocation"):
-            return COLO_FILL
-        if name.startswith("Sovereign"):
-            return SOV_FILL
-        return NEO_FILL
-
-    data_rows = []
-    for name, vals in CAPEX.items():
-        ws.cell(row=r, column=1, value=name).font = Font(size=10)
-        for i, v in enumerate(vals):
-            num_fmt(ws.cell(row=r, column=2 + i, value=v))
-        last = 2 + len(vals) - 1
-        cc = ws.cell(row=r, column=last + 1,
-                     value=f"=SUM({get_column_letter(2)}{r}:{get_column_letter(last)}{r})")
-        num_fmt(cc)
-        cc.font = Font(bold=True)
-        fill = capex_fill(name)
-        for col in range(1, last + 2):
-            ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=fill)
+    for seg, fill in SEGMENTS:
+        ws.cell(row=r, column=1, value=seg.upper()).font = Font(bold=True, color=WHITE, size=10)
+        for col in range(1, NCOL + 1):
+            ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=NAVY)
+        r += 1
+        for name, annual in dict(build_capex_rows())[seg]:
+            ws.cell(row=r, column=1, value=name).font = Font(size=10)
+            ws.cell(row=r, column=2, value=seg).font = Font(size=9, color=GREY)
+            for i, v in enumerate(annual):
+                num_fmt(ws.cell(row=r, column=yr0 + i, value=v))
+            cc = ws.cell(row=r, column=cum_col,
+                         value=f"=SUM({get_column_letter(yr0)}{r}:{get_column_letter(yrN)}{r})")
+            num_fmt(cc); cc.font = Font(bold=True)
+            for col in range(1, NCOL + 1):
+                ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=fill)
+                ws.cell(row=r, column=col).border = BORDER
+            seg_rows[seg].append(r)
+            r += 1
+        # segment subtotal
+        ws.cell(row=r, column=1, value=f"{seg} subtotal").font = Font(bold=True, color=NAVY)
+        rows = seg_rows[seg]
+        for col in range(yr0, cum_col + 1):
+            letter = get_column_letter(col)
+            cc = ws.cell(row=r, column=col, value=f"=SUM({letter}{rows[0]}:{letter}{rows[-1]})")
+            num_fmt(cc); cc.font = Font(bold=True, color=NAVY)
+        for col in range(1, NCOL + 1):
+            ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=LIGHT_GREY)
             ws.cell(row=r, column=col).border = BORDER
-        data_rows.append(r)
+        subtotal_rows.append((seg, r))
         r += 1
 
-    # total
-    ws.cell(row=r, column=1, value="TOTAL").font = Font(bold=True, color=WHITE)
-    last = 1 + len(CAPEX_YEARS) + 1
-    for col in range(2, last + 1):
+    # grand total
+    ws.cell(row=r, column=1, value="TOTAL — all companies").font = Font(bold=True, color=WHITE, size=11)
+    comp_rows = [rr for lst in seg_rows.values() for rr in lst]
+    for col in range(yr0, cum_col + 1):
         letter = get_column_letter(col)
-        cc = ws.cell(row=r, column=col, value=f"=SUM({letter}{data_rows[0]}:{letter}{data_rows[-1]})")
-        num_fmt(cc)
-        cc.font = Font(bold=True, color=WHITE)
-    for col in range(1, last + 1):
+        ref = ",".join(f"{letter}{rr}" for rr in comp_rows)
+        cc = ws.cell(row=r, column=col, value=f"=SUM({ref})")
+        num_fmt(cc); cc.font = Font(bold=True, color=WHITE)
+    for col in range(1, NCOL + 1):
         ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=BLUE)
         ws.cell(row=r, column=col).border = BORDER
     total_row = r
 
-    set_widths(ws, {"A": 34, "B": 9, "C": 9, "D": 9, "E": 9, "F": 9, "G": 9, "H": 13})
-    ws.freeze_panes = "B5"
+    widths = {"A": 34, "B": 19, get_column_letter(cum_col): 13}
+    for col in range(yr0, yrN + 1):
+        widths[get_column_letter(col)] = 9
+    set_widths(ws, widths)
+    ws.freeze_panes = "C5"
 
+    # Chart: annual capex by SEGMENT (subtotals) — cleaner than 30+ company series
     chart = BarChart()
     chart.type = "col"
     chart.grouping = "stacked"
     chart.overlap = 100
-    chart.title = "Annual AI-Infrastructure Capex by Company ($bn)"
+    chart.title = "Annual AI-Infrastructure Capex by Segment ($bn)"
     chart.height = 9
     chart.width = 24
-    # companies as series (title from col A), years as categories -> from_rows
-    data = Reference(ws, min_col=1, max_col=1 + len(CAPEX_YEARS),
-                     min_row=data_rows[0], max_row=data_rows[-1])
-    chart.add_data(data, titles_from_data=True, from_rows=True)
-    chart.set_categories(Reference(ws, min_col=2, max_col=1 + len(CAPEX_YEARS), min_row=hdr, max_row=hdr))
+    for seg, srow in subtotal_rows:
+        sdata = Reference(ws, min_col=yr0, max_col=yrN, min_row=srow, max_row=srow)
+        series_ref = Reference(ws, min_col=1, max_col=1, min_row=srow, max_row=srow)
+        chart.add_data(sdata, from_rows=True)
+    # set series names + categories
+    from openpyxl.chart.series import SeriesLabel
+    from openpyxl.chart.data_source import StrRef
+    for i, (seg, srow) in enumerate(subtotal_rows):
+        chart.series[i].tx = SeriesLabel(strRef=StrRef(f"'{ws.title}'!$A${srow}"))
+    chart.set_categories(Reference(ws, min_col=yr0, max_col=yrN, min_row=hdr, max_row=hdr))
     chart.y_axis.title = "US$bn"
     ws.add_chart(chart, f"A{total_row + 3}")
 

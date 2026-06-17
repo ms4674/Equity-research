@@ -16,7 +16,7 @@ vendor/equipment-lease financing), with an off-balance-sheet SPV/JV memo line.
 | Summary (by Company) | Funding = operating cash flow (self-funded) + external equity + total debt; % debt-funded, chart |
 | Debt by Type | Main table — total debt split into mutually-exclusive instrument buckets |
 | Cash-Flow Bridge | Operating cash flow → free cash flow → external-funding gap (separates OCF & FCF from equity) |
-| Capex Projections | Annual AI-infrastructure capex 2025–2030 by company |
+| Capex Projections | Annual AI-infrastructure capex 2025–2030 — every company listed separately, grouped by segment with subtotals |
 | Key Deals & Sources | Notable disclosed transactions with citations |
 
 Funding sources are split three ways: **operating cash flow (self-funded)**, **external equity**
