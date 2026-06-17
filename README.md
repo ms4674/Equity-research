@@ -20,14 +20,16 @@ vendor/equipment-lease financing), with an off-balance-sheet SPV/JV memo line.
 
 ### Companies covered
 - **Hyperscalers:** Microsoft, Amazon (AWS), Alphabet (Google), Meta, Oracle (OCI)
-- **Neoclouds / AI-native:** CoreWeave, xAI (Colossus), Nebius, IREN, Crusoe, Lambda,
+- **Neoclouds / AI-native:** CoreWeave, SpaceX/xAI (Colossus), Nebius, IREN, Crusoe, Lambda,
   Fluidstack, Nscale, and an "Other" aggregate.
+  - SpaceX acquired xAI (effective 2 Feb 2026), so Colossus I & II are now SpaceX-owned; the two
+    are shown as one consolidated **SpaceX / xAI** line to avoid double-counting the same clusters.
 
 ### Headline figures (research estimates, US$bn)
-- Total financing ≈ **$5,254bn** (≈ Goldman Sachs' ~$5.3tn 2025–2030 AI + data-center capex)
-- Equity / internal funding ≈ **$3,446bn**; total debt ≈ **$1,808bn** (≈ 34% debt-funded)
-- Debt mix: corporate bonds $800bn · private credit $346bn · bank/syndicated loans $242bn ·
-  insurance-linked lending $172bn · vendor/lease $130bn · securitization/ABS $94bn ·
+- Total financing ≈ **$5,374bn** (≈ Goldman Sachs' ~$5.3tn 2025–2030 AI + data-center capex)
+- Equity / internal funding ≈ **$3,531bn**; total debt ≈ **$1,843bn** (≈ 34% debt-funded)
+- Debt mix: corporate bonds $803bn · private credit $356bn · bank/syndicated loans $249bn ·
+  insurance-linked lending $174bn · vendor/lease $142bn · securitization/ABS $95bn ·
   convertibles $24bn
 
 > **Note:** Figures are research estimates that blend disclosed transactions (2023–early 2026)
