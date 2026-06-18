@@ -39,8 +39,7 @@ BS_PREV = {2026: "F", 2027: "G", 2028: "H", 2029: "I", 2030: "J"}
 # Sheet titles
 S_COVER = "Cover"
 S_ASSUM = "Assumptions"
-S_ISX = "IS SpaceX"
-S_ISC = "IS Cursor"
+S_SEG = "Segments"
 S_PPA = "Deal & PPA"
 S_SCH = "Schedules"
 S_IS = "Income Statement"
@@ -99,7 +98,7 @@ class ModelBuilder:
         first = self.wb.active
         first.title = S_COVER
         self.ws[S_COVER] = first
-        for t in [S_ASSUM, S_ISX, S_ISC, S_PPA, S_SCH, S_IS, S_BS, S_CF, S_CHK]:
+        for t in [S_ASSUM, S_SEG, S_PPA, S_SCH, S_IS, S_BS, S_CF, S_CHK]:
             self.ws[t] = self.wb.create_sheet(t)
 
     # -- reference helpers --------------------------------------------------
@@ -166,8 +165,7 @@ class ModelBuilder:
     # ----------------------------------------------------------------------
     def _run_all(self):
         self.build_assumptions()
-        self.build_is_spacex()
-        self.build_is_cursor()
+        self.build_segments()
         self.build_ppa()
         self.build_schedules()
         self.build_income_statement()
@@ -212,26 +210,33 @@ class ModelBuilder:
             self.put(s, key, label, indent=1, fmt=fmt, note=note)
             self.setval(s, key, "C", value, fmt=fmt, is_input=True)
 
-        # SpaceX -----------------------------------------------------------
-        self.put(s, "_sx", "SpaceX standalone (consolidated, incl. Starlink, launch, Starshield, xAI)", section=True)
-        self.put(s, "sx_rev_base", "  Revenue, FY2025 actual ($M)", indent=1)
-        self.setval(s, "sx_rev_base", "C", 18674, fmt=FMT_USD, is_input=True)
-        yrow("sx_rev_g", "  Revenue growth %", [None, 0.40, 0.35, 0.30, 0.25, 0.22])
-        yrow("sx_cogs", "  COGS % of revenue (ex-D&A)", [0.550, 0.535, 0.520, 0.505, 0.490, 0.480])
-        yrow("sx_rd", "  R&D % of revenue", [0.220, 0.190, 0.170, 0.150, 0.135, 0.125])
-        yrow("sx_sga", "  SG&A % of revenue", [0.147, 0.135, 0.125, 0.115, 0.105, 0.100])
+        # Operating segments ----------------------------------------------
+        # The combined entity is modelled as three reporting segments:
+        #   Space        = launch services (Falcon/Starship) + Starshield
+        #   Starlink     = satellite connectivity
+        #   xAI-Cursor   = AI segment (xAI/Grok + acquired Cursor) incl. synergies
+        self.put(s, "_seg", "Operating segments — revenue & profitability", section=True)
+        self.put(s, "_sp", "  Space (launch services + Starshield)", indent=0, bold=True)
+        self.put(s, "space_rev_base", "    Revenue, FY2025 ($M)", indent=1)
+        self.setval(s, "space_rev_base", "C", 6000, fmt=FMT_USD, is_input=True)
+        yrow("space_g", "    Revenue growth %", [None, 0.28, 0.30, 0.28, 0.24, 0.20])
+        yrow("space_ebitda", "    EBITDA margin %", [-0.08, 0.00, 0.08, 0.14, 0.19, 0.24])
 
-        # Cursor -----------------------------------------------------------
-        self.put(s, "_cu", "Cursor / Anysphere standalone (AI coding platform)", section=True)
-        yrow("cu_rev", "  Revenue ($M)", [450, 3000, 6500, 10000, 13500, 17000], fmt=FMT_USD)
-        yrow("cu_cogs", "  COGS % of revenue (inference / cloud, ex-D&A)", [0.55, 0.50, 0.46, 0.43, 0.40, 0.38])
-        yrow("cu_rd", "  R&D % of revenue", [0.40, 0.32, 0.28, 0.25, 0.23, 0.22])
-        yrow("cu_sm", "  Sales & marketing % of revenue", [0.35, 0.30, 0.26, 0.22, 0.20, 0.18])
-        yrow("cu_ga", "  G&A % of revenue", [0.15, 0.13, 0.11, 0.10, 0.09, 0.08])
+        self.put(s, "_sl", "  Starlink (satellite connectivity)", indent=0, bold=True)
+        self.put(s, "star_rev_base", "    Revenue, FY2025 ($M)", indent=1)
+        self.setval(s, "star_rev_base", "C", 11400, fmt=FMT_USD, is_input=True)
+        yrow("star_g", "    Revenue growth %", [None, 0.42, 0.36, 0.30, 0.25, 0.21])
+        yrow("star_ebitda", "    EBITDA margin %", [0.45, 0.48, 0.51, 0.53, 0.55, 0.57])
 
-        # Synergies / deal effects ----------------------------------------
-        self.put(s, "_syn", "Pro-forma adjustments (deal effects)", section=True)
-        yrow("syn_rev", "  Revenue synergies ($M)", [0, 50, 200, 350, 450, 550], fmt=FMT_USD)
+        self.put(s, "_ai", "  xAI-Cursor (AI: xAI/Grok + Cursor)", indent=0, bold=True)
+        self.put(s, "ai_rev_base", "    Organic revenue, FY2025 ($M) [xAI ~1,300 + Cursor ~450]", indent=1)
+        self.setval(s, "ai_rev_base", "C", 1750, fmt=FMT_USD, is_input=True)
+        yrow("ai_g", "    Organic revenue growth %", [None, 0.85, 0.70, 0.50, 0.38, 0.30])
+        yrow("ai_ebitda", "    EBITDA margin % (pre-synergies)", [-0.60, -0.25, -0.02, 0.08, 0.16, 0.22])
+
+        # Synergies / deal effects (attributed to the xAI-Cursor segment) ---
+        self.put(s, "_syn", "Pro-forma deal effects (within xAI-Cursor segment)", section=True)
+        yrow("syn_rev", "  Revenue synergies ($M) [Grok+Cursor cross-sell]", [0, 50, 200, 350, 450, 550], fmt=FMT_USD)
         yrow("syn_cost", "  Cost synergies ($M) [in-source inference on xAI/Starlink]", [0, 100, 350, 550, 700, 850], fmt=FMT_USD)
         yrow("integ", "  Integration & one-time deal costs ($M)", [0, 500, 0, 0, 0, 0], fmt=FMT_USD)
 
@@ -239,6 +244,10 @@ class ModelBuilder:
         self.put(s, "_cap", "Capital, financing & other", section=True)
         yrow("capex", "  Capex % of combined revenue", [0.260, 0.230, 0.210, 0.190, 0.175, 0.165])
         single("dep_rate", "  Depreciation % of beginning net PP&E", 0.090)
+        # depreciation allocation across segments (capital intensity), sums to 100%
+        single("dep_w_space", "  D&A allocation — Space %", 0.30)
+        single("dep_w_star", "  D&A allocation — Starlink %", 0.50)
+        single("dep_w_ai", "  D&A allocation — xAI-Cursor %", 0.20)
         yrow("sbc", "  Stock-based comp % of revenue", [0.060, 0.060, 0.055, 0.050, 0.045, 0.040])
         yrow("debt_draw", "  Net new long-term debt ($M)", [0, 2000, 2000, 1500, 1000, 1000], fmt=FMT_USD)
         yrow("spec_repay", "  Spectrum obligation repayment ($M)", [0, -2000, -2000, -2000, -2000, -2000], fmt=FMT_USD)
@@ -266,59 +275,109 @@ class ModelBuilder:
         single("cust_pct", "  Customer deposits & advances (% of revenue)", round(1900/18674, 4))
 
     # ====================================================================
-    # STANDALONE INCOME STATEMENTS
+    # SEGMENTS — revenue, EBITDA and EPS-contribution bridge
     # ====================================================================
-    def build_is_spacex(self):
-        s = S_ISX
-        self.put(s, "_t", "SPACEX STANDALONE — operating build (US$M, ex-D&A cash costs)")
+    # (key, label, growth_assum, margin_assum, dep_weight_assum)
+    SEGMENTS = [
+        ("space", "Space", "space_g", "space_ebitda", "dep_w_space"),
+        ("star", "Starlink", "star_g", "star_ebitda", "dep_w_star"),
+        ("ai", "xAI-Cursor", "ai_g", "ai_ebitda", "dep_w_ai"),
+    ]
+
+    def build_segments(self):
+        s = S_SEG
+        self.put(s, "_t", "OPERATING SEGMENTS — revenue, EBITDA & EPS contribution (US$M)")
         self.ws[s].cell(row=1, column=1).font = TITLE_FONT
+        self.put(s, "_n", "xAI-Cursor combines xAI/Grok with the acquired Cursor business and carries all deal synergies, integration costs and acquired-intangible amortization.")
+        self.ws[s].cell(row=self.r(s, "_n"), column=1).font = SUB_FONT
         self._year_header(s)
-        self.put(s, "rev", "Revenue", bold=True)
-        self.put(s, "cogs", "Cost of revenue (ex-D&A)", indent=1)
-        self.put(s, "gp", "Gross profit (cash)", bold=True)
-        self.put(s, "rd", "Research & development", indent=1)
-        self.put(s, "sga", "Selling, general & administrative", indent=1)
-        self.put(s, "ebitda", "EBITDA (cash, ex-synergies)", bold=True)
-        self.put(s, "ebitda_m", "  EBITDA margin %", indent=1, fmt=FMT_PCT)
+
+        # ---- Revenue by segment ----
+        self.put(s, "_rev", "Revenue by segment", section=True)
+        self.put(s, "space_rev", "  Space", indent=1)
+        self.put(s, "star_rev", "  Starlink", indent=1)
+        self.put(s, "ai_rev_org", "  xAI-Cursor — organic", indent=1)
+        self.put(s, "ai_rev_syn", "  xAI-Cursor — revenue synergies", indent=1)
+        self.put(s, "ai_rev", "  xAI-Cursor — total", indent=1)
+        self.put(s, "rev_tot", "  Total revenue", bold=True)
+
+        # ---- EBITDA by segment ----
+        self.put(s, "_ebd", "EBITDA by segment", section=True)
+        self.put(s, "space_ebitda", "  Space", indent=1)
+        self.put(s, "star_ebitda", "  Starlink", indent=1)
+        self.put(s, "ai_ebitda", "  xAI-Cursor (incl. cost synergies less integration)", indent=1)
+        self.put(s, "ebitda_tot", "  Total EBITDA", bold=True)
+        self.put(s, "ebitda_m", "  Total EBITDA margin %", indent=1, fmt=FMT_PCT)
+
+        # ---- per-segment bridge to net income & EPS ----
+        self.put(s, "_eps", "Segment contribution to net income & EPS", section=True)
+        self.put(s, "_method", "  D&A by capital-intensity weights; net interest & tax allocated by revenue share.", indent=1)
+        self.ws[s].cell(row=self.r(s, "_method"), column=1).font = SUB_FONT
+        for k, label, _g, _m, _w in self.SEGMENTS:
+            self.put(s, f"{k}_hd", f"  {label}", bold=True)
+            self.put(s, f"{k}_b_ebitda", "     EBITDA", indent=1)
+            self.put(s, f"{k}_b_dep", "     Less: depreciation", indent=1)
+            self.put(s, f"{k}_b_amort", "     Less: intangible amortization", indent=1)
+            self.put(s, f"{k}_b_ebit", "     EBIT", indent=1, bold=True)
+            self.put(s, f"{k}_b_nint", "     Net interest (alloc.)", indent=1)
+            self.put(s, f"{k}_b_pretax", "     Pre-tax income", indent=1)
+            self.put(s, f"{k}_b_tax", "     Income tax (alloc.)", indent=1)
+            self.put(s, f"{k}_b_ni", "     Net income contribution", indent=1, bold=True)
+            self.put(s, f"{k}_b_eps", "     EPS contribution ($)", indent=1, fmt=FMT_X)
+        self.put(s, "ni_tot", "  Total net income (check vs IS)", bold=True)
+        self.put(s, "eps_tot", "  Total diluted EPS ($)", bold=True, fmt=FMT_X)
 
         for y in YEARS:
             col = yl(y)
+            prevcol = yl(YEARS[YEARS.index(y) - 1]) if y != 2025 else None
+            # revenue
+            for k in ("space", "star"):
+                base = self.aref1(f"{k}_rev_base")
+                if y == 2025:
+                    self.setval(s, f"{k}_rev", col, f"={base}")
+                else:
+                    self.setval(s, f"{k}_rev", col, f"='{s}'!{prevcol}{self.r(s, f'{k}_rev')}*(1+{self.aref(f'{k}_g', y)})")
             if y == 2025:
-                self.setval(s, "rev", col, f"={self.aref1('sx_rev_base')}")
+                self.setval(s, "ai_rev_org", col, f"={self.aref1('ai_rev_base')}")
             else:
-                py = yl(YEARS[YEARS.index(y) - 1])
-                self.setval(s, "rev", col, f"='{s}'!{py}{self.r(s,'rev')}*(1+{self.aref('sx_rev_g', y)})")
-            self.setval(s, "cogs", col, f"={self.yref(s,'rev',y)}*{self.aref('sx_cogs', y)}")
-            self.setval(s, "gp", col, f"={self.yref(s,'rev',y)}-{self.yref(s,'cogs',y)}", bold=True)
-            self.setval(s, "rd", col, f"={self.yref(s,'rev',y)}*{self.aref('sx_rd', y)}")
-            self.setval(s, "sga", col, f"={self.yref(s,'rev',y)}*{self.aref('sx_sga', y)}")
-            self.setval(s, "ebitda", col, f"={self.yref(s,'gp',y)}-{self.yref(s,'rd',y)}-{self.yref(s,'sga',y)}", bold=True)
-            self.setval(s, "ebitda_m", col, f"={self.yref(s,'ebitda',y)}/{self.yref(s,'rev',y)}", fmt=FMT_PCT)
+                self.setval(s, "ai_rev_org", col, f"='{s}'!{prevcol}{self.r(s,'ai_rev_org')}*(1+{self.aref('ai_g', y)})")
+            self.setval(s, "ai_rev_syn", col, f"={self.aref('syn_rev', y)}")
+            self.setval(s, "ai_rev", col, f"={self.yref(s,'ai_rev_org',y)}+{self.yref(s,'ai_rev_syn',y)}")
+            self.setval(s, "rev_tot", col,
+                        f"={self.yref(s,'space_rev',y)}+{self.yref(s,'star_rev',y)}+{self.yref(s,'ai_rev',y)}", bold=True)
 
-    def build_is_cursor(self):
-        s = S_ISC
-        self.put(s, "_t", "CURSOR (ANYSPHERE) STANDALONE — operating build (US$M, ex-D&A cash costs)")
-        self.ws[s].cell(row=1, column=1).font = TITLE_FONT
-        self._year_header(s)
-        self.put(s, "rev", "Revenue", bold=True)
-        self.put(s, "cogs", "Cost of revenue (inference/cloud, ex-D&A)", indent=1)
-        self.put(s, "gp", "Gross profit (cash)", bold=True)
-        self.put(s, "rd", "Research & development", indent=1)
-        self.put(s, "sm", "Sales & marketing", indent=1)
-        self.put(s, "ga", "General & administrative", indent=1)
-        self.put(s, "ebitda", "EBITDA (cash)", bold=True)
-        self.put(s, "ebitda_m", "  EBITDA margin %", indent=1, fmt=FMT_PCT)
+            # EBITDA
+            self.setval(s, "space_ebitda", col, f"={self.yref(s,'space_rev',y)}*{self.aref('space_ebitda', y)}")
+            self.setval(s, "star_ebitda", col, f"={self.yref(s,'star_rev',y)}*{self.aref('star_ebitda', y)}")
+            self.setval(s, "ai_ebitda", col,
+                        f"={self.yref(s,'ai_rev',y)}*{self.aref('ai_ebitda', y)}+{self.aref('syn_cost', y)}-{self.aref('integ', y)}")
+            self.setval(s, "ebitda_tot", col,
+                        f"={self.yref(s,'space_ebitda',y)}+{self.yref(s,'star_ebitda',y)}+{self.yref(s,'ai_ebitda',y)}", bold=True)
+            self.setval(s, "ebitda_m", col, f"={self.yref(s,'ebitda_tot',y)}/{self.yref(s,'rev_tot',y)}", fmt=FMT_PCT)
 
-        for y in YEARS:
-            col = yl(y)
-            self.setval(s, "rev", col, f"={self.aref('cu_rev', y)}")
-            self.setval(s, "cogs", col, f"={self.yref(s,'rev',y)}*{self.aref('cu_cogs', y)}")
-            self.setval(s, "gp", col, f"={self.yref(s,'rev',y)}-{self.yref(s,'cogs',y)}", bold=True)
-            self.setval(s, "rd", col, f"={self.yref(s,'rev',y)}*{self.aref('cu_rd', y)}")
-            self.setval(s, "sm", col, f"={self.yref(s,'rev',y)}*{self.aref('cu_sm', y)}")
-            self.setval(s, "ga", col, f"={self.yref(s,'rev',y)}*{self.aref('cu_ga', y)}")
-            self.setval(s, "ebitda", col, f"={self.yref(s,'gp',y)}-{self.yref(s,'rd',y)}-{self.yref(s,'sm',y)}-{self.yref(s,'ga',y)}", bold=True)
-            self.setval(s, "ebitda_m", col, f"={self.yref(s,'ebitda',y)}/{self.yref(s,'rev',y)}", fmt=FMT_PCT)
+            # bridge to net income & EPS (per segment)
+            net_int = f"({self.yref(S_IS,'int_exp',y)}+{self.yref(S_IS,'int_inc',y)})"
+            tot_tax = f"({self.yref(S_IS,'tax_cur',y)}+{self.yref(S_IS,'tax_def',y)})"
+            for k, label, _g, _m, w in self.SEGMENTS:
+                rev_share = f"({self.yref(s, ('ai_rev' if k=='ai' else f'{k}_rev'), y)}/{self.yref(s,'rev_tot',y)})"
+                self.setval(s, f"{k}_b_ebitda", col, f"={self.yref(s, ('ai_ebitda' if k=='ai' else f'{k}_ebitda'), y)}")
+                self.setval(s, f"{k}_b_dep", col, f"=-{self.yref(S_IS,'dep',y)}*{self.aref1(w)}")
+                # acquired-intangible amortization sits entirely in xAI-Cursor
+                if k == "ai":
+                    self.setval(s, f"{k}_b_amort", col, f"=-{self.yref(S_IS,'amort',y)}")
+                else:
+                    self.setval(s, f"{k}_b_amort", col, 0, fmt=FMT_USD)
+                self.setval(s, f"{k}_b_ebit", col,
+                            f"={self.ref(s, f'{k}_b_ebitda', col)}+{self.ref(s, f'{k}_b_dep', col)}+{self.ref(s, f'{k}_b_amort', col)}", bold=True)
+                self.setval(s, f"{k}_b_nint", col, f"={net_int}*{rev_share}")
+                self.setval(s, f"{k}_b_pretax", col, f"={self.ref(s, f'{k}_b_ebit', col)}+{self.ref(s, f'{k}_b_nint', col)}")
+                self.setval(s, f"{k}_b_tax", col, f"={tot_tax}*{rev_share}")
+                self.setval(s, f"{k}_b_ni", col, f"={self.ref(s, f'{k}_b_pretax', col)}+{self.ref(s, f'{k}_b_tax', col)}", bold=True)
+                self.setval(s, f"{k}_b_eps", col, f"={self.ref(s, f'{k}_b_ni', col)}/{self.yref(S_IS,'shares',y)}", fmt=FMT_X)
+            self.setval(s, "ni_tot", col,
+                        "=" + "+".join(self.ref(s, f"{k}_b_ni", col) for k, *_ in self.SEGMENTS), bold=True)
+            self.setval(s, "eps_tot", col,
+                        "=" + "+".join(self.ref(s, f"{k}_b_eps", col) for k, *_ in self.SEGMENTS), bold=True, fmt=FMT_X)
 
     # ====================================================================
     # DEAL & PURCHASE PRICE ALLOCATION
@@ -512,18 +571,18 @@ class ModelBuilder:
         self.ws[s].cell(row=self.r(s, "_n"), column=1).font = SUB_FONT
         self._year_header(s)
 
-        self.put(s, "rev_sx", "Revenue — SpaceX", indent=1)
-        self.put(s, "rev_cu", "Revenue — Cursor", indent=1)
-        self.put(s, "rev_syn", "Revenue synergies", indent=1)
+        self.put(s, "_revh", "Revenue by segment", section=True)
+        self.put(s, "rev_space", "  Space", indent=1)
+        self.put(s, "rev_star", "  Starlink", indent=1)
+        self.put(s, "rev_ai", "  xAI-Cursor", indent=1)
         self.put(s, "rev_tot", "Total revenue", bold=True)
-        self.put(s, "cogs", "Cost of revenue (net of cost synergies)", indent=1)
-        self.put(s, "gp", "Gross profit", bold=True)
-        self.put(s, "gp_m", "  Gross margin %", indent=1, fmt=FMT_PCT)
-        self.put(s, "rd", "Research & development", indent=1)
-        self.put(s, "sga", "Selling, general & administrative", indent=1)
-        self.put(s, "integ", "Integration & one-time deal costs", indent=1)
-        self.put(s, "ebitda", "EBITDA", bold=True)
+        self.put(s, "_ebdh", "EBITDA by segment", section=True)
+        self.put(s, "ebitda_space", "  Space", indent=1)
+        self.put(s, "ebitda_star", "  Starlink", indent=1)
+        self.put(s, "ebitda_ai", "  xAI-Cursor (incl. synergies, integration)", indent=1)
+        self.put(s, "ebitda", "Total EBITDA", bold=True)
         self.put(s, "ebitda_m", "  EBITDA margin %", indent=1, fmt=FMT_PCT)
+        self.put(s, "_pnl", "Consolidated P&L", section=True)
         self.put(s, "dep", "Depreciation", indent=1)
         self.put(s, "amort", "Amortization of acquired intangibles", indent=1)
         self.put(s, "ebit", "EBIT (operating income)", bold=True)
@@ -536,24 +595,23 @@ class ModelBuilder:
         self.put(s, "ni", "Net income (loss)", bold=True)
         self.put(s, "ni_m", "  Net margin %", indent=1, fmt=FMT_PCT)
         self.put(s, "shares", "Diluted shares outstanding (M)", indent=1, fmt=FMT_USD1)
-        self.put(s, "eps", "Diluted EPS ($)", indent=1, fmt=FMT_X)
+        self.put(s, "eps", "Diluted EPS ($)", bold=True, fmt=FMT_X)
+        self.put(s, "_epsh", "EPS contribution by segment ($)", section=True)
+        self.put(s, "eps_space", "  Space", indent=1)
+        self.put(s, "eps_star", "  Starlink", indent=1)
+        self.put(s, "eps_ai", "  xAI-Cursor", indent=1)
+        self.put(s, "eps_chk", "  Total (= diluted EPS)", bold=True, fmt=FMT_X)
 
         for y in YEARS:
             col = yl(y)
-            self.setval(s, "rev_sx", col, f"={self.yref(S_ISX,'rev',y)}")
-            self.setval(s, "rev_cu", col, f"={self.yref(S_ISC,'rev',y)}")
-            self.setval(s, "rev_syn", col, f"={self.aref('syn_rev', y)}")
-            self.setval(s, "rev_tot", col, f"={self.yref(s,'rev_sx',y)}+{self.yref(s,'rev_cu',y)}+{self.yref(s,'rev_syn',y)}", bold=True)
-            # COGS: SpaceX + Cursor − cost synergies
-            self.setval(s, "cogs", col,
-                        f"={self.yref(S_ISX,'cogs',y)}+{self.yref(S_ISC,'cogs',y)}-{self.aref('syn_cost', y)}")
-            self.setval(s, "gp", col, f"={self.yref(s,'rev_tot',y)}-{self.yref(s,'cogs',y)}", bold=True)
-            self.setval(s, "gp_m", col, f"={self.yref(s,'gp',y)}/{self.yref(s,'rev_tot',y)}", fmt=FMT_PCT)
-            self.setval(s, "rd", col, f"={self.yref(S_ISX,'rd',y)}+{self.yref(S_ISC,'rd',y)}")
-            self.setval(s, "sga", col, f"={self.yref(S_ISX,'sga',y)}+{self.yref(S_ISC,'sm',y)}+{self.yref(S_ISC,'ga',y)}")
-            self.setval(s, "integ", col, f"={self.aref('integ', y)}")
-            self.setval(s, "ebitda", col,
-                        f"={self.yref(s,'gp',y)}-{self.yref(s,'rd',y)}-{self.yref(s,'sga',y)}-{self.yref(s,'integ',y)}", bold=True)
+            self.setval(s, "rev_space", col, f"={self.yref(S_SEG,'space_rev',y)}")
+            self.setval(s, "rev_star", col, f"={self.yref(S_SEG,'star_rev',y)}")
+            self.setval(s, "rev_ai", col, f"={self.yref(S_SEG,'ai_rev',y)}")
+            self.setval(s, "rev_tot", col, f"={self.yref(S_SEG,'rev_tot',y)}", bold=True)
+            self.setval(s, "ebitda_space", col, f"={self.yref(S_SEG,'space_ebitda',y)}")
+            self.setval(s, "ebitda_star", col, f"={self.yref(S_SEG,'star_ebitda',y)}")
+            self.setval(s, "ebitda_ai", col, f"={self.yref(S_SEG,'ai_ebitda',y)}")
+            self.setval(s, "ebitda", col, f"={self.yref(S_SEG,'ebitda_tot',y)}", bold=True)
             self.setval(s, "ebitda_m", col, f"={self.yref(s,'ebitda',y)}/{self.yref(s,'rev_tot',y)}", fmt=FMT_PCT)
             self.setval(s, "dep", col, f"={self.yref(S_SCH,'dep',y)}")
             self.setval(s, "amort", col, f"={self.yref(S_SCH,'int_am',y)}")
@@ -579,7 +637,12 @@ class ModelBuilder:
                 self.setval(s, "shares", col, f"={self.aref1('shares_pre')}+{self.ref(S_PPA,'newsh','C')}", fmt=FMT_USD1)
             else:
                 self.setval(s, "shares", col, f"={self.aref1('shares_pre')}+{self.ref(S_PPA,'newsh','C')}", fmt=FMT_USD1)
-            self.setval(s, "eps", col, f"={self.yref(s,'ni',y)}/{self.yref(s,'shares',y)}", fmt=FMT_X)
+            self.setval(s, "eps", col, f"={self.yref(s,'ni',y)}/{self.yref(s,'shares',y)}", fmt=FMT_X, bold=True)
+            # EPS contribution by segment (from Segments tab)
+            self.setval(s, "eps_space", col, f"={self.yref(S_SEG,'space_b_eps',y)}", fmt=FMT_X)
+            self.setval(s, "eps_star", col, f"={self.yref(S_SEG,'star_b_eps',y)}", fmt=FMT_X)
+            self.setval(s, "eps_ai", col, f"={self.yref(S_SEG,'ai_b_eps',y)}", fmt=FMT_X)
+            self.setval(s, "eps_chk", col, f"={self.yref(S_SEG,'eps_tot',y)}", fmt=FMT_X, bold=True)
 
     # ====================================================================
     # BALANCE SHEET (with PPA bridge)
@@ -806,6 +869,8 @@ class ModelBuilder:
         self.put(s, "bs", "Balance sheet balances (A − L&E)", bold=True)
         self.put(s, "cf", "Cash flow ties to balance sheet cash", bold=True)
         self.put(s, "ppa", "PPA bridge balances (Open: A − L&E)", bold=True)
+        self.put(s, "segni", "Segment net income sums to consolidated NI", bold=True)
+        self.put(s, "segeps", "Segment EPS contributions sum to diluted EPS", bold=True, fmt=FMT_X)
         for y in YEARS:
             col = yl(y)
             if y == 2025:
@@ -814,6 +879,8 @@ class ModelBuilder:
             else:
                 self.setval(s, "bs", col, f"={self.ref(S_BS,'chk',BS_COL[y])}", fmt=FMT_USD1)
                 self.setval(s, "cf", col, f"={self.yref(S_CF,'cash_end',y)}-{self.ref(S_BS,'cash',BS_COL[y])}", fmt=FMT_USD1)
+            self.setval(s, "segni", col, f"={self.yref(S_SEG,'ni_tot',y)}-{self.yref(S_IS,'ni',y)}", fmt=FMT_USD1)
+            self.setval(s, "segeps", col, f"={self.yref(S_SEG,'eps_tot',y)}-{self.yref(S_IS,'eps',y)}", fmt='0.0000')
         self.setval(s, "ppa", "C", f"={self.ref(S_BS,'chk','F')}", fmt=FMT_USD1)
 
     # ====================================================================
@@ -823,22 +890,23 @@ class ModelBuilder:
         s = S_COVER
         ws = self.ws[s]
         ws.cell(row=2, column=2, value="SpaceX  ×  Cursor").font = Font(bold=True, size=24, color=NAVY)
-        ws.cell(row=3, column=2, value="Pro-Forma Three-Statement Model").font = Font(bold=True, size=16, color=BLUE)
+        ws.cell(row=3, column=2, value="Pro-Forma Three-Statement Model — Segmented").font = Font(bold=True, size=16, color=BLUE)
         lines = [
             "",
             "Transaction: SpaceX acquires Cursor (Anysphere, Inc.) — announced 16-Jun-2026",
             "Consideration: ~US$60bn, 100% SpaceX Class A stock; expected close Q3-2026",
             "Strategic rationale: AI / developer-tools capability following the Feb-2026 xAI combination",
+            "Segments modelled: Space (launch + Starshield), Starlink, and xAI-Cursor (xAI/Grok + Cursor)",
             "",
             "Contents:",
             "   • Assumptions — all input drivers (blue cells are editable inputs)",
-            "   • IS SpaceX / IS Cursor — standalone operating builds",
+            "   • Segments — Space, Starlink & xAI-Cursor: revenue, EBITDA & EPS contribution",
             "   • Deal & PPA — purchase price allocation, goodwill, intangibles",
             "   • Schedules — PP&E, intangibles/DTL, debt & spectrum, tax/NOL",
-            "   • Income Statement — pro-forma combined P&L",
+            "   • Income Statement — segment-driven P&L with EPS contribution by segment",
             "   • Balance Sheet — purchase-accounting bridge + projections",
             "   • Cash Flow — integrated cash flow statement",
-            "   • Checks — balance-sheet and cash-flow integrity checks",
+            "   • Checks — balance, cash-flow and segment EPS integrity checks",
             "",
             "All figures in US$ millions unless stated. The workbook is fully formula-linked:",
             "change any blue input on the Assumptions tab and all three statements recalculate.",
