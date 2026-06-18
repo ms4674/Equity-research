@@ -37,46 +37,50 @@ acquisition-related cash flows** in the Cash Flow Statement.
 
 ---
 
-## 2. Standalone forecasts
+## 2. Segment forecasts
 
-### 2.1 SpaceX (consolidated: Starlink, launch, Starshield, xAI)
+The combined entity is modelled as **three operating segments** on the `Segments`
+tab. Each is driven by a revenue base, a growth path, and an EBITDA margin.
 
-Anchored to reported FY2025 figures:
+### 2.1 Space — launch services (Falcon/Starship) + Starshield
 
-* **FY2025 revenue ≈ $18,674M** (up ~33–43% YoY), with **Starlink ≈ $11.4bn** the
-  primary engine, plus launch services (~$4.2bn), Starshield (~$1.8bn) and xAI/other.
-* FY2025 was **GAAP loss-making** (operating loss ≈ $(2.6)bn; net loss ≈ $(4.9)bn),
-  driven by Starship R&D (~$3bn) and the absorption of xAI losses.
-
-Drivers (Assumptions tab):
+* FY2025 base **$6,000M** (≈ launch ~$4.2bn + Starshield ~$1.8bn).
+* Heavy Starship R&D keeps early margins negative; reusability and cadence drive
+  margin expansion over time.
 
 | Driver | 2025A | 2026E | 2027E | 2028E | 2029E | 2030E |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Revenue growth | — | 40% | 35% | 30% | 25% | 22% |
-| COGS % (ex-D&A) | 55.0% | 53.5% | 52.0% | 50.5% | 49.0% | 48.0% |
-| R&D % | 22.0% | 19.0% | 17.0% | 15.0% | 13.5% | 12.5% |
-| SG&A % | 14.7% | 13.5% | 12.5% | 11.5% | 10.5% | 10.0% |
+| Revenue growth | — | 28% | 30% | 28% | 24% | 20% |
+| EBITDA margin | (8)% | 0% | 8% | 14% | 19% | 24% |
 
-Cost ratios are expressed **excluding depreciation & amortization**; D&A is added
-back as a separate line so the model can show a clean EBITDA-to-EBIT bridge. The
-2025 ratios are calibrated to reproduce roughly the reported operating loss.
+### 2.2 Starlink — satellite connectivity
 
-### 2.2 Cursor (Anysphere)
-
-The fastest application-layer SaaS ramp on record: ARR of ~$100M (Jan-2025),
-~$500M (Jun-2025), ~$1bn (Nov-2025) and >$2bn annualised (early 2026); the $29.3bn
-Series D priced in November 2025. Full-year **recognised** revenue lags exit ARR, so:
+* FY2025 base **$11,400M** — already the group's profit engine (reported segment
+  operating margin ~39%; estimated EBITDA margin ~50%+).
+* Subscriber growth + Direct-to-Cell drive continued scale economics.
 
 | Driver | 2025A | 2026E | 2027E | 2028E | 2029E | 2030E |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Revenue ($M) | 450 | 3,000 | 6,500 | 10,000 | 13,500 | 17,000 |
-| COGS % (inference/cloud) | 55% | 50% | 46% | 43% | 40% | 38% |
-| R&D % | 40% | 32% | 28% | 25% | 23% | 22% |
-| Sales & marketing % | 35% | 30% | 26% | 22% | 20% | 18% |
-| G&A % | 15% | 13% | 11% | 10% | 9% | 8% |
+| Revenue growth | — | 42% | 36% | 30% | 25% | 21% |
+| EBITDA margin | 45% | 48% | 51% | 53% | 55% | 57% |
 
-Cursor's high COGS reflects model-inference / cloud costs; margins improve as it
-scales and (per the synergy assumption) in-sources inference onto SpaceX/xAI compute.
+### 2.3 xAI-Cursor — AI segment (xAI/Grok + acquired Cursor)
+
+* FY2025 base **$1,750M** (xAI/other ~$1,300M + Cursor ~$450M recognised revenue).
+* Reflects the fastest application-layer SaaS ramp on record (Cursor ARR $100M →
+  >$2bn between Jan-2025 and early-2026) plus xAI/Grok. Margins are deeply negative
+  early (investment + integration) and improve as inference is in-sourced.
+* **All deal effects are carried in this segment:** revenue synergies are added to
+  segment revenue; cost synergies and one-time integration costs adjust segment
+  EBITDA; the acquired-intangible amortization is charged here in the EPS bridge.
+
+| Driver | 2025A | 2026E | 2027E | 2028E | 2029E | 2030E |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Organic revenue growth | — | 85% | 70% | 50% | 38% | 30% |
+| EBITDA margin (pre-synergies) | (60)% | (25)% | (2)% | 8% | 16% | 22% |
+
+EBITDA margins are expressed **excluding depreciation & amortization**; D&A is added
+back separately so the model shows a clean EBITDA-to-EBIT bridge.
 
 ---
 
@@ -112,7 +116,33 @@ scales and (per the synergy assumption) in-sources inference onto SpaceX/xAI com
 
 ---
 
-## 5. Schedules & balance-sheet mechanics
+## 5. Segment EPS contribution
+
+The `Segments` tab (and the bottom of the `Income Statement`) bridge each segment
+from EBITDA to a net-income and **EPS contribution**, using a transparent allocation
+that **sums exactly to consolidated net income and diluted EPS**:
+
+```
+Segment EBITDA
+  − Depreciation        (allocated by capital-intensity weights: Space 30% / Starlink 50% / xAI-Cursor 20%)
+  − Intangible amort.   (100% to xAI-Cursor — it is the Cursor deal)
+  = Segment EBIT
+  + Net interest        (allocated pro-rata to segment revenue share)
+  = Segment pre-tax
+  − Income tax          (allocated pro-rata to segment revenue share)
+  = Segment net income
+  ÷ Diluted shares      = Segment EPS contribution
+```
+
+Because depreciation weights sum to 100%, amortization sits in a single segment, and
+net interest and tax are allocated by revenue share (which sums to 100%), the segment
+net-income and EPS contributions **add up to the consolidated totals by construction**
+(verified on the `Checks` tab). The resulting picture: **Starlink** is the dominant
+EPS driver, **Space** turns accretive as Starship matures, and **xAI-Cursor** is the
+largest near-term drag (integration costs + intangible amortization) before scaling
+into positive contribution.
+
+## 6. Schedules & balance-sheet mechanics
 
 * **PP&E:** `ending = beginning + capex − depreciation`. Capex is a % of combined
   revenue (26% → 16.5%); depreciation is 9% of beginning net PP&E.
@@ -143,7 +173,7 @@ estimates.
 
 ---
 
-## 6. Integrity & conventions
+## 7. Integrity & conventions
 
 The `Checks` tab confirms, for every projected year:
 
@@ -151,6 +181,8 @@ The `Checks` tab confirms, for every projected year:
 2. **Cash flow ties out** — ending cash on the Cash Flow Statement equals balance-
    sheet cash (≈ 0).
 3. **PPA bridge balances** — the opening pro-forma column balances (≈ 0).
+4. **Segment net income** sums to consolidated net income (≈ 0).
+5. **Segment EPS contributions** sum to diluted EPS (≈ 0).
 
 By construction the Cash Flow Statement is derived from the change in every non-cash
 balance-sheet line, so the balance sheet balances automatically. Interest is computed
@@ -158,7 +190,7 @@ on beginning balances to avoid circular references.
 
 ---
 
-## 7. Sources / data points
+## 8. Sources / data points
 
 Public reporting and estimates used to anchor the model (all approximate):
 

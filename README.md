@@ -19,14 +19,23 @@ with the following tabs:
 | --- | --- |
 | **Cover** | Transaction summary, contents, disclaimer |
 | **Assumptions** | Every input driver (blue cells are editable) |
-| **IS SpaceX** | SpaceX standalone operating build (revenue → EBITDA) |
-| **IS Cursor** | Cursor standalone operating build (revenue → EBITDA) |
+| **Segments** | **Space**, **Starlink** and **xAI-Cursor**: revenue, EBITDA, and a full per-segment bridge to net income and **EPS contribution** |
 | **Deal & PPA** | Consideration, purchase price allocation, goodwill, intangibles |
 | **Schedules** | PP&E roll, intangible amortization & deferred tax, debt & spectrum, tax / NOL |
-| **Income Statement** | Pro-forma combined P&L (revenue → net income, EPS) |
+| **Income Statement** | Segment-driven P&L (revenue → net income, EPS) with **EPS contribution by segment** |
 | **Balance Sheet** | Purchase-accounting bridge + projected balance sheet |
 | **Cash Flow** | Integrated cash flow statement |
-| **Checks** | Balance-sheet balance and cash-flow tie-out integrity checks |
+| **Checks** | Balance, cash-flow, and segment NI / EPS tie-out integrity checks |
+
+### Segments
+
+The combined entity is modelled as three reporting segments:
+
+| Segment | Contents |
+| --- | --- |
+| **Space** | Launch services (Falcon / Starship) + Starshield (government/defense) |
+| **Starlink** | Satellite connectivity |
+| **xAI-Cursor** | AI segment — xAI/Grok **+ the acquired Cursor** business; carries all deal synergies, integration costs and acquired-intangible amortization |
 
 The model is **live**: every projected cell is an Excel formula that references the
 `Assumptions` tab, so changing any blue input flows through all three statements and
@@ -54,14 +63,30 @@ Balance Sheet ◄── ending cash ◄─────────────�
 
 | | 2025PF | 2026E | 2027E | 2028E | 2029E | 2030E |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Total revenue | 19,124 | 29,194 | 41,994 | 56,232 | 71,303 | 87,520 |
-| EBITDA | 1,347 | 2,560 | 6,364 | 11,453 | 17,715 | 24,421 |
-| EBIT | (2,793) | (3,240) | 335 | 5,025 | 10,757 | 16,820 |
-| Net income | (4,367) | (4,351) | 1,014 | 5,578 | 11,297 | 17,436 |
-| Diluted EPS ($) | — | (2.04) | 0.48 | 2.61 | 5.30 | 8.17 |
-| Ending cash | — | 62,292 | 64,127 | 69,246 | 78,823 | 93,660 |
+| Revenue — Space | 6,000 | 7,680 | 9,984 | 12,780 | 15,847 | 19,016 |
+| Revenue — Starlink | 11,400 | 16,188 | 22,016 | 28,620 | 35,775 | 43,288 |
+| Revenue — xAI-Cursor | 1,750 | 3,288 | 5,704 | 8,606 | 11,843 | 15,361 |
+| **Total revenue** | **19,150** | **27,156** | **37,703** | **50,006** | **63,465** | **77,665** |
+| Total EBITDA | 3,600 | 6,548 | 12,263 | 18,196 | 25,282 | 33,468 |
+| EBIT | (540) | 748 | 6,275 | 11,888 | 18,540 | 26,185 |
+| Net income | (2,114) | (402) | 6,860 | 12,544 | 17,689 | 22,411 |
+| **Diluted EPS ($)** | **(0.99)** | **(0.19)** | **3.22** | **5.88** | **8.29** | **10.51** |
 
-Goodwill recognised on the deal: **~$45.3bn**; identifiable intangibles: **$15.0bn**.
+### EPS contribution by segment ($ / diluted share)
+
+| Segment | 2025PF | 2026E | 2027E | 2028E | 2029E | 2030E |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Space | (1.04) | (0.74) | (0.17) | 0.26 | 0.59 | 0.91 |
+| Starlink | 1.00 | 2.34 | 4.40 | 6.19 | 7.80 | 9.26 |
+| xAI-Cursor | (0.95) | (1.79) | (1.02) | (0.57) | (0.10) | 0.34 |
+| **Total** | **(0.99)** | **(0.19)** | **3.22** | **5.88** | **8.29** | **10.51** |
+
+Starlink is the EPS engine; Space turns accretive around 2028 as Starship matures;
+xAI-Cursor is the largest drag through the integration years (integration costs +
+intangible amortization) before turning positive as the AI segment scales and
+synergies build. Segment contributions **sum exactly to total diluted EPS** (see the
+`Checks` tab). Goodwill recognised on the deal: **~$45.3bn**; identifiable
+intangibles: **$15.0bn**.
 
 ## Running it
 
