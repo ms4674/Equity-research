@@ -242,12 +242,18 @@ class ModelBuilder:
 
         # Capital / financing ---------------------------------------------
         self.put(s, "_cap", "Capital, financing & other", section=True)
-        yrow("capex", "  Capex % of combined revenue", [0.260, 0.230, 0.210, 0.190, 0.175, 0.165])
-        single("dep_rate", "  Depreciation % of beginning net PP&E", 0.090)
-        # depreciation allocation across segments (capital intensity), sums to 100%
-        single("dep_w_space", "  D&A allocation — Space %", 0.30)
-        single("dep_w_star", "  D&A allocation — Starlink %", 0.50)
-        single("dep_w_ai", "  D&A allocation — xAI-Cursor %", 0.20)
+        # Capex % of each segment's revenue (capital intensity differs by segment)
+        yrow("space_capex", "  Space — capex % of segment revenue", [0.28, 0.26, 0.24, 0.22, 0.20, 0.18])
+        yrow("star_capex", "  Starlink — capex % of segment revenue", [0.36, 0.34, 0.30, 0.27, 0.24, 0.22])
+        yrow("ai_capex", "  xAI-Cursor — capex % of segment revenue", [0.25, 0.28, 0.26, 0.23, 0.20, 0.18])
+        # Depreciation % of each segment's beginning net PP&E (asset life differs)
+        single("space_dep_rate", "  Space — depreciation % of beginning PP&E", 0.090)
+        single("star_dep_rate", "  Starlink — depreciation % of beginning PP&E", 0.120)
+        single("ai_dep_rate", "  xAI-Cursor — depreciation % of beginning PP&E", 0.160)
+        # Opening (FY2025) net PP&E by segment; Starlink is the balancing item
+        single("space_ppe0", "  Space — opening net PP&E ($M)", 14000, fmt=FMT_USD)
+        single("ai_ppe0", "  xAI-Cursor — opening net PP&E ($M)", 3300, fmt=FMT_USD,
+               note="Starlink opening = total − Space − xAI-Cursor")
         yrow("sbc", "  Stock-based comp % of revenue", [0.060, 0.060, 0.055, 0.050, 0.045, 0.040])
         yrow("debt_draw", "  Net new long-term debt ($M)", [0, 2000, 2000, 1500, 1000, 1000], fmt=FMT_USD)
         yrow("spec_repay", "  Spectrum obligation repayment ($M)", [0, -2000, -2000, -2000, -2000, -2000], fmt=FMT_USD)
@@ -277,11 +283,11 @@ class ModelBuilder:
     # ====================================================================
     # SEGMENTS — revenue, EBITDA and EPS-contribution bridge
     # ====================================================================
-    # (key, label, growth_assum, margin_assum, dep_weight_assum)
+    # (key, label, growth_assum, margin_assum)
     SEGMENTS = [
-        ("space", "Space", "space_g", "space_ebitda", "dep_w_space"),
-        ("star", "Starlink", "star_g", "star_ebitda", "dep_w_star"),
-        ("ai", "xAI-Cursor", "ai_g", "ai_ebitda", "dep_w_ai"),
+        ("space", "Space", "space_g", "space_ebitda"),
+        ("star", "Starlink", "star_g", "star_ebitda"),
+        ("ai", "xAI-Cursor", "ai_g", "ai_ebitda"),
     ]
 
     def build_segments(self):
@@ -311,9 +317,9 @@ class ModelBuilder:
 
         # ---- per-segment bridge to net income & EPS ----
         self.put(s, "_eps", "Segment contribution to net income & EPS", section=True)
-        self.put(s, "_method", "  D&A by capital-intensity weights; net interest & tax allocated by revenue share.", indent=1)
+        self.put(s, "_method", "  Segment D&A from the PP&E schedule; net interest & tax allocated by revenue share.", indent=1)
         self.ws[s].cell(row=self.r(s, "_method"), column=1).font = SUB_FONT
-        for k, label, _g, _m, _w in self.SEGMENTS:
+        for k, label, _g, _m in self.SEGMENTS:
             self.put(s, f"{k}_hd", f"  {label}", bold=True)
             self.put(s, f"{k}_b_ebitda", "     EBITDA", indent=1)
             self.put(s, f"{k}_b_dep", "     Less: depreciation", indent=1)
@@ -358,10 +364,11 @@ class ModelBuilder:
             # bridge to net income & EPS (per segment)
             net_int = f"({self.yref(S_IS,'int_exp',y)}+{self.yref(S_IS,'int_inc',y)})"
             tot_tax = f"({self.yref(S_IS,'tax_cur',y)}+{self.yref(S_IS,'tax_def',y)})"
-            for k, label, _g, _m, w in self.SEGMENTS:
+            for k, label, _g, _m in self.SEGMENTS:
                 rev_share = f"({self.yref(s, ('ai_rev' if k=='ai' else f'{k}_rev'), y)}/{self.yref(s,'rev_tot',y)})"
                 self.setval(s, f"{k}_b_ebitda", col, f"={self.yref(s, ('ai_ebitda' if k=='ai' else f'{k}_ebitda'), y)}")
-                self.setval(s, f"{k}_b_dep", col, f"=-{self.yref(S_IS,'dep',y)}*{self.aref1(w)}")
+                # use each segment's own depreciation from the PP&E schedule
+                self.setval(s, f"{k}_b_dep", col, f"=-{self.yref(S_SCH, f'{k}_dep', y)}")
                 # acquired-intangible amortization sits entirely in xAI-Cursor
                 if k == "ai":
                     self.setval(s, f"{k}_b_amort", col, f"=-{self.yref(S_IS,'amort',y)}")
@@ -450,13 +457,19 @@ class ModelBuilder:
         self.ws[s].cell(row=1, column=1).font = TITLE_FONT
         self._year_header(s)
 
-        # combined revenue / cost references come from Income Statement
-        # PP&E roll
-        self.put(s, "_ppe", "Property, plant & equipment", section=True)
-        self.put(s, "ppe_beg", "  Beginning net PP&E", indent=1)
-        self.put(s, "capex", "  Capital expenditures", indent=1)
-        self.put(s, "dep", "  Depreciation", indent=1)
-        self.put(s, "ppe_end", "  Ending net PP&E", bold=True)
+        # PP&E roll forecast — by segment (Space, Starlink, xAI-Cursor)
+        self.put(s, "_ppe", "Property, plant & equipment — forecast by segment", section=True)
+        for k, label in [("space", "Space"), ("star", "Starlink"), ("ai", "xAI-Cursor")]:
+            self.put(s, f"{k}_hd", f"  {label}", bold=True)
+            self.put(s, f"{k}_ppe_beg", "     Beginning net PP&E", indent=1)
+            self.put(s, f"{k}_capex", "     (+) Capital expenditures", indent=1)
+            self.put(s, f"{k}_dep", "     (−) Depreciation", indent=1)
+            self.put(s, f"{k}_ppe_end", "     Ending net PP&E", bold=True)
+        self.put(s, "_ppe_t", "  Total — all segments", bold=True)
+        self.put(s, "ppe_beg", "     Total beginning net PP&E", indent=1)
+        self.put(s, "capex", "     (+) Total capital expenditures", indent=1)
+        self.put(s, "dep", "     (−) Total depreciation", indent=1)
+        self.put(s, "ppe_end", "     Total ending net PP&E", bold=True)
 
         # Intangibles & DTL roll
         self.put(s, "_intan", "Acquired intangibles & deferred tax", section=True)
@@ -487,24 +500,39 @@ class ModelBuilder:
         self.put(s, "nol_end", "  Ending NOL balance", bold=True)
         self.put(s, "cur_tax", "  Current income tax", bold=True)
 
+        # (seg key, revenue key on Segments tab, capex% assum, dep-rate assum, opening-PP&E assum)
+        SEGPPE = [
+            ("space", "space_rev", "space_capex", "space_dep_rate", "space_ppe0"),
+            ("star", "star_rev", "star_capex", "star_dep_rate", None),   # Starlink = plug
+            ("ai", "ai_rev", "ai_capex", "ai_dep_rate", "ai_ppe0"),
+        ]
         for y in YEARS:
             col = yl(y)
             prev = yl(YEARS[YEARS.index(y) - 1]) if y != 2025 else None
-            rev_is = self.yref(S_IS, "rev_tot", y)
-            # ---- PP&E ----
-            if y == 2025:
-                self.setval(s, "ppe_beg", col, 46000, fmt=FMT_USD)
-                self.setval(s, "capex", col, f"={self.aref('capex', y)}*{rev_is}")
-                self.setval(s, "dep", col, f"={self.ref(s,'ppe_beg',col)}*{self.aref1('dep_rate')}")
-                self.setval(s, "ppe_end", col, 46000, fmt=FMT_USD, bold=True)
-            else:
-                if y == 2026:
-                    self.setval(s, "ppe_beg", col, f"={self.ref(S_BS,'ppe', BS_COL['Open'])}")
+            # ---- PP&E roll by segment ----
+            for k, revkey, capkey, dratek, ppe0 in SEGPPE:
+                segrev = self.yref(S_SEG, revkey, y)
+                if y in (2025, 2026):
+                    if ppe0 is None:   # Starlink opening balances total PP&E
+                        beg = (f"={self.ref(S_BS,'ppe', BS_COL['Open'])}"
+                               f"-{self.aref1('space_ppe0')}-{self.aref1('ai_ppe0')}")
+                    else:
+                        beg = f"={self.aref1(ppe0)}"
                 else:
-                    self.setval(s, "ppe_beg", col, f"='{s}'!{prev}{self.r(s,'ppe_end')}")
-                self.setval(s, "capex", col, f"={self.aref('capex', y)}*{rev_is}")
-                self.setval(s, "dep", col, f"={self.ref(s,'ppe_beg',col)}*{self.aref1('dep_rate')}")
-                self.setval(s, "ppe_end", col, f"={self.ref(s,'ppe_beg',col)}+{self.ref(s,'capex',col)}-{self.ref(s,'dep',col)}", bold=True)
+                    beg = f"='{s}'!{prev}{self.r(s, f'{k}_ppe_end')}"
+                self.setval(s, f"{k}_ppe_beg", col, beg)
+                self.setval(s, f"{k}_capex", col, f"={self.aref(capkey, y)}*{segrev}")
+                self.setval(s, f"{k}_dep", col, f"={self.ref(s, f'{k}_ppe_beg', col)}*{self.aref1(dratek)}")
+                if y == 2025:   # memo year: not rolled (FY2025 PP&E is the opening actual)
+                    self.setval(s, f"{k}_ppe_end", col, f"={self.ref(s, f'{k}_ppe_beg', col)}", bold=True)
+                else:
+                    self.setval(s, f"{k}_ppe_end", col,
+                                f"={self.ref(s, f'{k}_ppe_beg', col)}+{self.ref(s, f'{k}_capex', col)}-{self.ref(s, f'{k}_dep', col)}", bold=True)
+            # ---- totals ----
+            self.setval(s, "ppe_beg", col, "=" + "+".join(self.ref(s, f"{k}_ppe_beg", col) for k, *_ in SEGPPE))
+            self.setval(s, "capex", col, "=" + "+".join(self.ref(s, f"{k}_capex", col) for k, *_ in SEGPPE))
+            self.setval(s, "dep", col, "=" + "+".join(self.ref(s, f"{k}_dep", col) for k, *_ in SEGPPE))
+            self.setval(s, "ppe_end", col, "=" + "+".join(self.ref(s, f"{k}_ppe_end", col) for k, *_ in SEGPPE), bold=True)
 
             # ---- intangibles & DTL (post-deal only) ----
             if y == 2025:
