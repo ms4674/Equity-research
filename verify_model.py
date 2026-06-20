@@ -83,6 +83,22 @@ show("Income Statement", "Pre-tax income (loss)")
 show("Income Statement", "Net income (loss)")
 show("Income Statement", "Diluted EPS ($)", money=False)
 
+print("\n=== PP&E FORECAST BY SEGMENT (US$M) ===")
+print("Year                       " + "".join(f"{y:>11}" for y in YEARS))
+for seg, lbl in [("Space", "Space"), ("Starlink", "Starlink"), ("xAI-Cursor", "xAI-Cursor")]:
+    sc = wb["Schedules"]
+    # locate the segment block header then its capex/dep/ending rows
+    hdr = next(r for r in range(1, sc.max_row + 1) if sc.cell(row=r, column=1).value == f"  {seg}")
+    cap = next(r for r in range(hdr, hdr + 6) if "Capital expenditures" in str(sc.cell(row=r, column=1).value))
+    dep = next(r for r in range(hdr, hdr + 6) if "Depreciation" in str(sc.cell(row=r, column=1).value))
+    end = next(r for r in range(hdr, hdr + 6) if "Ending net PP&E" in str(sc.cell(row=r, column=1).value))
+    print(f"{lbl} capex            " [:26] + "".join(fmt(cell("Schedules", f"{C[y]}{cap}")) for y in YEARS))
+    print(f"{lbl} depreciation     " [:26] + "".join(fmt(cell("Schedules", f"{C[y]}{dep}")) for y in YEARS))
+    print(f"{lbl} ending PP&E      " [:26] + "".join(fmt(cell("Schedules", f"{C[y]}{end}")) for y in YEARS))
+show("Schedules", "     (+) Total capital expenditures", key="TOTAL capex")
+show("Schedules", "     (−) Total depreciation", key="TOTAL depreciation")
+show("Schedules", "     Total ending net PP&E", key="TOTAL ending PP&E")
+
 print("\n=== EPS CONTRIBUTION BY SEGMENT ($) ===")
 print("Year                       " + "".join(f"{y:>11}" for y in YEARS))
 # EPS contribution rows are in the dedicated section; Space/Starlink/xAI-Cursor appear again
