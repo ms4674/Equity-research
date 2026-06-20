@@ -38,6 +38,7 @@ BS_PREV = {2026: "F", 2027: "G", 2028: "H", 2029: "I", 2030: "J"}
 
 # Sheet titles
 S_COVER = "Cover"
+S_SUM = "Summary"
 S_ASSUM = "Assumptions"
 S_SEG = "Segments"
 S_PPA = "Deal & PPA"
@@ -98,7 +99,7 @@ class ModelBuilder:
         first = self.wb.active
         first.title = S_COVER
         self.ws[S_COVER] = first
-        for t in [S_ASSUM, S_SEG, S_PPA, S_SCH, S_IS, S_BS, S_CF, S_CHK]:
+        for t in [S_SUM, S_ASSUM, S_SEG, S_PPA, S_SCH, S_IS, S_BS, S_CF, S_CHK]:
             self.ws[t] = self.wb.create_sheet(t)
 
     # -- reference helpers --------------------------------------------------
@@ -172,6 +173,7 @@ class ModelBuilder:
         self.build_balance_sheet()
         self.build_cash_flow()
         self.build_checks()
+        self.build_summary()
         self.build_cover()
 
     def build(self):
@@ -912,6 +914,97 @@ class ModelBuilder:
         self.setval(s, "ppa", "C", f"={self.ref(S_BS,'chk','F')}", fmt=FMT_USD1)
 
     # ====================================================================
+    # SUMMARY / OUTPUT DASHBOARD
+    # ====================================================================
+    def build_summary(self):
+        s = S_SUM
+        self.put(s, "_t", "SUMMARY / OUTPUT DASHBOARD — SpaceX × Cursor pro-forma (US$M unless noted)")
+        self.ws[s].cell(row=1, column=1).font = TITLE_FONT
+        self.put(s, "_n", "Live view of the model output. All figures link to the underlying tabs; edit blue inputs on Assumptions to update everything.")
+        self.ws[s].cell(row=self.r(s, "_n"), column=1).font = SUB_FONT
+        self._year_header(s)
+
+        def line(key, label, src_sheet, src_key, *, fmt=FMT_USD, indent=1, bold=False,
+                 bs=False, years=YEARS, pct=False):
+            self.put(s, key, label, indent=indent, bold=bold, fmt=fmt)
+            for y in years:
+                col = yl(y)
+                if bs:
+                    scol = BS_COL["2025A"] if y == 2025 else BS_COL[y]
+                else:
+                    scol = yl(y)
+                self.setval(s, key, col, f"={self.ref(src_sheet, src_key, scol)}", fmt=fmt, bold=bold)
+
+        # --- Revenue & profitability ---
+        self.put(s, "_rev", "Revenue & profitability", section=True)
+        line("rev_space", "  Revenue — Space", S_IS, "rev_space")
+        line("rev_star", "  Revenue — Starlink", S_IS, "rev_star")
+        line("rev_ai", "  Revenue — xAI-Cursor", S_IS, "rev_ai")
+        line("rev_tot", "  Total revenue", S_IS, "rev_tot", bold=True)
+        line("ebitda", "  Total EBITDA", S_IS, "ebitda", bold=True)
+        line("ebitda_m", "  EBITDA margin %", S_IS, "ebitda_m", fmt=FMT_PCT)
+        line("ebit", "  EBIT (operating income)", S_IS, "ebit", bold=True)
+        line("ni", "  Net income (loss)", S_IS, "ni", bold=True)
+        line("eps", "  Diluted EPS ($)", S_IS, "eps", fmt=FMT_X, bold=True)
+
+        # --- EPS contribution by segment ---
+        self.put(s, "_eps", "EPS contribution by segment ($)", section=True)
+        line("eps_space", "  Space", S_IS, "eps_space", fmt=FMT_X)
+        line("eps_star", "  Starlink", S_IS, "eps_star", fmt=FMT_X)
+        line("eps_ai", "  xAI-Cursor", S_IS, "eps_ai", fmt=FMT_X)
+        line("eps_tot", "  Total diluted EPS ($)", S_IS, "eps", fmt=FMT_X, bold=True)
+
+        # --- PP&E, capex & depreciation by segment ---
+        self.put(s, "_ppe", "Capex, depreciation & net PP&E by segment", section=True)
+        line("cx_space", "  Capex — Space", S_SCH, "space_capex")
+        line("cx_star", "  Capex — Starlink", S_SCH, "star_capex")
+        line("cx_ai", "  Capex — xAI-Cursor", S_SCH, "ai_capex")
+        line("cx_tot", "  Total capex", S_SCH, "capex", bold=True)
+        line("dp_space", "  Depreciation — Space", S_SCH, "space_dep")
+        line("dp_star", "  Depreciation — Starlink", S_SCH, "star_dep")
+        line("dp_ai", "  Depreciation — xAI-Cursor", S_SCH, "ai_dep")
+        line("dp_tot", "  Total depreciation", S_SCH, "dep", bold=True)
+        line("ppe_tot", "  Total net PP&E (ending)", S_SCH, "ppe_end", bold=True)
+
+        # --- Balance sheet highlights ---
+        self.put(s, "_bs", "Balance sheet highlights", section=True)
+        line("cash", "  Cash & ST investments", S_BS, "cash", bs=True)
+        line("ta", "  Total assets", S_BS, "ta", bs=True, bold=True)
+        line("tl", "  Total liabilities", S_BS, "tl", bs=True)
+        line("te", "  Total equity", S_BS, "te", bs=True, bold=True)
+
+        # --- Cash flow highlights (post-deal years only) ---
+        self.put(s, "_cf", "Cash flow highlights", section=True)
+        py = YEARS[1:]
+        line("cfo", "  Cash from operations", S_CF, "cfo", years=py)
+        line("capex_cf", "  Capital expenditures", S_CF, "capex", years=py)
+        self.put(s, "fcf", "  Free cash flow (CFO − capex)", indent=1, bold=True)
+        for y in py:
+            col = yl(y)
+            self.setval(s, "fcf", col, f"={self.ref(S_CF,'cfo',col)}+{self.ref(S_CF,'capex',col)}", bold=True)
+        line("cff", "  Cash from financing", S_CF, "cff", years=py)
+        line("cash_end", "  Ending cash", S_CF, "cash_end", years=py, bold=True)
+
+        # --- Deal highlights (single values) ---
+        self.put(s, "_deal", "Transaction highlights", section=True)
+        for key, label, src in [("d_consid", "  Equity purchase price ($M)", "consid"),
+                                 ("d_newsh", "  New SpaceX shares issued (M)", "newsh"),
+                                 ("d_int", "  Identifiable intangibles ($M)", "int_tot"),
+                                 ("d_gw", "  Goodwill ($M)", "gw")]:
+            f = FMT_USD1 if src == "newsh" else FMT_USD
+            self.put(s, key, label, indent=1)
+            self.setval(s, key, "C", f"={self.ref(S_PPA, src, 'C')}", fmt=f)
+
+        # --- Integrity checks ---
+        self.put(s, "_chk", "Integrity checks (≈ 0)", section=True)
+        line("chk_bs", "  Balance sheet balances", S_CHK, "bs", fmt=FMT_USD1)
+        self.put(s, "chk_cf", "  Cash flow ties to BS cash", indent=1, fmt=FMT_USD1)
+        for y in py:
+            self.setval(s, "chk_cf", yl(y), f"={self.ref(S_CHK,'cf',yl(y))}", fmt=FMT_USD1)
+        line("chk_segni", "  Segment NI sums to total", S_CHK, "segni", fmt=FMT_USD1)
+        line("chk_segeps", "  Segment EPS sums to total", S_CHK, "segeps", fmt='0.0000')
+
+    # ====================================================================
     # COVER
     # ====================================================================
     def build_cover(self):
@@ -927,6 +1020,7 @@ class ModelBuilder:
             "Segments modelled: Space (launch + Starshield), Starlink, and xAI-Cursor (xAI/Grok + Cursor)",
             "",
             "Contents:",
+            "   • Summary — output dashboard consolidating all key results",
             "   • Assumptions — all input drivers (blue cells are editable inputs)",
             "   • Segments — Space, Starlink & xAI-Cursor: revenue, EBITDA & EPS contribution",
             "   • Deal & PPA — purchase price allocation, goodwill, intangibles",
