@@ -18,6 +18,7 @@ with the following tabs:
 | Tab | Contents |
 | --- | --- |
 | **Cover** | Transaction summary, contents, disclaimer |
+| **Summary** | **Output dashboard** consolidating all key results (revenue/EBITDA/EPS by segment, PP&E, balance-sheet & cash-flow highlights, deal terms, integrity checks) — all live-linked |
 | **Assumptions** | Every input driver (blue cells are editable) |
 | **Segments** | **Space**, **Starlink** and **xAI-Cursor**: revenue, EBITDA, and a full per-segment bridge to net income and **EPS contribution** |
 | **Deal & PPA** | Consideration, purchase price allocation, goodwill, intangibles |
@@ -104,12 +105,20 @@ intangibles: **$15.0bn**.
 
 ```bash
 pip install -r requirements.txt
-python build_model.py          # writes SpaceX_Cursor_Pro_Forma_Model.xlsx
-python verify_model.py         # recalculates and prints integrity checks (optional)
+python build_model.py          # writes the workbook (live formulas)
+python recalc.py               # recalculates with LibreOffice so every cell carries a cached value
+python verify_model.py         # recomputes and prints integrity checks (optional)
 ```
 
-`verify_model.py` recomputes the workbook with the `formulas` engine and confirms the
-balance sheet balances and the cash flow ties to balance-sheet cash for every year.
+* `build_model.py` writes the workbook with live formulas (openpyxl does not cache
+  computed results).
+* `recalc.py` opens the workbook in LibreOffice with "recalculate on load" forced on
+  and re-saves it, so **every tab shows its computed values in any viewer** while the
+  formulas remain live. (Requires LibreOffice; the committed workbook is already
+  recalculated.)
+* `verify_model.py` recomputes the workbook independently with the `formulas` engine
+  and confirms the balance sheet balances, the cash flow ties to balance-sheet cash,
+  and the segment net-income / EPS contributions sum to the consolidated totals.
 
 ## Documentation
 

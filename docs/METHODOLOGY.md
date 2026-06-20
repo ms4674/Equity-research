@@ -204,6 +204,13 @@ By construction the Cash Flow Statement is derived from the change in every non-
 balance-sheet line, so the balance sheet balances automatically. Interest is computed
 on beginning balances to avoid circular references.
 
+The **Summary** tab is a live, formula-linked output dashboard that consolidates the
+key results (revenue/EBITDA/EPS by segment, the segment PP&E forecast, balance-sheet
+and cash-flow highlights, deal terms, and the integrity checks). After `build_model.py`
+writes the live formulas, `recalc.py` opens the workbook in LibreOffice with
+"recalculate on load" forced on and re-saves it, so **every tab carries cached
+computed values** (visible in any viewer) while the formulas stay live.
+
 ---
 
 ## 8. Sources / data points
