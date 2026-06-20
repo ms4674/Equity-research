@@ -124,7 +124,7 @@ that **sums exactly to consolidated net income and diluted EPS**:
 
 ```
 Segment EBITDA
-  − Depreciation        (allocated by capital-intensity weights: Space 30% / Starlink 50% / xAI-Cursor 20%)
+  − Depreciation        (each segment's own depreciation from the PP&E schedule)
   − Intangible amort.   (100% to xAI-Cursor — it is the Cursor deal)
   = Segment EBIT
   + Net interest        (allocated pro-rata to segment revenue share)
@@ -134,8 +134,9 @@ Segment EBITDA
   ÷ Diluted shares      = Segment EPS contribution
 ```
 
-Because depreciation weights sum to 100%, amortization sits in a single segment, and
-net interest and tax are allocated by revenue share (which sums to 100%), the segment
+Because segment depreciation sums to total depreciation, amortization sits in a
+single segment, and net interest and tax are allocated by revenue share (which sums
+to 100%), the segment
 net-income and EPS contributions **add up to the consolidated totals by construction**
 (verified on the `Checks` tab). The resulting picture: **Starlink** is the dominant
 EPS driver, **Space** turns accretive as Starship matures, and **xAI-Cursor** is the
@@ -144,8 +145,23 @@ into positive contribution.
 
 ## 6. Schedules & balance-sheet mechanics
 
-* **PP&E:** `ending = beginning + capex − depreciation`. Capex is a % of combined
-  revenue (26% → 16.5%); depreciation is 9% of beginning net PP&E.
+* **PP&E — forecast by segment (through 2030):** the `Schedules` tab rolls each
+  segment forward as `ending = beginning + capex − depreciation`, with totals that
+  tie to the balance sheet and feed consolidated depreciation:
+  * **Capex** is a percentage of each segment's own revenue, reflecting differing
+    capital intensity — Space 28% → 18%, Starlink 36% → 22% (satellite
+    constellation), xAI-Cursor 25% → 18% (AI compute, then moderating).
+  * **Depreciation** is a percentage of each segment's beginning net PP&E,
+    reflecting differing asset lives — Space 9%, Starlink 12%, xAI-Cursor 16%.
+  * **Opening (FY2025) net PP&E** is split Space $14.0bn / Starlink $29.0bn /
+    xAI-Cursor $3.3bn (Starlink is the balancing item so segment openings always
+    sum to total opening PP&E of $46.3bn).
+  * Each segment's depreciation flows into its EPS contribution; total capex and
+    total depreciation flow to the cash flow statement and income statement.
+
+  Illustrative output (US$M): total net PP&E grows from $46.3bn (FY2025) to ~$75.6bn
+  (2030); total capex rises from ~$6.2bn to ~$15.7bn; total depreciation from
+  ~$5.3bn to ~$7.9bn.
 * **Acquired intangibles:** amortize on a straight-line basis; deferred tax liability
   unwinds in proportion.
 * **Debt & spectrum obligation:** rolled forward with net-draw and repayment

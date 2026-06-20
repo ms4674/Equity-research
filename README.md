@@ -21,7 +21,7 @@ with the following tabs:
 | **Assumptions** | Every input driver (blue cells are editable) |
 | **Segments** | **Space**, **Starlink** and **xAI-Cursor**: revenue, EBITDA, and a full per-segment bridge to net income and **EPS contribution** |
 | **Deal & PPA** | Consideration, purchase price allocation, goodwill, intangibles |
-| **Schedules** | PP&E roll, intangible amortization & deferred tax, debt & spectrum, tax / NOL |
+| **Schedules** | **Segment PP&E forecast** (capex & depreciation by segment through 2030), intangible amortization & deferred tax, debt & spectrum, tax / NOL |
 | **Income Statement** | Segment-driven P&L (revenue → net income, EPS) with **EPS contribution by segment** |
 | **Balance Sheet** | Purchase-accounting bridge + projected balance sheet |
 | **Cash Flow** | Integrated cash flow statement |
@@ -68,18 +68,30 @@ Balance Sheet ◄── ending cash ◄─────────────�
 | Revenue — xAI-Cursor | 1,750 | 3,288 | 5,704 | 8,606 | 11,843 | 15,361 |
 | **Total revenue** | **19,150** | **27,156** | **37,703** | **50,006** | **63,465** | **77,665** |
 | Total EBITDA | 3,600 | 6,548 | 12,263 | 18,196 | 25,282 | 33,468 |
-| EBIT | (540) | 748 | 6,275 | 11,888 | 18,540 | 26,185 |
-| Net income | (2,114) | (402) | 6,860 | 12,544 | 17,689 | 22,411 |
-| **Diluted EPS ($)** | **(0.99)** | **(0.19)** | **3.22** | **5.88** | **8.29** | **10.51** |
+| Total D&A | 5,268 | 6,901 | 7,273 | 7,858 | 8,621 | 9,486 |
+| EBIT | (1,668) | (353) | 4,989 | 10,338 | 16,661 | 23,981 |
+| Net income | (3,242) | (1,464) | 5,546 | 10,878 | 16,908 | 20,361 |
+| **Diluted EPS ($)** | **(1.52)** | **(0.69)** | **2.60** | **5.10** | **7.93** | **9.54** |
 
 ### EPS contribution by segment ($ / diluted share)
 
 | Segment | 2025PF | 2026E | 2027E | 2028E | 2029E | 2030E |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Space | (1.04) | (0.74) | (0.17) | 0.26 | 0.59 | 0.91 |
-| Starlink | 1.00 | 2.34 | 4.40 | 6.19 | 7.80 | 9.26 |
-| xAI-Cursor | (0.95) | (1.79) | (1.02) | (0.57) | (0.10) | 0.34 |
-| **Total** | **(0.99)** | **(0.19)** | **3.22** | **5.88** | **8.29** | **10.51** |
+| Space | (1.05) | (0.74) | (0.18) | 0.24 | 0.71 | 0.93 |
+| Starlink | 0.33 | 1.70 | 3.67 | 5.35 | 7.18 | 8.28 |
+| xAI-Cursor | (0.81) | (1.65) | (0.89) | (0.49) | 0.04 | 0.34 |
+| **Total** | **(1.52)** | **(0.69)** | **2.60** | **5.10** | **7.93** | **9.54** |
+
+### PP&E forecast by segment (US$M, net)
+
+| | 2025PF | 2026E | 2027E | 2028E | 2029E | 2030E |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Space — capex / dep'n | 1,680 / 1,260 | 1,997 / 1,260 | 2,396 / 1,326 | 2,811 / 1,423 | 3,169 / 1,548 | 3,423 / 1,694 |
+| Starlink — capex / dep'n | 4,104 / 3,480 | 5,504 / 3,480 | 6,605 / 3,723 | 7,728 / 4,069 | 8,586 / 4,508 | 9,523 / 4,997 |
+| xAI-Cursor — capex / dep'n | 438 / 528 | 921 / 528 | 1,483 / 591 | 1,979 / 734 | 2,369 / 933 | 2,765 / 1,163 |
+| **Total capex** | **6,222** | **8,421** | **10,484** | **12,518** | **14,124** | **15,711** |
+| **Total depreciation** | **5,268** | **5,268** | **5,640** | **6,225** | **6,988** | **7,853** |
+| **Total ending net PP&E** | **46,300** | **49,453** | **54,297** | **60,591** | **67,726** | **75,584** |
 
 Starlink is the EPS engine; Space turns accretive around 2028 as Starship matures;
 xAI-Cursor is the largest drag through the integration years (integration costs +
