@@ -1,0 +1,74 @@
+SECTION,METRIC,VALUE,NOTES
+
+HEADLINE STATISTICS,,
+,EU share of global semiconductor production,~10%,"Down from historic highs; virtually no leading-edge AI chips"
+,EU cloud market share held by EU providers,~15%,"Stable since 2022; down from 29% in 2017"
+,US hyperscaler share of EU cloud market,~70%,"AWS + Azure + GCP combined"
+,EU dependency on chip imports,78% of EUR 55bn consumption (2024),"EUR 43.6bn imported from third countries"
+,AI components share of semiconductor market by 2030,>70%,"AI logic chips CAGR 18-29% (2023-2030)"
+,Total investment needed for tech sovereignty,EUR 320bn over 10 years,"EUR 120bn semiconductors + EUR 200bn cloud/AI + EUR 20bn energy AI"
+,Advanced foundry investment,EUR 30bn,"For first EU 3nm-and-below open foundry"
+,EU data centre capacity target,Triple current capacity by 2031-2033,"Currently 3.6 GW FLAP-D colocation"
+,EuroHPC infrastructure,"14 supercomputers, 19 AI Factories, 10 quantum systems","EUR 7bn budget"
+
+DEPENDENCY HEAT MAP BY AREA,,
+,Cloud - Infrastructure Market Share,5 - Critical,"US dominance structurally entrenched; EUR 10bn/quarter US capex in EU"
+,Cloud - Sovereignty & Data Control,4 - High,"CADA SEAL framework proposed but not yet law; EUR 180m sovereign cloud tender awarded"
+,Cloud - Hardware Supply Chain,5 - Critical,"No EU-designed server processors or AI GPUs at scale"
+,AI Datacenters - Capacity,4 - High,"Energy is binding constraint; Ireland at 22% electricity consumption"
+,AI Datacenters - GPU/Accelerator,5 - Critical,"NVIDIA >80% market; EU has only pre-scale startups"
+,AI Datacenters - Chip Design Ecosystem,5 - Critical,"US EDA tools (Synopsys/Cadence) monopoly; no scaled EU fabless AI companies"
+,AI Datacenters - Advanced Packaging,5 - Critical,"Most significant near-term structural gap; TSMC CoWoS dominance"
+,LLMs - Training Compute,4 - High,"EU AI labs train on US cloud; Gigafactory programme aims to close gap"
+,LLMs - Inference Chips,4 - High,"EU has emerging low-power strengths but no scaled inference accelerator"
+,LLMs - Software/Model Sovereignty,3 - Moderate,"Mistral AI is bright spot; but US models dominate enterprise deployment"
+,LLMs - Memory & Interconnect,5 - Critical,"HBM monopoly (SK Hynix/Samsung/Micron); NVLink/InfiniBand (NVIDIA)"
+,Quantum - Chip Development,2 - Moderate,"Strong R&D with 6 pilot lines; lab-to-fab gap remains"
+,Quantum - Photonics,3 - Moderate,"PIXEurope telecom-focused; quantum needs visible/UV range expansion"
+,Quantum - Enabling Electronics,3 - Moderate,"Chips JU EUR 20m call addresses gap; Bluefors (Finland) is global cryogenics leader"
+,Quantum - Hybrid Infrastructure,3 - Moderate,"EuroHPC integrating quantum; but cloud access via US platforms"
+,Quantum - PQC Readiness,2 - Moderate,"EU strength in security chips (NXP, Infineon); PQC transition manageable"
+
+KEY EU STRENGTHS TO LEVERAGE,,
+,Lithography equipment,"ASML global EUV monopoly","Geopolitical leverage; indispensable node in value chain"
+,Power/automotive/industrial chips,"NXP, Infineon, STMicroelectronics, Bosch","Mainstream chips; wide-bandgap semiconductors (SiC, GaN)"
+,Semiconductor R&D,"Imec, Fraunhofer, CEA-Leti","World-class research; pilot line experience"
+,EUV optics,Zeiss (Germany),"Critical ASML supply chain partner"
+,SOI substrates,SOITEC (France),"Global leader in silicon-on-insulator"
+,Quantum hardware diversity,"IQM, Pasqal, QuiX, AQT + 6 pilot lines","Multiple qubit modalities; strong academic base"
+,Cryogenics,Bluefors (Finland),"Global leader in dilution refrigerators for quantum"
+,AI models (open-weight),Mistral AI (France),"Leading European frontier model developer"
+,Security/identity chips,"NXP, Infineon","Strong position for PQC transition"
+
+CRITICAL GAPS REQUIRING ACTION,,
+,Leading-edge foundry (sub-5nm),None in EU,"Fully dependent on TSMC (Taiwan) and Samsung (Korea); pilot production 2030-2033 at earliest"
+,AI GPU/accelerator design,No scaled EU company,"NVIDIA/AMD monopoly; EU startups (Axelera, SiPearl) pre-revenue or early-revenue"
+,High Bandwidth Memory (HBM),No EU production,"SK Hynix, Samsung, Micron control entire market"
+,Advanced packaging at scale,No EU facility,"TSMC CoWoS, ASE, Amkor dominate; EU foundry plans include 3D packaging"
+,EDA tools,No EU equivalent,"Synopsys, Cadence, Siemens EDA (German-headquartered but US-listed)"
+,Cloud platform services,15% EU market share,"Structural scale disadvantage vs. hyperscalers; unlikely to close gap significantly"
+,AI training compute clusters,Insufficient scale,"Largest EU clusters far smaller than US frontier lab clusters (100k+ GPUs)"
+
+CHIPS ACT 2.0 - KEY POLICY INSTRUMENTS,,
+,Demand Accelerators,"Public innovation procurement; demand aggregation; forum for EU chip uptake","Shift from supply-only to supply+demand strategy"
+,Strategic Projects,"Facilitated public investment; fast-track permitting (12-month max); State aid simplification","Covers entire value chain: materials to packaging"
+,EU Open Foundry,"First EU 3nm-and-below fab with chiplet + 3D packaging","EUR 30bn investment; pilot 2030-2033"
+,Grand Challenges,"Industrial development of strategically important chips (esp. AI)","Competition-based funding mechanism"
+,Chips Fund,"Debt financing and equity for semiconductor startups/scaleups/SMEs","Addressing EU venture capital gap in deep tech"
+,B2B Supply Chain Platform,"Real-time visibility into semiconductor supply chains","Crisis preparedness; proactive risk management"
+,Semiconductor Regions of Excellence,"Label for regions creating framework conditions for semiconductor investment","Attracting and concentrating investment"
+,Strategic Partnerships,"International cooperation on semiconductors with like-minded partners","Diversifying supply away from single-source dependencies"
+
+LEGISLATIVE TIMELINE,,
+,Chips Act 2.0 proposal published,3 June 2026,COM(2026) 503
+,CADA proposal published,3 June 2026,COM(2026) 502
+,EU Open Source Strategy published,3 June 2026,Non-legislative
+,Quantum-enabling technology call,Jul-Sep 2026,"EUR 20m; Chips JU"
+,AI Gigafactory call,Expected July 2026,Under CADA
+,National Digital Decade Roadmap revisions,December 2026,Member state action
+,EU semiconductor crisis management Blueprint,Q2 2027,
+,Final adoption target (Chips Act 2.0 + CADA),Q2 2027,Subject to Parliament and Council negotiation
+,Advanced foundry pilot production,2030-2033,Subject to investment mobilisation
+,Data centre capacity tripled,2031-2033,CADA target
+,Full semiconductor investment mobilisation,By 2035,"EUR 120bn public+private"
+,Data centre investment complete,By 2036,"EUR 200bn public+private"
