@@ -1,0 +1,47 @@
+Date (YYYY-MM),Developer,Model version,Tier,Event,Input $/1M,Output $/1M,Blended 3:1 $/1M,Context window,Notes
+2023-03,OpenAI,GPT-4 (32K),Flagship,Launch,60.0,120.0,75.0,32K,Extended-context tier
+2023-03,OpenAI,GPT-4 (8K),Flagship,Launch,30.0,60.0,37.5,8K,First GPT-4 API tier
+2023-07,Anthropic,Claude 2,Flagship,Launch,8.0,24.0,12.0,100K,
+2023-11,Anthropic,Claude 2.1,Flagship,Launch,8.0,24.0,12.0,200K,
+2023-11,OpenAI,GPT-4 Turbo,Flagship,Launch,10.0,30.0,15.0,128K,~3x cheaper than GPT-4
+2023-12,Google,Gemini 1.0 Pro,Flagship,Launch,0.5,1.5,0.75,32K,
+2024-02,Google,Gemini 1.5 Pro,Flagship,Launch,3.5,10.5,5.25,1M,<=128K tier; >128K was $7/$21
+2024-03,Anthropic,Claude 3 Opus,Flagship,Launch,15.0,75.0,30.0,200K,
+2024-03,Anthropic,Claude 3 Sonnet,Mid/frontier,Launch,3.0,15.0,6.0,200K,
+2024-05,OpenAI,GPT-4o,Flagship,Launch,5.0,15.0,7.5,128K,
+2024-06,Anthropic,Claude 3.5 Sonnet,Flagship,Launch,3.0,15.0,6.0,200K,
+2024-08,OpenAI,GPT-4o,Flagship,Price cut,2.5,10.0,4.375,128K,gpt-4o-2024-08-06
+2024-09,OpenAI,o1-preview,Reasoning,Launch,15.0,60.0,26.25,128K,
+2024-10,Google,Gemini 1.5 Pro,Flagship,Price cut,1.25,5.0,2.188,2M,<=128K tier; ~64% cut
+2024-10,xAI,Grok-2,Flagship,Launch,2.0,10.0,4.0,128K,API GA
+2024-12,DeepSeek,DeepSeek V3,Open frontier,Launch,0.27,1.1,0.478,64K,Post-promo standard rate
+2024-12,Google,Gemini 2.0 Flash,Frontier-adjacent,Launch,0.1,0.4,0.175,1M,
+2024-12,OpenAI,o1,Reasoning,Launch,15.0,60.0,26.25,200K,
+2025-01,DeepSeek,DeepSeek R1,Open reasoning,Launch,0.55,2.19,0.96,64K,
+2025-02,Anthropic,Claude 3.7 Sonnet,Flagship,Launch,3.0,15.0,6.0,200K,
+2025-02,OpenAI,GPT-4.5,Flagship (premium),Launch,75.0,150.0,93.75,128K,Later deprecated
+2025-02,xAI,Grok-3,Flagship,Launch,3.0,15.0,6.0,131K,
+2025-03,Google,Gemini 2.5 Pro,Flagship,Launch,1.25,10.0,3.438,1M,<=200K tier; >200K $2.50/$15
+2025-04,OpenAI,GPT-4.1,Flagship,Launch,2.0,8.0,3.5,1M,
+2025-04,OpenAI,o3,Reasoning,Launch,10.0,40.0,17.5,200K,
+2025-05,Anthropic,Claude Opus 4,Flagship,Launch,15.0,75.0,30.0,200K,
+2025-05,Anthropic,Claude Sonnet 4,Mid/frontier,Launch,3.0,15.0,6.0,200K,1M context added later
+2025-06,OpenAI,o3,Reasoning,Price cut,2.0,8.0,3.5,200K,~80% cut
+2025-06,OpenAI,o3-pro,Reasoning (premium),Launch,20.0,80.0,35.0,200K,
+2025-07,xAI,Grok-4,Flagship,Launch,3.0,15.0,6.0,256K,Context later 2M
+2025-08,OpenAI,GPT-5,Flagship,Launch,1.25,10.0,3.438,400K,
+2025-09,Anthropic,Claude Sonnet 4.5,Mid/frontier,Launch,3.0,15.0,6.0,1M,
+2025-12,Anthropic,Claude Opus 4.6,Flagship,Launch,5.0,25.0,10.0,1M,Approx date; big drop vs Opus 4 ($15/$75)
+2026-01,Google,Gemini 3 Flash,Frontier-adjacent,Launch,0.5,3.0,1.125,1M,Approx date
+2026-02,Google,Gemini 3.1 Pro,Flagship,Launch,2.0,12.0,4.5,2M,"Preview; <=200K tier, >200K $4/$18"
+2026-03,Anthropic,Claude Sonnet 4.6,Mid/frontier,Launch,3.0,15.0,6.0,1M,Approx date
+2026-04,DeepSeek,DeepSeek V4 Pro,Open frontier,Launch,0.435,0.87,0.544,1M,75% promo rate; original $1.74/$3.48
+2026-04,OpenAI,GPT-5.4,Flagship,Launch,2.5,15.0,5.625,1M,
+2026-04,OpenAI,GPT-5.5,Flagship,Launch,5.0,30.0,11.25,1M,>272K input billed at long-context premium
+2026-04,OpenAI,GPT-5.5 Pro,Flagship (premium),Launch,30.0,180.0,67.5,1M,
+2026-04,xAI,Grok 4.20,Flagship,Launch,2.0,6.0,3.0,2M,Reasoning & non-reasoning same price
+2026-04,xAI,Grok 4.3,Flagship,Launch,1.25,2.5,1.562,1M,Released Apr 30 2026
+2026-05,Anthropic,Claude Opus 4.7,Flagship,Launch,5.0,25.0,10.0,1M,New tokenizer (~+35% tokens vs older)
+2026-05,Anthropic,Claude Opus 4.8,Flagship,Launch,5.0,25.0,10.0,1M,Released May 28 2026
+2026-05,Google,Gemini 3.5 Flash,Frontier-adjacent,Launch,1.5,9.0,3.375,1M,Released May 19 2026; beats 3.1 Pro on coding
+2026-06,Anthropic,Claude Fable 5,Flagship (frontier),Launch,10.0,50.0,20.0,1M,Approx date; current top frontier model

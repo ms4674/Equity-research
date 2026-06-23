@@ -14,3 +14,8 @@
 13,BenchGecko,llm-pricing (open dataset),https://github.com/BenchGecko/llm-pricing
 14,OpenRouter,Models pricing API,https://openrouter.ai/api/v1/models
 15,LiteLLM (BerriAI),Model price map,https://github.com/BerriAI/litellm
+16,OpenAI,API pricing (GPT-5.x family),https://openai.com/api/pricing
+17,Anthropic,Claude API pricing,https://www.anthropic.com/pricing
+18,Google,Gemini Developer API pricing,https://ai.google.dev/gemini-api/docs/pricing
+19,xAI,Grok API pricing,https://docs.x.ai/docs/models
+20,DeepSeek,Models & pricing,https://api-docs.deepseek.com/quick_start/pricing

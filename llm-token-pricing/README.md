@@ -13,6 +13,7 @@ This was put together to give an equity-research view of *who publishes a
 | --- | --- |
 | `LLM_Token_Pricing_Indices.xlsx` | Formatted, multi-sheet workbook (open in Excel / Google Sheets) |
 | `data/indicators.csv` | Main comparison matrix (one row per indicator) |
+| `data/frontier_price_time_series.csv` | Token price over time for frontier model versions |
 | `data/silicon_data_products.csv` | Detail on the Silicon Data product suite |
 | `data/methodology.csv` | Side-by-side methodology / construction comparison |
 | `data/sources.csv` | Reference links for every entry |
@@ -24,11 +25,16 @@ This was put together to give an equity-research view of *who publishes a
    type, what it measures, unit, blend ratio, aggregation method, weighting,
    model scope, coverage, update frequency, history, access (paid/free/open),
    data source and URL.
-2. **Silicon Data Suite** — breakdown of Silicon Data's relevant products
+2. **Frontier Price Time Series** — chronological published API token prices
+   (USD/1M tokens) for frontier/flagship model versions from OpenAI, Anthropic,
+   Google, xAI and DeepSeek, from GPT-4 (Mar 2023) through Claude Fable 5 (2026).
+   Each launch and price change is its own row, with input, output and a 3:1
+   blended price, context window and notes.
+3. **Silicon Data Suite** — breakdown of Silicon Data's relevant products
    (SDLLMTK index, Token Index API, Token Marketpulse, Token Pricebook, Portal).
-3. **Methodology** — how each index is constructed (single number vs per-model,
+4. **Methodology** — how each index is constructed (single number vs per-model,
    aggregation, blend ratio, normalization, weighting, key distinction).
-4. **Sources** — numbered list of every reference URL.
+5. **Sources** — numbered list of every reference URL.
 
 ## What's covered
 
@@ -83,4 +89,10 @@ To add a new indicator, append a row to the relevant list in
   references, not live values.
 - Live index values from Silicon Data require a Portal subscription / API key
   (`POST /api/token-index/index`), so they are not embedded here.
+- **Frontier time series**: prices are standard synchronous API *list* rates
+  (excludes Batch, cached-input and Fast-mode tiers). For models with
+  context-tiered pricing (e.g. Gemini Pro) the row uses the standard <=200K
+  tier and notes the long-context rate. The blended column uses a fixed 3:1
+  input:output ratio, `(3*input + output) / 4`. A few recent release dates are
+  approximate and flagged in the Notes column.
 - This is a reference compilation, not investment advice.

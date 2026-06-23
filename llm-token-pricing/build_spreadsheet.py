@@ -482,7 +482,141 @@ METHOD = [
 ]
 
 # ---------------------------------------------------------------------------
-# Sheet 4: Sources
+# Sheet 4: Frontier model token-price time series
+# ---------------------------------------------------------------------------
+#
+# Chronological series of published API token prices (USD per 1M tokens) for
+# frontier / flagship LLM versions from the major labs. Each price change
+# (launch, cut, promo end) is its own row so the table reads as a price-over-
+# time series. Blended price is computed at the 3:1 input:output convention
+# used by OpenRouter / Pulse / MyTokenTracker: (3*input + output) / 4.
+#
+# Each tuple: (date, developer, model, tier, event, input, output, context, notes)
+# Prices are standard synchronous API list rates (not Batch/cached/Fast tiers).
+
+FRONTIER_RAW = [
+    ("2023-03", "OpenAI", "GPT-4 (8K)", "Flagship", "Launch", 30.00, 60.00, "8K",
+     "First GPT-4 API tier"),
+    ("2023-03", "OpenAI", "GPT-4 (32K)", "Flagship", "Launch", 60.00, 120.00, "32K",
+     "Extended-context tier"),
+    ("2023-07", "Anthropic", "Claude 2", "Flagship", "Launch", 8.00, 24.00, "100K",
+     ""),
+    ("2023-11", "OpenAI", "GPT-4 Turbo", "Flagship", "Launch", 10.00, 30.00, "128K",
+     "~3x cheaper than GPT-4"),
+    ("2023-11", "Anthropic", "Claude 2.1", "Flagship", "Launch", 8.00, 24.00, "200K",
+     ""),
+    ("2023-12", "Google", "Gemini 1.0 Pro", "Flagship", "Launch", 0.50, 1.50, "32K",
+     ""),
+    ("2024-02", "Google", "Gemini 1.5 Pro", "Flagship", "Launch", 3.50, 10.50, "1M",
+     "<=128K tier; >128K was $7/$21"),
+    ("2024-03", "Anthropic", "Claude 3 Opus", "Flagship", "Launch", 15.00, 75.00, "200K",
+     ""),
+    ("2024-03", "Anthropic", "Claude 3 Sonnet", "Mid/frontier", "Launch", 3.00, 15.00, "200K",
+     ""),
+    ("2024-05", "OpenAI", "GPT-4o", "Flagship", "Launch", 5.00, 15.00, "128K",
+     ""),
+    ("2024-06", "Anthropic", "Claude 3.5 Sonnet", "Flagship", "Launch", 3.00, 15.00, "200K",
+     ""),
+    ("2024-08", "OpenAI", "GPT-4o", "Flagship", "Price cut", 2.50, 10.00, "128K",
+     "gpt-4o-2024-08-06"),
+    ("2024-09", "OpenAI", "o1-preview", "Reasoning", "Launch", 15.00, 60.00, "128K",
+     ""),
+    ("2024-10", "Google", "Gemini 1.5 Pro", "Flagship", "Price cut", 1.25, 5.00, "2M",
+     "<=128K tier; ~64% cut"),
+    ("2024-10", "xAI", "Grok-2", "Flagship", "Launch", 2.00, 10.00, "128K",
+     "API GA"),
+    ("2024-12", "OpenAI", "o1", "Reasoning", "Launch", 15.00, 60.00, "200K",
+     ""),
+    ("2024-12", "Google", "Gemini 2.0 Flash", "Frontier-adjacent", "Launch", 0.10, 0.40, "1M",
+     ""),
+    ("2024-12", "DeepSeek", "DeepSeek V3", "Open frontier", "Launch", 0.27, 1.10, "64K",
+     "Post-promo standard rate"),
+    ("2025-01", "DeepSeek", "DeepSeek R1", "Open reasoning", "Launch", 0.55, 2.19, "64K",
+     ""),
+    ("2025-02", "OpenAI", "GPT-4.5", "Flagship (premium)", "Launch", 75.00, 150.00, "128K",
+     "Later deprecated"),
+    ("2025-02", "Anthropic", "Claude 3.7 Sonnet", "Flagship", "Launch", 3.00, 15.00, "200K",
+     ""),
+    ("2025-02", "xAI", "Grok-3", "Flagship", "Launch", 3.00, 15.00, "131K",
+     ""),
+    ("2025-03", "Google", "Gemini 2.5 Pro", "Flagship", "Launch", 1.25, 10.00, "1M",
+     "<=200K tier; >200K $2.50/$15"),
+    ("2025-04", "OpenAI", "GPT-4.1", "Flagship", "Launch", 2.00, 8.00, "1M",
+     ""),
+    ("2025-04", "OpenAI", "o3", "Reasoning", "Launch", 10.00, 40.00, "200K",
+     ""),
+    ("2025-05", "Anthropic", "Claude Opus 4", "Flagship", "Launch", 15.00, 75.00, "200K",
+     ""),
+    ("2025-05", "Anthropic", "Claude Sonnet 4", "Mid/frontier", "Launch", 3.00, 15.00, "200K",
+     "1M context added later"),
+    ("2025-06", "OpenAI", "o3", "Reasoning", "Price cut", 2.00, 8.00, "200K",
+     "~80% cut"),
+    ("2025-06", "OpenAI", "o3-pro", "Reasoning (premium)", "Launch", 20.00, 80.00, "200K",
+     ""),
+    ("2025-07", "xAI", "Grok-4", "Flagship", "Launch", 3.00, 15.00, "256K",
+     "Context later 2M"),
+    ("2025-08", "OpenAI", "GPT-5", "Flagship", "Launch", 1.25, 10.00, "400K",
+     ""),
+    ("2025-09", "Anthropic", "Claude Sonnet 4.5", "Mid/frontier", "Launch", 3.00, 15.00, "1M",
+     ""),
+    ("2025-12", "Anthropic", "Claude Opus 4.6", "Flagship", "Launch", 5.00, 25.00, "1M",
+     "Approx date; big drop vs Opus 4 ($15/$75)"),
+    ("2026-01", "Google", "Gemini 3 Flash", "Frontier-adjacent", "Launch", 0.50, 3.00, "1M",
+     "Approx date"),
+    ("2026-02", "Google", "Gemini 3.1 Pro", "Flagship", "Launch", 2.00, 12.00, "2M",
+     "Preview; <=200K tier, >200K $4/$18"),
+    ("2026-03", "Anthropic", "Claude Sonnet 4.6", "Mid/frontier", "Launch", 3.00, 15.00, "1M",
+     "Approx date"),
+    ("2026-04", "OpenAI", "GPT-5.4", "Flagship", "Launch", 2.50, 15.00, "1M",
+     ""),
+    ("2026-04", "OpenAI", "GPT-5.5", "Flagship", "Launch", 5.00, 30.00, "1M",
+     ">272K input billed at long-context premium"),
+    ("2026-04", "OpenAI", "GPT-5.5 Pro", "Flagship (premium)", "Launch", 30.00, 180.00, "1M",
+     ""),
+    ("2026-04", "DeepSeek", "DeepSeek V4 Pro", "Open frontier", "Launch", 0.435, 0.87, "1M",
+     "75% promo rate; original $1.74/$3.48"),
+    ("2026-04", "xAI", "Grok 4.20", "Flagship", "Launch", 2.00, 6.00, "2M",
+     "Reasoning & non-reasoning same price"),
+    ("2026-04", "xAI", "Grok 4.3", "Flagship", "Launch", 1.25, 2.50, "1M",
+     "Released Apr 30 2026"),
+    ("2026-05", "Google", "Gemini 3.5 Flash", "Frontier-adjacent", "Launch", 1.50, 9.00, "1M",
+     "Released May 19 2026; beats 3.1 Pro on coding"),
+    ("2026-05", "Anthropic", "Claude Opus 4.7", "Flagship", "Launch", 5.00, 25.00, "1M",
+     "New tokenizer (~+35% tokens vs older)"),
+    ("2026-05", "Anthropic", "Claude Opus 4.8", "Flagship", "Launch", 5.00, 25.00, "1M",
+     "Released May 28 2026"),
+    ("2026-06", "Anthropic", "Claude Fable 5", "Flagship (frontier)", "Launch", 10.00, 50.00, "1M",
+     "Approx date; current top frontier model"),
+]
+
+FRONTIER_HEADERS = [
+    "Date (YYYY-MM)",
+    "Developer",
+    "Model version",
+    "Tier",
+    "Event",
+    "Input $/1M",
+    "Output $/1M",
+    "Blended 3:1 $/1M",
+    "Context window",
+    "Notes",
+]
+
+
+def _blend(inp, out):
+    """3:1 input:output blended price per 1M tokens."""
+    return round((3 * inp + out) / 4, 3)
+
+
+FRONTIER = sorted(FRONTIER_RAW, key=lambda r: (r[0], r[1], r[2]))
+FRONTIER = [
+    [d, dev, m, tier, ev, inp, out, _blend(inp, out), ctx, note]
+    for (d, dev, m, tier, ev, inp, out, ctx, note) in FRONTIER
+]
+
+
+# ---------------------------------------------------------------------------
+# Sheet 5: Sources
 # ---------------------------------------------------------------------------
 
 SOURCES_HEADERS = ["#", "Publisher", "Resource", "URL"]
@@ -518,10 +652,21 @@ SOURCES = [
      "https://openrouter.ai/api/v1/models"],
     ["15", "LiteLLM (BerriAI)", "Model price map",
      "https://github.com/BerriAI/litellm"],
+    ["16", "OpenAI", "API pricing (GPT-5.x family)",
+     "https://openai.com/api/pricing"],
+    ["17", "Anthropic", "Claude API pricing",
+     "https://www.anthropic.com/pricing"],
+    ["18", "Google", "Gemini Developer API pricing",
+     "https://ai.google.dev/gemini-api/docs/pricing"],
+    ["19", "xAI", "Grok API pricing",
+     "https://docs.x.ai/docs/models"],
+    ["20", "DeepSeek", "Models & pricing",
+     "https://api-docs.deepseek.com/quick_start/pricing"],
 ]
 
 SHEETS = {
     "Indicators": (INDICATORS_HEADERS, INDICATORS),
+    "Frontier Price Time Series": (FRONTIER_HEADERS, FRONTIER),
     "Silicon Data Suite": (SILICON_HEADERS, SILICON),
     "Methodology": (METHOD_HEADERS, METHOD),
     "Sources": (SOURCES_HEADERS, SOURCES),
@@ -543,6 +688,7 @@ BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 # Per-sheet column widths (chars).
 WIDTHS = {
     "Indicators": [26, 20, 12, 16, 40, 24, 26, 26, 26, 22, 30, 18, 14, 22, 26, 40],
+    "Frontier Price Time Series": [14, 12, 22, 18, 12, 12, 12, 16, 14, 44],
     "Silicon Data Suite": [26, 24, 38, 30, 24, 34, 14, 22, 40, 40],
     "Methodology": [26, 24, 26, 22, 34, 26, 26, 38],
     "Sources": [5, 22, 44, 50],
@@ -598,6 +744,7 @@ def build_csvs():
     os.makedirs(DATA_DIR, exist_ok=True)
     csv_map = {
         "indicators.csv": (INDICATORS_HEADERS, INDICATORS),
+        "frontier_price_time_series.csv": (FRONTIER_HEADERS, FRONTIER),
         "silicon_data_products.csv": (SILICON_HEADERS, SILICON),
         "methodology.csv": (METHOD_HEADERS, METHOD),
         "sources.csv": (SOURCES_HEADERS, SOURCES),
