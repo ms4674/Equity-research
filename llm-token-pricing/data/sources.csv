@@ -1,0 +1,21 @@
+#,Publisher,Resource,URL
+1,Silicon Data,LLM Token Expenditure Index (SDLLMTK) product page,https://www.silicondata.com/products/silicon-index/llm-token-expenditure-index
+2,Silicon Data,Token Index API reference,https://docs.silicondata.com/api-reference/token_index_api
+3,Silicon Data,Token Marketpulse,https://www.silicondata.com/products/token-marketpulse
+4,Silicon Data,Token Pricebook docs,https://docs.silicondata.com/products/token_pricebook
+5,Artificial Analysis,Intelligence Index + price trends,https://artificialanalysis.ai/trends
+6,Artificial Analysis,Intelligence Index v4.1 (cost-per-task),https://artificialanalysis.ai/articles/artificial-analysis-intelligence-index-v4-1
+7,LLM-Stats,AI leaderboard (score + pricing),https://llm-stats.com/
+8,MyTokenTracker,AI Cost Index,https://mytokentracker.io/cost-index
+9,Pulse,Inference Token Index + methodology v1.0,https://pulsebenchmarks.com/indices/inference-token-index/
+10,GCPI Research,Global Compute Price Index + methodology,https://globalcomputeindex.org/
+11,AIscending,llm-pricing-index (open dataset),https://github.com/AIscending/llm-pricing-index
+12,LLMRates,Token pricing tracker / API,https://llmrates.live/
+13,BenchGecko,llm-pricing (open dataset),https://github.com/BenchGecko/llm-pricing
+14,OpenRouter,Models pricing API,https://openrouter.ai/api/v1/models
+15,LiteLLM (BerriAI),Model price map,https://github.com/BerriAI/litellm
+16,OpenAI,API pricing (GPT-5.x family),https://openai.com/api/pricing
+17,Anthropic,Claude API pricing,https://www.anthropic.com/pricing
+18,Google,Gemini Developer API pricing,https://ai.google.dev/gemini-api/docs/pricing
+19,xAI,Grok API pricing,https://docs.x.ai/docs/models
+20,DeepSeek,Models & pricing,https://api-docs.deepseek.com/quick_start/pricing
