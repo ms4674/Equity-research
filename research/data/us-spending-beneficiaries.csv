@@ -1,0 +1,23 @@
+company,ticker,ownership,program_or_vehicle,sponsor,headline_value_usd,value_type,obligated_or_note,date,modality_or_category,theme
+IBM,IBM,public,CHIPS quantum LOI,Commerce/NIST,1000000000,planned,foundry; minority equity stake condition,2026-05-21,quantum foundry,quantum
+GlobalFoundries,GFS,public,CHIPS quantum LOI,Commerce/NIST,375000000,planned,secure multi-modality foundry; ~1% govt equity,2026-05-21,quantum foundry,quantum
+D-Wave Quantum,QBTS,public,CHIPS quantum LOI,Commerce/NIST,100000000,planned,issues $100M common stock to Commerce,2026-05-21,annealing/superconducting,quantum
+Rigetti Computing,RGTI,public,CHIPS quantum LOI,Commerce/NIST,100000000,ceiling (up to),minority equity stake condition,2026-05-21,superconducting,quantum
+Infleqtion,INFQ,public,CHIPS quantum LOI,Commerce/NIST,100000000,planned,SPAC listed Feb 2026,2026-05-21,neutral-atom,quantum
+Quantinuum,HON (IPO filed),majority Honeywell,CHIPS quantum LOI,Commerce/NIST,100000000,planned,trapped-ion QCCD; IPO filed,2026-05-21,trapped-ion,quantum
+PsiQuantum,private,private,CHIPS quantum LOI,Commerce/NIST,100000000,planned,photonic fault-tolerant,2026-05-21,photonic,quantum
+Atom Computing,private,private,CHIPS quantum LOI,Commerce/NIST,100000000,planned,neutral-atom,2026-05-21,neutral-atom,quantum
+Diraq,private,private,CHIPS quantum LOI,Commerce/NIST,38000000,ceiling (up to),silicon-spin CMOS,2026-05-21,silicon-spin,quantum
+IonQ,IONQ,public,AFRL quantum networking contract,AFRL,54500000,ceiling,only ~$11.99M obligated; unfunded FY2026,2024-09-25,quantum networking,quantum
+IonQ,IONQ,public,AFRL FY22-24 obligations,AFRL,51000000,obligated,earmark-driven cumulative,2024-12-31,quantum networking,quantum
+IonQ,IONQ,public,SHIELD IDIQ (eligible vendor),MDA,151000000000,program ceiling (IDIQ pool),not a direct award; vendor eligibility,2026-01-01,missile defense IDIQ,quantum
+Rigetti Computing,RGTI,public,Superconducting quantum networking (w/ QphoX),AFRL,5800000,contract (3yr),,2025-09-18,superconducting networking,quantum
+Rigetti Computing,RGTI,public,ABAA chip-fab consortium,AFOSR,5480000,award,incl. LLNL consortium,2025-04-28,chip fabrication,quantum
+DARPA QBI Stage B (per award),multiple,mixed,Quantum Benchmarking Initiative Stage B,DARPA,5000000,per-award ceiling ($1M-$5M),11 companies selected,2025-11-06,validation R&D,quantum
+SandboxAQ,private,private,DoW CIO AQtive Guard agreement,Dept. of War CIO,,undisclosed,5-year ACDI/PQC discovery,2025-12-10,crypto discovery/PQC,cybersecurity
+SandboxAQ,private,private,USAF quantum navigation SBIR,US Air Force,1200000,contract (SBIR),magnetic navigation prototype,2022-01-01,quantum sensing,cybersecurity
+Government-wide PQC migration,n/a,n/a,OMB/ONCD PQC migration estimate,OMB/ONCD,7100000000,estimate (2025-2035 2024$),excludes classified/NSS,2024-07-01,PQC migration,cybersecurity
+CISA cybersecurity (FY26),n/a,n/a,CISA FY26 appropriations,DHS/CISA,1367400000,appropriated,FCEB protection,2026-01-01,federal cyber defense,cybersecurity
+Cloudflare,NET,public,PQC SASE platform,multiple federal,,productized,hybrid ML-KEM TLS/IPsec,2026-06-22,SASE/network PQC,cybersecurity
+Palo Alto Networks,PANW,public,NGFW PQC ciphersuites,multiple federal,,productized,7+ PQC ciphersuites,2026-06-22,firewall PQC,cybersecurity
+SEALSQ,LAES,public,PQC semiconductor,multiple,,productized,secure-element/PQC chips,2026-06-22,PQC semiconductor,cybersecurity
