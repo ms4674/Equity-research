@@ -503,8 +503,7 @@ def build_cover(wb):
             "• Debt by Type: total debt split into mutually-exclusive instrument buckets.",
             "• Cash-Flow Bridge: operating cash flow -> free cash flow -> external funding gap.",
             "• Capex Projections: annual AI-infrastructure capex 2025-2030 by company.",
-            "• Private Credit Deals: transaction log of private-credit / SPV / 144A debt for AI infra.",
-            "• Key Deals & Sources: notable disclosed transactions underpinning the estimates.",
+            "• Deals & Sources: private-credit transactions + other key deals (bonds, equity, etc.) + sources.",
         ]),
         ("Scope & definitions", TEAL, [
             "• Hyperscalers: Microsoft, Amazon (AWS), Alphabet (Google), Meta, Oracle (OCI).",
@@ -1050,14 +1049,43 @@ def build_capex(wb):
 
 
 # ---------------------------------------------------------------------------
-# Sheet 6: Private Credit Transactions
+# Sheet 6: Deals & Sources (private credit transactions + other key deals, merged)
 # ---------------------------------------------------------------------------
-def build_private_credit(wb):
-    ws = wb.create_sheet("Private Credit Deals")
+# DEALS entries (co, amt) that are already itemized in PRIVATE_CREDIT — skipped
+# from the "Other key deals" section to avoid duplication.
+_PC_DUP_KEYS = {
+    ("Meta Platforms", "$27.3bn debt"), ("Oracle (OCI)", "~$25bn+"),
+    ("CoreWeave", "$8.5bn"), ("CoreWeave", "$7.5bn"), ("SpaceX / xAI", "~$20bn"),
+    ("Lambda", "$0.5bn"), ("Nscale", "$1.4bn"), ("Fluidstack", "~$6.7bn"),
+    ("Qatar (QIA / Qai)", "~$20bn"),
+}
+
+
+def _segment_of(co):
+    s = co.lower()
+    if any(k in s for k in ["sector", "colocation sector", "market"]):
+        return "Context / market"
+    if any(k in s for k in ["microsoft", "amazon", "alphabet", "google", "meta", "oracle"]):
+        return "Hyperscaler"
+    if any(k in s for k in ["coreweave", "xai", "spacex", "nebius", "lambda", "nscale",
+                            "fluidstack", "iren", "crusoe"]):
+        return "Neocloud / AI-native"
+    if any(k in s for k in ["equinix", "digital realty", "qts", "vantage", "aligned",
+                            "cyrusone", "switch", "stack", "applied digital", "colo"]):
+        return "Colocation / data-center REIT"
+    if any(k in s for k in ["humain", "stargate", "mgx", "mubadala", "qatar", "qia",
+                            "india", "mistral", "sovereign"]):
+        return "Sovereign cloud"
+    return "Context / market"
+
+
+def build_deals_combined(wb):
+    ws = wb.create_sheet("Deals & Sources")
     ws.sheet_view.showGridLines = False
-    title_cell(ws, "A1", "Private Credit Transactions — AI Infrastructure (US$bn)")
-    ws["A2"] = ("Transaction log of private-credit / SPV / private-placement (144A) debt for AI infra. "
-                "Itemized deals are summed; 'Context / market' rows (frameworks, projections) are not.")
+    title_cell(ws, "A1", "AI-Infrastructure Deals — Private Credit & Other Key Transactions (US$bn)")
+    ws["A2"] = ("Unified transaction log. Section 1: private-credit / SPV / 144A debt (itemized deals "
+                "summed). Section 2: context/frameworks. Section 3: other key deals (bonds, equity, "
+                "securitization, sovereign, leases). Amounts '~' = approximate.")
     ws["A2"].font = Font(italic=True, size=9, color=GREY)
 
     cols = ["Period", "Borrower / Project", "Segment", "Lead lenders / arrangers",
@@ -1074,28 +1102,33 @@ def build_private_credit(wb):
         "Context / market": "F0F0F0",
     }
 
-    deals = list(PRIVATE_CREDIT)
-    itemized = [d for d in deals if d[4] is not None]
-    context = [d for d in deals if d[4] is None]
-    itemized.sort(key=lambda d: d[4], reverse=True)
-
     r = hdr + 1
     item_rows = []
 
-    def write_deal(d, dim=False):
+    def write_deal(d, dim=False, track=False):
+        """d = (period, borrower, seg, lenders, amt, structure, pricing, tenor, notes, src).
+        amt may be numeric ($bn, summed when track=True), a string (shown as text), or None."""
         nonlocal r
         period, borrower, seg, lenders, amt, structure, pricing, tenor, notes, src = d
         ws.cell(row=r, column=1, value=period).font = Font(size=9)
         ws.cell(row=r, column=2, value=borrower).font = Font(size=9, bold=not dim)
         ws.cell(row=r, column=3, value=seg).font = Font(size=8, color=GREY)
         ws.cell(row=r, column=4, value=lenders).font = Font(size=9)
-        if amt is not None:
-            num_fmt(ws.cell(row=r, column=5, value=amt), "#,##0.0")
-            ws.cell(row=r, column=5).font = Font(size=9, bold=True)
+        amt_cell = ws.cell(row=r, column=5)
+        if isinstance(amt, (int, float)):
+            amt_cell.value = amt
+            num_fmt(amt_cell, "#,##0.0")
+            amt_cell.font = Font(size=9, bold=True)
+            if track:
+                item_rows.append(r)
+        elif amt:
+            amt_cell.value = amt
+            amt_cell.alignment = Alignment(horizontal="right")
+            amt_cell.font = Font(size=9)
         else:
-            c = ws.cell(row=r, column=5, value="—")
-            c.alignment = Alignment(horizontal="right")
-            c.font = Font(size=9, color=GREY)
+            amt_cell.value = "—"
+            amt_cell.alignment = Alignment(horizontal="right")
+            amt_cell.font = Font(size=9, color=GREY)
         ws.cell(row=r, column=6, value=structure).font = Font(size=9)
         ws.cell(row=r, column=7, value=pricing).font = Font(size=9)
         ws.cell(row=r, column=8, value=tenor).font = Font(size=9)
@@ -1109,13 +1142,21 @@ def build_private_credit(wb):
                                        horizontal="right" if col == 5 else "left")
             cell.border = BORDER
         ws.row_dimensions[r].height = 30
-        item_rows.append(r)
         r += 1
 
-    for d in itemized:
-        write_deal(d)
+    def section(label):
+        nonlocal r
+        ws.cell(row=r, column=1, value=label).font = Font(bold=True, color=WHITE, size=10)
+        for col in range(1, NCOL + 1):
+            ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=NAVY)
+        r += 1
 
-    # itemized total
+    # --- Section 1: private credit transactions (itemized) ---
+    section("1) PRIVATE CREDIT TRANSACTIONS (itemized — summed below)")
+    itemized = sorted([d for d in PRIVATE_CREDIT if d[4] is not None],
+                      key=lambda d: d[4], reverse=True)
+    for d in itemized:
+        write_deal(d, track=True)
     ws.cell(row=r, column=2, value="Total — itemized private credit deals").font = Font(bold=True, color=NAVY)
     tot = ws.cell(row=r, column=5, value=f"=SUM(E{item_rows[0]}:E{item_rows[-1]})")
     num_fmt(tot, "#,##0.0"); tot.font = Font(bold=True, color=NAVY)
@@ -1124,57 +1165,20 @@ def build_private_credit(wb):
         ws.cell(row=r, column=col).border = BORDER
     r += 2
 
-    # context section
-    ws.cell(row=r, column=1, value="CONTEXT / FRAMEWORKS / PROJECTIONS (not summed)").font = \
-        Font(bold=True, color=WHITE, size=10)
-    for col in range(1, NCOL + 1):
-        ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=NAVY)
-    r += 1
-    for d in context:
+    # --- Section 2: private-credit context / frameworks ---
+    section("2) CONTEXT / FRAMEWORKS / PROJECTIONS (not summed)")
+    for d in [d for d in PRIVATE_CREDIT if d[4] is None]:
         write_deal(d, dim=True)
+    r += 1
 
-    set_widths(ws, {"A": 11, "B": 30, "C": 16, "D": 30, "E": 11, "F": 22,
-                    "G": 14, "H": 13, "I": 38, "J": 18})
-    ws.freeze_panes = "A5"
+    # --- Section 3: other key deals (bonds, equity, securitization, sovereign, leases) ---
+    section("3) OTHER KEY DEALS — bonds · equity · securitization · sovereign · leases")
+    for (co, desc, period, amt, instr, src) in DEALS:
+        if (co, amt) in _PC_DUP_KEYS:
+            continue  # already itemized in Section 1
+        write_deal((period, co, _segment_of(co), "", amt, instr, "", "", desc, src), dim=True)
 
-
-# ---------------------------------------------------------------------------
-# Sheet 7: Key Deals & Sources
-# ---------------------------------------------------------------------------
-def build_deals(wb):
-    ws = wb.create_sheet("Key Deals & Sources")
-    ws.sheet_view.showGridLines = False
-    title_cell(ws, "A1", "Key Disclosed Transactions & Sources")
-    ws["A2"] = ("Representative deals underpinning the estimates. Amounts as reported; '~' denotes "
-                "approximate/announced figures. Not exhaustive.")
-    ws["A2"].font = Font(italic=True, size=9, color=GREY)
-
-    cols = ["Company / Group", "Transaction", "Period", "Amount", "Primary instrument", "Source(s)"]
-    hdr = 4
-    header_row(ws, hdr, 1, cols)
-    ws.row_dimensions[hdr].height = 18
-
-    r = hdr + 1
-    for i, (co, desc, period, amt, instr, src) in enumerate(DEALS):
-        ws.cell(row=r, column=1, value=co).font = Font(size=9, bold=True)
-        ws.cell(row=r, column=2, value=desc).font = Font(size=9)
-        ws.cell(row=r, column=3, value=period).font = Font(size=9)
-        ws.cell(row=r, column=4, value=amt).font = Font(size=9)
-        ws.cell(row=r, column=5, value=instr).font = Font(size=9)
-        ws.cell(row=r, column=6, value=src).font = Font(size=9, color=BLUE)
-        fill = WHITE if i % 2 == 0 else LIGHT_GREY
-        for col in range(1, 7):
-            cell = ws.cell(row=r, column=col)
-            cell.fill = PatternFill("solid", fgColor=fill)
-            cell.alignment = Alignment(wrap_text=True, vertical="top")
-            cell.border = BORDER
-        ws.row_dimensions[r].height = 30
-        r += 1
-
-    set_widths(ws, {"A": 20, "B": 64, "C": 10, "D": 14, "E": 22, "F": 22})
-    ws.freeze_panes = "A5"
-
-    # source list footer
+    # --- sources footer ---
     r += 1
     ws.cell(row=r, column=1, value="Selected sources:").font = Font(bold=True, size=10, color=NAVY)
     r += 1
@@ -1185,12 +1189,16 @@ def build_deals(wb):
         "Moody's Ratings — hyperscaler capex (~$785bn 2026, ~$1tn 2027); $662bn off-B/S DC leases.",
         "McKinsey — ~$2.7tn US (5.2tn global) data-center capex by 2030; insurance-linked private credit.",
         "Octus — HY/unrated AI-infra debt (~$107bn to ~May 2026); ~14GW unfunded ≈ $344bn need.",
-        "Company disclosures & press: Meta IR / FT / S&P (Hyperion); Oracle IR / IFR / Reuters; CoreWeave IR;",
-        "  CNBC / WSJ / The Information (xAI); Blackstone; Apollo Academy; MUFG; CreditSights; CNA.",
+        "Company / press: Meta IR, FT, S&P, IFR (Hyperion); Oracle IR, IFR, Reuters; CoreWeave IR; Blackstone;",
+        "  Apollo Academy; privatedebtnews; Bisnow; Quinn Emanuel; Build.inc; CNBC / WSJ / The Information (xAI).",
     ]
     for s in sources:
         ws.cell(row=r, column=1, value=s).font = Font(size=9, color="444444")
         r += 1
+
+    set_widths(ws, {"A": 12, "B": 30, "C": 16, "D": 28, "E": 11, "F": 22,
+                    "G": 14, "H": 13, "I": 40, "J": 18})
+    ws.freeze_panes = "A5"
 
 
 # ---------------------------------------------------------------------------
@@ -1207,8 +1215,7 @@ def main():
     build_debt_breakdown(wb)
     build_cashflow_bridge(wb)
     build_capex(wb)
-    build_private_credit(wb)
-    build_deals(wb)
+    build_deals_combined(wb)
 
     out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                        "AI_Infrastructure_Financing_2025-2030.xlsx")
