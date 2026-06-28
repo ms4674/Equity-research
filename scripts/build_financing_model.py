@@ -451,6 +451,151 @@ PRIVATE_CREDIT = [
      "Industry-wide", None, "Projection", "n/a", "n/a",
      "Morgan Stanley: ~$800bn over next 2 years; >$200bn already outstanding", "Morgan Stanley; Quinn Emanuel"),
 ]
+
+# ---------------------------------------------------------------------------
+# UNIFIED DEBT TRANSACTION LOG (supersedes DEALS + PRIVATE_CREDIT above for the
+# "Deals & Sources" sheet). Grouped by debt instrument type so loans, alternate
+# private credit and insurance-linked lending are all explicitly represented.
+# The 'Debt amount ($bn)' column is NUMERIC ONLY (None -> left blank).
+# GROUPS: (key, section label, summed-into-debt-total?)
+# ---------------------------------------------------------------------------
+GROUPS = [
+    ("bonds",   "1) CORPORATE BONDS (public IG/HY)", True),
+    ("loans",   "2) BANK & SYNDICATED LOANS (incl. GPU-backed term loans)", True),
+    ("pc",      "3) ALTERNATE PRIVATE CREDIT / SPV / 144A", True),
+    ("ins",     "4) INSURANCE-LINKED LENDING (memo — overlaps groups 1-3)", False),
+    ("abs",     "5) SECURITIZATION / ABS / CMBS", True),
+    ("conv",    "6) CONVERTIBLES / EQUITY-LINKED", True),
+    ("vendor",  "7) VENDOR / EQUIPMENT-LEASE FINANCING & BACKSTOPS (memo)", False),
+    ("equity",  "8) EQUITY & SOVEREIGN COMMITMENTS (memo — not debt)", False),
+    ("context", "9) CONTEXT / FRAMEWORKS / PROJECTIONS (memo)", False),
+]
+GROUP_ORDER_BEFORE_TOTAL = ["bonds", "loans", "pc", "ins", "abs", "conv"]
+GROUP_ORDER_AFTER_TOTAL = ["vendor", "equity", "context"]
+
+# fmt: off
+# fields: (group, period, borrower, segment, lenders, amount $bn|None,
+#          structure, pricing, tenor, notes, source)
+DEBT_TXNS = [
+    # --- 1) corporate bonds (public) ---
+    ("bonds", "2025", "Meta Platforms", "Hyperscaler", "Bank syndicate (BofA et al.)", 30.0,
+     "Public IG corporate bond", "~5-6%", "to 2063", "Largest IG deal of 2025", "BofA; MUFG"),
+    ("bonds", "2026", "Amazon (AWS)", "Hyperscaler", "Bank syndicate", 71.0,
+     "Public IG bonds ($54bn + EUR14.5bn)", "IG", "3-40y", "~4x oversubscribed", "CNA; Reuters"),
+    ("bonds", "2025", "Amazon (AWS)", "Hyperscaler", "Bank syndicate", 15.0,
+     "Public IG bond", "IG", "n/a", "", "CNA"),
+    ("bonds", "2025-26", "Alphabet (Google)", "Hyperscaler", "Bank syndicate", 50.0,
+     "Public bonds ($32bn incl 100-yr + $17.5bn)", "IG", "to 100y", "Rare 100-year tranche", "ConstructConnect; CNA"),
+    ("bonds", "2026", "Oracle (OCI)", "Hyperscaler", "Goldman Sachs", 25.0,
+     "Public IG bond (8-part)", "IG", "3-40y", "Within $45-50bn CY26 plan", "Oracle IR; IFR"),
+    ("bonds", "2025", "Oracle (OCI)", "Hyperscaler", "Bank syndicate", 18.0,
+     "Public IG bond (6-part)", "IG", "n/a", "", "Reuters; CNA"),
+    # --- 2) bank & syndicated loans ---
+    ("loans", "Mar 2026", "CoreWeave — DDTL 4.0", "Neocloud / AI-native",
+     "Blackstone Credit & Insurance (anchor); MUFG, MS, GS, JPM", 8.5,
+     "GPU-backed delayed-draw term loan", "SOFR+225 / ~5.9%", "Mar 2032",
+     "First IG-rated (A3 / A low) HPC loan; non-recourse", "CoreWeave IR"),
+    ("loans", "May 2025", "Anthropic", "Neocloud / AI-native", "Bank syndicate", 2.5,
+     "Revolving credit line", "n/a", "5y", "Liquidity backstop", "CNBC"),
+    ("loans", "2026", "Nscale", "Neocloud / AI-native", "Private credit / banks", 1.4,
+     "Term loan", "n/a", "n/a", "GPU-cloud build", "theaiinsider"),
+    ("loans", "2025", "Lambda", "Neocloud / AI-native", "Macquarie", 0.5,
+     "GPU-backed facility", "n/a", "n/a", "GPU-cloud build", "theaiinsider"),
+    ("loans", "2024", "Applied Digital", "Colocation / data-center REIT", "Macquarie", 5.0,
+     "Structured HPC financing", "n/a", "n/a", "Powered-shell build for CoreWeave", "press"),
+    # --- 3) alternate private credit / SPV / 144A ---
+    ("pc", "Oct 2025", "Meta — Hyperion (Beignet Investor LLC)", "Hyperscaler",
+     "PIMCO (~$18bn), BlackRock, Apollo; Blue Owl equity", 27.3,
+     "Off-B/S SPV; 144A senior secured bond", "6.581% / T+225bp", "Due May 2049",
+     "2.1GW; Meta lease + residual-value guarantee; A+ (S&P)", "IFR; FT; Quinn Emanuel"),
+    ("pc", "2026", "Anthropic — Google TPU chip SPV", "Neocloud / AI-native",
+     "Apollo, Blackstone; Broadcom RVG", 35.0, "Chip-leasing SPV; 3 tranches; ~half syndicated",
+     "A1 T+100bp; A2 5.75%; B 8.5%", "~5y", "Buys Google TPUs leased to Anthropic", "privatedebtnews; Build.inc"),
+    ("pc", "2025-26", "Oracle — Texas + Wisconsin DCs", "Hyperscaler", "Private credit consortium", 38.0,
+     "SPV debt package", "n/a", "n/a", "Two-site off-B/S financing", "FT"),
+    ("pc", "2025-26", "Oracle — New Mexico site", "Hyperscaler", "Private credit lenders", 18.0,
+     "SPV / project loan", "n/a", "n/a", "Single-site project loan", "FT"),
+    ("pc", "2025", "Oracle — Michigan campus", "Hyperscaler", "Project-finance lenders", 16.3,
+     "Project-level SPV financing", "n/a", "n/a", "OCI capacity build", "Press reports"),
+    ("pc", "2025-26", "xAI — Colossus 2 chip SPV", "Neocloud / AI-native",
+     "Valor Equity, Apollo, Diameter; NVIDIA equity", 12.5, "SPV; debt + ~$7.5bn equity",
+     "~10.5%", "5y (~2.5y avg)", "Buys NVIDIA GPUs leased to xAI", "FT; WSJ"),
+    ("pc", "2025", "Oracle/OpenAI — Abilene, TX (Stargate)", "Hyperscaler",
+     "Blue Owl + JPMorgan (Crusoe, Primary Digital)", 10.0, "Off-B/S SPV (~$13bn incl equity)",
+     "n/a", "n/a", "SPV owns OpenAI Abilene facility", "FT"),
+    ("pc", "May 2024", "CoreWeave — $7.5bn facility", "Neocloud / AI-native",
+     "Blackstone, Magnetar, Coatue, Carlyle, CDPQ, BlackRock", 7.5,
+     "GPU + customer-contract secured facility", "~10%+", "n/a", "Largest private debt deal at the time", "Blackstone"),
+    ("pc", "Early 2025", "Aligned Data Centers — debt", "Colocation / data-center REIT",
+     "Macquarie + global investors", 7.0, "Debt within $12bn raise (+$5bn equity)", "n/a", "n/a",
+     "Later acquired by MGX/BlackRock (~$40bn)", "SFA; NYU DRI"),
+    ("pc", "2026", "Fluidstack — Google-backed facility", "Neocloud / AI-native",
+     "Private credit (Google lease backstop)", 6.7, "SPV backed by contracted revenue", "n/a", "n/a",
+     "~$6.7bn Google-contracted revenue", "theaiinsider"),
+    ("pc", "Jun-Jul 2025", "xAI — secured notes / term loan", "Neocloud / AI-native",
+     "Apollo, Diameter; Morgan Stanley", 5.0, "Secured notes + term loan (part of $10bn raise)",
+     "up to ~12.5%", "~3-5y", "Lenders can operate Colossus on default", "CNBC; ciphertalk"),
+    ("pc", "Jul 2025", "CoreWeave — OpenAI contract financing", "Neocloud / AI-native",
+     "Private lenders (SPV)", 2.6, "SPV debt vs $11.9bn OpenAI contract", "n/a", "n/a",
+     "Funds OpenAI compute obligations", "FT"),
+    ("pc", "Aug 2023", "CoreWeave — $2.3bn facility", "Neocloud / AI-native", "Blackstone, Magnetar", 2.3,
+     "GPU-backed facility", "high", "n/a", "Early GPU-collateralized template", "Blackstone"),
+    # --- 4) insurance-linked lending (memo; overlaps groups 1-3) ---
+    ("ins", "2026", "Anthropic — A2 notes (insurer tranche)", "Neocloud / AI-native",
+     "Apollo / Athene + insurers", 24.0, "Insurance-bought A2 tranche of TPU SPV", "5.75%", "~5y",
+     "Within the $35bn Anthropic deal (group 3)", "privatedebtnews"),
+    ("ins", "Oct 2025", "Meta — Hyperion insurance allocation", "Hyperscaler",
+     "Insurers via PIMCO / BlackRock", None, "Insurance allocation of 144A bond", "6.581%", "2049",
+     "Subset of the $27.3bn Hyperion bond (group 3)", "FT; S&P"),
+    ("ins", "Mar 2026", "CoreWeave — DDTL 4.0 insurance anchor", "Neocloud / AI-native",
+     "Blackstone Credit & Insurance + insurers", None, "Insurance anchor of GPU-backed loan",
+     "SOFR+225 / 5.9%", "2032", "Subset of the $8.5bn DDTL (group 2)", "CoreWeave IR"),
+    ("ins", "2025", "Athene (Apollo) — AP Grange", "Context / market", "Athene / Apollo (+ Intel equity)", 6.5,
+     "Insurer JV investment (semis-adjacent)", "n/a", "n/a", "Largest single-issuer insurer credit exposure", "Moody's"),
+    # --- 5) securitization / ABS / CMBS ---
+    ("abs", "Nov 2025", "QTS (Blackstone) — BX 2025-VOLT", "Colocation / data-center REIT", "Blackstone", 3.5,
+     "SASB CMBS (~10 QTS DCs)", "floating", "2y + ext", "Year's largest data-center CMBS", "CREFC; SFA"),
+    ("abs", "2024-25", "Switch (DigitalBridge) — SWCH 2025-DATA", "Colocation / data-center REIT", "DigitalBridge", 3.5,
+     "$2.4bn SASB CMBS + $1.1bn ABS (green)", "n/a", "n/a", "Green-bond framework", "SFA; CREFC"),
+    ("abs", "2026", "Applied Digital — Polaris Forge HY bond", "Colocation / data-center REIT", "HY market", 1.59,
+     "HY / securitized bond (CoreWeave campus)", "7%", "15y contract", "150MW for CoreWeave", "TNW"),
+    # --- 6) convertibles / equity-linked ---
+    ("conv", "Dec 2025", "CoreWeave", "Neocloud / AI-native", "Convertible market", 2.7,
+     "Convertible notes", "1.75%", "n/a", "Shift toward hybrid instruments", "thedig; CoreWeave"),
+    ("conv", "2025-26", "Nebius", "Neocloud / AI-native", "Convertible market", 3.0,
+     "Convertible notes", "n/a", "n/a", "Lighter-balance-sheet strategy", "frankk research"),
+    # --- 7) vendor / equipment-lease financing & backstops (memo) ---
+    ("vendor", "through 2032", "CoreWeave — NVIDIA capacity backstop", "Neocloud / AI-native", "NVIDIA", 6.3,
+     "Vendor backstop of unsold capacity", "n/a", "to 2032", "De-risks CoreWeave", "theaiinsider"),
+    ("vendor", "2024-30", "Microsoft — finance-lease commitments", "Hyperscaler", "Lessors / developers", 100.0,
+     "Finance leases (uncommenced ~$108bn at 9/30/24)", "n/a", "to 20y", "Off-B/S; commence FY25-FY30", "MSFT 10-Q; CNBC"),
+    # --- 8) equity & sovereign commitments (memo; not debt) ---
+    ("equity", "2025-26", "CoreWeave — equity", "Neocloud / AI-native", "NVIDIA; IPO", 3.5,
+     "IPO ($1.5bn) + NVIDIA strategic ($2bn)", "n/a", "n/a", "Equity (not debt)", "CNBC; CoreWeave"),
+    ("equity", "2025", "SpaceX / xAI — $10bn raise", "Neocloud / AI-native", "Morgan Stanley", 10.0,
+     "$5bn debt + $5bn equity", "n/a", "n/a", "Debt portion also in group 3", "CNBC"),
+    ("equity", "2025-30", "HUMAIN (Saudi PIF)", "Sovereign cloud", "Public Investment Fund", 100.0,
+     "Sovereign equity", "n/a", "n/a", "11 DCs / 2.2GW; ~600k GPUs", "Presenc AI; NYU DRI"),
+    ("equity", "2025-26", "MGX / Mubadala (UAE)", "Sovereign cloud", "Mubadala / MGX", 40.0,
+     "Sovereign equity / infra", "n/a", "n/a", "Anchored Stargate; co-bought Aligned", "NYU DRI"),
+    ("equity", "2025-30", "Stargate UAE / G42 / Khazna", "Sovereign cloud", "Mubadala, MGX, Microsoft, G42", 30.0,
+     "Sovereign equity + JV", "n/a", "n/a", "5GW Abu Dhabi campus", "Khaleej Times; dcpulse"),
+    ("equity", "Late 2025", "Qatar (QIA / Qai) + Brookfield", "Sovereign cloud", "QIA / Qai, Brookfield", 20.0,
+     "JV / infra", "n/a", "n/a", "AI-infrastructure JV", "NYU DRI"),
+    # --- 9) context / frameworks / projections (memo) ---
+    ("context", "to 2026", "Sector — HY/unrated AI-infra debt", "Context / market", "Multiple", 107.0,
+     "Funded + committed debt", "n/a", "n/a", "$68.7bn neoclouds / $38.7bn AI-native DCs", "Octus"),
+    ("context", "2025", "Insurance-linked platforms — private credit", "Context / market", "Athene, Global Atlantic, etc.", 180.0,
+     "Insurance capital into private credit", "n/a", "n/a", "~25% of global private credit AUM", "McKinsey; ABF Journal"),
+    ("context", "2026-28", "Colocation — DC securitization supply", "Context / market", "Industry-wide", 130.0,
+     "ABS + CMBS net issuance", "n/a", "n/a", "Morgan Stanley estimate", "CREFC; Impax"),
+    ("context", "2025-28", "Market — private credit for AI data centers", "Context / market", "Industry-wide", 800.0,
+     "Projection", "n/a", "n/a", ">$200bn already outstanding", "Morgan Stanley; Quinn Emanuel"),
+    ("context", "2024", "KKR + Energy Capital Partners — partnership", "Context / market", "KKR, ECP", 50.0,
+     "Strategic partnership", "n/a", "n/a", "Accelerate AI infrastructure", "Business Times"),
+    ("context", "2025-28", "Broadcom + Apollo + Blackstone — platform", "Context / market", "Apollo, Blackstone, Broadcom", None,
+     "Platform framework", ">20 GW", "to 2028", "Deploy >20GW compute", "privatedebtnews"),
+]
 # fmt: on
 
 
@@ -1049,43 +1194,16 @@ def build_capex(wb):
 
 
 # ---------------------------------------------------------------------------
-# Sheet 6: Deals & Sources (private credit transactions + other key deals, merged)
+# Sheet 6: Deals & Sources (debt transaction log, grouped by instrument type)
 # ---------------------------------------------------------------------------
-# DEALS entries (co, amt) that are already itemized in PRIVATE_CREDIT — skipped
-# from the "Other key deals" section to avoid duplication.
-_PC_DUP_KEYS = {
-    ("Meta Platforms", "$27.3bn debt"), ("Oracle (OCI)", "~$25bn+"),
-    ("CoreWeave", "$8.5bn"), ("CoreWeave", "$7.5bn"), ("SpaceX / xAI", "~$20bn"),
-    ("Lambda", "$0.5bn"), ("Nscale", "$1.4bn"), ("Fluidstack", "~$6.7bn"),
-    ("Qatar (QIA / Qai)", "~$20bn"),
-}
-
-
-def _segment_of(co):
-    s = co.lower()
-    if any(k in s for k in ["sector", "colocation sector", "market"]):
-        return "Context / market"
-    if any(k in s for k in ["microsoft", "amazon", "alphabet", "google", "meta", "oracle"]):
-        return "Hyperscaler"
-    if any(k in s for k in ["coreweave", "xai", "spacex", "nebius", "lambda", "nscale",
-                            "fluidstack", "iren", "crusoe"]):
-        return "Neocloud / AI-native"
-    if any(k in s for k in ["equinix", "digital realty", "qts", "vantage", "aligned",
-                            "cyrusone", "switch", "stack", "applied digital", "colo"]):
-        return "Colocation / data-center REIT"
-    if any(k in s for k in ["humain", "stargate", "mgx", "mubadala", "qatar", "qia",
-                            "india", "mistral", "sovereign"]):
-        return "Sovereign cloud"
-    return "Context / market"
-
-
 def build_deals_combined(wb):
     ws = wb.create_sheet("Deals & Sources")
     ws.sheet_view.showGridLines = False
-    title_cell(ws, "A1", "AI-Infrastructure Deals — Private Credit & Other Key Transactions (US$bn)")
-    ws["A2"] = ("Unified transaction log. Section 1: private-credit / SPV / 144A debt (itemized deals "
-                "summed). Section 2: context/frameworks. Section 3: other key deals (bonds, equity, "
-                "securitization, sovereign, leases). Amounts '~' = approximate.")
+    title_cell(ws, "A1", "AI-Infrastructure Debt Transactions & Sources (US$bn)")
+    ws["A2"] = ("Transaction log grouped by debt instrument (bonds, loans, alternate private credit, "
+                "insurance-linked, securitization, convertibles). Groups 1,2,3,5,6 are summed; "
+                "insurance-linked (4), vendor (7), equity/sovereign (8) and context (9) are memos. "
+                "'Debt amount ($bn)' is numeric only.")
     ws["A2"].font = Font(italic=True, size=9, color=GREY)
 
     cols = ["Period", "Borrower / Project", "Segment", "Lead lenders / arrangers",
@@ -1101,34 +1219,29 @@ def build_deals_combined(wb):
         "Colocation / data-center REIT": COLO_FILL, "Sovereign cloud": SOV_FILL,
         "Context / market": "F0F0F0",
     }
+    group_label = {g[0]: g[1] for g in GROUPS}
+    group_summed = {g[0]: g[2] for g in GROUPS}
 
     r = hdr + 1
-    item_rows = []
+    summed_rows = []
 
-    def write_deal(d, dim=False, track=False):
-        """d = (period, borrower, seg, lenders, amt, structure, pricing, tenor, notes, src).
-        amt may be numeric ($bn, summed when track=True), a string (shown as text), or None."""
+    def write_txn(t):
+        """t = (group, period, borrower, seg, lenders, amt, structure, pricing, tenor, notes, src).
+        Debt-amount column is NUMERIC ONLY; None is left blank."""
         nonlocal r
-        period, borrower, seg, lenders, amt, structure, pricing, tenor, notes, src = d
+        group, period, borrower, seg, lenders, amt, structure, pricing, tenor, notes, src = t
         ws.cell(row=r, column=1, value=period).font = Font(size=9)
-        ws.cell(row=r, column=2, value=borrower).font = Font(size=9, bold=not dim)
+        ws.cell(row=r, column=2, value=borrower).font = Font(size=9, bold=True)
         ws.cell(row=r, column=3, value=seg).font = Font(size=8, color=GREY)
         ws.cell(row=r, column=4, value=lenders).font = Font(size=9)
         amt_cell = ws.cell(row=r, column=5)
         if isinstance(amt, (int, float)):
-            amt_cell.value = amt
+            amt_cell.value = float(amt)
             num_fmt(amt_cell, "#,##0.0")
             amt_cell.font = Font(size=9, bold=True)
-            if track:
-                item_rows.append(r)
-        elif amt:
-            amt_cell.value = amt
-            amt_cell.alignment = Alignment(horizontal="right")
-            amt_cell.font = Font(size=9)
-        else:
-            amt_cell.value = "—"
-            amt_cell.alignment = Alignment(horizontal="right")
-            amt_cell.font = Font(size=9, color=GREY)
+            if group_summed.get(group):
+                summed_rows.append(r)
+        # None -> leave the cell blank (numeric-only column)
         ws.cell(row=r, column=6, value=structure).font = Font(size=9)
         ws.cell(row=r, column=7, value=pricing).font = Font(size=9)
         ws.cell(row=r, column=8, value=tenor).font = Font(size=9)
@@ -1151,32 +1264,31 @@ def build_deals_combined(wb):
             ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=NAVY)
         r += 1
 
-    # --- Section 1: private credit transactions (itemized) ---
-    section("1) PRIVATE CREDIT TRANSACTIONS (itemized — summed below)")
-    itemized = sorted([d for d in PRIVATE_CREDIT if d[4] is not None],
-                      key=lambda d: d[4], reverse=True)
-    for d in itemized:
-        write_deal(d, track=True)
-    ws.cell(row=r, column=2, value="Total — itemized private credit deals").font = Font(bold=True, color=NAVY)
-    tot = ws.cell(row=r, column=5, value=f"=SUM(E{item_rows[0]}:E{item_rows[-1]})")
+    def write_group(key):
+        section(group_label[key])
+        rows = [t for t in DEBT_TXNS if t[0] == key]
+        rows.sort(key=lambda t: (t[5] is not None, t[5] or 0), reverse=True)
+        for t in rows:
+            write_txn(t)
+
+    # debt-instrument groups, then the summed total, then memo groups
+    for key in GROUP_ORDER_BEFORE_TOTAL:
+        write_group(key)
+
+    # total of itemized debt transactions (summed groups only)
+    ws.cell(row=r, column=2,
+            value="TOTAL — itemized debt transactions (bonds + loans + private credit + ABS + converts)").font = \
+        Font(bold=True, color=NAVY)
+    ref = ",".join(f"E{rr}" for rr in summed_rows)
+    tot = ws.cell(row=r, column=5, value=f"=SUM({ref})")
     num_fmt(tot, "#,##0.0"); tot.font = Font(bold=True, color=NAVY)
     for col in range(1, NCOL + 1):
         ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=TOTAL_FILL)
         ws.cell(row=r, column=col).border = BORDER
     r += 2
 
-    # --- Section 2: private-credit context / frameworks ---
-    section("2) CONTEXT / FRAMEWORKS / PROJECTIONS (not summed)")
-    for d in [d for d in PRIVATE_CREDIT if d[4] is None]:
-        write_deal(d, dim=True)
-    r += 1
-
-    # --- Section 3: other key deals (bonds, equity, securitization, sovereign, leases) ---
-    section("3) OTHER KEY DEALS — bonds · equity · securitization · sovereign · leases")
-    for (co, desc, period, amt, instr, src) in DEALS:
-        if (co, amt) in _PC_DUP_KEYS:
-            continue  # already itemized in Section 1
-        write_deal((period, co, _segment_of(co), "", amt, instr, "", "", desc, src), dim=True)
+    for key in GROUP_ORDER_AFTER_TOTAL:
+        write_group(key)
 
     # --- sources footer ---
     r += 1
