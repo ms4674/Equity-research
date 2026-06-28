@@ -366,6 +366,91 @@ DEALS = [
     ("Sector-wide", "Insurance-linked platforms deployed ~$180bn into private credit in 2025 (~25% of global private credit AUM)", "2025", "~$180bn", "Insurance / private credit", "McKinsey; ABF Journal"),
     ("Sector-wide", "Goldman Sachs: ~$5.3tn AI + data-center capex 2025-2030; Morgan Stanley: ~$800bn private credit for AI DCs 2025-28", "2025-30", "$5.3tn capex", "Context", "Goldman; Morgan Stanley"),
 ]
+
+# ---------------------------------------------------------------------------
+# PRIVATE CREDIT TRANSACTIONS (AI infrastructure) — transaction log.
+# fields: (period, borrower / project, segment, lead lenders / arrangers,
+#          amount $bn [None for context/framework rows], structure / instrument,
+#          pricing, tenor / maturity, collateral / notes, source)
+# Amounts are the DEBT / private-credit portion as reported ('~' = approx).
+# This log spans private placements (144A), SPV/project debt, GPU-backed DDTLs and
+# direct lending; it overlaps the 'Alternate private credit', 'Insurance-linked' and
+# parts of the 'Securitization (144A)' buckets in the aggregated model.
+# ---------------------------------------------------------------------------
+PRIVATE_CREDIT = [
+    ("Oct 2025", "Meta — Hyperion (Beignet Investor LLC), Louisiana", "Hyperscaler",
+     "PIMCO (~$18bn), BlackRock, Apollo (debt); Blue Owl (equity); MS adviser", 27.3,
+     "Off-B/S SPV; 144A senior secured bond", "6.581% / T+225bp", "Due May 2049 (~23.6y)",
+     "2.1GW campus; Meta lease + residual-value guarantee (up to ~$28bn); A+ (S&P)", "IFR; FT; Quinn Emanuel"),
+    ("2026", "Anthropic — Google TPU chip SPV", "Neocloud / AI-native",
+     "Apollo (Atlas SP $0.8bn equity; Athene), Blackstone; Broadcom RVG", 35.0,
+     "Chip-leasing SPV; 3 tranches; ~half syndicated", "A1 T+100bp; A2 5.75%; B 8.5%",
+     "~5y", "Buys Google TPUs leased to Anthropic; Broadcom residual-value support", "privatedebtnews; Build.inc"),
+    ("2025-26", "xAI — Colossus 2 chip SPV (Memphis/Southaven)", "Neocloud / AI-native",
+     "Valor Equity (lead), Apollo, Diameter (debt); NVIDIA up to $2bn equity", 12.5,
+     "SPV; debt + ~$7.5bn equity to buy & lease GPUs", "~10.5%", "5y (~2.5y avg life)",
+     "Buys NVIDIA GPUs leased to xAI; chips as collateral", "FT; WSJ; AAE filing"),
+    ("Jun-Jul 2025", "xAI — secured notes / term loan (part of $10bn raise)", "Neocloud / AI-native",
+     "Apollo, Diameter; Morgan Stanley arranger", 5.0,
+     "Secured notes + term loan", "up to ~12.5%", "~3-5y",
+     "Lenders can seize/operate Colossus on default", "CNBC; ciphertalk"),
+    ("Mar 2026", "CoreWeave — DDTL 4.0 (Compute Acq. Co. VIII)", "Neocloud / AI-native",
+     "Blackstone Credit & Insurance (anchor); MUFG, MS, GS, JPM", 8.5,
+     "Non-recourse GPU-backed delayed-draw term loan", "SOFR+225 / ~5.9% fixed", "Mar 2032",
+     "First IG-rated (A3 / A low) HPC-collateralized loan", "CoreWeave IR"),
+    ("May 2024", "CoreWeave — $7.5bn debt facility", "Neocloud / AI-native",
+     "Blackstone, Magnetar (co-leads), Coatue, Carlyle, CDPQ, BlackRock, Eldridge", 7.5,
+     "GPU + customer-contract secured facility", "~10%+ (at issue)", "n/a",
+     "Largest private debt deal at the time", "Blackstone"),
+    ("Aug 2023", "CoreWeave — $2.3bn debt facility", "Neocloud / AI-native",
+     "Blackstone, Magnetar", 2.3, "GPU-backed facility", "high", "n/a",
+     "Early template for GPU-collateralized debt", "Blackstone"),
+    ("Jul 2025", "CoreWeave — OpenAI contract financing", "Neocloud / AI-native",
+     "Private lenders (SPV)", 2.6, "SPV debt vs. $11.9bn OpenAI contract", "n/a", "n/a",
+     "Funds CoreWeave's OpenAI compute obligations", "FT"),
+    ("2025", "Oracle/OpenAI — Abilene, TX (Stargate; Crusoe developer)", "Hyperscaler",
+     "Blue Owl + JPMorgan (incl. Crusoe, Primary Digital Infrastructure)", 10.0,
+     "Off-B/S SPV (~$13bn incl. equity)", "n/a", "n/a",
+     "SPV owns OpenAI Abilene facility", "FT"),
+    ("2025-26", "Oracle — Texas + Wisconsin data centers", "Hyperscaler",
+     "Private credit consortium", 38.0, "SPV debt package", "n/a", "n/a",
+     "Two-site off-B/S financing", "FT"),
+    ("2025-26", "Oracle — New Mexico site", "Hyperscaler",
+     "Private credit lenders", 18.0, "SPV / project loan", "n/a", "n/a",
+     "Single-site project loan", "FT"),
+    ("2025", "Oracle — Michigan campus", "Hyperscaler",
+     "Project-finance lenders", 16.3, "Project-level SPV financing", "n/a", "n/a",
+     "OCI capacity build", "Press reports"),
+    ("2026", "Fluidstack — Google-backed facility", "Neocloud / AI-native",
+     "Private credit (Google lease backstop)", 6.7, "SPV backed by contracted revenue", "n/a", "n/a",
+     "~$6.7bn Google-contracted revenue backstop", "theaiinsider"),
+    ("2024", "Applied Digital — Macquarie financing", "Colocation / data-center REIT",
+     "Macquarie", 5.0, "Perpetual/structured HPC financing", "n/a", "n/a",
+     "Powered-shell build for CoreWeave (Polaris Forge)", "press"),
+    ("Early 2025", "Aligned Data Centers — debt commitments", "Colocation / data-center REIT",
+     "Macquarie + global investors", 7.0, "Debt within $12bn raise (+$5bn equity)", "n/a", "n/a",
+     "Later acquired by MGX/BlackRock (~$40bn)", "SFA; NYU DRI"),
+    ("2026", "Nscale — term loan", "Neocloud / AI-native",
+     "Private credit", 1.4, "Term loan", "n/a", "n/a", "GPU-cloud build", "theaiinsider"),
+    ("2025", "Lambda — GPU-backed facility", "Neocloud / AI-native",
+     "Macquarie", 0.5, "GPU-backed facility", "n/a", "n/a", "GPU-cloud build", "theaiinsider"),
+    # ---- context / frameworks (not summed into the itemized total) ----
+    ("2024", "KKR + Energy Capital Partners — AI infrastructure partnership", "Context / market",
+     "KKR, Energy Capital Partners", None, "Strategic partnership/commitment", "n/a", "n/a",
+     "~$50bn to accelerate AI infrastructure", "Business Times"),
+    ("Late 2025", "Qatar (QIA / Qai) + Brookfield — AI infrastructure JV", "Context / market",
+     "QIA / Qai, Brookfield", None, "Joint venture / infra credit", "n/a", "n/a",
+     "~$20bn JV", "NYU DRI"),
+    ("2025-28", "Broadcom + Apollo + Blackstone — AI compute platform", "Context / market",
+     "Apollo, Blackstone, Broadcom", None, "Platform framework", "n/a", "through 2028",
+     ">20 GW of compute to be deployed", "privatedebtnews"),
+    ("from Nov 2025", "Sector — 144A private placements (data centers)", "Context / market",
+     "Multiple (Blue Owl, PIMCO, etc.)", None, "144A private placement bonds", "n/a", "n/a",
+     ">$40bn by Applied Digital, CoreWeave, Hut 8, Related since Nov 2025", "Bisnow"),
+    ("2025-28", "Market — projected private credit for AI data centers", "Context / market",
+     "Industry-wide", None, "Projection", "n/a", "n/a",
+     "Morgan Stanley: ~$800bn over next 2 years; >$200bn already outstanding", "Morgan Stanley; Quinn Emanuel"),
+]
 # fmt: on
 
 
@@ -416,7 +501,9 @@ def build_cover(wb):
         ("What this workbook contains", BLUE, [
             "• Summary (by Company): equity / internal funding vs. total debt, with % debt-funded.",
             "• Debt by Type: total debt split into mutually-exclusive instrument buckets.",
+            "• Cash-Flow Bridge: operating cash flow -> free cash flow -> external funding gap.",
             "• Capex Projections: annual AI-infrastructure capex 2025-2030 by company.",
+            "• Private Credit Deals: transaction log of private-credit / SPV / 144A debt for AI infra.",
             "• Key Deals & Sources: notable disclosed transactions underpinning the estimates.",
         ]),
         ("Scope & definitions", TEAL, [
@@ -963,7 +1050,96 @@ def build_capex(wb):
 
 
 # ---------------------------------------------------------------------------
-# Sheet 5: Key Deals & Sources
+# Sheet 6: Private Credit Transactions
+# ---------------------------------------------------------------------------
+def build_private_credit(wb):
+    ws = wb.create_sheet("Private Credit Deals")
+    ws.sheet_view.showGridLines = False
+    title_cell(ws, "A1", "Private Credit Transactions — AI Infrastructure (US$bn)")
+    ws["A2"] = ("Transaction log of private-credit / SPV / private-placement (144A) debt for AI infra. "
+                "Itemized deals are summed; 'Context / market' rows (frameworks, projections) are not.")
+    ws["A2"].font = Font(italic=True, size=9, color=GREY)
+
+    cols = ["Period", "Borrower / Project", "Segment", "Lead lenders / arrangers",
+            "Debt amount\n($bn)", "Structure / instrument", "Pricing",
+            "Tenor /\nmaturity", "Collateral / notes", "Source(s)"]
+    NCOL = len(cols)
+    hdr = 4
+    header_row(ws, hdr, 1, cols, fill=TEAL)
+    ws.row_dimensions[hdr].height = 30
+
+    seg_color = {
+        "Hyperscaler": HYPER_FILL, "Neocloud / AI-native": NEO_FILL,
+        "Colocation / data-center REIT": COLO_FILL, "Sovereign cloud": SOV_FILL,
+        "Context / market": "F0F0F0",
+    }
+
+    deals = list(PRIVATE_CREDIT)
+    itemized = [d for d in deals if d[4] is not None]
+    context = [d for d in deals if d[4] is None]
+    itemized.sort(key=lambda d: d[4], reverse=True)
+
+    r = hdr + 1
+    item_rows = []
+
+    def write_deal(d, dim=False):
+        nonlocal r
+        period, borrower, seg, lenders, amt, structure, pricing, tenor, notes, src = d
+        ws.cell(row=r, column=1, value=period).font = Font(size=9)
+        ws.cell(row=r, column=2, value=borrower).font = Font(size=9, bold=not dim)
+        ws.cell(row=r, column=3, value=seg).font = Font(size=8, color=GREY)
+        ws.cell(row=r, column=4, value=lenders).font = Font(size=9)
+        if amt is not None:
+            num_fmt(ws.cell(row=r, column=5, value=amt), "#,##0.0")
+            ws.cell(row=r, column=5).font = Font(size=9, bold=True)
+        else:
+            c = ws.cell(row=r, column=5, value="—")
+            c.alignment = Alignment(horizontal="right")
+            c.font = Font(size=9, color=GREY)
+        ws.cell(row=r, column=6, value=structure).font = Font(size=9)
+        ws.cell(row=r, column=7, value=pricing).font = Font(size=9)
+        ws.cell(row=r, column=8, value=tenor).font = Font(size=9)
+        ws.cell(row=r, column=9, value=notes).font = Font(size=9)
+        ws.cell(row=r, column=10, value=src).font = Font(size=9, color=BLUE)
+        fill = seg_color.get(seg, WHITE)
+        for col in range(1, NCOL + 1):
+            cell = ws.cell(row=r, column=col)
+            cell.fill = PatternFill("solid", fgColor=fill)
+            cell.alignment = Alignment(wrap_text=True, vertical="top",
+                                       horizontal="right" if col == 5 else "left")
+            cell.border = BORDER
+        ws.row_dimensions[r].height = 30
+        item_rows.append(r)
+        r += 1
+
+    for d in itemized:
+        write_deal(d)
+
+    # itemized total
+    ws.cell(row=r, column=2, value="Total — itemized private credit deals").font = Font(bold=True, color=NAVY)
+    tot = ws.cell(row=r, column=5, value=f"=SUM(E{item_rows[0]}:E{item_rows[-1]})")
+    num_fmt(tot, "#,##0.0"); tot.font = Font(bold=True, color=NAVY)
+    for col in range(1, NCOL + 1):
+        ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=TOTAL_FILL)
+        ws.cell(row=r, column=col).border = BORDER
+    r += 2
+
+    # context section
+    ws.cell(row=r, column=1, value="CONTEXT / FRAMEWORKS / PROJECTIONS (not summed)").font = \
+        Font(bold=True, color=WHITE, size=10)
+    for col in range(1, NCOL + 1):
+        ws.cell(row=r, column=col).fill = PatternFill("solid", fgColor=NAVY)
+    r += 1
+    for d in context:
+        write_deal(d, dim=True)
+
+    set_widths(ws, {"A": 11, "B": 30, "C": 16, "D": 30, "E": 11, "F": 22,
+                    "G": 14, "H": 13, "I": 38, "J": 18})
+    ws.freeze_panes = "A5"
+
+
+# ---------------------------------------------------------------------------
+# Sheet 7: Key Deals & Sources
 # ---------------------------------------------------------------------------
 def build_deals(wb):
     ws = wb.create_sheet("Key Deals & Sources")
@@ -1031,6 +1207,7 @@ def main():
     build_debt_breakdown(wb)
     build_cashflow_bridge(wb)
     build_capex(wb)
+    build_private_credit(wb)
     build_deals(wb)
 
     out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),

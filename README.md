@@ -17,6 +17,7 @@ vendor/equipment-lease financing), with an off-balance-sheet SPV/JV memo line.
 | Debt by Type | Main table — total debt split into mutually-exclusive instrument buckets |
 | Cash-Flow Bridge | Operating cash flow → free cash flow → external-funding gap (separates OCF & FCF from equity) |
 | Capex Projections | Annual AI-infrastructure capex 2025–2030 — every company listed separately, grouped by segment with subtotals |
+| Private Credit Deals | Transaction log of private-credit / SPV / 144A debt for AI infra (borrower, lenders, amount, structure, pricing, tenor) |
 | Key Deals & Sources | Notable disclosed transactions with citations |
 
 Funding sources are split three ways: **operating cash flow (self-funded)**, **external equity**
@@ -44,6 +45,9 @@ dividends/buybacks, the self-funded capex, and **free cash flow = CFO − AI cap
   Sovereign **$250**
 - Debt mix: corporate bonds $863bn · private credit $426bn · bank/syndicated loans $332bn ·
   insurance-linked lending $204bn · securitization/ABS $203bn · vendor/lease $160bn · convertibles $26bn
+- Private Credit Deals tab logs **17 itemized transactions ≈ $204bn** (Meta-Hyperion, Anthropic TPU SPV,
+  xAI Colossus 2, Oracle SPVs, CoreWeave facilities, etc.) — consistent with reported >$200bn of
+  outstanding AI private credit — plus market frameworks/projections (KKR-ECP $50bn, Morgan Stanley ~$800bn)
 
 > **Cross-segment overlap:** Hyperscalers lease much colocation capacity and sovereign-wealth funds
 > also invest in neoclouds/labs & colo (e.g. MGX/BlackRock bought Aligned; PIF put ~$3bn into xAI),
