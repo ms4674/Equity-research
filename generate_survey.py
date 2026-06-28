@@ -304,6 +304,27 @@ add_options(doc, [
     "More than 25",
 ])
 
+add_question(doc, 9, "What is the balance between open-source/open-weight and proprietary (closed) models in your token usage?")
+add_options(doc, [
+    "Exclusively proprietary / closed models (e.g., GPT, Claude, Gemini)",
+    "Mostly proprietary, some open-source (\u2265 60% proprietary)",
+    "Roughly balanced mix of open-source and proprietary",
+    "Mostly open-source / open-weight, some proprietary (\u2265 60% open)",
+    "Exclusively open-source / open-weight models (e.g., Llama, Mistral, Qwen)",
+    "Don't know / not tracked",
+])
+
+add_question(doc, 10, "To what extent do you use non-US / Chinese-origin models (e.g., DeepSeek, Kimi, GLM, Qwen) versus US models (e.g., GPT, Claude, Gemini, Llama)?")
+add_options(doc, [
+    "Exclusively US models",
+    "Mostly US models, occasional testing of non-US models",
+    "Roughly balanced use of US and non-US models",
+    "Mostly non-US / Chinese-origin models",
+    "Exclusively non-US / Chinese-origin models",
+    "Evaluating non-US models but none in production yet",
+])
+add_other_line(doc)
+
 # =====================================================================
 # SECTION C — Token Consumption by Use Case (matrix)
 # =====================================================================
@@ -311,7 +332,7 @@ add_section_heading(doc, "C", "Token Consumption by Use Case")
 add_intro_text(doc, "For each use case you operate, estimate the monthly token volume it consumes. "
                     "Mark one circle per row; leave a row blank if not applicable.")
 
-add_question(doc, 9, "Estimated MONTHLY token consumption by use case:",
+add_question(doc, 11, "Estimated MONTHLY token consumption by use case:",
              note="Bands are total tokens/month (input + output). 1M = one million, 1B = one billion.")
 vol_cols = ["< 1M", "1M\u201310M", "10M\u2013100M", "100M\u20131B", "> 1B", "N/A"]
 add_matrix(doc, "Use case",
@@ -326,7 +347,7 @@ add_matrix(doc, "Use case",
                "Agentic / automation workflows",
            ])
 
-add_question(doc, 10, "What is your organization's approximate TOTAL token consumption per month (all use cases combined)?")
+add_question(doc, 12, "What is your organization's approximate TOTAL token consumption per month (all use cases combined)?")
 add_options(doc, [
     "Less than 1 million tokens / month",
     "1 million \u2013 50 million tokens / month",
@@ -337,7 +358,7 @@ add_options(doc, [
     "Not measured / don't know",
 ])
 
-add_question(doc, 11, "What is the approximate split between input (prompt) and output (completion) tokens?")
+add_question(doc, 13, "What is the approximate split between input (prompt) and output (completion) tokens?")
 add_options(doc, [
     "Mostly input (\u2265 80% input)",
     "Input-heavy (roughly 60\u201380% input)",
@@ -347,7 +368,7 @@ add_options(doc, [
     "Don't know / not tracked",
 ])
 
-add_question(doc, 12, "How has your total token consumption changed over the past 12 months?")
+add_question(doc, 14, "How has your total token consumption changed over the past 12 months?")
 add_options(doc, [
     "Decreased",
     "Flat (roughly unchanged)",
@@ -364,7 +385,7 @@ add_options(doc, [
 add_section_heading(doc, "D", "Current Token / LLM Budget")
 add_intro_text(doc, "Help us understand the financial scale of your LLM usage.")
 
-add_question(doc, 13, "What is your organization's approximate ANNUAL spend on LLM tokens / API usage (USD)?")
+add_question(doc, 15, "What is your organization's approximate ANNUAL spend on LLM tokens / API usage (USD)?")
 add_options(doc, [
     "Less than $10,000",
     "$10,000 \u2013 $100,000",
@@ -375,7 +396,7 @@ add_options(doc, [
     "Don't know / not disclosed",
 ])
 
-add_question(doc, 14, "How is your LLM/token budget primarily managed?")
+add_question(doc, 16, "How is your LLM/token budget primarily managed?")
 add_options(doc, [
     "Centralized platform / AI team budget",
     "Allocated per business unit or product team",
@@ -385,7 +406,7 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 15, "What share of your total IT / cloud budget does LLM token spend currently represent?")
+add_question(doc, 17, "What share of your total IT / cloud budget does LLM token spend currently represent?")
 add_options(doc, [
     "Less than 1%",
     "1% \u2013 5%",
@@ -395,7 +416,7 @@ add_options(doc, [
     "Don't know",
 ])
 
-add_question(doc, 16, "How do you expect your LLM token budget to change over the NEXT 12 months?")
+add_question(doc, 18, "How do you expect your LLM token budget to change over the NEXT 12 months?")
 add_options(doc, [
     "Decrease",
     "Stay roughly flat",
@@ -405,7 +426,7 @@ add_options(doc, [
     "Increase more than 5\u00d7",
 ])
 
-add_question(doc, 17, "Which methods do you actively use to control or reduce token costs?", multi=True)
+add_question(doc, 19, "Which methods do you actively use to control or reduce token costs?", multi=True)
 add_options(doc, [
     "Prompt optimization / shorter prompts",
     "Caching (prompt/response caching)",
@@ -423,7 +444,7 @@ add_other_line(doc)
 add_section_heading(doc, "E", "Sensitivity to Token Pricing")
 add_intro_text(doc, "Help us gauge how price changes would affect your usage and vendor choices.")
 
-add_question(doc, 18, "How sensitive is your LLM usage to changes in token pricing?")
+add_question(doc, 20, "How sensitive is your LLM usage to changes in token pricing?")
 add_options(doc, [
     "Not sensitive \u2014 price is not a factor in our decisions",
     "Slightly sensitive \u2014 minor consideration",
@@ -432,7 +453,7 @@ add_options(doc, [
     "Critically sensitive \u2014 price is the primary constraint",
 ])
 
-add_question(doc, 19, "If token prices INCREASED by 50%, what is the most likely response?")
+add_question(doc, 21, "If token prices INCREASED by 50%, what is the most likely response?")
 add_options(doc, [
     "No change \u2014 absorb the cost",
     "Optimize prompts/caching to offset the increase",
@@ -442,7 +463,7 @@ add_options(doc, [
     "Cancel or significantly scale back LLM initiatives",
 ])
 
-add_question(doc, 20, "If token prices DECREASED by 50%, how would your usage most likely respond?")
+add_question(doc, 22, "If token prices DECREASED by 50%, how would your usage most likely respond?")
 add_options(doc, [
     "No meaningful change in usage",
     "Modest increase (up to 25% more usage)",
@@ -451,7 +472,7 @@ add_options(doc, [
     "We would launch new use cases previously deemed too costly",
 ])
 
-add_question(doc, 21, "Which factors matter MOST when choosing an LLM provider/model?", multi=True)
+add_question(doc, 23, "Which factors matter MOST when choosing an LLM provider/model?", multi=True)
 add_options(doc, [
     "Token price / cost per request",
     "Model quality & accuracy",
@@ -463,7 +484,7 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 22, "What is the maximum acceptable price (per 1M output tokens) for your primary use case?")
+add_question(doc, 24, "What is the maximum acceptable price (per 1M output tokens) for your primary use case?")
 add_options(doc, [
     "Under $1 per 1M tokens",
     "$1 \u2013 $5 per 1M tokens",
@@ -473,7 +494,7 @@ add_options(doc, [
     "Price is not a binding constraint",
 ])
 
-add_question(doc, 23, "How frequently do you re-evaluate model/provider choices based on price?")
+add_question(doc, 25, "How frequently do you re-evaluate model/provider choices based on price?")
 add_options(doc, [
     "Rarely / never",
     "Annually",
@@ -487,7 +508,7 @@ add_options(doc, [
 # =====================================================================
 add_section_heading(doc, "F", "Outlook & Open Feedback")
 
-add_question(doc, 24, "What is the single biggest barrier to scaling your LLM usage?")
+add_question(doc, 26, "What is the single biggest barrier to scaling your LLM usage?")
 add_options(doc, [
     "Token / usage cost",
     "Model accuracy or reliability",
@@ -498,7 +519,7 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 25, "Over the next 2\u20133 years, what do you expect for token prices in the market?")
+add_question(doc, 27, "Over the next 2\u20133 years, what do you expect for token prices in the market?")
 add_options(doc, [
     "Fall significantly (more than 50%)",
     "Fall moderately (10\u201350%)",
@@ -509,7 +530,7 @@ add_options(doc, [
 ])
 
 # Open comment box
-add_question(doc, 26, "Any additional comments on your token consumption, budget, or pricing sensitivity? (optional)")
+add_question(doc, 28, "Any additional comments on your token consumption, budget, or pricing sensitivity? (optional)")
 for _ in range(4):
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(10)
