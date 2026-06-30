@@ -152,12 +152,13 @@ intro = [
     "WORKBOOK CONTENTS",
     "   1. Cover (this sheet)",
     "   2. Agreements Master — granular, one row per agreement (the core data set)",
-    "   3. Neocloud Exposure — neocloud memory exposure (mostly indirect, via GPU allocation)",
-    "   4. Pricing Benchmarks — DRAM/HBM/NAND contract & spot pricing, QoQ moves",
-    "   5. HBM Generations & Cost — per-stack / per-GB economics by generation",
-    "   6. Supplier Allocation — LTA coverage, capacity & 'sold-out' status by supplier",
-    "   7. Hyperscaler Capex — context on AI infra spend driving demand",
-    "   8. Sources — full citation list",
+    "   3. Micron SCA — dedicated breakdown of Micron's 16 Strategic Customer Agreements & customer cohorts",
+    "   4. Neocloud Exposure — neocloud memory exposure (mostly indirect, via GPU allocation)",
+    "   5. Pricing Benchmarks — DRAM/HBM/NAND contract & spot pricing, QoQ moves",
+    "   6. HBM Generations & Cost — per-stack / per-GB economics by generation",
+    "   7. Supplier Allocation — LTA coverage, capacity & 'sold-out' status by supplier",
+    "   8. Hyperscaler Capex — context on AI infra spend driving demand",
+    "   9. Sources — full citation list",
     "",
     "CAVEATS",
     "Many headline agreements are non-binding LOIs/MOUs or remain in negotiation; values are analyst estimates and "
@@ -305,6 +306,91 @@ for row in range(5, r):
     elif "negotiation" in sval or "proposal" in sval or "discussion" in sval or "qualified" in sval:
         ws.cell(row=row, column=8).fill = hdr_fill(RED)
 ws.row_dimensions[4].height = 30
+
+# =========================================================================== 2b. MICRON SCA
+ws = wb.create_sheet("Micron SCA")
+ws.sheet_view.showGridLines = False
+title_block(ws,
+            "MICRON STRATEGIC CUSTOMER AGREEMENTS (SCAs)",
+            "Announced Micron FQ3'26 (call/slides 24 Jun 2026). 16 SCAs across data center, consumer & automotive. Customers NOT publicly named by Micron.",
+            8)
+
+# --- A) Program key terms ---
+ws.cell(row=4, column=1, value="A) Program at a Glance — Key Terms").font = SECTION_FONT
+kh = ["Metric", "Detail", "Note"]
+K = [
+    ["Total agreements signed", "16 SCAs", "Completed in fiscal Q3 2026 (announced 24 Jun 2026)"],
+    ["End markets covered", "Data center, Consumer, Automotive", "DRAM (incl. HBM as appropriate) + NAND"],
+    ["Customer cohorts", "4 very large + 3 medium + 9 small (auto)", "4 hyperscale-scale; 3 mid; remainder automotive OEMs"],
+    ["Standard term", "5 years (CY2026-CY2030)", "Automotive agreements generally 3 years"],
+    ["Volume coverage", "~20% of Micron DRAM volume; ~1/3 (33%) of NAND volume", "Over the agreement period"],
+    ["Minimum contracted revenue", "~$100B (14 of 16 SCAs, at floor price)", "RPO ~$100B; actual revenue expected higher"],
+    ["Cash deposits & commitments", "~$22B ($18B cash + $4B letters of credit)", "Upfront; acts as take-or-pay fail-safe / penalty"],
+    ["Contract structure", "Take-or-pay, binding volume, non-cancellable", "Customer cannot walk away; deposit decrements vs purchases"],
+    ["Pricing mechanism", "Price band: ceiling @ CQ2'26 market + floor through term", "Some SCAs fixed-price or no band (market-based)"],
+    ["Floor economics", "Gross margin at floor > any prior-cycle peak", "Prior peak GM ~62%; recent GM ~85%"],
+    ["Revenue under SCAs (fully executed)", "~50%+ of total company revenue", "~40% at fixed price or ceiling at/near current market"],
+    ["Next-12-month RPO (Q3-signed)", "~$1.8B", "Full NTM breakdown to be disclosed from Q4"],
+    ["Capex response", "Raised toward ~$27B to expand capacity", "$100B Clay, NY complex; volume ~FY2028"],
+]
+r = write_table(ws, 5, kh, K, widths=[34, 46, 50], hdr_color="C55A11")
+
+# --- B) Customer cohorts / breakdown ---
+r2 = r + 2
+ws.cell(row=r2, column=1, value="B) Customer Cohorts — the 4 / 3 / 9 split (customers not named by Micron)").font = SECTION_FONT
+ch = ["Cohort", "# Agreements", "End Market", "Term", "Products",
+      "Pricing Structure", "Named / Inferred Customers", "Notes"]
+CC = [
+    ["Very large (hyperscale)", "4", "Data center", "5 yrs (2026-2030)",
+     "DRAM incl. HBM (HBM3E/HBM4), NAND/eSSD",
+     "Price band: ceiling @ CQ2'26 + floor; some fixed",
+     "Not named. Understood to be leading hyperscalers/AI-infra buyers. Micron's disclosed HBM customers: NVIDIA (HBM4 for Vera Rubin) & AMD.",
+     "Bulk of the ~$100B minimum revenue and the $22B deposits."],
+    ["Medium-sized", "3", "Data center / Consumer", "Multi-year (3-5 yrs)",
+     "DRAM, NAND",
+     "Mix of price bands / fixed",
+     "Not named. Span data center and consumer electronics OEMs.",
+     "Mid-tier of contracted revenue."],
+    ["Small (automotive)", "9", "Automotive & Embedded", "3 yrs",
+     "Auto-grade DRAM & NAND",
+     "Smaller volume; market-based",
+     "Not named. Automotive OEMs / Tier-1 suppliers.",
+     "Reflects Micron's long-term commitment to the auto segment (AEBU)."],
+    ["TOTAL", "16", "DC + Consumer + Auto", "3-5 yrs",
+     "DRAM (incl. HBM) + NAND", "Take-or-pay; floor+ceiling bands",
+     "4 disclosed cohorts; specific names withheld", "~50%+ of company revenue when fully executed."],
+]
+rr = write_table(ws, r2 + 1, ch, CC, widths=[22, 12, 20, 16, 26, 30, 40, 36], hdr_color="C55A11")
+# bold the TOTAL row
+for c in range(1, 9):
+    ws.cell(row=rr - 1, column=c).font = BOLD
+    ws.cell(row=rr - 1, column=c).fill = hdr_fill(AMBER)
+ws.row_dimensions[r2 + 1].height = 28
+
+# --- C) Business-unit context + note ---
+r3 = rr + 1
+ws.cell(row=r3, column=1, value="C) Micron Business Units (FQ3'26 reporting segments)").font = SECTION_FONT
+bh = ["Business Unit", "Code", "Scope", "Note"]
+BU = [
+    ["Core Data Center", "CDBU", "HBM, server DRAM, data-center SSD", "Primary beneficiary of large hyperscale SCAs"],
+    ["Mobile & Client", "MCBU", "Mobile/PC DRAM (LPDDR), client SSD", "Consumer-segment SCAs"],
+    ["Automotive & Embedded", "AEBU", "Auto-grade DRAM/NAND, embedded", "9 smaller 3-yr SCAs; rev ~$4.6B, ~79% GM"],
+]
+r4 = write_table(ws, r3 + 1, bh, BU, widths=[26, 10, 40, 44], hdr_color="C55A11")
+
+note_r = r4 + 1
+ws.merge_cells(start_row=note_r, start_column=1, end_row=note_r, end_column=8)
+c = ws.cell(row=note_r, column=1,
+            value="IMPORTANT: Micron did NOT publicly name any SCA counterparty. The customer identities above are cohort-level disclosures from "
+                  "the FQ3'26 call/slides plus reasonable inference (e.g., Micron's publicly disclosed HBM customers are NVIDIA and AMD). Do not treat "
+                  "inferred names as confirmed contract counterparties. Figures are at FLOOR price — actual realized revenue is expected to be higher. "
+                  "Source: Micron FQ3 FY2026 earnings call transcript & slide deck, 24 Jun 2026 (stockanalysis.com; Micron IR slides via Fortune/Quartr); "
+                  "Investing.com; WCCFTech; Seoul Economic Daily.")
+c.font = Font(italic=True, size=10, color="833C00")
+c.fill = hdr_fill(AMBER)
+c.alignment = WRAP
+c.border = BORDER
+ws.row_dimensions[note_r].height = 70
 
 # =========================================================================== 3. NEOCLOUD EXPOSURE
 ws = wb.create_sheet("Neocloud Exposure")
@@ -534,6 +620,9 @@ O = [
     [26, "WCCFTech / Bernstein & Morgan Stanley (2026)", "Rubin NVL72 rack $7.8M-9.1M; HBM4 ~$53/GB 2027", "wccftech.com"],
     [27, "ModulEdge / Frankk / Synergy (2025-26)", "Neocloud tiers, backlog, power, Nvidia ties", "moduledge.com/blog/neocloud ; research.frankk.site"],
     [28, "TechBriefly / BigGo / Korea JoongAng (2026)", "MSFT/Google 3yr DRAM deals; prepayments; ~$650B capex", "techbriefly.com ; finance.biggo.com"],
+    [29, "Micron FQ3'26 earnings call transcript (2026-06-24)", "16 SCAs: terms, 4/3/9 cohorts, take-or-pay, floor/ceiling", "stockanalysis.com/stocks/mu/transcripts/609470-q3-2026"],
+    [30, "Micron FQ3'26 IR slide deck (2026-06-24)", "SCA volume coverage, $100B min rev, $22B deposits, BU detail", "Micron IR slides via Fortune/Quartr"],
+    [31, "Investing.com / WCCFTech / Seoul Economic Daily (2026)", "SCA $100B, $18B cash + $4B LC, 14/16 deals, non-cancellable", "ng.investing.com ; wccftech.com ; en.sedaily.com"],
 ]
 r = write_table(ws, 4, oh, O, widths=[5, 34, 50, 58], hdr_color=NAVY)
 for row in range(5, r):
