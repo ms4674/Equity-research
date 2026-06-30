@@ -17,7 +17,7 @@ vendor/equipment-lease financing), with an off-balance-sheet SPV/JV memo line.
 | Debt by Type | Main table — total debt split into mutually-exclusive instrument buckets |
 | Cash-Flow Bridge | Operating cash flow → free cash flow → external-funding gap (separates OCF & FCF from equity) |
 | Capex Projections | Annual AI-infrastructure capex 2025–2030 — every company listed separately, grouped by segment with subtotals |
-| Deals & Sources | Debt transaction log grouped by instrument — corporate bonds · bank & syndicated loans · alternate private credit/SPV/144A · insurance-linked lending · securitization/ABS/CMBS · convertibles (+ vendor/equity/context memos + sources). Debt amount column is numeric only |
+| Deals & Sources | Debt transaction log grouped by instrument — corporate bonds · bank & syndicated loans · alternate private credit/SPV/144A · insurance-linked lending · securitization/ABS/CMBS & secured data-center bonds (incl. full Seaport Global desk-note universe) · convertibles (+ vendor/equity/context memos + sources). Debt amount column is numeric only |
 
 Funding sources are split three ways: **operating cash flow (self-funded)**, **external equity**
 (IPOs, strategic stakes, ATM, sovereign equity, mandatory convertible preferred), and **total debt**.
@@ -45,11 +45,14 @@ dividends/buybacks, the self-funded capex, and **free cash flow = CFO − AI cap
 - Debt mix: corporate bonds $863bn · private credit $426bn · bank/syndicated loans $332bn ·
   insurance-linked lending $204bn · securitization/ABS $203bn · vendor/lease $160bn · convertibles $26bn
 - Deals & Sources tab is a debt transaction log grouped by instrument (numeric-only amounts): itemized debt
-  transactions total **≈ $454bn** — corporate bonds ~$234bn (incl. SpaceX's $25bn inaugural bond),
-  alternate private credit/SPV ~$188bn, bank & syndicated loans ~$18bn, securitization/ABS ~$9bn,
-  convertibles ~$6bn — with separate memo sections for **insurance-linked lending** (e.g. Anthropic A2 notes
-  $24bn to Athene/insurers), vendor/lease & backstops (Microsoft's $196.6bn finance leases), equity/sovereign
-  commitments (Microsoft's BlackRock/GIP/MGX AIP up to $100bn), and market context (Morgan Stanley ~$800bn, etc.)
+  transactions total **≈ $506bn** — corporate bonds ~$242bn (incl. SpaceX's $25bn inaugural bond + CoreWeave
+  HY notes), alternate private credit/SPV ~$186bn, securitization/secured data-center bonds ~$55bn,
+  bank & syndicated loans ~$18bn, convertibles ~$6bn — with separate memo sections for **insurance-linked
+  lending** (e.g. Anthropic A2 notes $24bn to Athene/insurers), vendor/lease & backstops (Microsoft's $196.6bn
+  finance leases), equity/sovereign commitments (Microsoft's BlackRock/GIP/MGX AIP up to $100bn), and context
+- Securitization section now includes the full Seaport Global desk-note universe of **secured data-center
+  project bonds** by tenant-credit tier — e.g. APLD/Applied Digital, Core Scientific, Cipher, Terawulf (WULF/Flash),
+  Tract (SV/PR RNO), Meridian, Hut 8 (Beacon Point/River Bend), QTS Fayetteville, Edged, SE Cosmos, Elk Grove
 
 > **Cross-segment overlap:** Hyperscalers lease much colocation capacity and sovereign-wealth funds
 > also invest in neoclouds/labs & colo (e.g. MGX/BlackRock bought Aligned; PIF put ~$3bn into xAI),
