@@ -1,0 +1,12 @@
+rank_monthly,model,developer,country,license_type,monthly_tokens_T,mom_growth_pct,latest_weekly_tokens_T,weekly_growth_pct,input_price_list_usd_per_mtok,output_price_list_usd_per_mtok,input_price_realized_usd_per_mtok,output_price_realized_usd_per_mtok,notes
+1,DeepSeek V4 Flash,DeepSeek,China,Open (MIT),10.9,995,4.72,5,0.10,0.20,0.054,0.242,MoE w/ DeepSeek Sparse Attention; default low-cost high-volume model
+2,Hy3 Preview,Tencent,China,Preview,10.7,999,3.46,6,0.063,,,,295B MoE (21B active); launched late Apr 2026; output list price not disclosed
+3,Claude Opus 4.7,Anthropic,USA,Closed,7.48,197,2.23,9,5.00,25.00,1.65,25.00,Highest-ranked closed model; realized input reflects prompt caching
+4,Claude Sonnet 4.6,Anthropic,USA,Closed,7.45,34,1.54,1,3.00,15.00,1.31,15.00,Workhorse tier; realized input reflects prompt caching
+5,Owl Alpha,OpenRouter,USA,Closed,5.03,999,3.55,31,,,,,Platform-native routing/fallback model; pricing not published
+6,Gemini 3 Flash Preview,Google,USA,Closed,4.6,3,,,0.50,3.00,,,Latency-optimized high-frequency workhorse
+7,DeepSeek V4 Pro,DeepSeek,China,Open (MIT),4.54,739,2.08,17,0.435,0.87,,,1.6T params (49B active); higher-capability sibling of V4 Flash
+8,DeepSeek V3.2,DeepSeek,China,Open (MIT),4.31,-14,,,0.2288,0.3432,,,Prior-gen; being cannibalized by V4 family
+9,Kimi K2.6,Moonshot AI,China,Open,3.72,1,,,0.55,3.20,,,Top open-weights AA Intelligence Index (54); multimodal
+10,Nemotron 3 Super,NVIDIA,USA,Open,2.65,3,,,0.00,0.00,,,Offered free on OpenRouter; ~300 tok/s throughput
+,GLM 5.2,Z.ai (Zhipu AI),China,Open (MIT),,,2.11,66,0.94,3.00,0.447,3.31,"Launched Jun 13 (Coding Plan) / Jun 16 (weights+API); 744B MoE (40B active), 1M context; ranked #7 by weekly run-rate; partial-month so excluded from trailing-month top 10"
