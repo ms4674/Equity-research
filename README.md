@@ -45,10 +45,11 @@ dividends/buybacks, the self-funded capex, and **free cash flow = CFO − AI cap
 - Debt mix: corporate bonds $863bn · private credit $426bn · bank/syndicated loans $332bn ·
   insurance-linked lending $204bn · securitization/ABS $203bn · vendor/lease $160bn · convertibles $26bn
 - Deals & Sources tab is a debt transaction log grouped by instrument (numeric-only amounts): itemized debt
-  transactions total **≈ $429bn** — corporate bonds ~$209bn, alternate private credit/SPV ~$188bn,
-  bank & syndicated loans ~$18bn, securitization/ABS ~$9bn, convertibles ~$6bn — with separate memo sections
-  for **insurance-linked lending** (e.g. Anthropic A2 notes $24bn to Athene/insurers), vendor/lease & backstops,
-  equity/sovereign commitments, and market context (Morgan Stanley ~$800bn, KKR-ECP $50bn, etc.)
+  transactions total **≈ $454bn** — corporate bonds ~$234bn (incl. SpaceX's $25bn inaugural bond),
+  alternate private credit/SPV ~$188bn, bank & syndicated loans ~$18bn, securitization/ABS ~$9bn,
+  convertibles ~$6bn — with separate memo sections for **insurance-linked lending** (e.g. Anthropic A2 notes
+  $24bn to Athene/insurers), vendor/lease & backstops (Microsoft's $196.6bn finance leases), equity/sovereign
+  commitments (Microsoft's BlackRock/GIP/MGX AIP up to $100bn), and market context (Morgan Stanley ~$800bn, etc.)
 
 > **Cross-segment overlap:** Hyperscalers lease much colocation capacity and sovereign-wealth funds
 > also invest in neoclouds/labs & colo (e.g. MGX/BlackRock bought Aligned; PIF put ~$3bn into xAI),

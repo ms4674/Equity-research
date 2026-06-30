@@ -490,6 +490,9 @@ DEBT_TXNS = [
      "Public IG bond (8-part)", "IG", "3-40y", "Within $45-50bn CY26 plan", "Oracle IR; IFR"),
     ("bonds", "2025", "Oracle (OCI)", "Hyperscaler", "Bank syndicate", 18.0,
      "Public IG bond (6-part)", "IG", "n/a", "", "Reuters; CNA"),
+    ("bonds", "Jun 2026", "SpaceX / xAI", "Neocloud / AI-native", "Bank syndicate", 25.0,
+     "Inaugural senior unsecured bond (5 tranches)", "5.35-6.65%", "2031-2056",
+     "Refinanced ~$20bn bridge loan; funds SpaceX/Starlink + xAI compute", "SpaceX 8-K; StockTitan"),
     # --- 2) bank & syndicated loans ---
     ("loans", "Mar 2026", "CoreWeave — DDTL 4.0", "Neocloud / AI-native",
      "Blackstone Credit & Insurance (anchor); MUFG, MS, GS, JPM", 8.5,
@@ -567,9 +570,14 @@ DEBT_TXNS = [
     # --- 7) vendor / equipment-lease financing & backstops (memo) ---
     ("vendor", "through 2032", "CoreWeave — NVIDIA capacity backstop", "Neocloud / AI-native", "NVIDIA", 6.3,
      "Vendor backstop of unsold capacity", "n/a", "to 2032", "De-risks CoreWeave", "theaiinsider"),
-    ("vendor", "2024-30", "Microsoft — finance-lease commitments", "Hyperscaler", "Lessors / developers", 100.0,
-     "Finance leases (uncommenced ~$108bn at 9/30/24)", "n/a", "to 20y", "Off-B/S; commence FY25-FY30", "MSFT 10-Q; CNBC"),
+    ("vendor", "2024-31", "Microsoft — finance-lease commitments", "Hyperscaler", "Lessors / developers", 196.6,
+     "Finance leases not yet commenced (as of 31 Mar 2026)", "n/a", "to 21y",
+     "Off-B/S; commence FY26-FY31; Microsoft funds AI via leases not new bonds", "MSFT 10-Q"),
     # --- 8) equity & sovereign commitments (memo; not debt) ---
+    ("equity", "2024-25", "Microsoft — AI Infrastructure Partnership (AIP)", "Hyperscaler",
+     "Microsoft, BlackRock/GIP, MGX (+ NVIDIA)", 100.0, "Co-investment fund (equity sponsor)", "n/a", "n/a",
+     "Up to $100bn incl. debt; first deployment $40bn Aligned (Oct 2025); Microsoft offtake underwrites it",
+     "FT; chiragvadhia"),
     ("equity", "2025-26", "CoreWeave — equity", "Neocloud / AI-native", "NVIDIA; IPO", 3.5,
      "IPO ($1.5bn) + NVIDIA strategic ($2bn)", "n/a", "n/a", "Equity (not debt)", "CNBC; CoreWeave"),
     ("equity", "2025", "SpaceX / xAI — $10bn raise", "Neocloud / AI-native", "Morgan Stanley", 10.0,
