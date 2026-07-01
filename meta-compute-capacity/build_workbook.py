@@ -179,12 +179,89 @@ AI_BUILD = [
      "Owned self-build", "Meta's 32nd data center globally."),
 ]
 
-# Leased / colocation known markets (Dgtl Infra)
+# Leased COLOCATION known markets (Dgtl Infra) -- Meta owns the compute here
 LEASE_MARKETS = [
     "Ashburn, Virginia", "Manassas, Virginia", "Richmond, Virginia",
     "Aurora, Illinois", "Chicago, Illinois", "Dallas, Texas",
     "Houston, Texas", "Phoenix, Arizona", "Hillsboro, Oregon",
     "Santa Clara, California", "Chennai, India",
+]
+
+# NEOCLOUD / third-party CLOUD commitments (compute-as-a-service; provider owns GPUs)
+# provider, category, announced, value_$b (None=undisclosed), term, scope, notes
+NEOCLOUD_DEALS = [
+    ("CoreWeave — initial", "Neocloud (GPU-as-a-service)", "Sep 2025", 14.2,
+     "through Dec 14, 2031 (option to 2032)", "NVIDIA GB300 systems",
+     "First major Meta neocloud contract; disclosed in CoreWeave SEC filing."),
+    ("CoreWeave — expansion", "Neocloud (GPU-as-a-service)", "Apr 2026", 21.0,
+     "2027-2032", "Dedicated capacity, multi-site; incl. NVIDIA Vera Rubin",
+     "Brings Meta-CoreWeave total to ~$35B; supports large-scale AI inference."),
+    ("Nebius", "Neocloud (GPU-as-a-service)", "2025", 12.0,
+     "multi-year (+$15B option)", "Fixed dedicated compute",
+     "Up to $27B including a $15B option exercisable at Nebius's discretion."),
+    ("Google Cloud", "Hyperscaler cloud", "Aug 2025", 10.0,
+     "6 years", "Servers, storage, networking for AI",
+     "Minimum ~$10B; mainly AI infrastructure scaling."),
+    ("Amazon Web Services", "Hyperscaler cloud", "Ongoing", None,
+     "Ongoing", "Cloud infrastructure", "Long-standing; value undisclosed."),
+    ("Microsoft Azure", "Hyperscaler cloud", "Ongoing", None,
+     "Ongoing", "Cloud infrastructure", "Long-standing; value undisclosed."),
+]
+
+# COLOCATION rental rates -- by deal tier (CREFC data-center primer, 2026)
+# tier, typical size, typical term, rate $/kW/month, note
+COLO_RATE_TIER = [
+    ("Retail / edge colocation", "< ~250 kW", "1-3 yr", "$200 - $400",
+     "Highest unit price; smallest deployments."),
+    ("Wholesale colocation", "~250 kW - a few MW", "5-10 yr", "$150 - $250",
+     "Mid-size; typical enterprise / AI."),
+    ("Hyperscale / build-to-suit", "5 - 40+ MW", "10-15 yr", "$100 - $150",
+     "Largest deals, lowest unit rate — Meta's tier."),
+]
+# COLOCATION rates by metro (CBRE, 250-500 kW requirement)
+COLO_RATE_METRO = [
+    ("Primary N. America avg (250-500 kW)", "~$196 / kW/mo", "+6.6% YoY", "CBRE H2-2025 record; 4th straight annual rise."),
+    ("Chicago", "$200 - $230", "+14.7% YoY", "Highest US primary rate (Q1-2026)."),
+    ("Northern Virginia", "$190 - $235", "single-digit", "Largest US market."),
+    ("Atlanta", "$160 - $180", "+2% YoY", "Fast-growing; vacancy ~1%."),
+    ("Dallas-Ft. Worth", "market rate", "~flat", "Asking rents roughly unchanged YoY."),
+    ("Frankfurt", "$235 - $265", "up YoY", "Highest European rate."),
+    ("Singapore", "$310 - $475", "up YoY", "Highest APAC rate; supply-constrained."),
+    ("10 MW+ deployments", "premium/scarce", "up to +19% YoY", "Large contiguous blocks command premiums."),
+]
+# COLOCATION utilization / occupancy
+COLO_UTIL = [
+    ("Primary-market vacancy (CBRE, YE2025)", "1.4%", "Record low."),
+    ("Primary-market vacancy (JLL, YE2025)", "1.0%", "2nd straight year; ~99% occupancy."),
+    ("Under-construction precommitted (JLL)", "92%", "Binding leases or owner-occupied."),
+    ("Under-construction that is leased (JLL)", "~60%", "Remaining ~40% owner-occupied."),
+    ("N. America capacity under construction (JLL)", "35+ GW", "Extraordinary by historical standards."),
+    ("Net absorption, primary markets 2025 (CBRE)", "2,498 MW", "Record; prior peak 1,810 MW (2024)."),
+    ("Occupancy 'yellow / red flag' (CREFC)", "<85% / <75%", "Credit-stress thresholds."),
+    ("Power utilization 'yellow / red flag' (CREFC)", "<60% / <50%", "Increasingly the key tracked metric."),
+]
+
+# NEOCLOUD GPU rental rates ($/GPU-hour); on-demand unless noted
+# sku, coreweave_8x, lambda, hyperscaler_ondemand(str), specialty_reserved3yr(str)
+NEO_GPU_RATES = [
+    ("A100 80GB", 2.70, 1.29, "$1.50 - $3.00", "—"),
+    ("H100 SXM", 6.16, 3.29, "$3.50 - $5.00", "$1.70 - $2.30"),
+    ("H200 SXM", 6.30, 3.50, "$4.50 - $7.00", "—"),
+    ("B200", 8.60, 4.99, "$5.50+", "—"),
+    ("GB200 NVL72", 10.50, None, "n/d", "—"),
+    ("GH200", 6.50, 1.49, "n/d", "—"),
+]
+# NEOCLOUD utilization / economics
+NEO_UTIL = [
+    ("Debt-financed cluster break-even utilization", "~65-70%", "Little margin of safety (American Compute)."),
+    ("1,024x H100 cluster @ 55% vs 85% util", "-$330k vs +$340k /mo", "Illustrates utilization sensitivity."),
+    ("CoreWeave Model FLOPs Utilization (MFU)", "50%+", "Claimed vs industry typical 30-45%."),
+    ("CoreWeave active power (Q1-2026)", ">1.0 GW", "Plan: ~1.7 GW active in 2026."),
+    ("CoreWeave contracted power (Q1-2026)", ">3.5 GW", "Active/contracted ≈ 29% (energization gap)."),
+    ("CoreWeave revenue backlog (Mar-2026)", "$99.4B", ">50% est. from Meta / OpenAI / hyperscalers."),
+    ("Bare-metal gross margin (pre-depreciation)", "55-65%", "Before heavy GPU depreciation."),
+    ("Neocloud market size (2025)", "$25B+", "Q4-2025 $9B, +223% YoY (Synergy Research)."),
+    ("Reserved-contract discounts", "1yr 25-40%; 3yr up to ~50%", "Spot 50-80% below on-demand."),
 ]
 
 # ============================================================================
@@ -210,26 +287,40 @@ intro = [
      "reports ACTUAL electricity consumption (MWh/yr) for every owned online data center individually, plus one "
      "line for 'Leased data center facilities.' That is the most authoritative apples-to-apples split of realized "
      "compute and anchors the 'Summary' tab."),
-    ("Headline (FY2024, by electricity consumed)",
-     "Owned online data centers: 14.89 TWh (~82%)  |  Leased/colocation: 3.07 TWh (~17%)  |  Other DC-related: "
-     "0.10 TWh (~1%).  Total data-center electricity = 18.06 TWh. Leased share has roughly doubled since 2020-22 "
-     "(~9-11%) as Meta pre-leased heavily for AI."),
+    ("Three procurement modes — the key distinction",
+     "Meta's compute is sourced three ways: (1) OWNED self-build data centers; (2) LEASED COLOCATION — Meta leases "
+     "physical space & power (powered shells / wholesale colo) from REITs/operators and installs its OWN servers/GPUs "
+     "(measured in MW & sqft; shows up in Meta's leased-facility electricity); and (3) NEOCLOUD / CLOUD — Meta rents "
+     "GPU compute-as-a-service, where a THIRD PARTY owns the GPUs & the building (measured in $ multi-year "
+     "commitments / GPU-hours; it is opex, not in Meta's owned-electricity reporting). This workbook now separates "
+     "colocation from neocloud."),
+    ("Headline #1 — physical footprint (FY2024, by electricity consumed)",
+     "Owned online data centers: 14.89 TWh (~82%)  |  Leased colocation: 3.07 TWh (~17%)  |  Other DC-related: "
+     "0.10 TWh (~1%).  Total data-center electricity = 18.06 TWh. Leased colocation share roughly doubled since "
+     "2020-22 (~9-11%) as Meta pre-leased heavily for AI."),
+    ("Headline #2 — neocloud / cloud commitments ($, off the electricity split)",
+     "CoreWeave ~$35B (initial $14.2B Sep-2025 + $21B expansion Apr-2026, through 2032; GB300 / Vera Rubin) | "
+     "Nebius up to $27B ($12B fixed + $15B option) | Google Cloud $10B+ over 6 yrs (Aug-2025) | plus ongoing AWS & "
+     "Azure. ~$57B+ disclosed (up to ~$72B with options). These are compute rentals, NOT part of the owned-vs-"
+     "colocation electricity split (different unit)."),
     ("Forward-looking AI capacity",
      "Realized power today is dwarfed by the announced AI build-out. Trackers count ~15.8 GW of Meta AI data-center "
      "capacity across ~20 sites (~50% operational). Flagship clusters: Prometheus (Ohio, ~1 GW) and Hyperion "
      "(Louisiana, 2 GW scaling to 5 GW). Hyperion uses a $27-30B Blue Owl JV (Meta ~20% equity) that is leased "
      "back to Meta — an owned/leased hybrid. See 'AI Buildout' tab."),
     ("Tabs",
-     "1) Summary — owned vs leased split & trend (authoritative, energy-based).  "
-     "2) Owned - Site Energy — per-site MWh 2020-24.  "
+     "1) Summary — owned vs colocation vs neocloud.  2) Owned - Site Energy — per-site MWh 2020-24.  "
      "3) Owned - Campus Detail — buildings, sqft, investment, nameplate MW est.  "
-     "4) Leased & Colocation — leased energy trend + markets.  "
-     "5) AI Buildout (GW) — forward capacity.  6) Sources & Methodology."),
+     "4) Colocation (space & power) — leased-facility energy trend + markets.  "
+     "5) Neocloud & Cloud — GPU-as-a-service commitments.  "
+     "6) Utilization & Rental Rates — colocation ($/kW/mo, vacancy) & neocloud ($/GPU-hr, utilization).  "
+     "7) AI Buildout (GW).  8) Sources & Methodology."),
     ("Important caveats",
      "• Electricity consumption ≠ nameplate MW, but is the best public realized-capacity proxy and is Meta-reported & "
-     "third-party assured.  • Nameplate MW figures (Campus Detail) are third-party estimates (usdatamap) and are "
-     "incomplete — they predate/understate the AI expansion.  • GW figures for AI clusters are targets/announcements, "
-     "not installed capacity.  • FY2024 = Jan 1 - Dec 31, 2024. All figures are as-disclosed and rounded."),
+     "third-party assured.  • Colocation and neocloud are measured in DIFFERENT units (MWh vs $) and are not additive.  "
+     "• Neocloud $ are multi-year contract values, not annual spend or installed capacity.  • Rental rates & "
+     "utilization on tab 6 are market benchmarks (CBRE/JLL/CREFC/neocloud disclosures), not Meta-specific contract "
+     "terms, which are confidential.  • GW figures for AI clusters are targets/announcements.  • FY2024 = calendar 2024."),
 ]
 for h, b in intro:
     ws.cell(r, 1, h).font = BOLD_NAVY
@@ -263,7 +354,7 @@ for c, h in enumerate(head, start=1):
     hdr(ws.cell(r, c, h))
 rows_def = [
     ("Owned online data centers", owned_tot, OWNED_FILL),
-    ("Leased data center facilities", LEASED_ENERGY, LEASED_FILL),
+    ("Leased colocation facilities (Meta owns the compute)", LEASED_ENERGY, LEASED_FILL),
     ("Other DC-related (warehouse/network/small colo)", OTHER_ENERGY, GREY),
 ]
 first_data = r + 1
@@ -337,6 +428,42 @@ for k in range(5):
     cell = ws.cell(r, 2 + k, f"=({col}{first_data})/{col}{total_row}")
     cell.number_format = FMT_PCT
     cell.border = border_all
+
+# ---- Neocloud / cloud commitments block (separate unit: $) ----
+r += 2
+ws.cell(r, 1, "Neocloud / third-party cloud commitments ($ multi-year) — separate from the electricity split above").font = BOLD_NAVY
+r += 1
+for c, h in enumerate(["Counterparty", "Category", "Announced", "Value ($B)", "Term"], start=1):
+    hdr(ws.cell(r, c, h))
+neo_start = r + 1
+for prov, cat, ann, val, term, scope, notes in NEOCLOUD_DEALS:
+    r += 1
+    ws.cell(r, 1, prov).alignment = LEFT
+    ws.cell(r, 2, cat).alignment = LEFT
+    ws.cell(r, 3, ann).alignment = CENTER
+    vc = ws.cell(r, 4, val if val is not None else "n/d")
+    vc.alignment = CENTER
+    if isinstance(val, (int, float)):
+        vc.number_format = FMT_1
+    ws.cell(r, 5, term).alignment = LEFT
+    for c in range(1, 6):
+        ws.cell(r, c).border = border_all
+        ws.cell(r, c).fill = PatternFill("solid", fgColor="FCE4D6")  # light orange = neocloud
+neo_end = r
+r += 1
+ws.cell(r, 1, "Total disclosed neocloud/cloud commitments").font = BOLD
+tc = ws.cell(r, 4, f'=SUMIF(D{neo_start}:D{neo_end},"<>n/d")')
+tc.number_format = FMT_1; tc.font = BOLD
+for c in range(1, 6):
+    ws.cell(r, c).border = border_all
+    ws.cell(r, c).fill = PatternFill("solid", fgColor="F8CBAD")
+r += 1
+ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=8)
+ws.cell(r, 1, "Taxonomy: OWNED = Meta builds & owns the DC and compute. COLOCATION = Meta leases space/power, owns the "
+              "compute (in electricity split above, amber). NEOCLOUD/CLOUD = Meta rents GPU compute-as-a-service; the "
+              "provider owns the GPUs & building (this block, orange; measured in $, not MWh — not additive with the "
+              "table above). See Neocloud & Cloud and Utilization & Rental Rates tabs.").font = NOTE_FONT
+ws.row_dimensions[r].height = 42
 
 # ---- Pie chart (2024 split) ----
 pie = PieChart()
@@ -419,7 +546,7 @@ for c in range(1, 10):
     ws.cell(r, c).font = BOLD
 # memo: leased + other
 r += 2
-ws.cell(r, 1, "Memo — Leased data center facilities").font = REG
+ws.cell(r, 1, "Memo — Leased colocation facilities").font = REG
 for k, v in enumerate(LEASED_ENERGY):
     ws.cell(r, 4 + k, v).number_format = FMT_INT
 for c in range(1, 9):
@@ -482,22 +609,28 @@ ws.cell(r + 1, 1, "Note: nameplate MW total is only for the subset of sites the 
 ws.freeze_panes = "A5"
 
 # ============================================================================
-# SHEET 5 — LEASED & COLOCATION
+# SHEET 5 — COLOCATION (space & power; Meta owns the compute)
 # ============================================================================
-ws = wb.create_sheet("Leased & Colocation")
-title_block(ws, "Leased / Colocation Capacity",
-            "Third-party leased data-center facilities. Sources: Meta Environmental Data Index; Dgtl Infra; SemiAnalysis.",
+ws = wb.create_sheet("Colocation (space & power)")
+title_block(ws, "Leased Colocation — Space & Power (Meta owns the compute)",
+            "Meta leases powered shells / wholesale colo and installs its own servers. Sources: Meta Env. Data Index; Dgtl Infra; SemiAnalysis.",
             span=6)
-for i, w in enumerate([30, 15, 15, 15, 15, 15], start=1):
+for i, w in enumerate([34, 14, 14, 14, 14, 14], start=1):
     ws.column_dimensions[get_column_letter(i)].width = w
 r = 4
-ws.cell(r, 1, "Leased data-center electricity consumption (MWh/yr)").font = BOLD_NAVY
+ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+ws.cell(r, 1, "Definition: colocation = Meta rents physical data-center space & power from third parties (REITs/operators) "
+              "but owns and operates the servers/GPUs inside. It IS captured in Meta's 'Leased data center facilities' "
+              "electricity line. (Contrast with neocloud — see next tab.)").font = NOTE_FONT
+ws.row_dimensions[r].height = 42
+r += 2
+ws.cell(r, 1, "Leased colocation electricity consumption (MWh/yr)").font = BOLD_NAVY
 r += 1
 hdr(ws.cell(r, 1, "Metric"))
 for k, y in enumerate(YEARS):
     hdr(ws.cell(r, 2 + k, str(y)))
 r += 1
-ws.cell(r, 1, "Leased facilities (MWh)").border = border_all
+ws.cell(r, 1, "Leased colocation facilities (MWh)").border = border_all
 ws.cell(r, 1).alignment = LEFT
 for k, v in enumerate(LEASED_ENERGY):
     cell = ws.cell(r, 2 + k, v); cell.number_format = FMT_INT; cell.border = border_all
@@ -513,9 +646,9 @@ for k in range(1, 5):
     cell.number_format = FMT_PCT; cell.border = border_all
 
 r += 2
-ws.cell(r, 1, "Known leased / colocation markets").font = BOLD_NAVY
+ws.cell(r, 1, "Known colocation markets (Meta)").font = BOLD_NAVY
 r += 1
-hdr(ws.cell(r, 1, "#")); hdr(ws.cell(r, 2, "Market")); 
+hdr(ws.cell(r, 1, "#"))
 ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=4)
 hdr(ws.cell(r, 2, "Market"))
 for i, m in enumerate(LEASE_MARKETS, start=1):
@@ -528,10 +661,11 @@ r += 2
 ws.cell(r, 1, "Key relationships & context").font = BOLD_NAVY
 notes = [
     "Digital Realty (DLR): Meta is its ~11th-largest customer; ~48 leased locations; ~$61.8M annualized base rent (Dgtl Infra).",
-    "SemiAnalysis: Meta pre-leased more capacity in H2-2024 than any other hyperscaler, concentrated in Ohio.",
-    "Dual-track 'all of the above' strategy: self-build + leasing + on-site gas generation to ramp AI capacity fast.",
+    "SemiAnalysis: Meta pre-leased more colocation capacity in H2-2024 than any other hyperscaler, concentrated in Ohio.",
+    "Dual-track 'all of the above' strategy: self-build + colocation leasing + neocloud + on-site gas generation.",
     "Hyperion (Louisiana) is financed via a $27-30B Blue Owl JV (Meta ~20% equity) and leased back to Meta — an owned/leased hybrid (see AI Buildout).",
-    "Leased DC electricity nearly quadrupled 2020->2024 (0.80 -> 3.07 TWh); leased share of DC power rose from ~11% to ~17%.",
+    "Leased colocation electricity nearly quadrupled 2020->2024 (0.80 -> 3.07 TWh); colocation share of DC power rose from ~11% to ~17%.",
+    "Market rental rates & utilization/vacancy for colocation are on the 'Utilization & Rental Rates' tab.",
 ]
 for n in notes:
     r += 1
@@ -540,7 +674,185 @@ for n in notes:
     ws.row_dimensions[r].height = 30
 
 # ============================================================================
-# SHEET 6 — AI BUILDOUT (GW)
+# SHEET 6 — NEOCLOUD & CLOUD (compute-as-a-service; provider owns the GPUs)
+# ============================================================================
+ws = wb.create_sheet("Neocloud & Cloud")
+title_block(ws, "Neocloud / Third-Party Cloud — Compute-as-a-Service",
+            "Meta rents GPU capacity; the provider owns the GPUs & building. Measured in $ commitments (opex), not Meta MWh.",
+            span=7)
+for i, w in enumerate([22, 26, 12, 12, 26, 26, 40], start=1):
+    ws.column_dimensions[get_column_letter(i)].width = w
+r = 4
+ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=7)
+ws.cell(r, 1, "Definition: neocloud/cloud = Meta buys managed GPU compute from a third party that owns the chips and "
+              "data centers (CoreWeave, Nebius, Google Cloud, AWS, Azure). This is NOT in Meta's owned/colocation "
+              "electricity split; it is a separate, $-denominated procurement channel.").font = NOTE_FONT
+ws.row_dimensions[r].height = 42
+r += 2
+head = ["Counterparty", "Category", "Announced", "Value ($B)", "Term", "Scope / hardware", "Notes"]
+for c, h in enumerate(head, start=1):
+    hdr(ws.cell(r, c, h))
+ns = r + 1
+for prov, cat, ann, val, term, scope, notes in NEOCLOUD_DEALS:
+    r += 1
+    vals = [prov, cat, ann, val if val is not None else "n/d", term, scope, notes]
+    for c, v in enumerate(vals, start=1):
+        cell = ws.cell(r, c, v)
+        cell.border = border_all
+        cell.alignment = CENTER if c in (3, 4) else LEFTTOP
+        cell.font = REG
+    if isinstance(val, (int, float)):
+        ws.cell(r, 4).number_format = FMT_1
+    ws.row_dimensions[r].height = 34
+ne = r
+r += 1
+ws.cell(r, 1, "Total disclosed commitments").font = BOLD
+tc = ws.cell(r, 4, f'=SUMIF(D{ns}:D{ne},"<>n/d")'); tc.number_format = FMT_1; tc.font = BOLD
+for c in range(1, 8):
+    ws.cell(r, c).border = border_all
+    ws.cell(r, c).fill = PatternFill("solid", fgColor="F8CBAD")
+r += 2
+ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=7)
+ws.cell(r, 1, "Context").font = BOLD_NAVY
+ncontext = [
+    "Meta describes this as a 'portfolio-based approach to infrastructure' — self-build + colocation + neocloud together.",
+    "CoreWeave total with Meta ~$35B (through 2032); CoreWeave overall backlog $99.4B (Mar-2026) on >3.5 GW contracted power.",
+    "Nebius Meta deal up to $27B: $12B fixed dedicated compute + $15B option (exercisable by Nebius).",
+    "Google Cloud: $10B+ / 6 yrs; Meta historically also uses AWS and Azure (values undisclosed).",
+    "Neocloud GPU rental rates and utilization economics are on the 'Utilization & Rental Rates' tab.",
+]
+for n in ncontext:
+    r += 1
+    ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=7)
+    c = ws.cell(r, 1, "• " + n); c.alignment = LEFTTOP; c.font = REG
+    ws.row_dimensions[r].height = 28
+
+# ============================================================================
+# SHEET 7 — UTILIZATION & RENTAL RATES
+# ============================================================================
+ws = wb.create_sheet("Utilization & Rental Rates")
+title_block(ws, "Utilization & Rental Rates — Colocation vs Neocloud",
+            "Market benchmarks (NOT Meta-specific contract terms, which are confidential). Sources: CBRE, JLL, CREFC, neocloud disclosures.",
+            span=6)
+for i, w in enumerate([40, 20, 18, 44, 12, 12], start=1):
+    ws.column_dimensions[get_column_letter(i)].width = w
+
+r = 4
+ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+h = ws.cell(r, 1, "A.  COLOCATION (space & power leasing)")
+h.font = Font(bold=True, size=12, color="FFFFFF")
+h.fill = PatternFill("solid", fgColor=LEASED_FILL[:6] if False else "BF8F00")
+h.alignment = LEFT
+r += 1
+ws.cell(r, 1, "Rental rates by deal tier ($/kW/month)").font = BOLD_NAVY
+r += 1
+for c, hh in enumerate(["Tier", "Typical size", "Typical term", "Rate ($/kW/mo)", "", ""], start=1):
+    if hh:
+        hdr(ws.cell(r, c, hh))
+for tier, size, term, rate, note in COLO_RATE_TIER:
+    r += 1
+    ws.cell(r, 1, tier).alignment = LEFT
+    ws.cell(r, 2, size).alignment = CENTER
+    ws.cell(r, 3, term).alignment = CENTER
+    ws.cell(r, 4, rate).alignment = CENTER
+    ws.merge_cells(start_row=r, start_column=4, end_row=r, end_column=4)
+    ws.cell(r, 4).font = BOLD
+    ws.merge_cells(start_row=r, start_column=5, end_row=r, end_column=6)
+    ws.cell(r, 5, note).alignment = LEFT; ws.cell(r, 5).font = NOTE_FONT
+    for c in range(1, 5):
+        ws.cell(r, c).border = border_all
+r += 2
+ws.cell(r, 1, "Rental rates by market (250-500 kW requirement)").font = BOLD_NAVY
+r += 1
+for c, hh in enumerate(["Market", "Asking rate", "YoY", "Note"], start=1):
+    hdr(ws.cell(r, c, hh))
+    if c == 4:
+        ws.merge_cells(start_row=r, start_column=4, end_row=r, end_column=6)
+        hdr(ws.cell(r, 4, "Note"))
+for metro, rate, yoy, note in COLO_RATE_METRO:
+    r += 1
+    ws.cell(r, 1, metro).alignment = LEFT
+    ws.cell(r, 2, rate).alignment = CENTER
+    ws.cell(r, 3, yoy).alignment = CENTER
+    ws.merge_cells(start_row=r, start_column=4, end_row=r, end_column=6)
+    ws.cell(r, 4, note).alignment = LEFT; ws.cell(r, 4).font = NOTE_FONT
+    for c in range(1, 4):
+        ws.cell(r, c).border = border_all
+    ws.cell(r, 4).border = border_all
+r += 2
+ws.cell(r, 1, "Utilization / occupancy").font = BOLD_NAVY
+r += 1
+for c, hh in enumerate(["Metric", "Value", "Note"], start=1):
+    hdr(ws.cell(r, c, hh))
+    if c == 3:
+        ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=6)
+        hdr(ws.cell(r, 3, "Note"))
+for metric, val, note in COLO_UTIL:
+    r += 1
+    ws.cell(r, 1, metric).alignment = LEFT
+    ws.cell(r, 2, val).alignment = CENTER; ws.cell(r, 2).font = BOLD
+    ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=6)
+    ws.cell(r, 3, note).alignment = LEFT; ws.cell(r, 3).font = NOTE_FONT
+    for c in range(1, 3):
+        ws.cell(r, c).border = border_all
+    ws.cell(r, 3).border = border_all
+
+r += 2
+ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+h = ws.cell(r, 1, "B.  NEOCLOUD (GPU compute-as-a-service)")
+h.font = Font(bold=True, size=12, color="FFFFFF")
+h.fill = PatternFill("solid", fgColor="C55A11")
+h.alignment = LEFT
+r += 1
+ws.cell(r, 1, "GPU rental rates ($/GPU-hour, on-demand unless noted)").font = BOLD_NAVY
+r += 1
+for c, hh in enumerate(["GPU SKU", "CoreWeave (8x)", "Lambda", "Hyperscaler on-dmd", "Specialty rsv 3yr", ""], start=1):
+    if hh:
+        hdr(ws.cell(r, c, hh))
+for sku, cw, lam, hyp, rsv in NEO_GPU_RATES:
+    r += 1
+    ws.cell(r, 1, sku).alignment = LEFT
+    a = ws.cell(r, 2, cw); a.alignment = CENTER
+    if isinstance(cw, (int, float)):
+        a.number_format = '"$"#,##0.00'
+    b = ws.cell(r, 3, lam if lam is not None else "n/d"); b.alignment = CENTER
+    if isinstance(lam, (int, float)):
+        b.number_format = '"$"#,##0.00'
+    ws.cell(r, 4, hyp).alignment = CENTER
+    ws.cell(r, 5, rsv).alignment = CENTER
+    for c in range(1, 6):
+        ws.cell(r, c).border = border_all
+r += 1
+ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+ws.cell(r, 1, "Discounts: reserved 1yr ~25-40% off on-demand; 3yr up to ~50%; spot ~50-80% below on-demand. "
+              "CoreWeave bills 8-GPU clusters (premium for guaranteed capacity/orchestration); long-tail H100 ~$1.99-2.50.").font = NOTE_FONT
+ws.row_dimensions[r].height = 28
+r += 2
+ws.cell(r, 1, "Utilization & unit economics").font = BOLD_NAVY
+r += 1
+for c, hh in enumerate(["Metric", "Value", "Note"], start=1):
+    hdr(ws.cell(r, c, hh))
+    if c == 3:
+        ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=6)
+        hdr(ws.cell(r, 3, "Note"))
+for metric, val, note in NEO_UTIL:
+    r += 1
+    ws.cell(r, 1, metric).alignment = LEFT
+    ws.cell(r, 2, val).alignment = CENTER; ws.cell(r, 2).font = BOLD
+    ws.merge_cells(start_row=r, start_column=3, end_row=r, end_column=6)
+    ws.cell(r, 3, note).alignment = LEFT; ws.cell(r, 3).font = NOTE_FONT
+    for c in range(1, 3):
+        ws.cell(r, c).border = border_all
+    ws.cell(r, 3).border = border_all
+r += 2
+ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+ws.cell(r, 1, "Note: Meta's own contracted colocation rents and neocloud rates are confidential; figures above are "
+              "market benchmarks used to frame Meta's economics. Owned/self-build effective cost is often quoted at "
+              "~$1.40-1.80/GPU-hr for a single GPU at ~70% utilization (before cluster/networking overhead).").font = NOTE_FONT
+ws.row_dimensions[r].height = 40
+
+# ============================================================================
+# SHEET 8 — AI BUILDOUT (GW)
 # ============================================================================
 ws = wb.create_sheet("AI Buildout (GW)")
 title_block(ws, "Forward AI Capacity Build-out (nameplate GW)",
@@ -583,7 +895,7 @@ ws.cell(r, 1, "Legend: green = owned self-build; amber = JV-owned/leased hybrid;
               "GW figures are targets/announcements and include multi-year phasing.").font = NOTE_FONT
 
 # ============================================================================
-# SHEET 7 — SOURCES & METHODOLOGY
+# SHEET 9 — SOURCES & METHODOLOGY
 # ============================================================================
 ws = wb.create_sheet("Sources & Methodology")
 for i, w in enumerate([40, 100], start=1):
@@ -593,7 +905,9 @@ r = 4
 ws.cell(r, 1, "Methodology").font = BOLD_NAVY
 r += 1
 meth = [
-    "Capacity proxy: Data-center capacity is measured in electric power. Because Meta does not disclose a single owned-vs-leased MW figure, the owned/leased split uses ACTUAL electricity consumption (MWh/yr) as the realized-capacity proxy — the one metric Meta reports separately for owned sites and for leased facilities.",
+    "Three procurement modes are tracked separately: (1) OWNED self-build; (2) LEASED COLOCATION — Meta leases space/power and owns the compute; (3) NEOCLOUD/CLOUD — Meta rents compute-as-a-service and the provider owns the GPUs. Owned + colocation are comparable in electricity (MWh); neocloud is a distinct $-denominated channel and is NOT additive with the electricity split.",
+    "Capacity proxy: Data-center capacity is measured in electric power. Because Meta does not disclose a single owned-vs-leased MW figure, the owned vs colocation split uses ACTUAL electricity consumption (MWh/yr) as the realized-capacity proxy — the one metric Meta reports separately for owned sites and for leased facilities.",
+    "Utilization & rental rates (tab 6) are external market benchmarks (CBRE/JLL/CREFC for colocation; neocloud disclosures & third-party price trackers for GPU rates). They frame Meta's economics but are NOT Meta's confidential contract terms.",
     "Owned online data centers are reported individually by Meta (18 sites with material 2024 consumption). 'Leased data center facilities' and 'Other DC-related facilities' are each reported as single lines.",
     "Nameplate MW (Campus Detail) are third-party estimates (usdatamap) available only for a subset of sites; they understate installed power and exclude the AI expansion. Use directionally.",
     "AI build-out GW are announced targets / analyst estimates with multi-year phasing — NOT installed capacity.",
@@ -619,6 +933,17 @@ sources = [
     ("usdatamap — Meta", "https://usdatamap.com/company/meta — third-party per-site nameplate MW estimates (incomplete)."),
     ("CBRE North America DC Trends H2 2025", "https://www.cbre.com/insights/books/north-america-data-center-trends-h2-2025 — Blue Owl JV; $27B Hyperion; market context."),
     ("Redact.dev — Facebook data center list (May 2026)", "https://redact.dev/blog/full-list-of-known-and-upcoming-facebook-datacenters-as-of-may-2026 — campus sqft/investment; Lebanon ~1GW; Hyperion up to 5GW."),
+    ("CoreWeave — Meta $21B expansion (Apr 2026)", "https://coreweave.com/news/coreweave-and-meta-announce-21-billion-expanded-ai-infrastructure-agreement — through Dec 2032; Vera Rubin; brings total to ~$35B."),
+    ("Reuters — CoreWeave $14B Meta deal (Sep 2025)", "https://www.reuters.com/technology/coreweave-signs-14-billion-ai-deal-with-meta-bloomberg-news-reports-2025-09-30/ — $14.2B through Dec 14 2031; GB300."),
+    ("CNBC — Meta +$21B CoreWeave (Apr 2026)", "https://www.cnbc.com/2026/04/09/meta-commits-to-spending-additional-21-billion-with-coreweave-.html — 2027-2032; portfolio approach."),
+    ("CNBC / Reuters / Bloomberg — Meta-Google Cloud (Aug 2025)", "https://www.cnbc.com/2025/08/21/google-scores-six-year-meta-cloud-deal-worth-over-10-billion.html — $10B+ over 6 yrs."),
+    ("Alatirok — Neocloud Economics 2026", "https://alatirok.com/neocloud-economics-2026/ — Nebius-Meta up to $27B ($12B + $15B option); CoreWeave $99.4B backlog / 3.5 GW."),
+    ("CoreWeave Q1 FY2026 results", "https://www.businesswire.com/news/home/20260507558197 — >1 GW active, >3.5 GW contracted power; Meta $21B; MFU context."),
+    ("CBRE — N. America DC Trends H2 2025 & Global 2026", "https://www.cbre.com/insights/books/north-america-data-center-trends-h2-2025 — $196/kW/mo, 1.4% vacancy, metro rates."),
+    ("JLL — N. America DC Report YE 2025", "https://www.jll.com/en-us/insights/market-dynamics/north-america-data-centers — 1% vacancy, 92% precommitted, 35+ GW UC, ~60% leased."),
+    ("CREFC — Data Center e-primer (2026)", "https://www.crefc.org/common/Uploaded%20files/Learn/DataCenters-eprimer-2026.02.25.pdf — rate tiers by deal type; occupancy/power-utilization flags."),
+    ("Mercatus / DeployBase / Verda — GPU cloud pricing", "https://www.mercatus-ai.com/blog/cloud-gpu-pricing — cross-provider $/GPU-hr by SKU (H100/H200/B200/GB200); reserved & spot discounts."),
+    ("American Compute / ModulEdge — Neocloud unit economics", "https://www.moduledge.com/blog/neocloud — ~70% break-even utilization; cluster P&L sensitivity; margins."),
 ]
 for name, url in sources:
     r += 1
