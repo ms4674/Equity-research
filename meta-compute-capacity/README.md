@@ -34,16 +34,26 @@ anchors the model.
 Leased colocation share of data-center power rose from ~11% (2020) to ~17% (2024).
 
 ## Headline #2 — neocloud / cloud commitments ($, separate from the split above)
-| Counterparty | Value | Term |
-|---|---:|---|
-| CoreWeave (initial + expansion) | ~$35B ($14.2B + $21B) | through 2032 |
-| Nebius | up to $27B ($12B + $15B option) | multi-year |
-| Google Cloud | $10B+ | 6 years |
-| AWS, Microsoft Azure | undisclosed | ongoing |
+| Counterparty | Value | Term | Avg $B/yr (straight-line) |
+|---|---:|---|---:|
+| CoreWeave — initial | $14.2B | Sep 2025 – Dec 2031 | ~$2.3B |
+| CoreWeave — expansion | $21B | 2027 – 2032 | ~$3.5B |
+| Nebius — Order #1 | $2.9B | 2026 – 2030 (5-yr) | ~$0.6B |
+| Nebius — Vera Rubin dedicated | $12B | 2027 – 2031 (5-yr) | ~$2.4B |
+| Nebius — unsold-capacity backstop | up to $15B | ~2027 – 2031 | up to ~$3.0B (contingent) |
+| Google Cloud | $10B+ | 6 years | ~$1.7B |
+| AWS, Microsoft Azure | undisclosed | ongoing | n/d |
 
-**~$57B+ disclosed** (up to ~$72B with options). Neocloud is compute rented as a
-service — a **different unit** ($) than the electricity split, so the two are not
-additive.
+**~$60B firm disclosed** (up to ~$75B if the Nebius $15B backstop triggers).
+Neocloud is compute rented as a service — a **different unit** ($) than the
+electricity split, so the two are not additive.
+
+### How much per year on CoreWeave + Nebius?
+Straight-line (contract total ÷ term), the combined **CoreWeave + Nebius** run-rate
+ramps to roughly **$8–9B/yr firm in 2028–2031** (up to ~$12B/yr if the Nebius
+backstop triggers). Actual cash spend is back-loaded — small at each contract's
+start and rising as GPU capacity is deployed. See the per-year matrix on the
+**Neocloud & Cloud** tab.
 
 Forward AI build-out (targets, not installed): ~**15.8 GW** across ~20 sites (~50%
 operational); flagships **Prometheus** (Ohio, ~1 GW) and **Hyperion** (Louisiana,

@@ -196,9 +196,12 @@ NEOCLOUD_DEALS = [
     ("CoreWeave — expansion", "Neocloud (GPU-as-a-service)", "Apr 2026", 21.0,
      "2027-2032", "Dedicated capacity, multi-site; incl. NVIDIA Vera Rubin",
      "Brings Meta-CoreWeave total to ~$35B; supports large-scale AI inference."),
-    ("Nebius", "Neocloud (GPU-as-a-service)", "2025", 12.0,
-     "multi-year (+$15B option)", "Fixed dedicated compute",
-     "Up to $27B including a $15B option exercisable at Nebius's discretion."),
+    ("Nebius — Order #1", "Neocloud (GPU-as-a-service)", "Nov 2025", 2.9,
+     "5 years (2026-2030)", "2 dedicated GPU clusters (deployed Dec-2025/Feb-2026)",
+     "First Nebius-Meta order; SEC 6-K, Nov 1 2025."),
+    ("Nebius — Vera Rubin agreement", "Neocloud (GPU-as-a-service)", "Mar 2026", 12.0,
+     "5 years (from early 2027)", "Dedicated NVIDIA Vera Rubin capacity",
+     "Up to ~$27B: $12B firm dedicated + up to $15B contingent backstop for unsold capacity."),
     ("Google Cloud", "Hyperscaler cloud", "Aug 2025", 10.0,
      "6 years", "Servers, storage, networking for AI",
      "Minimum ~$10B; mainly AI infrastructure scaling."),
@@ -251,6 +254,26 @@ NEO_GPU_RATES = [
     ("GB200 NVL72", 10.50, None, "n/d", "—"),
     ("GH200", 6.50, 1.49, "n/d", "—"),
 ]
+# NEOCLOUD annualized spend — contract-level (straight-line avg = total / term years)
+# contract, total_$b(str), window, years, avg_per_yr_$b(str), firm/contingent
+NEO_ANNUAL = [
+    ("CoreWeave — initial", "14.2", "Sep 2025 - Dec 2031", "~6", "~2.3", "Firm"),
+    ("CoreWeave — expansion", "21.0", "2027 - 2032", "6", "~3.5", "Firm"),
+    ("Nebius — Order #1", "2.9", "2026 - 2030 (5-yr)", "5", "~0.6", "Firm"),
+    ("Nebius — dedicated (Vera Rubin)", "12.0", "2027 - 2031 (5-yr)", "5", "~2.4", "Firm"),
+    ("Nebius — unsold-capacity backstop", "up to 15.0", "~2027 - 2031 (5-yr)", "5", "up to ~3.0", "Contingent"),
+]
+# Illustrative per-year run-rate matrix ($B, straight-line). None => 0/blank.
+NEO_YEARS = [2026, 2027, 2028, 2029, 2030, 2031, 2032]
+# rows: label, [2026..2032], kind
+NEO_MATRIX = [
+    ("CoreWeave — initial ($14.2B)",        [2.37, 2.37, 2.37, 2.37, 2.37, 2.37, 0.0], "firm"),
+    ("CoreWeave — expansion ($21B)",        [0.0, 3.50, 3.50, 3.50, 3.50, 3.50, 3.50], "firm"),
+    ("Nebius — Order #1 ($2.9B)",           [0.58, 0.58, 0.58, 0.58, 0.58, 0.0, 0.0], "firm"),
+    ("Nebius — dedicated ($12B)",           [0.0, 2.40, 2.40, 2.40, 2.40, 2.40, 0.0], "firm"),
+    ("Nebius — backstop (up to $15B)",      [0.0, 3.00, 3.00, 3.00, 3.00, 3.00, 0.0], "contingent"),
+]
+
 # NEOCLOUD utilization / economics
 NEO_UTIL = [
     ("Debt-financed cluster break-even utilization", "~65-70%", "Little margin of safety (American Compute)."),
@@ -299,10 +322,11 @@ intro = [
      "0.10 TWh (~1%).  Total data-center electricity = 18.06 TWh. Leased colocation share roughly doubled since "
      "2020-22 (~9-11%) as Meta pre-leased heavily for AI."),
     ("Headline #2 — neocloud / cloud commitments ($, off the electricity split)",
-     "CoreWeave ~$35B (initial $14.2B Sep-2025 + $21B expansion Apr-2026, through 2032; GB300 / Vera Rubin) | "
-     "Nebius up to $27B ($12B fixed + $15B option) | Google Cloud $10B+ over 6 yrs (Aug-2025) | plus ongoing AWS & "
-     "Azure. ~$57B+ disclosed (up to ~$72B with options). These are compute rentals, NOT part of the owned-vs-"
-     "colocation electricity split (different unit)."),
+     "CoreWeave ~$35.2B (initial $14.2B Sep-2025 + $21B expansion Apr-2026, through 2032) | Nebius ~$14.9B firm "
+     "($2.9B Order #1 Nov-2025 + $12B Vera Rubin Mar-2026) plus up to $15B contingent backstop (=> up to ~$27B) | "
+     "Google Cloud $10B+ / 6 yrs | plus ongoing AWS & Azure. ~$60B firm disclosed (up to ~$75B with the Nebius "
+     "option). Straight-line, the CoreWeave + Nebius run-rate ramps to ~$8-9B/yr firm (up to ~$12B) in 2028-2031. "
+     "These are compute rentals — NOT part of the owned-vs-colocation electricity split (different unit)."),
     ("Forward-looking AI capacity",
      "Realized power today is dwarfed by the announced AI build-out. Trackers count ~15.8 GW of Meta AI data-center "
      "capacity across ~20 sites (~50% operational). Flagship clusters: Prometheus (Ohio, ~1 GW) and Hyperion "
@@ -726,6 +750,78 @@ for n in ncontext:
     ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=7)
     c = ws.cell(r, 1, "• " + n); c.alignment = LEFTTOP; c.font = REG
     ws.row_dimensions[r].height = 28
+
+# ---- Annualized spend: contract-level (straight-line avg) ----
+r += 2
+ws.cell(r, 1, "Estimated annualized spend — CoreWeave & Nebius (straight-line = total ÷ term)").font = BOLD_NAVY
+r += 1
+for c, hh in enumerate(["Contract", "Total ($B)", "Window", "Yrs", "Avg $B/yr", "Type"], start=1):
+    hdr(ws.cell(r, c, hh))
+    ws.merge_cells(start_row=r, start_column=6, end_row=r, end_column=7)
+    hdr(ws.cell(r, 6, "Type"))
+for contract, tot, window, yrs, avg, kind in NEO_ANNUAL:
+    r += 1
+    ws.cell(r, 1, contract).alignment = LEFT
+    ws.cell(r, 2, tot).alignment = CENTER
+    ws.cell(r, 3, window).alignment = CENTER
+    ws.cell(r, 4, yrs).alignment = CENTER
+    ws.cell(r, 5, avg).alignment = CENTER; ws.cell(r, 5).font = BOLD
+    ws.merge_cells(start_row=r, start_column=6, end_row=r, end_column=7)
+    ws.cell(r, 6, kind).alignment = CENTER
+    fill = "FCE4D6" if kind == "Firm" else "FFF2CC"
+    for c in range(1, 8):
+        ws.cell(r, c).border = border_all
+        ws.cell(r, c).fill = PatternFill("solid", fgColor=fill)
+
+# ---- Illustrative per-year run-rate matrix ----
+r += 2
+ws.cell(r, 1, "Illustrative per-year run-rate ($B, straight-line; actual spend is back-loaded as capacity deploys)").font = BOLD_NAVY
+r += 1
+hdr(ws.cell(r, 1, "Contract"))
+for k, y in enumerate(NEO_YEARS):
+    hdr(ws.cell(r, 2 + k, str(y)))
+mat_first = r + 1
+for label, vals, kind in NEO_MATRIX:
+    r += 1
+    ws.cell(r, 1, label).alignment = LEFT
+    fill = "FCE4D6" if kind == "firm" else "FFF2CC"
+    for k, v in enumerate(vals):
+        cell = ws.cell(r, 2 + k, v if v else None)
+        cell.number_format = FMT_1
+        cell.alignment = CENTER
+        cell.border = border_all
+        cell.fill = PatternFill("solid", fgColor=fill)
+    ws.cell(r, 1).border = border_all
+    ws.cell(r, 1).fill = PatternFill("solid", fgColor=fill)
+mat_last = r
+# firm subtotal (exclude contingent = last row)
+r += 1
+ws.cell(r, 1, "Firm total ($B/yr)").font = BOLD
+for k in range(len(NEO_YEARS)):
+    col = get_column_letter(2 + k)
+    cell = ws.cell(r, 2 + k, f"=SUM({col}{mat_first}:{col}{mat_last-1})")
+    cell.number_format = FMT_1; cell.font = BOLD
+    cell.alignment = CENTER; cell.border = border_all
+    cell.fill = PatternFill("solid", fgColor="F8CBAD")
+ws.cell(r, 1).fill = PatternFill("solid", fgColor="F8CBAD"); ws.cell(r, 1).border = border_all
+firm_row = r
+r += 1
+ws.cell(r, 1, "Incl. Nebius backstop ($B/yr)").font = BOLD
+for k in range(len(NEO_YEARS)):
+    col = get_column_letter(2 + k)
+    cell = ws.cell(r, 2 + k, f"=SUM({col}{mat_first}:{col}{mat_last})")
+    cell.number_format = FMT_1; cell.font = BOLD
+    cell.alignment = CENTER; cell.border = border_all
+    cell.fill = PatternFill("solid", fgColor="FFF2CC")
+ws.cell(r, 1).fill = PatternFill("solid", fgColor="FFF2CC"); ws.cell(r, 1).border = border_all
+r += 2
+ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=7)
+ws.cell(r, 1, "How to read: figures are straight-line averages (contract total ÷ term). Actual cash spend/recognition "
+              "is back-loaded — small in the first year of each contract and rising as GPU capacity is deployed and "
+              "energized. Once fully ramped (~2028-2031), Meta's firm CoreWeave+Nebius run-rate is ~$8-9B/yr, or up to "
+              "~$12B/yr if Nebius's $15B unsold-capacity backstop is triggered. Excludes Google Cloud ($10B+/6yrs ≈ "
+              "$1.7B/yr) and undisclosed AWS/Azure.").font = NOTE_FONT
+ws.row_dimensions[r].height = 56
 
 # ============================================================================
 # SHEET 7 — UTILIZATION & RENTAL RATES
