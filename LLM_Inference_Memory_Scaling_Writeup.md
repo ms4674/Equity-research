@@ -214,7 +214,69 @@ the critical path.
 
 ---
 
-## 5. Investment / strategic takeaways
+## 5. Small models, distillation, and post-training (SLM + SFT/RL)
+
+A common question is whether moving to a **small language model (SLM)** that has
+been **fine-tuned (SFT)** and **reinforcement-learned (RLHF / GRPO / RLVR)** cuts
+KV-cache demand. The answer is **yes — but almost entirely because the model is
+*small*, not because of the fine-tuning or RL themselves.** The two effects run
+through different mechanisms and must be separated.
+
+### 5.1 The size effect is real and large (architecture)
+
+KV cache is set by `layers x kv_heads x head_dim`, so a smaller model has a
+smaller per-token footprint directly:
+
+| Model | KV / token | KV @128K, batch 1 |
+|-------|-----------|-------------------|
+| Llama-3.1-70B | 320 KB | ~43 GB |
+| Llama-3.1-8B | 128 KB | ~17 GB |
+| Llama-3.2-1B | 32 KB | ~4.3 GB |
+
+Substituting a 70B general model with a 1B SLM is a **~10x cut in per-token KV**
+(and a comparable cut in weights). That substitution is the dominant saving.
+
+### 5.2 Fine-tuning and RL do not reduce KV directly — they enable it
+
+SFT and RL change weight **values**, not architecture. `layers`, `kv_heads`, and
+`head_dim` are untouched, so post-training does **not** lower per-token KV at
+all. Its contribution is indirect but decisive:
+
+- **Enabler for the substitution.** SFT + RL (usually with distillation from a
+  large teacher) are what let a 1–3B model reach large-model quality on a
+  *specific* task. Without them the SLM isn't deployable, so the size saving in
+  5.1 is never captured. Post-training unlocks the KV reduction rather than
+  causing it.
+- **Shorter effective context.** A specialized model needs fewer few-shot
+  examples, shorter system prompts, and less retrieved (RAG) context to hit
+  target quality. Because KV is linear in `seq_len`, collapsing an ~8K-token
+  few-shot prompt to a few hundred zero-shot tokens is a direct linear KV cut,
+  stacked on top of the smaller per-token footprint.
+
+### 5.3 Counterpoint: RL can *increase* KV demand
+
+RL is not uniformly KV-reducing:
+
+- **Reasoning RL (long chain-of-thought, RLVR)** deliberately generates *more*
+  tokens; KV grows with every decoded token, so a reasoning-tuned SLM can
+  consume more KV per request than a terse base model — sometimes offsetting the
+  size advantage.
+- **Agentic / tool-use RL** lengthens context (tool outputs, multi-turn state),
+  pushing `seq_len` — and therefore KV — back up.
+
+So "SLM + RL" can move either way at the *workload* level; the architecture-level
+per-token KV is unchanged.
+
+### 5.4 What still does the heavy lifting
+
+The most reliable KV wins come from **size + GQA/MLA + KV quantization + shorter
+context**, with SFT/RL acting as the quality bridge that makes the small-model
+path viable. Post-training belongs in the "enabler" column, not the
+"KV-reduction mechanism" column.
+
+---
+
+## 6. Investment / strategic takeaways
 
 1. **Context length, not parameter count, is the marginal memory driver in
    production inference.** GQA/MLA capped per-token KV even as models grew, but
@@ -234,6 +296,11 @@ the critical path.
    Trainium) optimize for capacity + interconnect to hold big weights and long
    KV; SRAM-centric ASICs (Groq, Cerebras) optimize for decode bandwidth at the
    cost of capacity, betting on aggressive KV/weight compression.
+6. **SLM substitution cuts memory via size, not post-training.** Fine-tuning and
+   RL are the quality bridge that makes a small specialized model viable (and can
+   shorten prompts), but reasoning/agentic RL can lengthen generation and push KV
+   back up. The durable savings come from smaller architecture + GQA/MLA + KV
+   quantization + shorter context.
 
 *See `LLM_Parametric_vs_Memory_Scaling.xlsx` (tabs: Weights Memory, KV Cache
 Scaling, Decode Economics, Parametric Scaling) to flip precision, batch, GPU,
