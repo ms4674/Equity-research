@@ -185,9 +185,9 @@ sub.paragraph_format.space_after = Pt(10)
 purpose = doc.add_paragraph()
 prun = purpose.add_run(
     "Purpose:  This survey measures how organizations consume large language model (LLM) tokens "
-    "by use case and by sector, your current token budget, and how sensitive your usage is to changes "
-    "in token pricing. Responses are confidential and will be reported only in aggregate. "
-    "Estimated completion time: 10\u201312 minutes."
+    "by use case and by sector, the model mix you rely on, your current token budget and ROI, and "
+    "how sensitive your usage is to changes in token pricing. Responses are confidential and will be "
+    "reported only in aggregate. Estimated completion time: 12\u201315 minutes."
 )
 prun.font.size = Pt(10.5)
 prun.font.color.rgb = GREY
@@ -207,7 +207,7 @@ drun.font.color.rgb = LIGHT
 # SECTION A — Respondent & Organization Profile
 # =====================================================================
 add_section_heading(doc, "A", "Respondent & Organization Profile")
-add_intro_text(doc, "Help us segment results by sector, organization size, and your role.")
+add_intro_text(doc, "Help us segment results by sector, footprint, organization size, and your role.")
 
 add_question(doc, 1, "Which sector best describes your organization's primary industry?")
 add_options(doc, [
@@ -223,7 +223,17 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 2, "What is the approximate size of your organization (full-time employees)?")
+add_question(doc, 2, "Is your organization a multinational (operating in more than one country)?")
+add_options(doc, [
+    "Yes \u2014 multinational operating across multiple regions worldwide",
+    "Yes \u2014 operate in a few countries within a single region",
+    "No \u2014 domestic, single-country operations only",
+    "No \u2014 single location / local operations only",
+    "Planning international expansion (currently domestic)",
+    "Not sure / prefer not to say",
+])
+
+add_question(doc, 3, "What is the approximate size of your organization (full-time employees)?")
 add_options(doc, [
     "1\u201350 (startup / small business)",
     "51\u2013250 (small-medium)",
@@ -233,7 +243,7 @@ add_options(doc, [
     "More than 20,000 (global enterprise)",
 ])
 
-add_question(doc, 3, "Which best describes your role relative to LLM/AI initiatives?")
+add_question(doc, 4, "Which best describes your role relative to LLM/AI initiatives?")
 add_options(doc, [
     "Executive sponsor / budget owner (CxO, VP)",
     "Engineering / data science / ML practitioner",
@@ -244,7 +254,7 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 4, "What is your organization's overall stage of LLM adoption?")
+add_question(doc, 5, "What is your organization's overall stage of LLM adoption?")
 add_options(doc, [
     "Not yet using LLMs / exploring only",
     "Piloting one or a few proofs-of-concept",
@@ -254,12 +264,12 @@ add_options(doc, [
 ])
 
 # =====================================================================
-# SECTION B — Use Cases & Deployment
+# SECTION B — Adoption Breadth & Use Cases
 # =====================================================================
-add_section_heading(doc, "B", "LLM Use Cases & Deployment Model")
-add_intro_text(doc, "Tell us where and how you apply LLMs today.")
+add_section_heading(doc, "B", "Adoption Breadth & Use Cases")
+add_intro_text(doc, "Tell us how broadly generative AI is used and where it is applied.")
 
-add_question(doc, 5, "Which LLM use cases are active in your organization today?", multi=True)
+add_question(doc, 6, "Which LLM use cases are active in your organization today?", multi=True)
 add_options(doc, [
     "Customer support / chatbots / virtual agents",
     "Software development & coding assistants",
@@ -273,7 +283,28 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 6, "Which single use case consumes the MOST tokens in your organization?")
+add_question(doc, 7, "How widely is generative AI used across your organization today?")
+add_options(doc, [
+    "Used by a small group of technical teams only",
+    "Used by select business functions",
+    "Used across several major departments",
+    "Used broadly across most departments",
+    "Embedded into company-wide workflows or products",
+    "Not used in any meaningful way",
+    "Don't know",
+])
+
+add_question(doc, 8, "What share of employees use generative AI tools at least weekly?")
+add_options(doc, [
+    "Less than 10%",
+    "10% \u2013 25%",
+    "26% \u2013 50%",
+    "51% \u2013 75%",
+    "More than 75%",
+    "Don't know",
+])
+
+add_question(doc, 9, "Which single use case consumes the MOST tokens in your organization?")
 add_options(doc, [
     "Customer support / conversational agents",
     "Coding & software development assistants",
@@ -284,7 +315,7 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 7, "How do you primarily access LLM capabilities?")
+add_question(doc, 10, "How do you primarily access LLM capabilities?")
 add_options(doc, [
     "Commercial API providers (e.g., OpenAI, Anthropic, Google)",
     "Cloud-hosted models (Azure, AWS Bedrock, Vertex AI)",
@@ -294,7 +325,7 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 8, "How many distinct LLM-powered applications/workflows are in production?")
+add_question(doc, 11, "How many distinct LLM-powered applications/workflows are in production?")
 add_options(doc, [
     "None yet (pilots only)",
     "1\u20132",
@@ -304,17 +335,37 @@ add_options(doc, [
     "More than 25",
 ])
 
-add_question(doc, 9, "What is the balance between open-source/open-weight and proprietary (closed) models in your token usage?")
+# =====================================================================
+# SECTION C — Model Mix & Sourcing
+# =====================================================================
+add_section_heading(doc, "C", "Model Mix & Sourcing")
+add_intro_text(doc, "Tell us about the balance of open-source vs proprietary and US vs non-US models.")
+
+add_question(doc, 12, "What share of token consumption runs through proprietary/closed models vs open-source, open-weight models?")
 add_options(doc, [
-    "Exclusively proprietary / closed models (e.g., GPT, Claude, Gemini)",
-    "Mostly proprietary, some open-source (\u2265 60% proprietary)",
-    "Roughly balanced mix of open-source and proprietary",
-    "Mostly open-source / open-weight, some proprietary (\u2265 60% open)",
-    "Exclusively open-source / open-weight models (e.g., Llama, Mistral, Qwen)",
-    "Don't know / not tracked",
+    "Mostly open-source / open-weight",
+    "Mixed, roughly equal",
+    "Mostly proprietary / closed models",
+    "Mostly closed models but increasingly moving to open-source",
+    "Mostly open-source but increasing use of closed models",
+    "Neither / not applicable",
+    "Don't know",
 ])
 
-add_question(doc, 10, "To what extent do you use non-US / Chinese-origin models (e.g., DeepSeek, Kimi, GLM, Qwen) versus US models (e.g., GPT, Claude, Gemini, Llama)?")
+add_question(doc, 13, "What would be the reasons to increase your use of open-source / open-weight models?", multi=True)
+add_options(doc, [
+    "Lower inference or token costs",
+    "Open models are closing the performance gap with proprietary models",
+    "Ability to customize or fine-tune models for internal needs",
+    "More transparency into model architecture, weights or behavior",
+    "Easier integration into internal developer workflows",
+    "Better economics for high-volume, lower-complexity workloads",
+    "Building internal AI expertise or strategic capability",
+    "Data privacy and security control",
+])
+add_other_line(doc)
+
+add_question(doc, 14, "To what extent do you use non-US / Chinese-origin models (e.g., DeepSeek, Kimi, GLM, Qwen) versus US models (e.g., GPT, Claude, Gemini, Llama)?")
 add_options(doc, [
     "Exclusively US models",
     "Mostly US models, occasional testing of non-US models",
@@ -325,14 +376,23 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
+add_question(doc, 15, "Has your organization shifted token volume toward lower-cost models in the past six months?")
+add_options(doc, [
+    "Yes, significantly",
+    "Yes, somewhat",
+    "Not really",
+    "We are evaluating it",
+    "Don't know",
+])
+
 # =====================================================================
-# SECTION C — Token Consumption by Use Case (matrix)
+# SECTION D — Token Consumption by Use Case
 # =====================================================================
-add_section_heading(doc, "C", "Token Consumption by Use Case")
+add_section_heading(doc, "D", "Token Consumption by Use Case")
 add_intro_text(doc, "For each use case you operate, estimate the monthly token volume it consumes. "
                     "Mark one circle per row; leave a row blank if not applicable.")
 
-add_question(doc, 11, "Estimated MONTHLY token consumption by use case:",
+add_question(doc, 16, "Estimated MONTHLY token consumption by use case:",
              note="Bands are total tokens/month (input + output). 1M = one million, 1B = one billion.")
 vol_cols = ["< 1M", "1M\u201310M", "10M\u2013100M", "100M\u20131B", "> 1B", "N/A"]
 add_matrix(doc, "Use case",
@@ -347,7 +407,7 @@ add_matrix(doc, "Use case",
                "Agentic / automation workflows",
            ])
 
-add_question(doc, 12, "What is your organization's approximate TOTAL token consumption per month (all use cases combined)?")
+add_question(doc, 17, "What is your organization's approximate TOTAL token consumption per month (all use cases combined)?")
 add_options(doc, [
     "Less than 1 million tokens / month",
     "1 million \u2013 50 million tokens / month",
@@ -358,7 +418,7 @@ add_options(doc, [
     "Not measured / don't know",
 ])
 
-add_question(doc, 13, "What is the approximate split between input (prompt) and output (completion) tokens?")
+add_question(doc, 18, "What is the approximate split between input (prompt) and output (completion) tokens?")
 add_options(doc, [
     "Mostly input (\u2265 80% input)",
     "Input-heavy (roughly 60\u201380% input)",
@@ -368,7 +428,7 @@ add_options(doc, [
     "Don't know / not tracked",
 ])
 
-add_question(doc, 14, "How has your total token consumption changed over the past 12 months?")
+add_question(doc, 19, "How has your total token consumption changed over the past 12 months?")
 add_options(doc, [
     "Decreased",
     "Flat (roughly unchanged)",
@@ -379,13 +439,26 @@ add_options(doc, [
     "Not applicable / too new to compare",
 ])
 
-# =====================================================================
-# SECTION D — Token Budget
-# =====================================================================
-add_section_heading(doc, "D", "Current Token / LLM Budget")
-add_intro_text(doc, "Help us understand the financial scale of your LLM usage.")
+add_question(doc, 20, "What is the main driver of your token growth?")
+add_options(doc, [
+    "More users",
+    "More AI features in products",
+    "More complex prompts",
+    "Longer context windows",
+    "Agentic workflows",
+    "Higher customer adoption",
+    "More document-heavy workflows",
+    "No growth",
+])
+add_other_line(doc)
 
-add_question(doc, 15, "What is your organization's approximate ANNUAL spend on LLM tokens / API usage (USD)?")
+# =====================================================================
+# SECTION E — Budget, Cost Control & Tracking
+# =====================================================================
+add_section_heading(doc, "E", "Budget, Cost Control & Tracking")
+add_intro_text(doc, "Help us understand the financial scale of your LLM usage and how you govern it.")
+
+add_question(doc, 21, "What is your organization's approximate ANNUAL spend on LLM tokens / API usage (USD)?")
 add_options(doc, [
     "Less than $10,000",
     "$10,000 \u2013 $100,000",
@@ -396,7 +469,7 @@ add_options(doc, [
     "Don't know / not disclosed",
 ])
 
-add_question(doc, 16, "How is your LLM/token budget primarily managed?")
+add_question(doc, 22, "How is your LLM/token budget primarily managed?")
 add_options(doc, [
     "Centralized platform / AI team budget",
     "Allocated per business unit or product team",
@@ -406,7 +479,7 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 17, "What share of your total IT / cloud budget does LLM token spend currently represent?")
+add_question(doc, 23, "What share of your total IT / cloud budget does LLM token spend currently represent?")
 add_options(doc, [
     "Less than 1%",
     "1% \u2013 5%",
@@ -416,7 +489,7 @@ add_options(doc, [
     "Don't know",
 ])
 
-add_question(doc, 18, "How do you expect your LLM token budget to change over the NEXT 12 months?")
+add_question(doc, 24, "How do you expect your LLM token budget to change over the NEXT 12 months?")
 add_options(doc, [
     "Decrease",
     "Stay roughly flat",
@@ -426,25 +499,45 @@ add_options(doc, [
     "Increase more than 5\u00d7",
 ])
 
-add_question(doc, 19, "Which methods do you actively use to control or reduce token costs?", multi=True)
+add_question(doc, 25, "How does your organization control or reduce AI token costs and budgets?", multi=True)
 add_options(doc, [
     "Prompt optimization / shorter prompts",
-    "Caching (prompt/response caching)",
-    "Routing to smaller / cheaper models where possible",
+    "Caching (prompt / response caching)",
+    "Routing simple tasks to lower-cost / smaller models",
     "Self-hosting open-weight models",
-    "Batching, rate limiting, or usage quotas",
     "Fine-tuning / distillation to reduce per-call tokens",
-    "No active cost-control measures yet",
+    "Hard spending caps by team, product or application",
+    "Usage quotas (daily/weekly) by user, team or business unit",
+    "Rate limits on API calls",
+    "Limits on prompt / context-window length",
+    "Limits on output length",
+    "Approval required for high-cost models",
+    "Restricting access to approved use cases only",
+    "Alerts when spending exceeds a threshold",
+    "No formal cost-control or budget measures yet",
+])
+add_other_line(doc)
+
+add_question(doc, 26, "What tools does your organization use to track AI token usage and spending?", multi=True)
+add_options(doc, [
+    "Dashboards from AI model providers",
+    "Cloud cost-management tools",
+    "Internal data dashboards or BI tools",
+    "Observability or application-performance monitoring tools",
+    "API logs",
+    "Spreadsheets or manual reporting",
+    "Procurement or finance systems",
+    "We do not track token usage",
 ])
 add_other_line(doc)
 
 # =====================================================================
-# SECTION E — Sensitivity to Token Pricing
+# SECTION F — Sensitivity to Token Pricing
 # =====================================================================
-add_section_heading(doc, "E", "Sensitivity to Token Pricing")
+add_section_heading(doc, "F", "Sensitivity to Token Pricing")
 add_intro_text(doc, "Help us gauge how price changes would affect your usage and vendor choices.")
 
-add_question(doc, 20, "How sensitive is your LLM usage to changes in token pricing?")
+add_question(doc, 27, "How sensitive is your LLM usage to changes in token pricing?")
 add_options(doc, [
     "Not sensitive \u2014 price is not a factor in our decisions",
     "Slightly sensitive \u2014 minor consideration",
@@ -453,7 +546,7 @@ add_options(doc, [
     "Critically sensitive \u2014 price is the primary constraint",
 ])
 
-add_question(doc, 21, "If token prices INCREASED by 50%, what is the most likely response?")
+add_question(doc, 28, "If token prices INCREASED by 50%, what is the most likely response?")
 add_options(doc, [
     "No change \u2014 absorb the cost",
     "Optimize prompts/caching to offset the increase",
@@ -463,7 +556,7 @@ add_options(doc, [
     "Cancel or significantly scale back LLM initiatives",
 ])
 
-add_question(doc, 22, "If token prices DECREASED by 50%, how would your usage most likely respond?")
+add_question(doc, 29, "If token prices DECREASED by 50%, how would your usage most likely respond?")
 add_options(doc, [
     "No meaningful change in usage",
     "Modest increase (up to 25% more usage)",
@@ -472,7 +565,7 @@ add_options(doc, [
     "We would launch new use cases previously deemed too costly",
 ])
 
-add_question(doc, 23, "Which factors matter MOST when choosing an LLM provider/model?", multi=True)
+add_question(doc, 30, "Which factors matter MOST when choosing an LLM provider/model?", multi=True)
 add_options(doc, [
     "Token price / cost per request",
     "Model quality & accuracy",
@@ -484,7 +577,7 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 24, "What is the maximum acceptable price (per 1M output tokens) for your primary use case?")
+add_question(doc, 31, "What is the maximum acceptable price (per 1M output tokens) for your primary use case?")
 add_options(doc, [
     "Under $1 per 1M tokens",
     "$1 \u2013 $5 per 1M tokens",
@@ -494,7 +587,7 @@ add_options(doc, [
     "Price is not a binding constraint",
 ])
 
-add_question(doc, 25, "How frequently do you re-evaluate model/provider choices based on price?")
+add_question(doc, 32, "How frequently do you re-evaluate model/provider choices based on price?")
 add_options(doc, [
     "Rarely / never",
     "Annually",
@@ -504,11 +597,41 @@ add_options(doc, [
 ])
 
 # =====================================================================
-# SECTION F — Outlook & Open Feedback
+# SECTION G — ROI & Measurement
 # =====================================================================
-add_section_heading(doc, "F", "Outlook & Open Feedback")
+add_section_heading(doc, "G", "ROI & Measurement")
+add_intro_text(doc, "Help us understand how you measure the value of your token spend.")
 
-add_question(doc, 26, "What is the single biggest barrier to scaling your LLM usage?")
+add_question(doc, 33, "How accurately can your organization measure ROI from AI token consumption?")
+add_options(doc, [
+    "We can measure ROI directly with high confidence",
+    "We can estimate ROI using operational proxies",
+    "We track token costs but only loosely connect them to outcomes",
+    "We track AI usage but not token-level cost",
+    "We do not measure ROI",
+    "Don't know",
+])
+
+add_question(doc, 34, "What proxy do you use to assess whether token spending is worthwhile?", multi=True)
+add_options(doc, [
+    "Cost per completed workflow",
+    "Cost per active AI user",
+    "Cost per customer interaction",
+    "Cost per document processed",
+    "Cost per code change, pull request or deployment",
+    "Change in customer satisfaction or response time",
+    "Revenue or usage tied to AI-enabled features",
+    "Gross margin impact of AI-enabled features",
+    "We do not use formal ROI proxies",
+])
+add_other_line(doc)
+
+# =====================================================================
+# SECTION H — Outlook & Open Feedback
+# =====================================================================
+add_section_heading(doc, "H", "Outlook & Open Feedback")
+
+add_question(doc, 35, "What is the single biggest barrier to scaling your LLM usage?")
 add_options(doc, [
     "Token / usage cost",
     "Model accuracy or reliability",
@@ -519,7 +642,7 @@ add_options(doc, [
 ])
 add_other_line(doc)
 
-add_question(doc, 27, "Over the next 2\u20133 years, what do you expect for token prices in the market?")
+add_question(doc, 36, "Over the next 2\u20133 years, what do you expect for token prices in the market?")
 add_options(doc, [
     "Fall significantly (more than 50%)",
     "Fall moderately (10\u201350%)",
@@ -530,7 +653,7 @@ add_options(doc, [
 ])
 
 # Open comment box
-add_question(doc, 28, "Any additional comments on your token consumption, budget, or pricing sensitivity? (optional)")
+add_question(doc, 37, "Any additional comments on your token consumption, budget, ROI, or pricing sensitivity? (optional)")
 for _ in range(4):
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(10)
