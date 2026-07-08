@@ -1,7 +1,7 @@
 """Generate the Asia-listed Semiconductor & Data Center coverage universe spreadsheet.
 
 Scope: names listed in mainland China (SSE/SZSE/STAR), Hong Kong, Taiwan, South Korea,
-Japan, Singapore and other parts of Asia. No US- or Europe-listed names.
+Japan, Singapore and other parts of Asia, plus VNET (US-listed China ADR) by request.
 
 Produces:
   - semi_datacenter_coverage.xlsx  (formatted, multi-sheet)
@@ -48,6 +48,12 @@ COVERAGE = [
      "DDR5 memory interface / CXL chips for servers; AI memory bandwidth beneficiary."),
     ("GigaDevice Semiconductor", "603986.SS", "SSE", "Semis - Memory (NOR/NAND/DRAM)", "Mainland China", 12.0, "No", "2016-08",
      "NOR flash leader; expanding niche DRAM (CXMT ecosystem partner); MCUs."),
+    ("Zhongji Innolight", "300308.SZ", "SZSE ChiNext", "Data Center - Optical Modules", "Mainland China", 140.0, "No", "2012-04 (Innolight inj. 2017)",
+     "World #1 optical transceiver maker (800G/1.6T); NVIDIA/hyperscaler supplier; HK listing filed."),
+    ("Eoptolink Technology", "300502.SZ", "SZSE ChiNext", "Data Center - Optical Modules", "Mainland China", 80.0, "No", "2016-03",
+     "China #2 optical module maker (800G/1.6T); FY25 net profit +236%; planning HK H-share listing."),
+    ("UCloud Technology", "688158.SS", "SSE STAR", "Data Center - Cloud/AI Compute", "Mainland China", 2.3, "No", "2020-01",
+     "Neutral third-party cloud provider; Kongming AI compute platform; first cloud company listed on STAR."),
     ("Runze Technology", "300442.SZ", "SZSE ChiNext", "Data Center - Wholesale IDC", "Mainland China", 10.0, "No", "2015 (backdoor 2022)",
      "Pure-play wholesale IDC campuses (Beijing-Langfang, Yangtze Delta); AI/intelligent-computing demand."),
     ("Beijing Sinnet Technology", "300383.SZ", "SZSE ChiNext", "Data Center - IDC/Cloud", "Mainland China", 4.0, "No", "2014-01",
@@ -115,6 +121,9 @@ COVERAGE = [
      "Largest SGX REIT IPO in a decade (US$773M raise); NTT-sponsored global datacenter portfolio."),
     ("YTL Power International", "6742.KL", "Bursa Malaysia", "Data Center - Power/AI Campus", "Malaysia", 10.0, "No", "1997 (listed)",
      "Utility building Johor AI datacenter campus (NVIDIA GPU cloud partnership); power + DC play."),
+    # =========================== US-LISTED CHINA ADR (by request) ===========================
+    ("VNET Group (21Vianet)", "VNET", "Nasdaq (China ADR)", "Data Center - Colocation", "US ADR (China)", 2.4, "No", "2011-04",
+     "Carrier-neutral IDC in China; wholesale (Hyperscale 2.0) growth + retail; REIT/asset monetization optionality."),
 ]
 
 HEADERS = [
@@ -122,7 +131,7 @@ HEADERS = [
     "Approx. Market Cap ($B)", "Recent IPO/Listing", "IPO/Listing Date", "Notes / Thesis",
 ]
 
-REGION_ORDER = ["Mainland China", "Hong Kong", "Taiwan", "South Korea", "Japan", "Singapore", "Malaysia"]
+REGION_ORDER = ["Mainland China", "Hong Kong", "Taiwan", "South Korea", "Japan", "Singapore", "Malaysia", "US ADR (China)"]
 
 
 def write_csv(path):
@@ -150,7 +159,7 @@ def write_xlsx(path):
     ws["A1"] = "Semiconductor & Data Center - Proposed Coverage Universe (Asia-Listed Only)"
     ws["A1"].font = Font(bold=True, size=14)
     ws["A2"] = (f"As of {AS_OF}. Scope: mainland China, Hong Kong, Taiwan, South Korea, Japan, Singapore, "
-                "Malaysia listings only - no US or Europe listings. Market caps approximate/rounded for "
+                "Malaysia listings, plus VNET (US-listed China ADR). Market caps approximate/rounded for "
                 "scoping only (not investment advice). Recent IPOs/listings highlighted in green.")
     ws["A2"].font = Font(italic=True, size=9, color="808080")
     ws.append([])  # row 3 spacer
