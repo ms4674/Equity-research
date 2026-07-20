@@ -40,6 +40,7 @@ of estimated dollar spend.
 | Model Comparison | All 304 matched text LLMs: input/output/blended $ per 1M tokens, context window, weekly token volume (prompt/completion split), free-tier share, requests, estimated spend, class color-coding; filterable |
 | Top 20 Volume Chart | Bar chart of the 20 highest-volume models |
 | By Developer | Volume, model count, and estimated spend rolled up per developer (Anthropic, DeepSeek, Google, OpenAI, ...) |
+| Params & Benchmarks | Deep-dive on 9 selected models (NVIDIA Nemotron 3 Ultra/Super, Claude Fable 5, GPT-5.6 Sol, Kimi K3, GLM-5.2, Qwen3.7 Max, DeepSeek V4 Pro/Flash): total/active parameters, architecture, AA Intelligence Index and cost per task, GPQA Diamond, SWE-bench Verified/Pro, Terminal-Bench, HLE, pricing, and weekly volume |
 
 CSV versions of every table are in [`csv/`](csv/).
 
@@ -61,6 +62,13 @@ CSV versions of every table are in [`csv/`](csv/).
   models' global volume share is understated relative to what these numbers show.
   Token counts use each upstream provider's own tokenizer, so cross-provider token
   comparisons are approximate.
+- **Params & Benchmarks sheet:** parameter counts are official vendor disclosures for
+  open-weights models; Anthropic, OpenAI, and Alibaba do not disclose parameter counts
+  (~3T figures for Fable 5 / GPT-5.6 Sol are third-party estimates, and Kimi K3's ~50B
+  active is a community estimate from the disclosed 16-of-896 expert activation).
+  Benchmark scores are vendor-reported at highest reasoning effort, researched
+  2026-07-20; labs use different agent harnesses and Terminal-Bench versions, so
+  cross-model comparisons are approximate. Sources are cited per row in the sheet.
 
 ## Reproducing
 

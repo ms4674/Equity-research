@@ -13,6 +13,7 @@ Outputs:
   - data/csv/model_comparison.csv
   - data/csv/open_vs_closed_summary.csv
   - data/csv/by_developer.csv
+  - data/csv/params_benchmarks.csv
 """
 
 import csv
@@ -46,6 +47,141 @@ MANUAL_OVERRIDES = {
 OPEN_KEYWORDS = re.compile(
     r"open[- ]?(weight|source)|MIT licen[cs]e|Apache[- ]2", re.IGNORECASE
 )
+
+# ------------------------------------------------------- Params & Benchmarks
+# Hand-curated deep-dive for selected model families (researched 2026-07-20).
+# Parameter counts are official unless marked "undisclosed". Benchmark scores
+# are vendor-reported unless the note says otherwise; the AA Intelligence Index
+# and cost-per-task columns come from the artificialanalysis.ai leaderboard
+# snapshot of 2026-07-20 (highest-effort configuration of each model).
+# None = not published / not applicable.
+PARAMS_BENCHMARKS = [
+    {
+        "catalog_id": "nvidia/nemotron-3-ultra-550b-a55b",
+        "model": "NVIDIA Nemotron 3 Ultra",
+        "developer": "NVIDIA",
+        "open": True,
+        "released": "2026-06-04",
+        "total_b": 550, "active_b": 55,
+        "arch": "Hybrid Mamba-Transformer MoE (90% sparsity)",
+        "aa_index": 38, "aa_cost_task": 0.24,
+        "gpqa": 87.0, "swe_verified": 71.9, "swe_pro": None,
+        "terminal_bench": 56.4, "tb_ver": "2.1", "hle": 26.7,
+        "notes": "Largest US open-weights model; NVIDIA model card (BF16). "
+                 "AA scored it 47.7-48.2 on Index v4.0 at release.",
+    },
+    {
+        "catalog_id": "nvidia/nemotron-3-super-120b-a12b",
+        "model": "NVIDIA Nemotron 3 Super",
+        "developer": "NVIDIA",
+        "open": True,
+        "released": "2026-03-10",
+        "total_b": 120, "active_b": 12,
+        "arch": "Hybrid Mamba-Transformer LatentMoE, NVFP4 pretraining",
+        "aa_index": 25, "aa_cost_task": 0.21,
+        "gpqa": 79.2, "swe_verified": 60.5, "swe_pro": None,
+        "terminal_bench": 31.0, "tb_ver": "2.0", "hle": 18.3,
+        "notes": "SWE-bench Verified via OpenHands harness (NVIDIA model card).",
+    },
+    {
+        "catalog_id": "anthropic/claude-fable-5",
+        "model": "Claude Fable 5",
+        "developer": "Anthropic",
+        "open": False,
+        "released": "2026-06-09",
+        "total_b": None, "active_b": None,
+        "arch": "Undisclosed (Mythos-class; third-party estimates ~3T)",
+        "aa_index": 60, "aa_cost_task": 2.75,
+        "gpqa": 92.6, "swe_verified": 95.0, "swe_pro": 80.3,
+        "terminal_bench": 88.0, "tb_ver": "2.1", "hle": 53.3,
+        "notes": "Anthropic launch materials / system card; OpenAI's comparison "
+                 "table reports Terminal-Bench 83.1 and SWE-bench Pro 80.0. "
+                 "AA config: Adaptive Reasoning, Max Effort, Opus 4.8 fallback.",
+    },
+    {
+        "catalog_id": "openai/gpt-5.6-sol",
+        "model": "GPT-5.6 Sol",
+        "developer": "OpenAI",
+        "open": False,
+        "released": "2026-07-09",
+        "total_b": None, "active_b": None,
+        "arch": "Undisclosed (third-party estimates ~3T)",
+        "aa_index": 59, "aa_cost_task": 1.04,
+        "gpqa": 94.6, "swe_verified": None, "swe_pro": 64.6,
+        "terminal_bench": 88.8, "tb_ver": "2.1", "hle": 47.2,
+        "notes": "OpenAI launch table (Codex harness); no SWE-bench Verified "
+                 "published. AA config: max reasoning effort. HLE is AA-HLE.",
+    },
+    {
+        "catalog_id": "moonshotai/kimi-k3",
+        "model": "Kimi K3",
+        "developer": "Moonshot AI",
+        "open": True,
+        "released": "2026-07-16",
+        "total_b": 2800, "active_b": 50,
+        "arch": "Stable LatentMoE, 16/896 experts active; KDA attention "
+                "(active params ~50B, third-party estimate)",
+        "aa_index": 57, "aa_cost_task": 0.95,
+        "gpqa": 93.5, "swe_verified": None, "swe_pro": None,
+        "terminal_bench": 88.3, "tb_ver": "2.1", "hle": 43.5,
+        "notes": "First open 3T-class model; weights promised by 2026-07-27. "
+                 "Moonshot tech blog (reasoning_effort max, KimiCode harness); "
+                 "no SWE-bench results published.",
+    },
+    {
+        "catalog_id": "z-ai/glm-5.2",
+        "model": "GLM-5.2",
+        "developer": "Z.ai (Zhipu)",
+        "open": True,
+        "released": "2026-06-13",
+        "total_b": 753, "active_b": 40,
+        "arch": "MoE, MIT license; trained on Huawei Ascend 910B",
+        "aa_index": 51, "aa_cost_task": 0.47,
+        "gpqa": 91.2, "swe_verified": None, "swe_pro": 62.1,
+        "terminal_bench": 81.0, "tb_ver": "2.1", "hle": 40.5,
+        "notes": "Z.ai release blog (Terminus-2 harness); strongest open-weights "
+                 "model on the AA Index. No SWE-bench Verified published.",
+    },
+    {
+        "catalog_id": "qwen/qwen3.7-max",
+        "model": "Qwen3.7 Max",
+        "developer": "Alibaba (Qwen)",
+        "open": False,
+        "released": "2026-05-20",
+        "total_b": None, "active_b": None,
+        "arch": "Undisclosed (API-only; Qwen's top tier is closed since late 2025)",
+        "aa_index": 46, "aa_cost_task": 1.03,
+        "gpqa": 92.4, "swe_verified": 80.4, "swe_pro": 60.6,
+        "terminal_bench": 69.7, "tb_ver": "2.0", "hle": 41.4,
+        "notes": "Alibaba Qwen3.7 release blog (xhigh reasoning).",
+    },
+    {
+        "catalog_id": "deepseek/deepseek-v4-pro",
+        "model": "DeepSeek V4 Pro",
+        "developer": "DeepSeek",
+        "open": True,
+        "released": "2026-04-24",
+        "total_b": 1600, "active_b": 49,
+        "arch": "MoE with hybrid CSA+HCA attention, MIT license",
+        "aa_index": 44, "aa_cost_task": 0.04,
+        "gpqa": 90.1, "swe_verified": 80.6, "swe_pro": 55.4,
+        "terminal_bench": 67.9, "tb_ver": "2.0", "hle": 37.7,
+        "notes": "DeepSeek V4 technical report, Think-Max mode.",
+    },
+    {
+        "catalog_id": "deepseek/deepseek-v4-flash",
+        "model": "DeepSeek V4 Flash",
+        "developer": "DeepSeek",
+        "open": True,
+        "released": "2026-04-24",
+        "total_b": 284, "active_b": 13,
+        "arch": "MoE with hybrid CSA+HCA attention, MIT license",
+        "aa_index": 40, "aa_cost_task": 0.02,
+        "gpqa": 88.1, "swe_verified": 79.0, "swe_pro": 52.6,
+        "terminal_bench": 56.9, "tb_ver": "2.0", "hle": 34.8,
+        "notes": "DeepSeek V4 technical report, Think-Max mode.",
+    },
+]
 
 
 def load_raw():
@@ -228,7 +364,116 @@ def autosize(ws, widths):
         ws.column_dimensions[get_column_letter(i)].width = w
 
 
-def write_workbook(rows, summary, devs, grand_total, excluded_tokens):
+def enrich_params_benchmarks(models, rows):
+    """Join the hand-curated table with catalog pricing and weekly token volume."""
+    id_to_canon = {e["id"]: e["canonical_slug"] for e in models if ":" not in e["id"]}
+    by_slug = {r["slug"]: r for r in rows}
+    out = []
+    for pb in PARAMS_BENCHMARKS:
+        pb = dict(pb)
+        row = by_slug.get(id_to_canon.get(pb["catalog_id"], ""))
+        pb["price_in"] = row["price_in"] if row else None
+        pb["price_out"] = row["price_out"] if row else None
+        pb["tokens_total"] = row["tokens_total"] if row else None
+        out.append(pb)
+    return out
+
+
+def write_params_benchmarks_sheet(wb, pb_rows):
+    ws = wb.create_sheet("Params & Benchmarks")
+    ws["A1"] = "Parameter and benchmark deep-dive: selected model families"
+    ws["A1"].font = Font(bold=True, size=14)
+    ws["A2"] = ("NVIDIA Nemotron, Claude Fable, OpenAI GPT-5.6 Sol, Kimi K3, Z.ai GLM, "
+                "Qwen, DeepSeek - researched 2026-07-20")
+    ws["A3"] = ("Benchmark scores are vendor-reported (highest reasoning effort) unless noted; harnesses differ "
+                "across labs, so treat cross-model comparisons as approximate. AA = Artificial Analysis "
+                "Intelligence Index v4.1 leaderboard snapshot, 2026-07-20.")
+    ws["A2"].font = ws["A3"].font = Font(italic=True, color="595959")
+
+    headers = [
+        "Model", "Developer", "Class", "Released",
+        "Total params (B)", "Active params (B)", "Architecture / license",
+        "AA Intelligence Index", "AA cost per task ($)",
+        "GPQA Diamond (%)", "SWE-bench Verified (%)", "SWE-bench Pro (%)",
+        "Terminal-Bench (%)", "TB ver.", "HLE (%)",
+        "Input $/1M", "Output $/1M", "Weekly tokens (B)", "Notes / sources",
+    ]
+    hr = 5
+    for c, h in enumerate(headers, 1):
+        ws.cell(row=hr, column=c, value=h)
+    style_header(ws, hr, len(headers))
+    ws.freeze_panes = f"A{hr + 1}"
+
+    for i, pb in enumerate(pb_rows):
+        r = hr + 1 + i
+        vals = [
+            pb["model"], pb["developer"],
+            "Open-weights" if pb["open"] else "Closed",
+            pb["released"],
+            pb["total_b"] if pb["total_b"] is not None else "undisclosed",
+            pb["active_b"] if pb["active_b"] is not None else "undisclosed",
+            pb["arch"],
+            pb["aa_index"], pb["aa_cost_task"],
+            pb["gpqa"], pb["swe_verified"], pb["swe_pro"],
+            pb["terminal_bench"], pb["tb_ver"], pb["hle"],
+            pb["price_in"], pb["price_out"],
+            pb["tokens_total"] / 1e9 if pb["tokens_total"] else None,
+            pb["notes"],
+        ]
+        for c, v in enumerate(vals, 1):
+            cell = ws.cell(row=r, column=c, value=v if v is not None else "—")
+            cell.border = BORDER
+            if c == 3:
+                cell.fill = OPEN_FILL if pb["open"] else CLOSED_FILL
+            if c == 19:
+                cell.alignment = Alignment(wrap_text=True, vertical="top")
+        for c in (5, 6):
+            if isinstance(ws.cell(row=r, column=c).value, (int, float)):
+                ws.cell(row=r, column=c).number_format = "#,##0"
+        ws.cell(row=r, column=9).number_format = "$0.00"
+        for c in (10, 11, 12, 13, 15):
+            if isinstance(ws.cell(row=r, column=c).value, (int, float)):
+                ws.cell(row=r, column=c).number_format = "0.0"
+        for c in (16, 17):
+            if isinstance(ws.cell(row=r, column=c).value, (int, float)):
+                ws.cell(row=r, column=c).number_format = "$#,##0.000"
+        if isinstance(ws.cell(row=r, column=18).value, (int, float)):
+            ws.cell(row=r, column=18).number_format = "#,##0.0"
+    autosize(ws, [24, 15, 13, 11, 13, 13, 40, 12, 11, 12, 13, 12, 13, 7, 9, 10, 10, 13, 60])
+
+    nrow = hr + len(pb_rows) + 2
+    notes = [
+        "Total/active parameters: official vendor disclosures for open-weights models. Anthropic, OpenAI, and Alibaba "
+        "do not disclose parameter counts for Fable 5, GPT-5.6 Sol, or Qwen3.7 Max; ~3T figures are third-party estimates only.",
+        "Kimi K3's ~50B active is a community estimate from the disclosed 16-of-896 expert activation; Moonshot has not "
+        "published an official active-parameter figure. Weights promised by 2026-07-27 (API-only as of 2026-07-20).",
+        "Terminal-Bench versions differ (2.0 vs 2.1) and each lab uses its own agent harness (KimiCode, Claude Code, Codex, "
+        "Terminus-2), so scores are not strictly comparable across rows.",
+        "SWE-bench Pro validity is contested: OpenAI's 2026-07-08 audit estimates ~30% of tasks are flawed.",
+        "AA cost per task = Artificial Analysis's measured cost to run its Intelligence Index suite, divided per task; "
+        "reflects token efficiency as well as list price.",
+        "HLE = Humanity's Last Exam, no tools (AA-HLE for Fable 5 / Sol). Weekly tokens = OpenRouter volume, week ending "
+        + WEEK_ENDING + " (understates first-party API usage of closed models).",
+    ]
+    for i, n in enumerate(notes):
+        ws.cell(row=nrow + i, column=1, value=n).font = Font(size=9, color="595959")
+
+    chart = BarChart()
+    chart.type = "col"
+    chart.title = "GPQA Diamond vs AA Intelligence Index"
+    data_start = hr + 1
+    data_end = hr + len(pb_rows)
+    data = Reference(ws, min_col=8, max_col=8, min_row=hr, max_row=data_end)
+    data2 = Reference(ws, min_col=10, max_col=10, min_row=hr, max_row=data_end)
+    cats = Reference(ws, min_col=1, min_row=data_start, max_row=data_end)
+    chart.add_data(data, titles_from_data=True)
+    chart.add_data(data2, titles_from_data=True)
+    chart.set_categories(cats)
+    chart.height, chart.width = 10, 24
+    ws.add_chart(chart, f"A{nrow + len(notes) + 2}")
+
+
+def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows):
     wb = Workbook()
 
     # ---- Sheet 1: Summary (open vs closed)
@@ -385,6 +630,9 @@ def write_workbook(rows, summary, devs, grand_total, excluded_tokens):
     ws4.auto_filter.ref = f"A1:F{len(devs) + 1}"
     autosize(ws4, [22, 14, 10, 16, 12, 18])
 
+    # ---- Sheet 5: Params & benchmarks deep-dive
+    write_params_benchmarks_sheet(wb, pb_rows)
+
     wb.save(OUT_XLSX)
 
 
@@ -431,14 +679,39 @@ def write_csvs(rows, summary, devs, grand_total):
             ])
 
 
+def write_params_benchmarks_csv(pb_rows):
+    with open(os.path.join(OUT_CSV_DIR, "params_benchmarks.csv"), "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow([
+            "model", "developer", "class", "released",
+            "total_params_b", "active_params_b", "architecture",
+            "aa_intelligence_index", "aa_cost_per_task_usd",
+            "gpqa_diamond_pct", "swe_bench_verified_pct", "swe_bench_pro_pct",
+            "terminal_bench_pct", "terminal_bench_version", "hle_pct",
+            "input_usd_per_1m", "output_usd_per_1m", "weekly_tokens", "notes",
+        ])
+        for pb in pb_rows:
+            w.writerow([
+                pb["model"], pb["developer"],
+                "open-weights" if pb["open"] else "closed",
+                pb["released"], pb["total_b"], pb["active_b"], pb["arch"],
+                pb["aa_index"], pb["aa_cost_task"],
+                pb["gpqa"], pb["swe_verified"], pb["swe_pro"],
+                pb["terminal_bench"], pb["tb_ver"], pb["hle"],
+                pb["price_in"], pb["price_out"], pb["tokens_total"], pb["notes"],
+            ])
+
+
 def main():
     rankings, models = load_raw()
     catalog = index_catalog(models)
     rows, excluded = build_rows(rankings, catalog)
     summary, grand_total = summarize(rows)
     devs = by_developer(rows)
-    write_workbook(rows, summary, devs, grand_total, excluded)
+    pb_rows = enrich_params_benchmarks(models, rows)
+    write_workbook(rows, summary, devs, grand_total, excluded, pb_rows)
     write_csvs(rows, summary, devs, grand_total)
+    write_params_benchmarks_csv(pb_rows)
 
     print(f"Matched text LLMs: {len(rows)}  |  weekly tokens: {grand_total / 1e12:.2f}T")
     print(f"Excluded (embeddings/media): {excluded / 1e9:.0f}B tokens")
