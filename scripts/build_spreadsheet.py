@@ -14,6 +14,7 @@ Outputs:
   - data/csv/open_vs_closed_summary.csv
   - data/csv/by_developer.csv
   - data/csv/params_benchmarks.csv
+  - data/csv/tool_use_benchmarks.csv
 """
 
 import csv
@@ -47,6 +48,114 @@ MANUAL_OVERRIDES = {
 OPEN_KEYWORDS = re.compile(
     r"open[- ]?(weight|source)|MIT licen[cs]e|Apache[- ]2", re.IGNORECASE
 )
+
+# ------------------------------------------------------------------ Tool use
+# Hand-curated tool-use / agentic benchmark comparison (researched 2026-07-21).
+# Primary source for K3 / Fable 5 / Sol / Opus 4.8 / GLM-5.2 rows: Moonshot's
+# Kimi K3 launch evaluation table (kimi.com/blog/kimi-k3) - the only published
+# single-methodology table covering all of them (MCP Atlas: 500-task public
+# subset, 100-turn limit, Gemini 3.1 Pro judge; AutomationBench: 600-task
+# public subset; Toolathlon-Verified; BrowseComp with 300K context compaction;
+# GDPval-AA Elo cited from artificialanalysis.ai). DeepSeek / MiniMax / Kimi
+# K2.6 / Nemotron rows come from their own vendor reports and AA/BenchLM
+# mirrors, so cross-row comparisons outside the Moonshot block are looser.
+TOOL_USE = [
+    {
+        "slug": "moonshotai/kimi-k3-20260715",
+        "model": "Kimi K3", "developer": "Moonshot AI", "open": True,
+        "mcp_atlas": 84.2, "toolathlon": 73.2, "automation": 30.8,
+        "browsecomp": 91.2, "gdpval_elo": 1668, "tau2": None,
+        "notes": "Moonshot launch table (reasoning max, KimiCode/Claude Code "
+                 "harnesses). #1 on AutomationBench-AA (53%) per AA; also leads "
+                 "SpreadsheetBench 2 (34.8) and DeepSearchQA (95.0 F1). "
+                 "BrowseComp hits 90.4 even without context compaction.",
+    },
+    {
+        "slug": "anthropic/claude-5-fable-20260609",
+        "model": "Claude Fable 5", "developer": "Anthropic", "open": False,
+        "mcp_atlas": 84.7, "toolathlon": 77.9, "automation": 29.1,
+        "browsecomp": 88.0, "gdpval_elo": 1760, "tau2": None,
+        "notes": "Best-in-table on Toolathlon-Verified, GDPval-AA, Job Bench "
+                 "(57.4), OfficeQA Pro (69.9), APEX-Agents (43.3). OpenAI's own "
+                 "table also shows Fable leading Toolathlon (61.7 vs Sol 58.0).",
+    },
+    {
+        "slug": "openai/gpt-5.6-sol-20260709",
+        "model": "GPT-5.6 Sol", "developer": "OpenAI", "open": False,
+        "mcp_atlas": 83.6, "toolathlon": 74.9, "automation": 29.7,
+        "browsecomp": 90.4, "gdpval_elo": 1748, "tau2": 85.1,
+        "notes": "Moonshot table (Codex harness). OpenAI reports SOTA computer "
+                 "use (OSWorld 2.0 62.6%) and Agents' Last Exam 52.7% (+12.2 "
+                 "over Fable); BrowseComp 92.2 in Sol Ultra 4-agent mode. "
+                 "Tau2 from AA leaderboard.",
+    },
+    {
+        "slug": "anthropic/claude-4.8-opus-20260528",
+        "model": "Claude Opus 4.8", "developer": "Anthropic", "open": False,
+        "mcp_atlas": 83.6, "toolathlon": 76.2, "automation": 27.2,
+        "browsecomp": 84.3, "gdpval_elo": 1600, "tau2": None,
+        "notes": "Closed reference point below the Fable/Sol tier; Moonshot "
+                 "launch table.",
+    },
+    {
+        "slug": "z-ai/glm-5.2-20260616",
+        "model": "GLM-5.2", "developer": "Z.ai (Zhipu)", "open": True,
+        "mcp_atlas": 82.6, "toolathlon": 59.9, "automation": 12.9,
+        "browsecomp": None, "gdpval_elo": 1514, "tau2": None,
+        "notes": "Moonshot launch table. Z.ai's own blog reports MCP Atlas 77.0 "
+                 "and HLE-with-tools 54.7; built for 'thousands of tool calls' "
+                 "long-horizon sessions. Only row with parallel tool-call API "
+                 "support besides Kimi K2.6.",
+    },
+    {
+        "slug": "deepseek/deepseek-v4-pro-20260423",
+        "model": "DeepSeek V4 Pro", "developer": "DeepSeek", "open": True,
+        "mcp_atlas": 73.6, "toolathlon": 51.8, "automation": None,
+        "browsecomp": 83.4, "gdpval_elo": 1554, "tau2": None,
+        "notes": "DeepSeek V4 technical report, Think-Max mode (Toolathlon "
+                 "standard variant, not Verified).",
+    },
+    {
+        "slug": "deepseek/deepseek-v4-flash-20260423",
+        "model": "DeepSeek V4 Flash", "developer": "DeepSeek", "open": True,
+        "mcp_atlas": 69.0, "toolathlon": 47.8, "automation": None,
+        "browsecomp": 73.2, "gdpval_elo": 1395, "tau2": None,
+        "notes": "DeepSeek V4 technical report, Think-Max mode. Highest "
+                 "real-world tool-call volume of any paid model on OpenRouter.",
+    },
+    {
+        "slug": "minimax/minimax-m3-20260531",
+        "model": "MiniMax M3", "developer": "MiniMax", "open": True,
+        "mcp_atlas": 74.2, "toolathlon": None, "automation": None,
+        "browsecomp": 83.5, "gdpval_elo": 1395, "tau2": 88.9,
+        "notes": "Vendor report / AA-BenchLM mirrors. Native computer use and "
+                 "multimodal input; reported 24-hour autonomous run with "
+                 "~2,000 tool calls.",
+    },
+    {
+        "slug": "moonshotai/kimi-k2.6-20260420",
+        "model": "Kimi K2.6", "developer": "Moonshot AI", "open": True,
+        "mcp_atlas": 69.4, "toolathlon": 50.0, "automation": None,
+        "browsecomp": 83.2, "gdpval_elo": 1190, "tau2": 95.9,
+        "notes": "Moonshot K2.7 launch comparison / BenchLM. Best tau2-bench in "
+                 "this set; native agent swarms (300 sub-agents, 4,000 steps); "
+                 "HLE-with-tools 54.0 led all frontier models at release.",
+    },
+    {
+        "slug": "nvidia/nemotron-3-ultra-550b-a55b-20260604",
+        "model": "NVIDIA Nemotron 3 Ultra", "developer": "NVIDIA", "open": True,
+        "mcp_atlas": None, "toolathlon": None, "automation": None,
+        "browsecomp": 44.4, "gdpval_elo": None, "tau2": 70.9,
+        "notes": "NVIDIA model card (BF16). Tau2 column shows TauBench V3 "
+                 "average (airline/retail/telecom/banking), a different version "
+                 "from the AA tau2 numbers above. No MCP Atlas or Toolathlon "
+                 "published.",
+    },
+]
+
+# OpenRouter weekly tool calls per model (rankings 'Tool Calls' chart), last
+# completed ISO week. Snapshot: data/raw/openrouter_tool_calls_week_2026-07-20.json
+TOOL_CALLS_WEEK = "2026-07-13"
 
 # ------------------------------------------------------- Params & Benchmarks
 # Hand-curated deep-dive for selected model families (researched 2026-07-20).
@@ -364,6 +473,136 @@ def autosize(ws, widths):
         ws.column_dimensions[get_column_letter(i)].width = w
 
 
+def enrich_tool_use(catalog, rows):
+    """Join the tool-use table with catalog API flags, weekly volume, and
+    real-world weekly tool-call counts from the OpenRouter snapshot."""
+    tc_path = sorted(glob.glob(os.path.join(RAW, "openrouter_tool_calls_week_*.json")))[-1]
+    with open(tc_path) as f:
+        weeks = json.load(f)["data"]
+    week = next(w for w in weeks if w["x"] == TOOL_CALLS_WEEK)
+    calls = defaultdict(int)
+    for key, n in week["ys"].items():
+        calls[key.split(":")[0]] += n
+    total_calls = sum(week["ys"].values())
+
+    by_slug = {r["slug"]: r for r in rows}
+    out = []
+    for tu in TOOL_USE:
+        tu = dict(tu)
+        entry = catalog.get(tu["slug"])
+        sp = (entry or {}).get("supported_parameters") or []
+        tu["parallel_tools"] = "parallel_tool_calls" in sp
+        row = by_slug.get(tu["slug"])
+        tu["tokens_total"] = row["tokens_total"] if row else None
+        tu["weekly_tool_calls"] = calls.get(tu["slug"]) or None
+        out.append(tu)
+    top_callers = sorted(week["ys"].items(),
+                         key=lambda kv: (kv[0] == "Others", -kv[1]))
+    return out, top_callers, total_calls
+
+
+def write_tool_use_sheet(wb, tu_rows, top_callers, total_calls):
+    ws = wb.create_sheet("Tool Use")
+    ws["A1"] = "Tool use: Kimi K3 vs closed frontier (Fable 5, GPT-5.6 Sol) and open-weights peers"
+    ws["A1"].font = Font(bold=True, size=14)
+    ws["A2"] = ("Agentic tool-calling benchmarks (researched 2026-07-21) plus real-world "
+                "tool-call traffic on OpenRouter")
+    ws["A3"] = ("Rows 1-5 (K3, Fable 5, Sol, Opus 4.8, GLM-5.2) share one methodology: Moonshot's Kimi K3 launch "
+                "table. Remaining rows are vendor-reported under their own harnesses, so compare them loosely.")
+    ws["A2"].font = ws["A3"].font = Font(italic=True, color="595959")
+
+    headers = [
+        "Model", "Developer", "Class",
+        "MCP Atlas (%)", "Toolathlon-Verified (%)", "AutomationBench (%)",
+        "BrowseComp (%)", "GDPval-AA (Elo)", "tau2-bench (%)",
+        "Parallel tool-call API", "OpenRouter tool calls, wk of "
+        + TOOL_CALLS_WEEK + " (M)", "Weekly tokens (B)", "Notes / sources",
+    ]
+    hr = 5
+    for c, h in enumerate(headers, 1):
+        ws.cell(row=hr, column=c, value=h)
+    style_header(ws, hr, len(headers))
+    ws.freeze_panes = f"A{hr + 1}"
+
+    for i, tu in enumerate(tu_rows):
+        r = hr + 1 + i
+        vals = [
+            tu["model"], tu["developer"],
+            "Open-weights" if tu["open"] else "Closed",
+            tu["mcp_atlas"], tu["toolathlon"], tu["automation"],
+            tu["browsecomp"], tu["gdpval_elo"], tu["tau2"],
+            "Yes" if tu["parallel_tools"] else "No",
+            tu["weekly_tool_calls"] / 1e6 if tu["weekly_tool_calls"] else None,
+            tu["tokens_total"] / 1e9 if tu["tokens_total"] else None,
+            tu["notes"],
+        ]
+        for c, v in enumerate(vals, 1):
+            cell = ws.cell(row=r, column=c, value=v if v is not None else "—")
+            cell.border = BORDER
+            if c == 3:
+                cell.fill = OPEN_FILL if tu["open"] else CLOSED_FILL
+            if c == 13:
+                cell.alignment = Alignment(wrap_text=True, vertical="top")
+        for c in (4, 5, 6, 7, 9, 11):
+            if isinstance(ws.cell(row=r, column=c).value, (int, float)):
+                ws.cell(row=r, column=c).number_format = "0.0"
+        if isinstance(ws.cell(row=r, column=8).value, (int, float)):
+            ws.cell(row=r, column=8).number_format = "#,##0"
+        if isinstance(ws.cell(row=r, column=12).value, (int, float)):
+            ws.cell(row=r, column=12).number_format = "#,##0.0"
+    autosize(ws, [24, 15, 13, 11, 15, 14, 12, 12, 11, 13, 18, 13, 70])
+
+    # Real-world tool-call leaderboard (OpenRouter 'Tool Calls' chart)
+    lb_start = hr + len(tu_rows) + 2
+    ws.cell(row=lb_start, column=1,
+            value=f"Real-world tool-call traffic on OpenRouter — completed week of {TOOL_CALLS_WEEK} "
+                  f"(total {total_calls / 1e6:.0f}M tool calls)").font = Font(bold=True, size=12)
+    for c, h in enumerate(["Model (permaslug)", "Tool calls (M)", "Share"], 1):
+        ws.cell(row=lb_start + 1, column=c, value=h)
+    style_header(ws, lb_start + 1, 3)
+    for i, (slug, n) in enumerate(top_callers):
+        r = lb_start + 2 + i
+        ws.cell(row=r, column=1, value=slug).border = BORDER
+        ws.cell(row=r, column=2, value=n / 1e6).number_format = "#,##0.0"
+        ws.cell(row=r, column=2).border = BORDER
+        ws.cell(row=r, column=3, value=n / total_calls).number_format = "0.0%"
+        ws.cell(row=r, column=3).border = BORDER
+
+    nrow = lb_start + 2 + len(top_callers) + 1
+    notes = [
+        "Benchmarks: MCP Atlas = multi-step tool use over Model Context Protocol servers (500-task public subset, "
+        "100-turn limit, Gemini 3.1 Pro judge). Toolathlon-Verified = multi-tool office/personal workflows; DeepSeek "
+        "rows use the standard Toolathlon variant. AutomationBench = Zapier-style SaaS automation (600-task subset). "
+        "BrowseComp = agentic web research. GDPval-AA = Artificial Analysis's Elo for economically valuable "
+        "professional tasks. tau2-bench = conversational tool use; the Nemotron figure is TauBench V3 (different version).",
+        "Kimi K3's launch table is vendor-published: K3 runs at max reasoning effort on Moonshot's preferred harness "
+        "per benchmark, while competitor numbers mix harnesses and third-party citations. OpenAI's own table shows the "
+        "same ordering on Toolathlon (Fable 61.7 > Opus 59.9 > Sol 58.0 on the standard variant).",
+        "Takeaway: on tool use the three frontier models are within ~1 point on MCP Atlas (Fable 84.7, K3 84.2, Sol 83.6). "
+        "Fable 5 leads orchestrated professional work (Toolathlon, GDPval-AA, OfficeQA); Sol leads computer use and "
+        "long-horizon agent runs (OSWorld 62.6, Agents' Last Exam 52.7); K3 leads web research (BrowseComp 91.2) and "
+        "Zapier-style automation, at roughly half Fable's cost per task ($0.94 vs $2.75 per AA).",
+        "Real-world traffic tells a different story: OpenRouter's tool-call chart is dominated by cheap open-weights "
+        "models (Hy3, MiMo-V2.5, DeepSeek V4 Flash, GLM-5.2, MiniMax M3). Fable 5, Sol, and K3 are outside the top 9 "
+        "tool-callers - premium closed models are used more via first-party APIs and coding products than through "
+        "OpenRouter tool-calling.",
+        "Weekly tokens = OpenRouter total volume, week ending " + WEEK_ENDING + ". Kimi K3 launched 2026-07-16, so its "
+        "volume covers <1 day. Source: OpenRouter (openrouter.ai/rankings), as of 2026-07-21.",
+    ]
+    for i, n in enumerate(notes):
+        ws.cell(row=nrow + i, column=1, value=n).font = Font(size=9, color="595959")
+
+    chart = BarChart()
+    chart.type = "col"
+    chart.title = "Tool-use benchmarks: MCP Atlas vs Toolathlon-Verified"
+    data = Reference(ws, min_col=4, max_col=5, min_row=hr, max_row=hr + len(tu_rows))
+    cats = Reference(ws, min_col=1, min_row=hr + 1, max_row=hr + len(tu_rows))
+    chart.add_data(data, titles_from_data=True)
+    chart.set_categories(cats)
+    chart.height, chart.width = 10, 24
+    ws.add_chart(chart, f"E{lb_start + 1}")
+
+
 def enrich_params_benchmarks(models, rows):
     """Join the hand-curated table with catalog pricing and weekly token volume."""
     id_to_canon = {e["id"]: e["canonical_slug"] for e in models if ":" not in e["id"]}
@@ -473,7 +712,8 @@ def write_params_benchmarks_sheet(wb, pb_rows):
     ws.add_chart(chart, f"A{nrow + len(notes) + 2}")
 
 
-def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows):
+def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows,
+                   tu_rows, top_callers, total_calls):
     wb = Workbook()
 
     # ---- Sheet 1: Summary (open vs closed)
@@ -633,6 +873,9 @@ def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows):
     # ---- Sheet 5: Params & benchmarks deep-dive
     write_params_benchmarks_sheet(wb, pb_rows)
 
+    # ---- Sheet 6: Tool use comparison
+    write_tool_use_sheet(wb, tu_rows, top_callers, total_calls)
+
     wb.save(OUT_XLSX)
 
 
@@ -702,6 +945,27 @@ def write_params_benchmarks_csv(pb_rows):
             ])
 
 
+def write_tool_use_csv(tu_rows):
+    with open(os.path.join(OUT_CSV_DIR, "tool_use_benchmarks.csv"), "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow([
+            "model", "developer", "class",
+            "mcp_atlas_pct", "toolathlon_verified_pct", "automationbench_pct",
+            "browsecomp_pct", "gdpval_aa_elo", "tau2_bench_pct",
+            "parallel_tool_call_api", "openrouter_tool_calls_week_" + TOOL_CALLS_WEEK.replace("-", ""),
+            "weekly_tokens", "notes",
+        ])
+        for tu in tu_rows:
+            w.writerow([
+                tu["model"], tu["developer"],
+                "open-weights" if tu["open"] else "closed",
+                tu["mcp_atlas"], tu["toolathlon"], tu["automation"],
+                tu["browsecomp"], tu["gdpval_elo"], tu["tau2"],
+                tu["parallel_tools"], tu["weekly_tool_calls"],
+                tu["tokens_total"], tu["notes"],
+            ])
+
+
 def main():
     rankings, models = load_raw()
     catalog = index_catalog(models)
@@ -709,9 +973,12 @@ def main():
     summary, grand_total = summarize(rows)
     devs = by_developer(rows)
     pb_rows = enrich_params_benchmarks(models, rows)
-    write_workbook(rows, summary, devs, grand_total, excluded, pb_rows)
+    tu_rows, top_callers, total_calls = enrich_tool_use(catalog, rows)
+    write_workbook(rows, summary, devs, grand_total, excluded, pb_rows,
+                   tu_rows, top_callers, total_calls)
     write_csvs(rows, summary, devs, grand_total)
     write_params_benchmarks_csv(pb_rows)
+    write_tool_use_csv(tu_rows)
 
     print(f"Matched text LLMs: {len(rows)}  |  weekly tokens: {grand_total / 1e12:.2f}T")
     print(f"Excluded (embeddings/media): {excluded / 1e9:.0f}B tokens")

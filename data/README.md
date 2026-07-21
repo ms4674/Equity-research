@@ -41,6 +41,7 @@ of estimated dollar spend.
 | Top 20 Volume Chart | Bar chart of the 20 highest-volume models |
 | By Developer | Volume, model count, and estimated spend rolled up per developer (Anthropic, DeepSeek, Google, OpenAI, ...) |
 | Params & Benchmarks | Deep-dive on 9 selected models (NVIDIA Nemotron 3 Ultra/Super, Claude Fable 5, GPT-5.6 Sol, Kimi K3, GLM-5.2, Qwen3.7 Max, DeepSeek V4 Pro/Flash): total/active parameters, architecture, AA Intelligence Index and cost per task, GPQA Diamond, SWE-bench Verified/Pro, Terminal-Bench, HLE, pricing, and weekly volume |
+| Tool Use | Tool-calling comparison of Kimi K3 vs closed frontier (Claude Fable 5, GPT-5.6 Sol, Opus 4.8) and open-weights peers (GLM-5.2, DeepSeek V4 Pro/Flash, MiniMax M3, Kimi K2.6, Nemotron 3 Ultra): MCP Atlas, Toolathlon-Verified, AutomationBench, BrowseComp, GDPval-AA Elo, tau2-bench, parallel tool-call API support, plus OpenRouter's real-world weekly tool-call leaderboard |
 
 CSV versions of every table are in [`csv/`](csv/).
 
@@ -62,6 +63,12 @@ CSV versions of every table are in [`csv/`](csv/).
   models' global volume share is understated relative to what these numbers show.
   Token counts use each upstream provider's own tokenizer, so cross-provider token
   comparisons are approximate.
+- **Tool Use sheet:** the K3 / Fable 5 / Sol / Opus 4.8 / GLM-5.2 rows come from
+  Moonshot's Kimi K3 launch evaluation table (kimi.com/blog/kimi-k3), the only
+  published single-methodology table covering all five; remaining rows are
+  vendor-reported under their own harnesses. Real-world tool-call counts come from
+  OpenRouter's public "Tool Calls" chart (snapshot in `raw/`), which only lists the
+  top 9 models per week plus an aggregated "Others" row.
 - **Params & Benchmarks sheet:** parameter counts are official vendor disclosures for
   open-weights models; Anthropic, OpenAI, and Alibaba do not disclose parameter counts
   (~3T figures for Fable 5 / GPT-5.6 Sol are third-party estimates, and Kimi K3's ~50B
