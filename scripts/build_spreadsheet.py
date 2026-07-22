@@ -17,6 +17,7 @@ Outputs:
   - data/csv/tool_use_benchmarks.csv
   - data/csv/cloud_provider_split.csv
   - data/csv/harness_rl_environments.csv
+  - data/csv/quantization_kld.csv
 """
 
 import csv
@@ -50,6 +51,280 @@ MANUAL_OVERRIDES = {
 OPEN_KEYWORDS = re.compile(
     r"open[- ]?(weight|source)|MIT licen[cs]e|Apache[- ]2", re.IGNORECASE
 )
+
+# ------------------------------------------------------- Quantization fidelity (KLD)
+# KL divergence measures how far a compressed/quantized variant's output
+# distribution is from ITS OWN full-precision reference - it is not defined
+# across different models (different tokenizers/vocabularies). This table
+# therefore compares each model's quantization-fidelity story, which is the
+# only meaningful "KLD comparison" across models. Researched 2026-07-22.
+QUANT_KLD = [
+    {
+        "model": "Kimi K3", "developer": "Moonshot AI", "open": True,
+        "precision": "Native MXFP4 weights + MXFP8 activations; QAT from the SFT "
+                     "stage (the 4-bit checkpoint IS the model - no higher-"
+                     "precision reference exists)",
+        "measurable": "Not yet - weights due 2026-07-27; nothing on HF as of "
+                      "2026-07-22",
+        "kld_native": "~0 by construction (QAT native format)",
+        "kld_4bit": "n/a - the native format is already 4-bit",
+        "kld_2bit": "Pending community quants (Unsloth gates sub-4-bit releases "
+                    "on measured KLD)",
+        "notes": "Expected to mirror DeepSeek V4 Flash: native MXFP4 experts "
+                 "repack bit-for-bit into GGUF (KLD ~0, 100% top-token "
+                 "agreement). ~1.4TB at MXFP4 vs ~5.6TB BF16-equivalent.",
+        "sources": "kimi.com/blog/kimi-k3; HF community analysis",
+    },
+    {
+        "model": "Kimi K2.6 / K2.7", "developer": "Moonshot AI", "open": True,
+        "precision": "Native INT4 QAT for MoE weights, BF16 elsewhere (1T params)",
+        "measurable": "Yes (weights public)",
+        "kld_native": "UD-Q8_K_XL 'truly lossless' (KLD ~0; PPL 1.8419)",
+        "kld_4bit": "UD-Q4_K_XL near-lossless: PPL 1.8420 vs 1.8419 lossless "
+                    "(584GB vs 595GB)",
+        "kld_2bit": "Dynamic 2-bit: PPL 2.4131 (340GB, -43% size); 1/3-bit "
+                    "uploads gated on KLD scores",
+        "notes": "Because MoE weights are already INT4-native, Q8 repack is "
+                 "bit-exact; only the BF16 non-expert tensors can degrade in "
+                 "smaller quants.",
+        "sources": "Unsloth Kimi K2.6 guide; unsloth/Kimi-K2.6-GGUF",
+    },
+    {
+        "model": "DeepSeek V4 Flash", "developer": "DeepSeek", "open": True,
+        "precision": "Native MXFP4 routed experts (96% of params) + FP8/BF16 "
+                     "rest; QAT (284B/13B)",
+        "measurable": "Yes - the best-measured KLD ladder of any frontier model "
+                      "(see ladder table below)",
+        "kld_native": "UD-Q8_K_XL: KLD ~0, 100% top-token agreement, all 1,328 "
+                      "tensors bit-identical to official weights",
+        "kld_4bit": "UD-Q4_K_XL mean KLD 0.0102 (96.3% top-token); bartowski "
+                    "MXFP4 0.0105; third-party imatrix Q4 0.0290-0.0291 (93.9%)",
+        "kld_2bit": "0.36-0.42 mean KLD, only ~78% top-token agreement "
+                    "(87-98GB) - the quality cliff",
+        "notes": "Canonical example of QAT killing the quantization tax at "
+                 "native precision; KLD only reappears in sub-4-bit community "
+                 "compressions.",
+        "sources": "Unsloth DeepSeek-V4 guide (wikitext-2, ctx 512, 4x B200)",
+    },
+    {
+        "model": "DeepSeek V4 Pro", "developer": "DeepSeek", "open": True,
+        "precision": "Same family: native MXFP4 experts + FP8 mixed (1.6T/49B)",
+        "measurable": "Yes (weights public)",
+        "kld_native": "Native repack lossless by same mechanism as Flash",
+        "kld_4bit": "No published ladder (community measured Flash first)",
+        "kld_2bit": "No published ladder",
+        "notes": "Expect Flash-like profile; 1.6T scale makes full KLD runs "
+                 "expensive, so trackers prioritized Flash.",
+        "sources": "DeepSeek V4 HF card; Unsloth docs",
+    },
+    {
+        "model": "GLM-5.2", "developer": "Z.ai (Zhipu)", "open": True,
+        "precision": "BF16/FP8 release (753B/40B); no QAT claimed",
+        "measurable": "Yes (weights public, MIT)",
+        "kld_native": "No first-party KLD published",
+        "kld_4bit": "Community GGUF quants follow the standard Unsloth Dynamic "
+                    "pattern; no headline KLD table published",
+        "kld_2bit": "Not published",
+        "notes": "Without QAT, 4-bit quants carry the normal ~0.004-0.012 KLD "
+                 "format tax (see format table below) rather than ~0.",
+        "sources": "z.ai/blog/glm-5.2; community GGUF repos",
+    },
+    {
+        "model": "MiniMax M3", "developer": "MiniMax", "open": True,
+        "precision": "Open weights; MSA sparse-attention architecture",
+        "measurable": "Yes (weights public)",
+        "kld_native": "No KLD published",
+        "kld_4bit": "Not published",
+        "kld_2bit": "Not published",
+        "notes": "No first-party or major community KLD measurements found as "
+                 "of 2026-07-22.",
+        "sources": "M3 launch materials",
+    },
+    {
+        "model": "NVIDIA Nemotron 3 Ultra", "developer": "NVIDIA", "open": True,
+        "precision": "BF16 reference + NVFP4 post-training-quantized release "
+                     "(550B/55B)",
+        "measurable": "Yes, but NVIDIA reports benchmark deltas instead of KLD",
+        "kld_native": "BF16 = reference (KLD 0 by definition)",
+        "kld_4bit": "NVFP4 quality cost measured on benchmarks: AA Intelligence "
+                    "Index 48.2 -> 47.7; GPQA 87.0 -> 87.9; SWE-bench Verified "
+                    "71.9 -> 69.7; Terminal-Bench 56.4 -> 53.9",
+        "kld_2bit": "Not published",
+        "notes": "The PTQ (not QAT) counter-example: a real, measurable quality "
+                 "delta between precisions - exactly what QAT-native releases "
+                 "avoid.",
+        "sources": "NVIDIA model card (BF16 vs NVFP4 columns); AA launch article",
+    },
+    {
+        "model": "Claude Fable 5", "developer": "Anthropic", "open": False,
+        "precision": "Undisclosed (serving precision unknown)",
+        "measurable": "No - no weight access; API exposes no logprobs; no "
+                      "reference distribution exists for outsiders",
+        "kld_native": "Unmeasurable",
+        "kld_4bit": "Unmeasurable",
+        "kld_2bit": "Unmeasurable",
+        "notes": "Any internal quantization/distillation between training and "
+                 "serving is invisible; users cannot audit serving fidelity.",
+        "sources": "Anthropic API docs (no logprobs surface)",
+    },
+    {
+        "model": "GPT-5.6 Sol", "developer": "OpenAI", "open": False,
+        "precision": "Undisclosed",
+        "measurable": "No - no weights; API returns top-k logprobs only, and "
+                      "there is no full-precision reference to diverge from",
+        "kld_native": "Unmeasurable",
+        "kld_4bit": "Unmeasurable",
+        "kld_2bit": "Unmeasurable",
+        "notes": "Top-k logprobs allow drift monitoring over time, but not KLD "
+                 "against a reference checkpoint.",
+        "sources": "OpenAI API docs",
+    },
+    {
+        "model": "Qwen3.7 Max", "developer": "Alibaba (Qwen)", "open": False,
+        "precision": "Undisclosed (API-only tier)",
+        "measurable": "No - closed weights since late 2025 for the Max tier",
+        "kld_native": "Unmeasurable",
+        "kld_4bit": "Unmeasurable",
+        "kld_2bit": "Unmeasurable",
+        "notes": "Alibaba's open Qwen3.x models are measurable (community GGUF "
+                 "KLD tables exist, e.g. Qwen3.6-27B used as the format "
+                 "reference below); the Max tier is not.",
+        "sources": "Qwen release notes",
+    },
+]
+
+# Measured KLD ladder for DeepSeek V4 Flash (closest public proxy for what
+# K3's post-release ladder will look like). Source: Unsloth, wikitext-2,
+# ctx 512, vs official weights.
+KLD_LADDER = [
+    ("Official checkpoint (reference)", 156.4, 4.5319, 0.0, 0.0, 100.0),
+    ("Unsloth UD-Q8_K_XL", 161.9, 4.5319, 0.0, 0.0, 100.0),
+    ("Unsloth UD-Q4_K_XL", 155.1, 4.5335, 0.0102, 3.40, 96.28),
+    ("bartowski MXFP4", 156.0, 4.5351, 0.0105, 3.42, 96.18),
+    ("antirez Q4KExperts-F16 (imatrix)", 164.6, 4.5743, 0.0291, 5.87, 93.95),
+    ("antirez mixed L37-42-Q4K (imatrix)", 97.6, 5.8169, 0.3605, 21.15, 79.74),
+    ("antirez IQ2XXS (imatrix)", 86.7, 6.0808, 0.4079, 22.23, 78.15),
+]
+
+# 4-bit-class format comparison: mean KLD vs FP16 reference measured on
+# Qwen3.6-27B (SpecPicks 2026 format review). MXFP4 is K3's native format.
+KLD_FORMATS = [
+    (4.0, 0.0123, 0.0078, 0.0061, 0.0042),
+    (4.5, 0.0094, 0.0058, 0.0047, 0.0031),
+    (6.0, 0.0028, 0.0019, 0.0015, 0.0017),
+    (8.0, 0.0009, 0.0008, 0.0007, 0.0006),
+]
+
+
+def write_quant_kld_sheet(wb):
+    ws = wb.create_sheet("Quantization & KLD")
+    ws["A1"] = "KLD (quantization fidelity): Kimi K3 vs open-weights peers and closed frontier models"
+    ws["A1"].font = Font(bold=True, size=14)
+    ws["A2"] = ("KL divergence measures a quantized variant against ITS OWN full-precision reference; it is not "
+                "defined across different models (different tokenizers/vocabularies). The comparable question is "
+                "each model's quantization-fidelity profile. Researched 2026-07-22.")
+    ws["A2"].font = Font(italic=True, color="595959")
+
+    headers = [
+        "Model", "Developer", "Class", "Release precision / QAT",
+        "KLD measurable by outsiders?", "KLD at native / lossless tier",
+        "KLD at 4-bit tier", "KLD at ~2-bit tier", "Notes", "Sources",
+    ]
+    hr = 4
+    for c, h in enumerate(headers, 1):
+        ws.cell(row=hr, column=c, value=h)
+    style_header(ws, hr, len(headers))
+    ws.freeze_panes = f"A{hr + 1}"
+    for i, m in enumerate(QUANT_KLD):
+        r = hr + 1 + i
+        vals = [m["model"], m["developer"],
+                "Open-weights" if m["open"] else "Closed",
+                m["precision"], m["measurable"], m["kld_native"],
+                m["kld_4bit"], m["kld_2bit"], m["notes"], m["sources"]]
+        for c, v in enumerate(vals, 1):
+            cell = ws.cell(row=r, column=c, value=v)
+            cell.border = BORDER
+            cell.alignment = Alignment(wrap_text=True, vertical="top")
+            if c == 3:
+                cell.fill = OPEN_FILL if m["open"] else CLOSED_FILL
+        ws.row_dimensions[r].height = 95
+    autosize(ws, [19, 14, 12, 34, 26, 30, 34, 26, 36, 26])
+
+    # Measured ladder (DeepSeek V4 Flash)
+    lr = hr + len(QUANT_KLD) + 2
+    ws.cell(row=lr, column=1, value="Measured KLD ladder - DeepSeek V4 Flash (closest public proxy for K3's "
+                                    "future ladder; Unsloth, wikitext-2)").font = Font(bold=True, size=12)
+    ladder_headers = ["Quant", "Size (GB)", "Perplexity", "Mean KLD", "RMS delta-p (%)", "Same top token (%)"]
+    for c, h in enumerate(ladder_headers, 1):
+        ws.cell(row=lr + 1, column=c, value=h)
+    style_header(ws, lr + 1, len(ladder_headers))
+    for i, (name, gb, ppl, kld, dp, tt) in enumerate(KLD_LADDER):
+        r = lr + 2 + i
+        for c, v in enumerate([name, gb, ppl, kld, dp, tt], 1):
+            cell = ws.cell(row=r, column=c, value=v)
+            cell.border = BORDER
+        ws.cell(row=r, column=3).number_format = "0.0000"
+        ws.cell(row=r, column=4).number_format = "0.0000"
+        ws.cell(row=r, column=5).number_format = "0.00"
+        ws.cell(row=r, column=6).number_format = "0.00"
+
+    # Format-level KLD reference
+    fr = lr + 2 + len(KLD_LADDER) + 1
+    ws.cell(row=fr, column=1, value="4-bit-class format KLD vs FP16 (measured on Qwen3.6-27B; lower = closer to "
+                                    "full precision; MXFP4 is K3's native format)").font = Font(bold=True, size=12)
+    fmt_headers = ["Bits per weight", "Q4_K_M (classic GGUF)", "oQ ('optimal Q')", "MXFP4/MXFP6", "UD-MLX"]
+    for c, h in enumerate(fmt_headers, 1):
+        ws.cell(row=fr + 1, column=c, value=h)
+    style_header(ws, fr + 1, len(fmt_headers))
+    for i, row_ in enumerate(KLD_FORMATS):
+        r = fr + 2 + i
+        for c, v in enumerate(row_, 1):
+            cell = ws.cell(row=r, column=c, value=v)
+            cell.border = BORDER
+            if c > 1:
+                cell.number_format = "0.0000"
+
+    nrow = fr + 2 + len(KLD_FORMATS) + 1
+    notes = [
+        "Why there is no 'K3 KLD vs Fable 5 KLD' number: KL divergence compares two probability distributions over "
+        "the same vocabulary. Different models have different tokenizers and no shared reference, so cross-model KLD "
+        "is undefined. The comparable dimension is how faithfully each model's served/compressed form reproduces its "
+        "own reference - and whether outsiders can measure that at all.",
+        "The open-weights frontier has engineered the quantization tax away: K3, K2.x, and DeepSeek V4 are "
+        "quantization-aware-trained so the low-precision checkpoint IS the model (KLD ~0 at native precision). KLD "
+        "only becomes a live issue for sub-4-bit community compressions, where ~2-bit costs 0.36+ KLD and ~22% "
+        "top-token disagreement (the quality cliff).",
+        "Closed models are unauditable on this axis: Anthropic exposes no logprobs, OpenAI only top-k, and neither "
+        "releases a reference checkpoint - so serving fidelity is a trust relationship, not a measurement. With open "
+        "models you can verify token-level fidelity yourself (Unsloth verified DeepSeek V4 Flash bit-identical).",
+        "Interpretation caveat (July 2026 community finding): KLD has a 'silent zone' near baseline where further "
+        "KLD reductions do not translate into quality gains; Unsloth and the 'Accuracy is Not All You Need' paper "
+        "recommend pairing KLD with flip-sensitive benchmarks (e.g. Aider) rather than reading tiny KLD deltas.",
+        "Kimi K3 status: weights promised by 2026-07-27 (not on Hugging Face as of 2026-07-22). Expect an "
+        "Unsloth-style measured ladder within days of release; until then the K3 row is by-construction reasoning, "
+        "not measurement.",
+        "Nemotron 3 Ultra is the post-training-quantization counter-example: NVIDIA ships BF16 + NVFP4 and reports "
+        "the quality delta on benchmarks (AA Index 48.2 vs 47.7) rather than KLD.",
+    ]
+    for i, n in enumerate(notes):
+        ws.cell(row=nrow + i, column=1, value=n).font = Font(size=9, color="595959")
+
+
+def write_quant_kld_csv():
+    with open(os.path.join(OUT_CSV_DIR, "quantization_kld.csv"), "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow([
+            "model", "developer", "class", "release_precision_qat", "kld_measurable",
+            "kld_native_lossless_tier", "kld_4bit_tier", "kld_2bit_tier", "notes", "sources",
+        ])
+        for m in QUANT_KLD:
+            w.writerow([
+                m["model"], m["developer"],
+                "open-weights" if m["open"] else "closed",
+                m["precision"], m["measurable"], m["kld_native"],
+                m["kld_4bit"], m["kld_2bit"], m["notes"], m["sources"],
+            ])
+
 
 # ----------------------------------------------------- Harness & RL environments
 # Hand-curated comparison of agent harnesses and RL training environments
@@ -1367,6 +1642,9 @@ def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows,
     # ---- Sheet 8: Harnesses & RL environments
     write_harness_rl_sheet(wb)
 
+    # ---- Sheet 9: Quantization & KLD
+    write_quant_kld_sheet(wb)
+
     wb.save(OUT_XLSX)
 
 
@@ -1491,6 +1769,7 @@ def main():
     write_tool_use_csv(tu_rows)
     write_cloud_csv(cloud_rows, cloud_meta)
     write_harness_rl_csv()
+    write_quant_kld_csv()
 
     print(f"\nCloud split (covered {cloud_meta['covered'] / 1e12:.1f}T of {grand_total / 1e12:.1f}T):")
     for cat, d in sorted(cloud_cats.items(), key=lambda kv: -(kv[1]['open'] + kv[1]['closed'])):
