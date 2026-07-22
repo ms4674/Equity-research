@@ -15,6 +15,7 @@ Outputs:
   - data/csv/by_developer.csv
   - data/csv/params_benchmarks.csv
   - data/csv/tool_use_benchmarks.csv
+  - data/csv/cloud_provider_split.csv
 """
 
 import csv
@@ -48,6 +49,191 @@ MANUAL_OVERRIDES = {
 OPEN_KEYWORDS = re.compile(
     r"open[- ]?(weight|source)|MIT licen[cs]e|Apache[- ]2", re.IGNORECASE
 )
+
+# ------------------------------------------------------------- Cloud providers
+# Category map for every serving provider seen in the endpoint-stats snapshot.
+# "Hyperscaler" = general-purpose public cloud; "Model lab" = the model
+# developer's own first-party API; "AI inference cloud" = independent
+# GPU/inference-specialist provider.
+PROVIDER_CATEGORY = {
+    "Amazon Bedrock": "Hyperscaler (US)", "Azure": "Hyperscaler (US)",
+    "Google": "Hyperscaler (US)", "Google AI Studio": "Hyperscaler (US)",
+    "Cloudflare": "Hyperscaler (US)", "DigitalOcean": "Hyperscaler (US)",
+    "Alibaba": "Hyperscaler (China)", "Baidu": "Hyperscaler (China)",
+    "Tencent": "Hyperscaler (China)", "StreamLake": "Hyperscaler (China)",
+    "OpenAI": "Model lab", "Anthropic": "Model lab", "DeepSeek": "Model lab",
+    "Moonshot AI": "Model lab", "Minimax": "Model lab", "Mistral": "Model lab",
+    "xAI": "Model lab", "Z.AI": "Model lab", "Xiaomi": "Model lab",
+    "StepFun": "Model lab", "Poolside": "Model lab", "Nvidia": "Model lab",
+    "Cohere": "Model lab", "Morph": "Model lab",
+}
+DEFAULT_PROVIDER_CATEGORY = "AI inference cloud"
+
+
+def build_cloud_split(rows):
+    """Estimate weekly tokens per serving provider by distributing each
+    model-variant's weekly volume across its endpoints proportionally to the
+    endpoints' live 30-minute request counts."""
+    stats_path = sorted(glob.glob(os.path.join(RAW, "openrouter_endpoint_stats_*.json")))[-1]
+    prov_path = sorted(glob.glob(os.path.join(RAW, "openrouter_providers_*.json")))[-1]
+    with open(stats_path) as f:
+        snapshot = json.load(f)
+    with open(prov_path) as f:
+        providers_dir = json.load(f)
+    hq = {p["displayName"]: p.get("headquarters") or "" for p in providers_dir}
+    hq.update({p["name"]: p.get("headquarters") or "" for p in providers_dir})
+
+    open_by_slug = {r["slug"]: r["open"] for r in rows}
+    prov = defaultdict(lambda: {"open": 0.0, "closed": 0.0, "models": set()})
+    covered = unattributed = 0
+    for m in snapshot["data"]:
+        tokens = m["weekly_tokens"]
+        is_open = open_by_slug.get(m["model_permaslug"])
+        if is_open is None:
+            unattributed += tokens
+            continue
+        total_req = sum(ep["request_count_30m"] for ep in m["endpoints"])
+        if total_req == 0:
+            unattributed += tokens
+            continue
+        covered += tokens
+        cls = "open" if is_open else "closed"
+        for ep in m["endpoints"]:
+            share = ep["request_count_30m"] / total_req
+            p = prov[ep["provider_name"]]
+            p[cls] += tokens * share
+            if share > 0:
+                p["models"].add(m["model_permaslug"])
+
+    out = []
+    for name, p in sorted(prov.items(), key=lambda kv: -(kv[1]["open"] + kv[1]["closed"])):
+        out.append(
+            {
+                "provider": name,
+                "category": PROVIDER_CATEGORY.get(name, DEFAULT_PROVIDER_CATEGORY),
+                "hq": hq.get(name, ""),
+                "open": p["open"],
+                "closed": p["closed"],
+                "total": p["open"] + p["closed"],
+                "models": len(p["models"]),
+            }
+        )
+    cats = defaultdict(lambda: {"open": 0.0, "closed": 0.0, "providers": 0})
+    for r in out:
+        c = cats[r["category"]]
+        c["open"] += r["open"]
+        c["closed"] += r["closed"]
+        c["providers"] += 1
+    meta = {
+        "fetched_at": snapshot["fetched_at"],
+        "covered": covered,
+        "unattributed": unattributed,
+        "n_pairs": len(snapshot["data"]),
+    }
+    return out, dict(cats), meta
+
+
+def write_cloud_sheet(wb, cloud_rows, cloud_cats, meta, grand_total):
+    ws = wb.create_sheet("By Cloud Provider")
+    ws["A1"] = "Where LLM tokens are served: open vs closed volume by cloud / inference provider"
+    ws["A1"].font = Font(bold=True, size=14)
+    ws["A2"] = (f"OpenRouter-routed traffic. Weekly volume (week ending {WEEK_ENDING}) distributed across each "
+                f"model's serving endpoints by live request share (endpoint snapshot {meta['fetched_at']}).")
+    ws["A3"] = (f"Covers the top {meta['n_pairs']} model-variant pairs = {meta['covered'] / 1e12:.1f}T of "
+                f"{grand_total / 1e12:.1f}T weekly tokens ({meta['covered'] / grand_total:.0%}); "
+                "long-tail models are not attributed.")
+    ws["A2"].font = ws["A3"].font = Font(italic=True, color="595959")
+
+    # --- Section 1: by provider category
+    hr = 5
+    cat_headers = ["Provider category", "# providers", "Open-weights tokens (B)",
+                   "Closed tokens (B)", "Total (B)", "Share of covered",
+                   "Open share within category"]
+    for c, h in enumerate(cat_headers, 1):
+        ws.cell(row=hr, column=c, value=h)
+    style_header(ws, hr, len(cat_headers))
+    order = ["Model lab", "AI inference cloud", "Hyperscaler (US)", "Hyperscaler (China)"]
+    covered = meta["covered"]
+    for i, cat in enumerate(order):
+        d = cloud_cats.get(cat, {"open": 0, "closed": 0, "providers": 0})
+        r = hr + 1 + i
+        tot = d["open"] + d["closed"]
+        vals = [cat, d["providers"], d["open"] / 1e9, d["closed"] / 1e9, tot / 1e9,
+                tot / covered if covered else 0, d["open"] / tot if tot else 0]
+        for c, v in enumerate(vals, 1):
+            cell = ws.cell(row=r, column=c, value=v)
+            cell.border = BORDER
+        for c in (3, 4, 5):
+            ws.cell(row=r, column=c).number_format = "#,##0.0"
+        for c in (6, 7):
+            ws.cell(row=r, column=c).number_format = "0.0%"
+
+    # --- Section 2: per provider
+    hr2 = hr + len(order) + 2
+    ws.cell(row=hr2 - 1, column=1, value="Per provider (estimated weekly tokens)").font = Font(bold=True, size=12)
+    headers = ["Provider", "Category", "HQ", "Open-weights tokens (B)", "Closed tokens (B)",
+               "Total (B)", "Share of covered", "Open share", "# models served"]
+    for c, h in enumerate(headers, 1):
+        ws.cell(row=hr2, column=c, value=h)
+    style_header(ws, hr2, len(headers))
+    for i, r_ in enumerate(cloud_rows):
+        r = hr2 + 1 + i
+        tot = r_["total"]
+        vals = [r_["provider"], r_["category"], r_["hq"],
+                r_["open"] / 1e9, r_["closed"] / 1e9, tot / 1e9,
+                tot / covered if covered else 0,
+                r_["open"] / tot if tot else 0, r_["models"]]
+        for c, v in enumerate(vals, 1):
+            cell = ws.cell(row=r, column=c, value=v)
+            cell.border = BORDER
+            if c == 2:
+                cell.fill = (
+                    PatternFill("solid", fgColor="DDEBF7") if v.startswith("Hyperscaler")
+                    else PatternFill("solid", fgColor="FFF2CC") if v == "Model lab"
+                    else PatternFill("solid", fgColor="EDEDED")
+                )
+        for c in (4, 5, 6):
+            ws.cell(row=r, column=c).number_format = "#,##0.0"
+        for c in (7, 8):
+            ws.cell(row=r, column=c).number_format = "0.0%"
+    ws.auto_filter.ref = f"A{hr2}:I{hr2 + len(cloud_rows)}"
+    ws.freeze_panes = f"A{hr2 + 1}"
+    autosize(ws, [20, 19, 6, 20, 16, 12, 14, 11, 13])
+
+    nrow = hr2 + len(cloud_rows) + 2
+    notes = [
+        "Methodology: OpenRouter does not publish per-provider token volume. Each model-variant's weekly tokens are "
+        "split across its serving endpoints in proportion to each endpoint's live 30-minute request count "
+        "(openrouter.ai frontend endpoint stats). Requests are a proxy for tokens - providers with atypical request "
+        "sizes will be over/under-stated - and the 30-minute window is extrapolated to the week, so treat rows as "
+        "order-of-magnitude estimates.",
+        "Categories: 'Model lab' = first-party API of the model's developer (OpenAI, Anthropic, DeepSeek, Moonshot...). "
+        "'AI inference cloud' = independent GPU/inference specialists (DeepInfra, Fireworks, Together, Baseten, Novita, "
+        "Groq...). 'Hyperscaler' = general-purpose public clouds (AWS Bedrock, Azure, Google Vertex/AI Studio, "
+        "Cloudflare, DigitalOcean; Alibaba, Baidu, Tencent, StreamLake/Kuaishou).",
+        "Closed models can only be served by their lab or licensed hyperscalers, so their provider mix is structurally "
+        "narrow; open-weights models are served competitively by many independent clouds.",
+        "Google is counted as a hyperscaler (Vertex AI / AI Studio are cloud services) even though it is also the lab "
+        "behind the Gemini models it serves; the same applies to Alibaba/Tencent/Baidu serving their own models.",
+        "Scope caveat: this covers only traffic routed through OpenRouter. Direct first-party API usage (e.g. most "
+        "OpenAI/Anthropic enterprise traffic) and direct cloud contracts (Bedrock/Vertex/Azure enterprise deals) are "
+        "not visible here, so hyperscaler and lab shares of the GLOBAL market are far larger than these rows suggest.",
+        "Free-tier variant endpoints sometimes expose no live stats (e.g. Tencent Hy3 free promo); those tokens are "
+        "distributed using the model's standard-variant endpoint mix as a proxy.",
+        "Source: OpenRouter (openrouter.ai/rankings), as of " + meta["fetched_at"] + ".",
+    ]
+    for i, n in enumerate(notes):
+        ws.cell(row=nrow + i, column=1, value=n).font = Font(size=9, color="595959")
+
+    pie = PieChart()
+    pie.title = "Covered tokens by provider category"
+    data = Reference(ws, min_col=5, min_row=hr, max_row=hr + len(order))
+    cats_ref = Reference(ws, min_col=1, min_row=hr + 1, max_row=hr + len(order))
+    pie.add_data(data, titles_from_data=True)
+    pie.set_categories(cats_ref)
+    pie.height, pie.width = 8, 12
+    ws.add_chart(pie, f"K{hr}")
+
 
 # ------------------------------------------------------------------ Tool use
 # Hand-curated tool-use / agentic benchmark comparison (researched 2026-07-21).
@@ -713,7 +899,7 @@ def write_params_benchmarks_sheet(wb, pb_rows):
 
 
 def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows,
-                   tu_rows, top_callers, total_calls):
+                   tu_rows, top_callers, total_calls, cloud_rows, cloud_cats, cloud_meta):
     wb = Workbook()
 
     # ---- Sheet 1: Summary (open vs closed)
@@ -876,6 +1062,9 @@ def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows,
     # ---- Sheet 6: Tool use comparison
     write_tool_use_sheet(wb, tu_rows, top_callers, total_calls)
 
+    # ---- Sheet 7: Cloud provider split
+    write_cloud_sheet(wb, cloud_rows, cloud_cats, cloud_meta, grand_total)
+
     wb.save(OUT_XLSX)
 
 
@@ -966,6 +1155,24 @@ def write_tool_use_csv(tu_rows):
             ])
 
 
+def write_cloud_csv(cloud_rows, meta):
+    with open(os.path.join(OUT_CSV_DIR, "cloud_provider_split.csv"), "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow([
+            "provider", "category", "hq",
+            "est_weekly_tokens_open", "est_weekly_tokens_closed",
+            "est_weekly_tokens_total", "share_of_covered", "open_share", "models_served",
+        ])
+        for r in cloud_rows:
+            w.writerow([
+                r["provider"], r["category"], r["hq"],
+                round(r["open"]), round(r["closed"]), round(r["total"]),
+                round(r["total"] / meta["covered"], 6) if meta["covered"] else 0,
+                round(r["open"] / r["total"], 4) if r["total"] else 0,
+                r["models"],
+            ])
+
+
 def main():
     rankings, models = load_raw()
     catalog = index_catalog(models)
@@ -974,11 +1181,19 @@ def main():
     devs = by_developer(rows)
     pb_rows = enrich_params_benchmarks(models, rows)
     tu_rows, top_callers, total_calls = enrich_tool_use(catalog, rows)
+    cloud_rows, cloud_cats, cloud_meta = build_cloud_split(rows)
     write_workbook(rows, summary, devs, grand_total, excluded, pb_rows,
-                   tu_rows, top_callers, total_calls)
+                   tu_rows, top_callers, total_calls, cloud_rows, cloud_cats, cloud_meta)
     write_csvs(rows, summary, devs, grand_total)
     write_params_benchmarks_csv(pb_rows)
     write_tool_use_csv(tu_rows)
+    write_cloud_csv(cloud_rows, cloud_meta)
+
+    print(f"\nCloud split (covered {cloud_meta['covered'] / 1e12:.1f}T of {grand_total / 1e12:.1f}T):")
+    for cat, d in sorted(cloud_cats.items(), key=lambda kv: -(kv[1]['open'] + kv[1]['closed'])):
+        tot = d['open'] + d['closed']
+        print(f"  {cat:22s} {tot / 1e12:6.2f}T ({tot / cloud_meta['covered']:5.1%})  "
+              f"open={d['open'] / 1e12:5.2f}T closed={d['closed'] / 1e12:5.2f}T  providers={d['providers']}")
 
     print(f"Matched text LLMs: {len(rows)}  |  weekly tokens: {grand_total / 1e12:.2f}T")
     print(f"Excluded (embeddings/media): {excluded / 1e9:.0f}B tokens")

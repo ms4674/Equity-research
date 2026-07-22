@@ -42,6 +42,7 @@ of estimated dollar spend.
 | By Developer | Volume, model count, and estimated spend rolled up per developer (Anthropic, DeepSeek, Google, OpenAI, ...) |
 | Params & Benchmarks | Deep-dive on 9 selected models (NVIDIA Nemotron 3 Ultra/Super, Claude Fable 5, GPT-5.6 Sol, Kimi K3, GLM-5.2, Qwen3.7 Max, DeepSeek V4 Pro/Flash): total/active parameters, architecture, AA Intelligence Index and cost per task, GPQA Diamond, SWE-bench Verified/Pro, Terminal-Bench, HLE, pricing, and weekly volume |
 | Tool Use | Tool-calling comparison of Kimi K3 vs closed frontier (Claude Fable 5, GPT-5.6 Sol, Opus 4.8) and open-weights peers (GLM-5.2, DeepSeek V4 Pro/Flash, MiniMax M3, Kimi K2.6, Nemotron 3 Ultra): MCP Atlas, Toolathlon-Verified, AutomationBench, BrowseComp, GDPval-AA Elo, tau2-bench, parallel tool-call API support, plus OpenRouter's real-world weekly tool-call leaderboard |
+| By Cloud Provider | Estimated weekly tokens served per cloud/inference provider, split open vs closed, rolled up by category (model-lab first-party APIs, independent AI inference clouds, US hyperscalers, China hyperscalers), with per-provider table and category pie chart |
 
 CSV versions of every table are in [`csv/`](csv/).
 
@@ -63,6 +64,15 @@ CSV versions of every table are in [`csv/`](csv/).
   models' global volume share is understated relative to what these numbers show.
   Token counts use each upstream provider's own tokenizer, so cross-provider token
   comparisons are approximate.
+- **By Cloud Provider sheet:** OpenRouter does not publish per-provider token volume,
+  so each model-variant's weekly tokens are distributed across its serving endpoints in
+  proportion to each endpoint's live 30-minute request count
+  (`scripts/fetch_endpoint_stats.py` snapshots the frontend endpoint-stats API for the
+  top 60 model-variant pairs, ~96% of weekly volume). Requests are a proxy for tokens
+  and the 30-minute window is extrapolated to the week, so rows are order-of-magnitude
+  estimates. Covers OpenRouter-routed traffic only: direct first-party API usage and
+  direct Bedrock/Vertex/Azure enterprise contracts are invisible here, so hyperscaler
+  and lab shares of the global market are far larger than these rows suggest.
 - **Tool Use sheet:** the K3 / Fable 5 / Sol / Opus 4.8 / GLM-5.2 rows come from
   Moonshot's Kimi K3 launch evaluation table (kimi.com/blog/kimi-k3), the only
   published single-methodology table covering all five; remaining rows are
