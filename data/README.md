@@ -43,6 +43,7 @@ of estimated dollar spend.
 | Params & Benchmarks | Deep-dive on 9 selected models (NVIDIA Nemotron 3 Ultra/Super, Claude Fable 5, GPT-5.6 Sol, Kimi K3, GLM-5.2, Qwen3.7 Max, DeepSeek V4 Pro/Flash): total/active parameters, architecture, AA Intelligence Index and cost per task, GPQA Diamond, SWE-bench Verified/Pro, Terminal-Bench, HLE, pricing, and weekly volume |
 | Tool Use | Tool-calling comparison of Kimi K3 vs closed frontier (Claude Fable 5, GPT-5.6 Sol, Opus 4.8) and open-weights peers (GLM-5.2, DeepSeek V4 Pro/Flash, MiniMax M3, Kimi K2.6, Nemotron 3 Ultra): MCP Atlas, Toolathlon-Verified, AutomationBench, BrowseComp, GDPval-AA Elo, tau2-bench, parallel tool-call API support, plus OpenRouter's real-world weekly tool-call leaderboard |
 | By Cloud Provider | Estimated weekly tokens served per cloud/inference provider, split open vs closed, rolled up by category (model-lab first-party APIs, independent AI inference clouds, US hyperscalers, China hyperscalers), with per-provider table and category pie chart |
+| Harnesses & RL Envs | Agent harness and RL-environment comparison across 8 labs (Kimi K3, Claude Fable 5, GPT-5.6 Sol, GLM-5/5.2, DeepSeek V4, Nemotron 3, MiniMax M3, Qwen3.7 Max): first-party harnesses, API compatibility, RL algorithms and training stacks, disclosed RL environments, and openness of each post-training stack, plus a shared-infrastructure reference (Claude Code, Codex, Kimi Code, Terminus-2, Harbor, RepoLaunch, NeMo Gym, slime) |
 
 CSV versions of every table are in [`csv/`](csv/).
 
@@ -64,6 +65,11 @@ CSV versions of every table are in [`csv/`](csv/).
   models' global volume share is understated relative to what these numbers show.
   Token counts use each upstream provider's own tokenizer, so cross-provider token
   comparisons are approximate.
+- **Harnesses & RL Envs sheet:** hand-curated from primary sources (lab tech blogs and
+  papers: Kimi K3 blog, GLM-5 paper arXiv:2602.15763, DeepSeek-V4 report
+  arXiv:2606.19348, MiniMax-M1 paper, NVIDIA NeMo Gym repo and HF RL blends, OpenAI
+  Codex harness posts, Anthropic Fable 5 docs, Alibaba Qwen3.7 blog). Closed-lab rows
+  describe publicly known information only — their actual RL stacks are proprietary.
 - **By Cloud Provider sheet:** OpenRouter does not publish per-provider token volume,
   so each model-variant's weekly tokens are distributed across its serving endpoints in
   proportion to each endpoint's live 30-minute request count

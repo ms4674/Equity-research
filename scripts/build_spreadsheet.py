@@ -16,6 +16,7 @@ Outputs:
   - data/csv/params_benchmarks.csv
   - data/csv/tool_use_benchmarks.csv
   - data/csv/cloud_provider_split.csv
+  - data/csv/harness_rl_environments.csv
 """
 
 import csv
@@ -49,6 +50,304 @@ MANUAL_OVERRIDES = {
 OPEN_KEYWORDS = re.compile(
     r"open[- ]?(weight|source)|MIT licen[cs]e|Apache[- ]2", re.IGNORECASE
 )
+
+# ----------------------------------------------------- Harness & RL environments
+# Hand-curated comparison of agent harnesses and RL training environments
+# (researched 2026-07-22). Sources per row; closed labs disclose harness
+# architecture but not RL environments, so those cells describe what is
+# publicly known or stated by the lab.
+HARNESS_RL = [
+    {
+        "model": "Kimi K3", "developer": "Moonshot AI", "open": True,
+        "harness": "Kimi Code CLI (KimiCode harness); Kimi.com / Kimi Work apps; "
+                   "K3 Swarm Max orchestrator for up to 300 parallel sub-agents",
+        "compat": "OpenAI- and Anthropic-compatible APIs; MCP tools. Hard "
+                  "requirement: preserved thinking history - harnesses must pass "
+                  "back all prior reasoning or quality destabilizes; Moonshot "
+                  "recommends verified harnesses (Kimi Code) and warns against "
+                  "mid-session model switches",
+        "rl_stack": "Parallel Agent RL (PARL): trainable orchestrator with frozen "
+                    "sub-agents for credit assignment (Agent Swarm lineage from "
+                    "K2.5); per-head Muon optimizer; quantile-balanced MoE "
+                    "routing; trained in preserved-thinking mode; QAT from SFT "
+                    "stage (MXFP4/MXFP8)",
+        "rl_envs": "Not released. Disclosed examples: 24h GPU kernel-optimization "
+                   "sandboxes (H200 + non-NVIDIA GPGPU), 48h chip-design run on "
+                   "open-source EDA tools, internal knowledge-work environments "
+                   "derived from real user-agent workflows. Technical report due "
+                   "with weights (by 2026-07-27)",
+        "openness": "Weights open (due 2026-07-27); RL framework and environments "
+                    "not released; contributed KDA prefix-caching to vLLM",
+        "eval_harness": "KimiCode (own evals); mini-SWE-agent on DeepSWE "
+                        "leaderboard; Claude Code for SWE Marathon/OfficeQA",
+        "sources": "kimi.com/blog/kimi-k3; Kimi API docs",
+    },
+    {
+        "model": "Claude Fable 5", "developer": "Anthropic", "open": False,
+        "harness": "Claude Code (CLI + SDK) - the reference harness most labs "
+                   "benchmark against; Claude Cowork for knowledge work",
+        "compat": "Anthropic API only (adaptive thinking always on; effort "
+                  "parameter replaces thinking budgets). Harness-level features "
+                  "co-designed with the model: memory tool, context editing / "
+                  "tool-result clearing, compaction, task budgets, code execution, "
+                  "programmatic tool calling; no assistant prefill",
+        "rl_stack": "Undisclosed. Known: RLHF + RL on long-horizon agentic tasks; "
+                    "adaptive reasoning with effort levels (low->max); Opus 4.8 "
+                    "fallback via safety classifiers (Fable) on cyber/bio/"
+                    "distillation requests",
+        "rl_envs": "Undisclosed. System card documents evaluation (not training) "
+                   "environments across SWE, terminal, multi-agent, computer-use "
+                   "(OSWorld), finance/legal/healthcare agents. Anthropic "
+                   "publishes no RL training data or environments",
+        "openness": "Fully closed (weights, data, RL stack); harness (Claude "
+                    "Code) is a product with open plugin/MCP ecosystem",
+        "eval_harness": "Claude Code / Terminus-2 (AA); vendor system card",
+        "sources": "Anthropic Fable 5 launch + system card; platform.claude.com docs",
+    },
+    {
+        "model": "GPT-5.6 Sol", "developer": "OpenAI", "open": False,
+        "harness": "Codex suite: Codex CLI (agent loop), Codex Cloud, VS Code "
+                   "extension, App Server (JSON-RPC protocol exposing the "
+                   "harness to products)",
+        "compat": "Responses API drives the agent loop (structured context: repo "
+                  "metadata, file tree, diffs, command outputs; automatic "
+                  "compaction; sandboxed execution). Sol defaults to subagent-"
+                  "orchestrator mode; known open issue: subagent config fields "
+                  "hidden, blocking cheap Terra/Luna subagent routing "
+                  "(openai/codex#31814)",
+        "rl_stack": "Undisclosed. Known: RL optimized for multi-step execution "
+                    "(plan->implement->validate->repair) and long uninterrupted "
+                    "runs (~25h reported); reasoning modes incl. 'pro'; models "
+                    "explicitly tuned for the Codex harness",
+        "rl_envs": "Undisclosed. Public signals: Agents' Last Exam-style "
+                   "long-horizon professional workflows (55 fields), OSWorld "
+                   "computer use, terminal tasks. No RL environments or data "
+                   "released",
+        "openness": "Fully closed for GPT-5.x; separately ships open-weight "
+                    "gpt-oss models (Apache 2.0, no RL stack)",
+        "eval_harness": "Codex (own evals and AA Coding Agent Index)",
+        "sources": "OpenAI 'Unrolling the Codex agent loop', 'Unlocking the "
+                   "Codex harness', GPT-5.6 launch post",
+    },
+    {
+        "model": "GLM-5 / GLM-5.2", "developer": "Z.ai (Zhipu)", "open": True,
+        "harness": "No own CLI - ships Anthropic-native API designed to drop into "
+                   "Claude Code, OpenClaw, Cline etc. (GLM Coding Plan $3-80/mo); "
+                   "positions third-party harnesses as the product surface",
+        "compat": "Anthropic-native + OpenAI-compatible; parallel tool-call API "
+                  "support (rare among peers); 1M context with dynamic working-"
+                  "memory management for thousands-of-tool-call sessions",
+        "rl_stack": "slime (open-source, Megatron+SGLang) - the disclosed RL "
+                    "framework behind GLM-4.5->5.2. Sequential pipeline: Reasoning "
+                    "RL -> Agentic RL -> General RL with on-policy cross-stage "
+                    "distillation; fully async decoupled rollout/training; TITO "
+                    "gateway (token-in-token-out); double-sided importance "
+                    "sampling; hybrid rewards (rule-based + ORM + GRM)",
+        "rl_envs": "Most detailed public disclosure of any lab: 10K+ verifiable "
+                   "SWE environments built with RepoLaunch from real issue-PR "
+                   "pairs across 9 languages; synthesized terminal environments "
+                   "in Harbor format (Dockerized, >90% build accuracy); slide-"
+                   "generation environment with executable HTML rendering "
+                   "verification; multi-hop search tasks. Environments themselves "
+                   "not released, but pipeline is documented",
+        "openness": "Weights open (MIT); RL framework open (slime on GitHub); "
+                    "environment-building pipelines documented in GLM-5 paper; "
+                    "environment data not released",
+        "eval_harness": "Claude Code / Terminus-2",
+        "sources": "GLM-5 paper (arXiv:2602.15763); THUDM/slime; z.ai/blog/glm-5.2",
+    },
+    {
+        "model": "DeepSeek V4 Pro / Flash", "developer": "DeepSeek", "open": True,
+        "harness": "No own harness - dual-mode OpenAI + Anthropic-compatible API "
+                   "(drops into Codex- or Claude Code-style harnesses); new "
+                   "XML-based DSML tool-call schema replacing JSON",
+        "compat": "OpenAI + Anthropic API compatibility; three reasoning modes "
+                  "(non-think / high / max); 1M context",
+        "rl_stack": "Two-stage post-training that replaces mixed RL: (1) domain "
+                    "specialists (math, code, agent, instruction following) each "
+                    "trained with SFT + GRPO where the actor natively functions "
+                    "as its own generative reward model (no separate RM); (2) "
+                    "10+ specialist teachers merged into one student via "
+                    "multi-teacher on-policy distillation (weighted reverse-KL)",
+        "rl_envs": "Sandbox infrastructure for agentic RL documented in the V4 "
+                   "report (Sec 5.2.5) incl. million-token-context RL rollouts; "
+                   "agentic tool-use data injected already in mid-training. "
+                   "Environments and RL data not released",
+        "openness": "Weights open (MIT) incl. base checkpoints; detailed "
+                    "technical report; RL sandbox infra and data not released",
+        "eval_harness": "Own harness + mini-SWE-agent (DeepSWE); Terminus (TB 2.0)",
+        "sources": "DeepSeek-V4 report (arXiv:2606.19348)",
+    },
+    {
+        "model": "Nemotron 3 (Nano/Super/Ultra)", "developer": "NVIDIA", "open": True,
+        "harness": "NeMo Gym ships out-of-the-box harnesses (incl. Claude Code "
+                   "and Hermes) plus bring-your-own-agent interfaces; served via "
+                   "NVIDIA API / NIM",
+        "compat": "OpenAI-compatible endpoints; models tuned for high-throughput "
+                  "agentic serving on Blackwell (NVFP4)",
+        "rl_stack": "Fully open: NeMo RL + NeMo Gym (RLVR - RL from verifiable "
+                    "rewards). Super trained in 6 disclosed RL stages (RLVR 1-3, "
+                    "SWE 1-2, RLHF) with pass-rate-ordered curriculum; Ultra adds "
+                    "multi-teacher on-policy distillation (MOPD). Also usable "
+                    "with VeRL/Unsloth",
+        "rl_envs": "The only lab that RELEASES its RL environments and data: "
+                   "NeMo Gym environment hub (70+ environments - coding, math, "
+                   "tool use, workplace-assistant agents, SWE-Gym, DAPO-Math, "
+                   "Skywork-OR1...) plus published per-stage RL training blends "
+                   "for Nano/Super/Ultra on Hugging Face with mixing ratios and "
+                   "recipes",
+        "openness": "Maximal: open weights + open RL environments + open RL "
+                    "data blends + training recipes + tech reports (NVIDIA Open "
+                    "Model License)",
+        "eval_harness": "NeMo Evaluator SDK / NeMo Skills; OpenHands for SWE-bench",
+        "sources": "NVIDIA-NeMo/Gym; HF nvidia/Nemotron-RL-*-Training-Blends",
+    },
+    {
+        "model": "MiniMax M3", "developer": "MiniMax", "open": True,
+        "harness": "MiniMax Agent product; native computer use (only open model "
+                   "here with it); no dedicated CLI - OpenAI/Anthropic-compatible "
+                   "API for third-party harnesses",
+        "compat": "OpenAI + Anthropic-compatible; text+image+video input; 1M "
+                  "context (MSA sparse attention)",
+        "rl_stack": "CISPO lineage (clips importance-sampling weights instead of "
+                    "token updates - M1 paper); large-scale RL on sandbox-based "
+                    "real-world SWE environments; M1 full RL run cost ~$535K on "
+                    "512 H800s in 3 weeks. M3-specific recipe not yet published",
+        "rl_envs": "Sandbox-based real-world software engineering environments "
+                   "(disclosed in M1 paper); 24-hour autonomous runs with ~2,000 "
+                   "tool calls reported for M3. Environments not released",
+        "openness": "Weights open; CISPO algorithm published; environments and "
+                    "RL data not released",
+        "eval_harness": "Own agent product; Terminus-2 (AA)",
+        "sources": "MiniMax-M1 paper (arXiv:2506.13585); M3 launch materials",
+    },
+    {
+        "model": "Qwen3.7 Max", "developer": "Alibaba (Qwen)", "open": False,
+        "harness": "Qwen Chat + DashScope API; agent-first positioning with "
+                   "native OpenAI- and Anthropic-API compatibility (works in "
+                   "Claude Code / Codex-style harnesses); retains reasoning "
+                   "across turns",
+        "compat": "OpenAI + Anthropic-compatible; extended-thinking mode "
+                  "(enable_thinking / preserve_thinking); 1M context",
+        "rl_stack": "Undisclosed for the closed Max tier. Public signals: "
+                    "QwenWorldBench - internal benchmark using LLMs as world "
+                    "models to simulate agentic environments across 7 domains "
+                    "(Terminal, SWE, MCP, Search, OS, Android, Web) - implies "
+                    "world-model-driven agent training; 35h autonomous "
+                    "kernel-optimization sandbox (Docker + H100, CUTLASS/CUDA "
+                    "docs only) with GPT-5.4 as anti-reward-hacking judge",
+        "rl_envs": "Not released for Max. Open Qwen3.x models ship weights "
+                   "(Apache 2.0) but not RL environments",
+        "openness": "Max tier fully closed since late 2025; smaller Qwen models "
+                    "open-weight",
+        "eval_harness": "Claude Code harness for agentic evals (per Qwen3.7 blog)",
+        "sources": "Qwen3.7 blog (alibabacloud.com); deeplearning.ai The Batch",
+    },
+]
+
+
+def write_harness_rl_sheet(wb):
+    ws = wb.create_sheet("Harnesses & RL Envs")
+    ws["A1"] = "Agent harnesses and RL training environments: Kimi K3 vs open-weights peers and frontier labs"
+    ws["A1"].font = Font(bold=True, size=14)
+    ws["A2"] = ("What each lab ships as its agent harness, what is known about its RL post-training stack and "
+                "environments, and how open that stack is (researched 2026-07-22)")
+    ws["A2"].font = Font(italic=True, color="595959")
+
+    headers = [
+        "Model / family", "Developer", "Class", "First-party agent harness",
+        "API / harness compatibility", "RL algorithm & training stack",
+        "RL environments (disclosed)", "Openness of post-training stack",
+        "Eval harness used", "Sources",
+    ]
+    hr = 4
+    for c, h in enumerate(headers, 1):
+        ws.cell(row=hr, column=c, value=h)
+    style_header(ws, hr, len(headers))
+    ws.freeze_panes = f"A{hr + 1}"
+
+    for i, m in enumerate(HARNESS_RL):
+        r = hr + 1 + i
+        vals = [
+            m["model"], m["developer"],
+            "Open-weights" if m["open"] else "Closed",
+            m["harness"], m["compat"], m["rl_stack"], m["rl_envs"],
+            m["openness"], m["eval_harness"], m["sources"],
+        ]
+        for c, v in enumerate(vals, 1):
+            cell = ws.cell(row=r, column=c, value=v)
+            cell.border = BORDER
+            cell.alignment = Alignment(wrap_text=True, vertical="top")
+            if c == 3:
+                cell.fill = OPEN_FILL if m["open"] else CLOSED_FILL
+        ws.row_dimensions[r].height = 150
+    autosize(ws, [17, 13, 12, 38, 38, 44, 44, 30, 24, 26])
+
+    # Shared third-party infrastructure block
+    lb = hr + len(HARNESS_RL) + 2
+    ws.cell(row=lb, column=1, value="Shared harness & RL-environment infrastructure referenced above").font = Font(bold=True, size=12)
+    infra = [
+        ("Claude Code", "Anthropic's CLI harness - de-facto industry reference; GLM, Kimi, and Qwen all "
+                        "advertise compatibility with it and use it in their own evals"),
+        ("Codex CLI / App Server", "OpenAI's harness; agent loop on the Responses API; also the eval harness for GPT models"),
+        ("Kimi Code", "Moonshot's CLI; only harness with verified preserved-thinking support for K3"),
+        ("Terminus-2", "Terminal-Bench's neutral reference harness, used by Artificial Analysis for cross-model evals"),
+        ("mini-SWE-agent / OpenHands", "Open community harnesses used by DeepSWE and SWE-bench leaderboards"),
+        ("Harbor", "Dockerized task format for terminal/agent environments; used by Z.ai's synthesized "
+                   "environments and PostTrain Bench"),
+        ("RepoLaunch", "Pipeline that turns real GitHub issue-PR pairs into executable, verifiable SWE "
+                       "environments; basis of Z.ai's 10K+ RL environments"),
+        ("NeMo Gym", "NVIDIA's open RL-environment hub (70+ environments, RLVR datasets, harness "
+                     "integrations incl. Claude Code and Hermes) - the largest open RL environment release"),
+        ("slime", "Z.ai/THUDM's open RL post-training framework (Megatron + SGLang); battle-tested on "
+                  "GLM-4.5 through GLM-5.2; also supports Qwen, DeepSeek, Llama, Kimi K2"),
+    ]
+    for c, h in enumerate(["Component", "Role"], 1):
+        ws.cell(row=lb + 1, column=c, value=h)
+    style_header(ws, lb + 1, 2)
+    for i, (name, desc) in enumerate(infra):
+        r = lb + 2 + i
+        ws.cell(row=r, column=1, value=name).border = BORDER
+        cell = ws.cell(row=r, column=2, value=desc)
+        cell.border = BORDER
+        cell.alignment = Alignment(wrap_text=True, vertical="top")
+        ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=6)
+        ws.row_dimensions[r].height = 28
+
+    nrow = lb + 2 + len(infra) + 1
+    notes = [
+        "Openness spectrum (least to most): OpenAI / Anthropic / Qwen Max disclose harness architecture but no RL "
+        "environments or data -> Moonshot / DeepSeek / MiniMax release weights + papers but keep environments "
+        "private -> Z.ai releases weights + the RL framework (slime) and documents its environment pipelines -> "
+        "NVIDIA releases the entire stack (weights, environments, RL data blends, recipes).",
+        "A structural trend across labs: models and harnesses are co-trained and entangled. K3 requires preserved "
+        "thinking history (unstable in non-verified harnesses), GPT-5.6 Sol is tuned for Codex and Fable 5 for "
+        "Claude Code, and AA's Coding Agent Index now benchmarks model+harness pairs rather than bare models.",
+        "RL environment scale is becoming a disclosed competitive metric: Z.ai reports 10K+ verifiable SWE "
+        "environments; NVIDIA's NeMo Gym ships 70+ public environments; DeepSeek and Moonshot describe sandbox "
+        "infrastructure without counts; closed labs disclose nothing.",
+        "Closed-lab rows describe publicly known information only; actual RL stacks are proprietary and may differ.",
+    ]
+    for i, n in enumerate(notes):
+        ws.cell(row=nrow + i, column=1, value=n).font = Font(size=9, color="595959")
+
+
+def write_harness_rl_csv():
+    with open(os.path.join(OUT_CSV_DIR, "harness_rl_environments.csv"), "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow([
+            "model", "developer", "class", "first_party_harness", "api_compatibility",
+            "rl_algorithm_stack", "rl_environments_disclosed", "post_training_openness",
+            "eval_harness", "sources",
+        ])
+        for m in HARNESS_RL:
+            w.writerow([
+                m["model"], m["developer"],
+                "open-weights" if m["open"] else "closed",
+                m["harness"], m["compat"], m["rl_stack"], m["rl_envs"],
+                m["openness"], m["eval_harness"], m["sources"],
+            ])
+
 
 # ------------------------------------------------------------- Cloud providers
 # Category map for every serving provider seen in the endpoint-stats snapshot.
@@ -1065,6 +1364,9 @@ def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows,
     # ---- Sheet 7: Cloud provider split
     write_cloud_sheet(wb, cloud_rows, cloud_cats, cloud_meta, grand_total)
 
+    # ---- Sheet 8: Harnesses & RL environments
+    write_harness_rl_sheet(wb)
+
     wb.save(OUT_XLSX)
 
 
@@ -1188,6 +1490,7 @@ def main():
     write_params_benchmarks_csv(pb_rows)
     write_tool_use_csv(tu_rows)
     write_cloud_csv(cloud_rows, cloud_meta)
+    write_harness_rl_csv()
 
     print(f"\nCloud split (covered {cloud_meta['covered'] / 1e12:.1f}T of {grand_total / 1e12:.1f}T):")
     for cat, d in sorted(cloud_cats.items(), key=lambda kv: -(kv[1]['open'] + kv[1]['closed'])):
