@@ -5,6 +5,10 @@ and closed (proprietary, API-only) LLMs.
 
 **Main deliverable:** [`llm_pricing_vs_token_volume.xlsx`](llm_pricing_vs_token_volume.xlsx)
 
+Also available: [`llm_data_tables.xlsx`](llm_data_tables.xlsx) — every CSV table from
+[`csv/`](csv/) compiled into one data-only Excel workbook (unformatted, filterable),
+for anyone who prefers plain data sheets over the formatted main workbook.
+
 ## Data source
 
 All data comes from OpenRouter, the largest multi-provider LLM gateway and the only
@@ -45,6 +49,7 @@ of estimated dollar spend.
 | By Cloud Provider | Estimated weekly tokens served per cloud/inference provider, split open vs closed, rolled up by category (model-lab first-party APIs, independent AI inference clouds, US hyperscalers, China hyperscalers), with per-provider table and category pie chart |
 | Harnesses & RL Envs | Agent harness and RL-environment comparison across 8 labs (Kimi K3, Claude Fable 5, GPT-5.6 Sol, GLM-5/5.2, DeepSeek V4, Nemotron 3, MiniMax M3, Qwen3.7 Max): first-party harnesses, API compatibility, RL algorithms and training stacks, disclosed RL environments, and openness of each post-training stack, plus a shared-infrastructure reference (Claude Code, Codex, Kimi Code, Terminus-2, Harbor, RepoLaunch, NeMo Gym, slime) |
 | Quantization & KLD | Quantization-fidelity (KL divergence) comparison: per-model release precision and QAT status, whether KLD is externally measurable, and published KLD at native/4-bit/2-bit tiers for Kimi K3, Kimi K2.6, DeepSeek V4 Pro/Flash, GLM-5.2, MiniMax M3, Nemotron 3 Ultra vs unmeasurable closed models; includes the measured DeepSeek V4 Flash KLD ladder and a 4-bit format KLD reference table |
+| Training Data | Vendor-disclosed pretraining corpus sizes for 15 model families (MiMo-V2.5 48T, Llama 4 Scout 40T, DeepSeek V4 32T, GLM-5 27T, Nemotron 3 25T, Kimi K2 15.5T; closed labs undisclosed), with tokens-per-parameter ratios, data-pipeline notes, and a disclosed-corpus bar chart |
 
 CSV versions of every table are in [`csv/`](csv/).
 
@@ -66,6 +71,11 @@ CSV versions of every table are in [`csv/`](csv/).
   models' global volume share is understated relative to what these numbers show.
   Token counts use each upstream provider's own tokenizer, so cross-provider token
   comparisons are approximate.
+- **Training Data sheet:** pretraining corpus sizes are vendor-reported and not
+  independently verifiable; token counts are not apples-to-apples across labs
+  (different tokenizers, dedup, multimodal counting). Kimi K3's corpus is undisclosed
+  until its technical report ships with the weights (due 2026-07-27). Every disclosed
+  figure belongs to an open-weights model; closed labs publish nothing.
 - **Quantization & KLD sheet:** KL divergence is only defined against a model's own
   full-precision reference, so the sheet compares quantization-fidelity profiles, not a
   single cross-model KLD number. Kimi K3's row is by-construction reasoning (QAT-native

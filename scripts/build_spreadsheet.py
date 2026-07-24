@@ -18,6 +18,8 @@ Outputs:
   - data/csv/cloud_provider_split.csv
   - data/csv/harness_rl_environments.csv
   - data/csv/quantization_kld.csv
+  - data/csv/training_data.csv
+  - data/llm_data_tables.xlsx (all CSV tables compiled into one data-only workbook)
 """
 
 import csv
@@ -51,6 +53,269 @@ MANUAL_OVERRIDES = {
 OPEN_KEYWORDS = re.compile(
     r"open[- ]?(weight|source)|MIT licen[cs]e|Apache[- ]2", re.IGNORECASE
 )
+
+# ---------------------------------------------------------- Training dataset sizes
+# Pretraining corpus sizes as disclosed by each lab (researched 2026-07-24).
+# tokens_t = trillions of pretraining tokens, None = undisclosed.
+TRAINING_DATA = [
+    {
+        "model": "Kimi K3", "developer": "Moonshot AI", "open": True,
+        "params_b": 2800, "tokens_t": None,
+        "status": "Undisclosed (tech report due with weights, 2026-07-27)",
+        "notes": "Pipeline disclosed without quantities: web+code+vision "
+                 "pretraining, long-context mid-training toward 1M, SFT, RLVR. "
+                 "Predecessor Kimi K2 (1T params) disclosed 15.5T tokens, so "
+                 "K3's corpus is presumably well beyond that; treat any "
+                 "specific figure circulating now as an estimate.",
+        "sources": "kimi.com/blog/kimi-k3; Kimi K2 paper (arXiv:2507.20534)",
+    },
+    {
+        "model": "Kimi K2 / K2.6", "developer": "Moonshot AI", "open": True,
+        "params_b": 1000, "tokens_t": 15.5,
+        "status": "Disclosed for K2 base (K2.6/K2.7 increments not broken out)",
+        "notes": "15.5T curated tokens across web text, code, mathematics, "
+                 "knowledge; MuonClip optimizer, 4,096-token pretraining window.",
+        "sources": "Kimi K2 paper (arXiv:2507.20534)",
+    },
+    {
+        "model": "Claude Fable 5", "developer": "Anthropic", "open": False,
+        "params_b": None, "tokens_t": None,
+        "status": "Undisclosed",
+        "notes": "Anthropic discloses neither corpus size nor parameter count "
+                 "for any frontier model.",
+        "sources": "Fable 5 system card (no training-data quantities)",
+    },
+    {
+        "model": "GPT-5.6 Sol", "developer": "OpenAI", "open": False,
+        "params_b": None, "tokens_t": None,
+        "status": "Undisclosed",
+        "notes": "OpenAI stopped disclosing training-data scale after GPT-3 "
+                 "(300B tokens, 2020). gpt-oss open-weight models also ship "
+                 "without a precise token count ('trillions of tokens').",
+        "sources": "GPT-5.6 launch materials (no training-data quantities)",
+    },
+    {
+        "model": "Gemini 3.x", "developer": "Google", "open": False,
+        "params_b": None, "tokens_t": None,
+        "status": "Undisclosed",
+        "notes": "No corpus quantities disclosed for the Gemini series.",
+        "sources": "Gemini model cards",
+    },
+    {
+        "model": "GLM-5 / 5.1 / 5.2", "developer": "Z.ai (Zhipu)", "open": True,
+        "params_b": 753, "tokens_t": 27,
+        "status": "Disclosed (GLM-5 base, which 5.1/5.2 build on)",
+        "notes": "27T-token corpus prioritizing code and reasoning early; "
+                 "distinct mid-training phase extends context 4K->200K with "
+                 "long-context agentic data.",
+        "sources": "GLM-5 paper (arXiv:2602.15763)",
+    },
+    {
+        "model": "DeepSeek V4 Pro", "developer": "DeepSeek", "open": True,
+        "params_b": 1600, "tokens_t": 32,
+        "status": "Disclosed ('more than 32T tokens', shared corpus with Flash)",
+        "notes": "Agentic tool-use data injected already in mid-training; "
+                 "FP8-mixed pretraining with MXFP4 on expert weights.",
+        "sources": "DeepSeek-V4 report (arXiv:2606.19348)",
+    },
+    {
+        "model": "DeepSeek V4 Flash", "developer": "DeepSeek", "open": True,
+        "params_b": 284, "tokens_t": 32,
+        "status": "Disclosed ('more than 32T tokens', shared corpus with Pro)",
+        "notes": "Same >32T corpus as V4 Pro; the small variant is heavily "
+                 "over-trained relative to its size (~113 tokens per param).",
+        "sources": "DeepSeek-V4 report (arXiv:2606.19348)",
+    },
+    {
+        "model": "Qwen3.7 Max", "developer": "Alibaba (Qwen)", "open": False,
+        "params_b": None, "tokens_t": None,
+        "status": "Undisclosed (closed tier)",
+        "notes": "Alibaba disclosed 36T tokens for the open Qwen3 generation "
+                 "(2025) but publishes no quantities for the closed Max tier.",
+        "sources": "Qwen3 technical report (2025); Qwen3.7 launch blog",
+    },
+    {
+        "model": "Nemotron 3 (Nano/Super/Ultra)", "developer": "NVIDIA", "open": True,
+        "params_b": None, "tokens_t": 25,
+        "status": "Disclosed AND largely released - the only lab that ships "
+                  "much of the corpus itself",
+        "notes": "25T tokens in two phases (23.5T diverse + 1.5T high-quality) "
+                 "+ 121B long-context phase; 16 data categories. ~8-10T tokens "
+                 "(~40-50% of the blend) released as open datasets "
+                 "(Nemotron-CC-v2.x, CC-Math, Pretraining-Code, Specialized). "
+                 "Documented for Nano/Super; Ultra follows the same data program.",
+        "sources": "NVIDIA Nemotron 3 pretraining docs + Nano tech report; "
+                   "HF Nemotron pretraining dataset collections",
+    },
+    {
+        "model": "MiMo-V2.5", "developer": "Xiaomi", "open": True,
+        "params_b": 310, "tokens_t": 48,
+        "status": "Disclosed - largest disclosed corpus of any model here",
+        "notes": "~48T tokens, FP8 mixed precision, five-stage pipeline (text "
+                 "pretraining, projector warmup, multimodal pretraining, "
+                 "SFT/agentic post-training with 32K->256K->1M context "
+                 "extension, RL+MOPD). ~155 tokens per param - the most "
+                 "over-trained large model on this list.",
+        "sources": "XiaomiMiMo/MiMo-V2.5 HF card; mimo.xiaomi.com",
+    },
+    {
+        "model": "Hy3", "developer": "Tencent", "open": True,
+        "params_b": 295, "tokens_t": None,
+        "status": "Undisclosed",
+        "notes": "295B/21B MoE (192 experts, top-8 routing); Tencent's model "
+                 "card discusses post-training scale-up but no corpus count.",
+        "sources": "Tencent Hy3 model card; SiliconFlow explainer",
+    },
+    {
+        "model": "MiniMax M3", "developer": "MiniMax", "open": True,
+        "params_b": None, "tokens_t": None,
+        "status": "Undisclosed",
+        "notes": "No corpus size published for M3; total params also not "
+                 "officially stated (third-party estimates ~200-400B).",
+        "sources": "M3 launch materials",
+    },
+    {
+        "model": "Llama 4 Scout", "developer": "Meta", "open": True,
+        "params_b": 109, "tokens_t": 40,
+        "status": "Disclosed (2025)",
+        "notes": "~40T multimodal tokens - highest tokens-per-param ratio here "
+                 "(~367x); 10M-token context via iRoPE.",
+        "sources": "Meta Llama 4 launch blog (2025)",
+    },
+    {
+        "model": "Llama 4 Maverick", "developer": "Meta", "open": True,
+        "params_b": 400, "tokens_t": 22,
+        "status": "Disclosed (2025)",
+        "notes": "~22T multimodal tokens.",
+        "sources": "Meta Llama 4 launch blog (2025)",
+    },
+]
+
+
+def write_training_data_sheet(wb):
+    ws = wb.create_sheet("Training Data")
+    ws["A1"] = "Pretraining dataset sizes: what each lab disclosed"
+    ws["A1"].font = Font(bold=True, size=14)
+    ws["A2"] = ("Vendor-disclosed pretraining corpus sizes (trillions of tokens) for the models featured in this "
+                "workbook; researched 2026-07-24. Closed labs disclose nothing, so their rows document that "
+                "asymmetry rather than a number.")
+    ws["A2"].font = Font(italic=True, color="595959")
+
+    headers = ["Model", "Developer", "Class", "Total params (B)",
+               "Pretraining tokens (T)", "Tokens per total param",
+               "Disclosure status", "Data composition / pipeline notes", "Sources"]
+    hr = 4
+    for c, h in enumerate(headers, 1):
+        ws.cell(row=hr, column=c, value=h)
+    style_header(ws, hr, len(headers))
+    ws.freeze_panes = f"A{hr + 1}"
+    for i, m in enumerate(TRAINING_DATA):
+        r = hr + 1 + i
+        ratio = (m["tokens_t"] * 1000 / m["params_b"]
+                 if m["tokens_t"] and m["params_b"] else None)
+        vals = [m["model"], m["developer"],
+                "Open-weights" if m["open"] else "Closed",
+                m["params_b"] if m["params_b"] is not None else "undisclosed",
+                m["tokens_t"] if m["tokens_t"] is not None else "undisclosed",
+                ratio if ratio is not None else "—",
+                m["status"], m["notes"], m["sources"]]
+        for c, v in enumerate(vals, 1):
+            cell = ws.cell(row=r, column=c, value=v)
+            cell.border = BORDER
+            cell.alignment = Alignment(wrap_text=True, vertical="top")
+            if c == 3:
+                cell.fill = OPEN_FILL if m["open"] else CLOSED_FILL
+        if isinstance(ws.cell(row=r, column=4).value, (int, float)):
+            ws.cell(row=r, column=4).number_format = "#,##0"
+        if isinstance(ws.cell(row=r, column=5).value, (int, float)):
+            ws.cell(row=r, column=5).number_format = "0.0"
+        if isinstance(ws.cell(row=r, column=6).value, (int, float)):
+            ws.cell(row=r, column=6).number_format = "#,##0x"
+        ws.row_dimensions[r].height = 68
+    autosize(ws, [22, 14, 12, 13, 14, 13, 34, 52, 30])
+
+    nrow = hr + len(TRAINING_DATA) + 2
+    notes = [
+        "Disclosure asymmetry mirrors the rest of this workbook: every disclosed corpus size belongs to an "
+        "open-weights model; Anthropic, OpenAI, Google, and Alibaba's closed tier publish nothing. NVIDIA goes "
+        "furthest, releasing ~8-10T tokens of the actual corpus as open datasets.",
+        "Tokens-per-parameter is a rough over-training indicator (Chinchilla-optimal is ~20x): DeepSeek V4 Pro sits "
+        "near 20x while small-model releases (MiMo-V2.5 ~155x, Llama 4 Scout ~367x, Nemotron 3 Super ~208x) are "
+        "heavily over-trained to maximize quality per active parameter at inference time.",
+        "Counts are vendor-reported and not independently verifiable; token counts also are not comparable "
+        "apples-to-apples across labs (different tokenizers, dedup policies, and multimodal counting).",
+        "Kimi K3's corpus size should be published with its technical report alongside the weights (due 2026-07-27); "
+        "this row can then be updated from 'undisclosed' to a disclosed figure.",
+        "Pretraining corpus size is distinct from post-training/RL data, which is covered in the Harnesses & RL "
+        "Envs tab.",
+    ]
+    for i, n in enumerate(notes):
+        ws.cell(row=nrow + i, column=1, value=n).font = Font(size=9, color="595959")
+
+    chart = BarChart()
+    chart.type = "col"
+    chart.title = "Disclosed pretraining corpus size (T tokens)"
+    disclosed = [(m["model"], m["tokens_t"]) for m in TRAINING_DATA if m["tokens_t"]]
+    start = nrow + len(notes) + 2
+    ws.cell(row=start, column=1, value="Model")
+    ws.cell(row=start, column=2, value="Pretraining tokens (T)")
+    for i, (name, t) in enumerate(disclosed):
+        ws.cell(row=start + 1 + i, column=1, value=name)
+        ws.cell(row=start + 1 + i, column=2, value=t)
+    data = Reference(ws, min_col=2, min_row=start, max_row=start + len(disclosed))
+    cats = Reference(ws, min_col=1, min_row=start + 1, max_row=start + len(disclosed))
+    chart.add_data(data, titles_from_data=True)
+    chart.set_categories(cats)
+    chart.height, chart.width = 9, 20
+    chart.legend = None
+    ws.add_chart(chart, f"D{start}")
+
+
+def write_training_data_csv():
+    with open(os.path.join(OUT_CSV_DIR, "training_data.csv"), "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["model", "developer", "class", "total_params_b",
+                    "pretraining_tokens_t", "tokens_per_total_param",
+                    "disclosure_status", "notes", "sources"])
+        for m in TRAINING_DATA:
+            ratio = (round(m["tokens_t"] * 1000 / m["params_b"], 1)
+                     if m["tokens_t"] and m["params_b"] else None)
+            w.writerow([m["model"], m["developer"],
+                        "open-weights" if m["open"] else "closed",
+                        m["params_b"], m["tokens_t"], ratio,
+                        m["status"], m["notes"], m["sources"]])
+
+
+def write_csv_compilation_workbook():
+    """Compile every CSV in data/csv/ into one data-only Excel workbook."""
+    out_path = os.path.join(ROOT, "data", "llm_data_tables.xlsx")
+    wb = Workbook()
+    wb.remove(wb.active)
+    for path in sorted(glob.glob(os.path.join(OUT_CSV_DIR, "*.csv"))):
+        name = os.path.splitext(os.path.basename(path))[0][:31]
+        ws = wb.create_sheet(name)
+        with open(path, newline="") as f:
+            for ri, row in enumerate(csv.reader(f), start=1):
+                for ci, v in enumerate(row, start=1):
+                    if v == "":
+                        val = None
+                    else:
+                        try:
+                            val = int(v)
+                        except ValueError:
+                            try:
+                                val = float(v)
+                            except ValueError:
+                                val = v
+                    ws.cell(row=ri, column=ci, value=val)
+        style_header(ws, 1, ws.max_column)
+        ws.freeze_panes = "A2"
+        ws.auto_filter.ref = ws.dimensions
+        for col in range(1, ws.max_column + 1):
+            ws.column_dimensions[get_column_letter(col)].width = 18
+    wb.save(out_path)
+    return out_path
+
 
 # ------------------------------------------------------- Quantization fidelity (KLD)
 # KL divergence measures how far a compressed/quantized variant's output
@@ -1645,6 +1910,9 @@ def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows,
     # ---- Sheet 9: Quantization & KLD
     write_quant_kld_sheet(wb)
 
+    # ---- Sheet 10: Training dataset sizes
+    write_training_data_sheet(wb)
+
     wb.save(OUT_XLSX)
 
 
@@ -1770,6 +2038,9 @@ def main():
     write_cloud_csv(cloud_rows, cloud_meta)
     write_harness_rl_csv()
     write_quant_kld_csv()
+    write_training_data_csv()
+    tables_path = write_csv_compilation_workbook()
+    print(f"Wrote {tables_path}")
 
     print(f"\nCloud split (covered {cloud_meta['covered'] / 1e12:.1f}T of {grand_total / 1e12:.1f}T):")
     for cat, d in sorted(cloud_cats.items(), key=lambda kv: -(kv[1]['open'] + kv[1]['closed'])):
