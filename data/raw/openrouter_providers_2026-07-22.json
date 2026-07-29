@@ -1,0 +1,3206 @@
+[
+ {
+  "name": "Cerebras",
+  "displayName": "Cerebras",
+  "slug": "cerebras",
+  "baseUrl": "https://api.cerebras.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.cerebras.ai/terms-of-service",
+   "privacyPolicyURL": "https://www.cerebras.ai/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "user_34hviQyjkN4AUKW1UISrVr2jdkw",
+   "org_3Atwb7DKKdaRJYErtNEd3XeIUpT"
+  ],
+  "adapterName": "CerebrasAdapter",
+  "statusPageUrl": "https://status.cerebras.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.cerebras.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Deepgram",
+  "displayName": "Deepgram",
+  "slug": "deepgram",
+  "baseUrl": "https://api.deepgram.com",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://deepgram.com/terms",
+   "privacyPolicyURL": "https://deepgram.com/privacy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://deepgram.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "deepgram_stt"
+ },
+ {
+  "name": "StepFun",
+  "displayName": "StepFun",
+  "slug": "stepfun",
+  "baseUrl": "https://api.stepfun.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_38x7nyArKRacEJKcYmSSuKJ3Ba3"
+  ],
+  "adapterName": "StepFunAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://platform.stepfun.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Black Forest Labs",
+  "displayName": "Black Forest Labs",
+  "slug": "black-forest-labs",
+  "baseUrl": "https://api.bfl.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://bfl.ai/legal/terms-of-service",
+   "privacyPolicyURL": "https://bfl.ai/legal/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "BlackForestLabsAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://bfl.ai&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "bfl"
+ },
+ {
+  "name": "Moonshot AI",
+  "displayName": "Moonshot AI",
+  "slug": "moonshotai",
+  "baseUrl": "https://api.moonshot.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://platform.moonshot.ai/docs/agreement/modeluse",
+   "privacyPolicyURL": "https://platform.moonshot.ai/docs/agreement/userprivacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "SG",
+  "datacenters": [
+   "SG"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "MoonshotAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://moonshot.ai&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Stealth",
+  "displayName": "Stealth",
+  "slug": "stealth",
+  "baseUrl": " ",
+  "dataPolicy": {
+   "training": true,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://openrouter.ai/terms/stealth",
+   "requiresUserIDs": true
+  },
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "StealthAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "/images/icons/Stealth.svg",
+   "className": "invert-0 dark:invert"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Morph",
+  "displayName": "Morph",
+  "slug": "morph",
+  "baseUrl": "https://api.morphllm.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.morphllm.com/privacy/tos",
+   "privacyPolicyURL": "https://morphllm.com/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3CQDCvFLJOYUJc7jSY0QlXMwou1"
+  ],
+  "adapterName": "VLLMOpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://morphllm.com&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Reka",
+  "displayName": "Reka AI",
+  "slug": "reka",
+  "baseUrl": "https://api.reka.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://reka.ai/legal/terms-of-use",
+   "privacyPolicyURL": "https://reka.ai/legal/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://reka.ai&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Z.AI",
+  "displayName": "Z.ai",
+  "slug": "z-ai",
+  "baseUrl": "https://api.z.ai/api/paas/v4",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://chat.z.ai/legal-agreement/terms-of-service",
+   "privacyPolicyURL": "https://chat.z.ai/legal-agreement/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "SG",
+  "datacenters": [
+   "SG"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "ZAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://z.ai/model-api&size=256",
+   "className": "invert-0 dark:invert"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Arcee AI",
+  "displayName": "Arcee AI",
+  "slug": "arcee-ai",
+  "baseUrl": "https://api.clarifai.com/v2/ext/openai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_2zEf2QaELqm2QdK6JN1acFA0OhM"
+  ],
+  "adapterName": "ClarifaiAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.arcee.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "SambaNova",
+  "displayName": "SambaNova",
+  "slug": "sambanova",
+  "baseUrl": "https://api.sambanova.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://sambanova.ai/terms-and-conditions",
+   "privacyPolicyURL": "https://sambanova.ai/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_34TptiZLZltWmnSdkKa0cAGbfcv"
+  ],
+  "adapterName": "SambaNovaAdapter",
+  "statusPageUrl": "https://status.sambanova.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://sambanova.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "AI21",
+  "displayName": "AI21",
+  "slug": "ai21",
+  "baseUrl": "https://api.ai21.com/studio/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.ai21.com/terms-of-service/",
+   "privacyPolicyURL": "https://www.ai21.com/privacy-policy/",
+   "requiresUserIDs": false
+  },
+  "headquarters": "IL",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "AI21Adapter",
+  "statusPageUrl": "https://status.ai21.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://ai21.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Minimax",
+  "displayName": "MiniMax",
+  "slug": "minimax",
+  "baseUrl": "https://api.minimaxi.chat/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.minimax.io/platform/protocol/terms-of-service",
+   "privacyPolicyURL": "https://www.minimax.io/platform/protocol/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "SG",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "MinimaxAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://minimaxi.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Io Net",
+  "displayName": "io.net",
+  "slug": "io-net",
+  "baseUrl": "https://api.intelligence.io.solutions/api/openrouter/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://io.net/terms",
+   "privacyPolicyURL": "https://io.net/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3A7gUm8QL5J9PpUvZxoy2qo7CGa"
+  ],
+  "adapterName": "IonetAdapter",
+  "statusPageUrl": "https://status.io.net/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://io.net/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Ionstream",
+  "displayName": "Ionstream",
+  "slug": "ionstream",
+  "baseUrl": "https://chat.ionstream.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://ionstream.ai/terms-and-conditions/",
+   "privacyPolicyURL": "https://ionstream.ai/privacy-policy/",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3AV0TaQxpuruS8v62PQyvmPqMar"
+  ],
+  "adapterName": "IonstreamAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://ionstream.ai/assets/ionstream-mark-dark.svg&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "NCompass",
+  "displayName": "nCompass",
+  "slug": "ncompass",
+  "baseUrl": "https://api.ncompass.tech/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://ncompass.tech/terms",
+   "privacyPolicyURL": "https://ncompass.tech/privacy",
+   "requiresUserIDs": false
+  },
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://console.ncompass.tech/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "BaseTen",
+  "displayName": "Baseten",
+  "slug": "baseten",
+  "baseUrl": "https://inference.baseten.co/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.baseten.co/terms-and-conditions",
+   "privacyPolicyURL": "https://www.baseten.co/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "org_39u535k7BagDmYcNLozCmyvmYv6"
+  ],
+  "adapterName": "BasetenAdapter",
+  "statusPageUrl": "https://status.baseten.co/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/baseten-favicon.svg"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Cohere",
+  "displayName": "Cohere",
+  "slug": "cohere",
+  "baseUrl": "https://api.cohere.com/v2",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://cohere.com/terms-of-use",
+   "privacyPolicyURL": "https://cohere.com/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": true,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "CohereV2Adapter",
+  "statusPageUrl": "https://status.cohere.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/Cohere.png"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Groq",
+  "displayName": "Groq",
+  "slug": "groq",
+  "baseUrl": "https://api.groq.com/openai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://groq.com/terms-of-use/",
+   "privacyPolicyURL": "https://groq.com/privacy-policy/",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_32nX3oZexbk6tkra3WMyrbfMdcg",
+   "org_39qEfN7nDjmHkIJdiqe8dfBFala"
+  ],
+  "adapterName": "GroqAdapter",
+  "statusPageUrl": "https://status.groq.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://groq.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Sail Research",
+  "displayName": "Sail Research",
+  "slug": "sail-research",
+  "baseUrl": "https://api.sailresearch.com/partner/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.sailresearch.com/terms",
+   "privacyPolicyURL": "https://www.sailresearch.com/privacy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3A3F50bBkvwgb7xsGZylAMMYJ4H"
+  ],
+  "adapterName": "SailResearchAdapter",
+  "statusPageUrl": "https://status.sailresearch.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.sailresearch.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "DeepSeek",
+  "displayName": "DeepSeek",
+  "slug": "deepseek",
+  "baseUrl": "https://api.deepseek.com/beta",
+  "dataPolicy": {
+   "training": true,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://chat.deepseek.com/downloads/DeepSeek%20Terms%20of%20Use.html",
+   "privacyPolicyURL": "https://chat.deepseek.com/downloads/DeepSeek%20Privacy%20Policy.html",
+   "requiresUserIDs": false
+  },
+  "headquarters": "CN",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "DeepSeekAdapter",
+  "statusPageUrl": "https://status.deepseek.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/DeepSeek.png"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "deepseek"
+ },
+ {
+  "name": "Crusoe",
+  "displayName": "Crusoe",
+  "slug": "crusoe",
+  "baseUrl": "https://openrouter.inference.crusoecloud.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://legal.crusoe.ai/open-router#managed-inference-tos-open-router",
+   "privacyPolicyURL": "https://legal.crusoe.ai/open-router#cloud-privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "org_3Euyy0GrS1PrXPyj4hJnEbe0U66"
+  ],
+  "adapterName": "CrusoeAdapter",
+  "statusPageUrl": "https://status.crusoecloud.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.crusoe.ai&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Darkbloom",
+  "displayName": "Darkbloom",
+  "slug": "darkbloom",
+  "baseUrl": "https://api.darkbloom.dev/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.darkbloom.dev/terms.html",
+   "privacyPolicyURL": "https://www.darkbloom.dev/privacy.html",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_2y9VnH6wcuvNW7iFZwxx2r8Q8KL"
+  ],
+  "adapterName": "DarkbloomAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "/images/icons/Darkbloom.png"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Mancer 2",
+  "displayName": "Mancer",
+  "slug": "mancer",
+  "baseUrl": "https://neuro.mancer.tech/oai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://mancer.tech/terms",
+   "privacyPolicyURL": "https://mancer.tech/privacy",
+   "requiresUserIDs": false
+  },
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "user_3FI3uLNwufxDVYm1UuAbUhxdZKB"
+  ],
+  "adapterName": "MancerAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://mancer.tech/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "mancer"
+ },
+ {
+  "name": "NextBit",
+  "displayName": "NextBit",
+  "slug": "nextbit",
+  "baseUrl": "https://api.nextbit256.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.nextbit256.com/docs/terms-of-service",
+   "privacyPolicyURL": "https://www.nextbit256.com/docs/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "ES",
+  "datacenters": [
+   "ES"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "org_3ADXW9bSwxd3yDMjCvLhBnVH3UP"
+  ],
+  "adapterName": "NextBitAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://nextbit256.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Infermatic",
+  "displayName": "Infermatic",
+  "slug": "infermatic",
+  "baseUrl": "https://api.totalgpt.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://infermatic.ai/terms-and-conditions/",
+   "privacyPolicyURL": "https://infermatic.ai/privacy-policy/",
+   "requiresUserIDs": false
+  },
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "user_38J1V7YbWlE2QReAjpr9onFiPoU",
+   "org_38JV1mcgQdYibZ5i6vNRDOiVUtt"
+  ],
+  "adapterName": "InfermaticAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://infermatic.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Avian",
+  "displayName": "Avian.io",
+  "slug": "avian",
+  "baseUrl": "https://api.avian.io/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://avian.io/terms",
+   "privacyPolicyURL": "https://avian.io/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [],
+  "adapterName": "AvianAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://avian.io/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Switchpoint",
+  "displayName": "Switchpoint",
+  "slug": "switchpoint",
+  "baseUrl": "https://www.switchpoint.dev/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://switchpoint.dev/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Inflection",
+  "displayName": "Inflection",
+  "slug": "inflection",
+  "baseUrl": "https://api.inflection.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://developers.inflection.ai/tos",
+   "privacyPolicyURL": "https://inflection.ai/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "InflectionAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://inflection.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Tencent",
+  "displayName": "Tencent Cloud",
+  "slug": "tencent",
+  "baseUrl": "https://tokenhub-intl.tencentcloudmaas.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.tencentcloud.com/en/document/product/301/78869",
+   "privacyPolicyURL": "https://www.tencentcloud.com/en/document/product/1300/78952",
+   "requiresUserIDs": false
+  },
+  "headquarters": "CN",
+  "datacenters": [
+   "SG"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3GlfoSqOofqbEh34HBIUDd7SiIO"
+  ],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": "https://status.tencentcloud.com",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.tencentcloud.com&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "DeepInfra",
+  "displayName": "DeepInfra",
+  "slug": "deepinfra",
+  "baseUrl": "https://api.deepinfra.com/v1/openai",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://deepinfra.com/terms",
+   "privacyPolicyURL": "https://deepinfra.com/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "org_38GSfr7NVq111kyg6iXh1TTpKuz"
+  ],
+  "adapterName": "DeepInfraAdapter",
+  "statusPageUrl": "https://status.deepinfra.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/DeepInfra.webp"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "xAI",
+  "displayName": "xAI",
+  "slug": "xai",
+  "baseUrl": "https://api.x.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://x.ai/legal/terms-of-service-enterprise",
+   "privacyPolicyURL": "https://x.ai/legal/privacy-policy",
+   "requiresUserIDs": true
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_3ArX7HqyYgUMydwZfe5BKu5KVz6"
+  ],
+  "adapterName": "XAIResponsesAdapter",
+  "statusPageUrl": "https://status.x.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://x.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "xai_responses"
+ },
+ {
+  "name": "Krea",
+  "displayName": "Krea",
+  "slug": "krea",
+  "baseUrl": "https://api.krea.ai",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.krea.ai/terms",
+   "privacyPolicyURL": "https://www.krea.ai/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "KreaImageAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.krea.ai&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "krea"
+ },
+ {
+  "name": "Amazon Nova",
+  "displayName": "Amazon Nova",
+  "slug": "amazon-nova",
+  "baseUrl": "https://api.nova.amazon.com/v1",
+  "dataPolicy": {
+   "training": true,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "AmazonNovaAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://nova.amazon.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": null
+ },
+ {
+  "name": "Xiaomi",
+  "displayName": "Xiaomi",
+  "slug": "xiaomi",
+  "baseUrl": "https://api.xiaomimimo.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://platform.xiaomimimo.com/#/docs/terms/user-agreement",
+   "privacyPolicyURL": "https://platform.xiaomimimo.com/#/docs/terms/privacy-policy",
+   "requiresUserIDs": true
+  },
+  "headquarters": "CN",
+  "datacenters": [
+   "SG",
+   "NL"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "user_353qok8CmkPxVcEtDuGZzQOEu4u",
+   "user_35F3bTvDBxn8U8NlFRLtIufJNlD",
+   "user_36vqlXmXNo4fc4k6musIPTdL7Sj"
+  ],
+  "adapterName": "XiaomiAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.mi.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Azure",
+  "displayName": "Azure",
+  "slug": "azure",
+  "baseUrl": "https://openrouter-east-us-2.openai.azure.com/openai",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.microsoft.com/en-us/legal/terms-of-use?oneroute=true",
+   "privacyPolicyURL": "https://www.microsoft.com/en-us/privacy/privacystatement",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "AzureOpenAIAdapter",
+  "statusPageUrl": "https://status.azure.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/Azure.svg"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": null
+ },
+ {
+  "name": "Nvidia",
+  "displayName": "NVIDIA",
+  "slug": "nvidia",
+  "baseUrl": "https://74819e7c-e3e6-4497-8fdb-5f5fdc17dc85.invocation.api.nvcf.nvidia.com/v1",
+  "dataPolicy": {
+   "training": true,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf",
+   "privacyPolicyURL": "https://www.nvidia.com/en-us/about-nvidia/privacy-policy/",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "user_2zzFfst7y4QMhMLqFTIsrTPsW3p",
+   "org_37G44VbtYmFQ3sUjou76Okgx5oA"
+  ],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.nvidia.com/en-us/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Mara",
+  "displayName": "MARA",
+  "slug": "mara",
+  "baseUrl": "https://api.cloud.mara.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.mara.com/mara-legals/ai-policies#cloud-toc",
+   "privacyPolicyURL": "https://www.mara.com/mara-legals/ai-policies#cloud-pp",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.mara.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "InferenceNet",
+  "displayName": "inference.net",
+  "slug": "inference-net",
+  "baseUrl": "https://api.inference.net/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://inference.net/terms-of-service",
+   "privacyPolicyURL": "https://inference.net/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "EncodedImageOpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://inference.net/&size=256",
+   "className": "invert-0 dark:invert"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Perceptron",
+  "displayName": "Perceptron",
+  "slug": "perceptron",
+  "baseUrl": "https://api.perceptron.inc/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.perceptron.inc/terms-of-use",
+   "privacyPolicyURL": "https://www.perceptron.inc/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3E33zIJ7bIMhPhJoaGxSNLQivjj"
+  ],
+  "adapterName": "PerceptronAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.perceptron.inc&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Sourceful",
+  "displayName": "Sourceful",
+  "slug": "sourceful",
+  "baseUrl": "https://design-api.sourceful.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.sourceful.com/legal/spring-terms-of-use",
+   "privacyPolicyURL": "https://www.sourceful.com/legal/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "SourcefulAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.sourceful.com&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "sourceful"
+ },
+ {
+  "name": "Nebius",
+  "displayName": "Nebius Token Factory",
+  "slug": "nebius",
+  "baseUrl": "https://api.studio.nebius.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://docs.nebius.com/legal/studio/terms-of-use/",
+   "privacyPolicyURL": "https://docs.nebius.com/legal/studio/privacy/",
+   "requiresUserIDs": false
+  },
+  "headquarters": "NL",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_38IQyXcgfBXsG7mGiURlUC1vqxL",
+   "user_38ZpKrcXXJGkZ6nXTzP6xo17vp5"
+  ],
+  "adapterName": "NebiusAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://docs.nebius.com/&size=256",
+   "className": "invert-0 dark:invert"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "AionLabs",
+  "displayName": "AionLabs",
+  "slug": "aion-labs",
+  "baseUrl": "https://api.aionlabs.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.aionlabs.ai/terms/",
+   "privacyPolicyURL": "https://www.aionlabs.ai/privacy-policy/",
+   "requiresUserIDs": false
+  },
+  "headquarters": "IL",
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.aionlabs.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Cloudflare",
+  "displayName": "Cloudflare",
+  "slug": "cloudflare",
+  "baseUrl": "https://api.cloudflare.com/client/v4/accounts/{accountId}/ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.cloudflare.com/service-specific-terms-developer-platform/#developer-platform-terms",
+   "privacyPolicyURL": "https://developers.cloudflare.com/workers-ai/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "user_3DjbtFYO5V21wHamvFG8khOxL1s",
+   "org_3DjcRGFcino1IHjgA9etWZHsP1i"
+  ],
+  "adapterName": "CloudflareAdapter",
+  "statusPageUrl": "https://www.cloudflarestatus.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.cloudflare.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Liquid",
+  "displayName": "Liquid",
+  "slug": "liquid",
+  "baseUrl": "https://router.liquid.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.liquid.ai/terms-conditions",
+   "privacyPolicyURL": "https://www.liquid.ai/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.liquid.ai/&size=256",
+   "className": "invert-0 dark:invert"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Crucible",
+  "displayName": "Crucible",
+  "slug": "crucible",
+  "baseUrl": "https://example.com",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "user_2uUmqwcIIpC4CqxzBFY47rq7VH4"
+  ],
+  "adapterName": "CrucibleAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://example.com&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Decart",
+  "displayName": "Decart",
+  "slug": "decart",
+  "baseUrl": "https://api.cogito.decart.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://cogito.decart.ai/legal/terms",
+   "privacyPolicyURL": "https://cogito.decart.ai/legal/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "user_2wctCjbKvH1IsdLKz3JOXVsdmKl",
+   "org_3ExHeaHEelL7OUqsmBfkY4B85jO"
+  ],
+  "adapterName": "VLLMOpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://cogito.decart.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Recraft",
+  "displayName": "Recraft",
+  "slug": "recraft",
+  "baseUrl": "https://external.api.recraft.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "RecraftAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "/images/icons/Recraft.svg",
+   "className": "invert-0 dark:invert"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "recraft"
+ },
+ {
+  "name": "DekaLLM",
+  "displayName": "DekaLLM",
+  "slug": "dekallm",
+  "baseUrl": "https://dekallm.openrouter.cloudeka.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://docs.cloudeka.ai/service-portal-ai/end-user-license-agreement",
+   "privacyPolicyURL": "https://www.cloudeka.id/id/privacy-policy/",
+   "requiresUserIDs": false
+  },
+  "headquarters": "ID",
+  "datacenters": [
+   "ID"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3CeBAUgNWYtfLyn8Fjk83Q1OzR6"
+  ],
+  "adapterName": "VLLMOpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.cloudeka.id&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Meta",
+  "displayName": "Meta",
+  "slug": "meta",
+  "baseUrl": "https://api.meta.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://ai.developer.meta.com/legal/terms-of-service",
+   "privacyPolicyURL": "https://www.facebook.com/privacy/policy/",
+   "requiresUserIDs": true
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": true,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "org_3EMrT7oTqd3C8KobSJ17f5XWc5j"
+  ],
+  "adapterName": "InternalStreamMetaResponsesAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://ai.meta.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_responses"
+ },
+ {
+  "name": "ModelRun",
+  "displayName": "ModelRun",
+  "slug": "modelrun",
+  "baseUrl": "https://api2.runmodelrun.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://modelrun.org/TOS.html",
+   "privacyPolicyURL": "https://modelrun.org/privacy-policy.html",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_398AY9gETwDQkj8n6SXr9rA6HL0"
+  ],
+  "adapterName": "ModelRunAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://api.runmodelrun.com&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Seed",
+  "displayName": "Seed",
+  "slug": "seed",
+  "baseUrl": "https://ark.ap-southeast.bytepluses.com/api/v3",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://docs.byteplus.com/en/docs/legal/docs-terms-of-service",
+   "privacyPolicyURL": "https://docs.byteplus.com/en/docs/legal/docs-privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "SG",
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "BytePlusAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://avatars.githubusercontent.com/u/4158466?v=4&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "byteplus"
+ },
+ {
+  "name": "SiliconFlow",
+  "displayName": "SiliconFlow",
+  "slug": "siliconflow",
+  "baseUrl": "https://api.siliconflow.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://docs.siliconflow.com/en/legals/terms-of-service",
+   "privacyPolicyURL": "https://docs.siliconflow.com/en/legals/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "SG",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_3ApDsMOJYj42Hctdbe0J0XrHddj"
+  ],
+  "adapterName": "SiliconFlowAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/SiliconFlow.svg"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Phala",
+  "displayName": "Phala",
+  "slug": "phala",
+  "baseUrl": "https://api.redpill.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://red-pill.ai/terms",
+   "privacyPolicyURL": "https://red-pill.ai/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "user_35L3mosJLS7VsWBeyMo7pdH3GE6",
+   "org_36exlufMqlqSWEj9d9rW6x5eOdE"
+  ],
+  "adapterName": "PhalaAdapter",
+  "statusPageUrl": "https://status.phala.network/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://phala.network/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Relace",
+  "displayName": "Relace",
+  "slug": "relace",
+  "baseUrl": "https://instantapply.endpoint.relace.run/v1/apply",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.relace.ai/terms-of-use",
+   "privacyPolicyURL": "https://www.relace.ai/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "RelaceAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://relace.ai&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "OpenAI",
+  "displayName": "OpenAI",
+  "slug": "openai",
+  "baseUrl": "https://api.openai.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://openai.com/policies/row-terms-of-use/",
+   "privacyPolicyURL": "https://openai.com/policies/privacy-policy/",
+   "requiresUserIDs": true
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": true,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "OpenAIResponsesAdapter",
+  "statusPageUrl": "https://status.openai.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/OpenAI.svg",
+   "className": "invert-0 dark:invert"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_responses"
+ },
+ {
+  "name": "Poolside",
+  "displayName": "Poolside",
+  "slug": "poolside",
+  "baseUrl": "https://inference.poolside.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "http://poolside.ai/legal",
+   "privacyPolicyURL": "https://poolside.ai/legal/privacy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "user_2zsBJfUgMlYvly30EB1YONoD4kJ",
+   "org_2zsEDfFECcgdfvZRm30sq0jjs1z"
+  ],
+  "adapterName": "VLLMOpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://poolside.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "AtlasCloud",
+  "displayName": "AtlasCloud",
+  "slug": "atlas-cloud",
+  "baseUrl": "https://api.atlascloud.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "privacyPolicyURL": "https://www.atlascloud.ai/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_39WrnTg9d06n60qtHgSCiitxrVq"
+  ],
+  "adapterName": "AtlasCloudAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.atlascloud.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_extended"
+ },
+ {
+  "name": "FakeProvider",
+  "displayName": "FakeProvider",
+  "slug": "fake-provider",
+  "baseUrl": "https://fake-provider-712835604272.us-east4.run.app/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "FakeAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://openrouter.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Modular",
+  "displayName": "Modular",
+  "slug": "modular",
+  "baseUrl": "https://api.runmodelrun.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.runmodelrun.com/TOS.html",
+   "privacyPolicyURL": "https://www.runmodelrun.com/privacy-policy.html",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.modular.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Cirrascale",
+  "displayName": "Cirrascale",
+  "slug": "cirrascale",
+  "baseUrl": "https://ai2endpoints.cirrascale.ai/api",
+  "dataPolicy": {
+   "training": true,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.cirrascale.com/terms-of-service",
+   "privacyPolicyURL": "https://www.cirrascale.com/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "user_33CUof3bWv2XGq864tVAwcxLCVN"
+  ],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.cirrascale.com&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Ambient",
+  "displayName": "Ambient",
+  "slug": "ambient",
+  "baseUrl": "https://api.ambient.xyz/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_38tjIOWJWZx8DLy4eBFPZOj8iQe"
+  ],
+  "adapterName": "AmbientAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://ambient.xyz/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Anthropic",
+  "displayName": "Anthropic",
+  "slug": "anthropic",
+  "baseUrl": "https://api.anthropic.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.anthropic.com/legal/commercial-terms",
+   "privacyPolicyURL": "https://www.anthropic.com/legal/privacy",
+   "requiresUserIDs": true
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": true,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "AnthropicMessageAdapter",
+  "statusPageUrl": "https://status.anthropic.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/Anthropic.svg"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "anthropic"
+ },
+ {
+  "name": "Baidu",
+  "displayName": "Baidu Qianfan",
+  "slug": "baidu",
+  "baseUrl": "https://api.baiduqianfan.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://intl.cloud.baidu.com/en/doc/Agreements/s/bmesahnjh-intl-en",
+   "privacyPolicyURL": "https://intl.cloud.baidu.com/en/doc/Agreements/s/Plr0fi68q-intl-en",
+   "requiresUserIDs": false
+  },
+  "headquarters": "CN",
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3ClcshPIvCJrlidp8QaHyh3kBZR"
+  ],
+  "adapterName": "BaiduAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://intl.cloud.baidu.com/en&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Together",
+  "displayName": "Together",
+  "slug": "together",
+  "baseUrl": "https://api.together.xyz/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.together.ai/terms-of-service",
+   "privacyPolicyURL": "https://www.together.ai/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "org_3Ao0BoKhwwioO3iArOjbkWR0jD0"
+  ],
+  "adapterName": "TogetherAdapter",
+  "statusPageUrl": "https://status.together.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.together.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Amazon Bedrock",
+  "displayName": "Amazon Bedrock",
+  "slug": "amazon-bedrock",
+  "baseUrl": "not_used",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://aws.amazon.com/service-terms/",
+   "privacyPolicyURL": "https://aws.amazon.com/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": true,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_39b6V1QWwN007RTEQkmKy4KCs4k"
+  ],
+  "adapterName": "AmazonBedrockConverseAdapter",
+  "statusPageUrl": "https://health.aws.amazon.com/health/status",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/Bedrock.svg"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Google",
+  "displayName": "Google Vertex",
+  "slug": "google-vertex",
+  "baseUrl": "not_used",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://cloud.google.com/terms/",
+   "privacyPolicyURL": "https://cloud.google.com/terms/cloud-privacy-notice",
+   "requiresUserIDs": true
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "GoogleVertexGeminiAdapter",
+  "statusPageUrl": "https://status.cloud.google.com/products/sdXM79fz1FS6ekNpu37K/history",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/GoogleVertex.svg"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "gemini"
+ },
+ {
+  "name": "Nex AGI",
+  "displayName": "Nex AGI",
+  "slug": "nex-agi",
+  "baseUrl": "https://api.nex-agi.cn/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "privacyPolicyURL": "https://api.nex-agi.cn/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "CN",
+  "datacenters": [
+   "SG"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "NexAGIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://nex.sii.edu.cn/en/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "DigitalOcean",
+  "displayName": "DigitalOcean",
+  "slug": "digitalocean",
+  "baseUrl": "https://inference.do-ai.run/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.digitalocean.com/legal/terms-of-service-agreement",
+   "privacyPolicyURL": "https://www.digitalocean.com/legal/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3EP6x2Jf4X7ahSVv1VJNcUj60rF",
+   "user_39dFecS0Ic60eeWnZDoZoaGcckv"
+  ],
+  "adapterName": "DigitalOceanAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.digitalocean.com&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Chutes",
+  "displayName": "Chutes",
+  "slug": "chutes",
+  "baseUrl": "https://llm.chutes.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://chutes.ai/tos",
+   "privacyPolicyURL": "https://chutes.ai/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_3BFjvDfsIrd9T4oeYy2FlxqoY3I"
+  ],
+  "adapterName": "ChutesAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://chutes.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Inceptron",
+  "displayName": "Inceptron",
+  "slug": "inceptron",
+  "baseUrl": "https://api.inceptron.io/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.inceptron.io/termsofservice",
+   "privacyPolicyURL": "https://www.inceptron.io/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "SE",
+  "datacenters": [
+   "FI"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_38eVjOI3LvUE8oMUJreSPcIggIs"
+  ],
+  "adapterName": "InceptronAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.inceptron.io&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Upstage",
+  "displayName": "Upstage",
+  "slug": "upstage",
+  "baseUrl": "https://api.upstage.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3B4DZxSH95AdTOk0Z4flpBV3sXH"
+  ],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://upstage.ai&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Google AI Studio",
+  "displayName": "Google AI Studio",
+  "slug": "google-ai-studio",
+  "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 55,
+   "canPublish": false,
+   "termsOfServiceURL": "https://cloud.google.com/terms/",
+   "privacyPolicyURL": "https://cloud.google.com/terms/cloud-privacy-notice",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "GoogleAIStudioGeminiAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/GoogleAIStudio.svg"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "gemini"
+ },
+ {
+  "name": "Parasail",
+  "displayName": "Parasail",
+  "slug": "parasail",
+  "baseUrl": "https://api.parasail.io/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://parasail.io/legal/terms-of-service",
+   "privacyPolicyURL": "https://www.parasail.io/legal/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_34P5Ca01in28Ek1oxb5OtfZdEjQ",
+   "user_37qaJKhqfUEFgVF46sarwDHxE50"
+  ],
+  "adapterName": "ParasailAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.parasail.io/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "OpenInference",
+  "displayName": "OpenInference",
+  "slug": "open-inference",
+  "baseUrl": "https://api.openinference.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.openinference.ai/terms",
+   "privacyPolicyURL": "https://www.openinference.ai/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "user_3FHtqRUbSI0sFOIFEZxKMcxi2tf",
+   "org_3FHvfETsrgjTicucG1rsiFfsyEF"
+  ],
+  "adapterName": "OpenInferenceAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://openinference.xyz/&size=256",
+   "className": "invert dark:invert-0"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Featherless",
+  "displayName": "Featherless",
+  "slug": "featherless",
+  "baseUrl": "https://api.featherless.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://featherless.ai/terms",
+   "privacyPolicyURL": "https://featherless.ai/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "org_3EMvISfK9ed3Jfn7rnFQOrmf6Et"
+  ],
+  "adapterName": "OpenAIAdapter",
+  "statusPageUrl": "https://featherless.ai/status",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://featherless.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "StreamLake",
+  "displayName": "StreamLake",
+  "slug": "streamlake",
+  "baseUrl": "https://vanchin.streamlake.ai/api/gateway/v1/endpoints",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.streamlake.ai/document/DOC/mgkchnd89grpt1961fw",
+   "privacyPolicyURL": "https://www.streamlake.ai/document/DOC/mgkci47q13qr66h9i54",
+   "requiresUserIDs": false
+  },
+  "headquarters": "CN",
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "user_3DybIw2UNLpEdimIV6wQg7DTdjh",
+   "org_3DydQb67kHQffhtjuQsypJb767B"
+  ],
+  "adapterName": "StreamLakeAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.streamlake.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Alibaba",
+  "displayName": "Alibaba Cloud Int.",
+  "slug": "alibaba",
+  "baseUrl": "https://llm-6nbyml54yaaqvdb9.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-product-terms-of-service-v-3-8-0",
+   "privacyPolicyURL": "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "SG",
+  "datacenters": [
+   "SG",
+   "CN"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "user_3DxIrJTjrI0eJWhDbqAm5GAiYer",
+   "org_3DxJ2HvuVE0P8bLtKXMKaalYWB7"
+  ],
+  "adapterName": "AlibabaAdapter",
+  "statusPageUrl": "https://status.alibabacloud.com/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.alibabacloud.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "alibaba"
+ },
+ {
+  "name": "Clarifai",
+  "displayName": "Clarifai",
+  "slug": "clarifai",
+  "baseUrl": "https://api.clarifai.com/v2/ext/openai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.clarifai.com/company/terms",
+   "privacyPolicyURL": "https://www.clarifai.com/company/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_35IKZ8qKVkCQ9KdPxter2Tqq44Z"
+  ],
+  "adapterName": "ClarifaiAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.clarifai.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Quiver",
+  "displayName": "Quiver",
+  "slug": "quiver",
+  "baseUrl": "https://api.quiver.ai",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "QuiverImageAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://d1lamhf6l6yk6d.cloudfront.net/uploads/2026/02/logo_001Up00000JveVeIAJ-20260115185420.svg&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "quiver"
+ },
+ {
+  "name": "Venice",
+  "displayName": "Venice",
+  "slug": "venice",
+  "baseUrl": "https://api.venice.ai/api/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://venice.ai/legal/tos",
+   "privacyPolicyURL": "https://venice.ai/legal/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_357i4Lz67htGP3XCPQMGJx43x5C"
+  ],
+  "adapterName": "VeniceAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://venice.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Sakana AI",
+  "displayName": "Sakana",
+  "slug": "sakana",
+  "baseUrl": "https://api.sakana.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://console.sakana.ai/terms-of-service",
+   "privacyPolicyURL": "https://console.sakana.ai/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "SakanaAIAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://sakana.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_responses"
+ },
+ {
+  "name": "Inferact vLLM",
+  "displayName": "Inferact vLLM Reference Implementation",
+  "slug": "inferact-vllm",
+  "baseUrl": "https://minimax.svc.inferact.dev/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3FdPNTq4TxK9yvERGDS80SxvzZz"
+  ],
+  "adapterName": "InferactVLLMAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://inferact.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Friendli",
+  "displayName": "Friendli",
+  "slug": "friendli",
+  "baseUrl": "https://api.friendli.ai/serverless/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://friendli.ai/terms-of-service",
+   "privacyPolicyURL": "https://friendli.ai/privacypolicy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "org_30UbH62SiHlw3NXfTBapW8Lg5k3"
+  ],
+  "adapterName": "FriendliAdapter",
+  "statusPageUrl": "https://status.friendli.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://friendli.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "WandB",
+  "displayName": "Weights & Biases",
+  "slug": "wandb",
+  "baseUrl": "https://api.inference.wandb.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://site.wandb.ai/terms/",
+   "privacyPolicyURL": "https://wandb.ai/site/privacy/",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_35lC0lqFZXiNrrxF1OW68kxpbX9"
+  ],
+  "adapterName": "WandbAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://wandb.ai/home&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "AkashML",
+  "displayName": "AkashML",
+  "slug": "akashml",
+  "baseUrl": "https://api.akashml.com/integrations/openrouter/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://akashml.com/terms",
+   "privacyPolicyURL": "https://akashml.com/privacy",
+   "requiresUserIDs": false
+  },
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3AoSnG28c18YvTYtWz9iEsZRpQs",
+   "user_3AoGC82W05OtjzXICzSTMjZlygI",
+   "user_3AoF0Vp35yiAmEZk9TNa6uixmdv"
+  ],
+  "adapterName": "AkashAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://akashml.com/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "HeyGen",
+  "displayName": "HeyGen",
+  "slug": "heygen",
+  "baseUrl": "https://api.heygen.com",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.heygen.com/terms",
+   "privacyPolicyURL": "https://www.heygen.com/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "HeyGenVideoAgentAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://heygen.com&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "heygen"
+ },
+ {
+  "name": "Inception",
+  "displayName": "Inception",
+  "slug": "inception",
+  "baseUrl": "https://api.inceptionlabs.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.inceptionlabs.ai/terms",
+   "privacyPolicyURL": "https://www.inceptionlabs.ai/terms#privacy-policy",
+   "requiresUserIDs": false
+  },
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "InceptionAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/Inception.svg",
+   "className": "invert-0 dark:invert"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Perplexity",
+  "displayName": "Perplexity",
+  "slug": "perplexity",
+  "baseUrl": "https://api.perplexity.ai",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.perplexity.ai/hub/legal/perplexity-api-terms-of-service",
+   "privacyPolicyURL": "https://www.perplexity.ai/hub/legal/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "PerplexityAdapter",
+  "statusPageUrl": "https://status.perplexity.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/Perplexity.svg"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "perplexity"
+ },
+ {
+  "name": "Tenstorrent",
+  "displayName": "Tenstorrent",
+  "slug": "tenstorrent",
+  "baseUrl": "https://console.tenstorrent.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://tenstorrent.com/terms",
+   "privacyPolicyURL": "https://tenstorrent.com/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [],
+  "adapterName": "TenstorrentAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": false,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://tenstorrent.com&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Wafer",
+  "displayName": "Wafer",
+  "slug": "wafer",
+  "baseUrl": "https://pass.wafer.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.wafer.ai/terms",
+   "privacyPolicyURL": "https://www.wafer.ai/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [],
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [],
+  "owners": [
+   "org_3F3ioe7WKznOsU61ElMRdqF7V7f"
+  ],
+  "adapterName": "WaferAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.wafer.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "GMICloud",
+  "displayName": "GMICloud",
+  "slug": "gmicloud",
+  "baseUrl": "https://api.gmi-serving.com/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "canPublish": false,
+   "termsOfServiceURL": "https://www.gmicloud.ai/terms-and-conditions",
+   "privacyPolicyURL": "https://docs.gmicloud.ai/privacy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "datacenters": [
+   "US"
+  ],
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}",
+   "org_3EumBkqgQ9nDJ3QUZxfQDsLuJ6S"
+  ],
+  "adapterName": "GMICloudAdapter",
+  "statusPageUrl": null,
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://gmicloud.ai/&size=256",
+   "className": "invert-0 dark:invert"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Fireworks",
+  "displayName": "Fireworks",
+  "slug": "fireworks",
+  "baseUrl": "https://api.fireworks.ai/inference/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://fireworks.ai/terms-of-service",
+   "privacyPolicyURL": "https://fireworks.ai/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_34k70EDz4tN23XFsU2l3tSqm4wF"
+  ],
+  "adapterName": "FireworksAdapter",
+  "statusPageUrl": "https://status.fireworks.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/Fireworks.png"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ },
+ {
+  "name": "Mistral",
+  "displayName": "Mistral",
+  "slug": "mistral",
+  "baseUrl": "https://api.mistral.ai/v1",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": true,
+   "retentionDays": 30,
+   "canPublish": false,
+   "termsOfServiceURL": "https://mistral.ai/terms/#terms-of-use",
+   "privacyPolicyURL": "https://mistral.ai/terms/#privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "FR",
+  "hasChatCompletions": true,
+  "hasCompletions": false,
+  "isAbortable": false,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "{}"
+  ],
+  "adapterName": "MistralAdapter",
+  "statusPageUrl": "https://status.mistral.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "/images/icons/Mistral.png"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "mistral"
+ },
+ {
+  "name": "Novita",
+  "displayName": "NovitaAI",
+  "slug": "novita",
+  "baseUrl": "https://api.novita.ai/v3/openai",
+  "dataPolicy": {
+   "training": false,
+   "trainingOpenRouter": false,
+   "retainsPrompts": false,
+   "canPublish": false,
+   "termsOfServiceURL": "https://novita.ai/legal/terms-of-service",
+   "privacyPolicyURL": "https://novita.ai/legal/privacy-policy",
+   "requiresUserIDs": false
+  },
+  "headquarters": "US",
+  "hasChatCompletions": true,
+  "hasCompletions": true,
+  "isAbortable": true,
+  "moderationRequired": false,
+  "editors": [
+   "{}"
+  ],
+  "owners": [
+   "org_34P2zP0TCZwbzCC8QkH8m8o1i8M"
+  ],
+  "adapterName": "NovitaAdapter",
+  "statusPageUrl": "https://status.novita.ai/",
+  "byokEnabled": true,
+  "icon": {
+   "url": "https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://novita.ai/&size=256"
+  },
+  "sendClientIp": false,
+  "pricingStrategy": "openai_chat_completions"
+ }
+]

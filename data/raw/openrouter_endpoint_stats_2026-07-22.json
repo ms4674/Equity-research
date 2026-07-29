@@ -1,0 +1,2904 @@
+{
+ "fetched_at": "2026-07-22",
+ "source_week": "2026-07-16",
+ "data": [
+  {
+   "model_permaslug": "tencent/hy3-20260706",
+   "variant": "free",
+   "weekly_tokens": 9757650355032,
+   "variant_fallback": true,
+   "endpoints": [
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 1717
+    },
+    {
+     "provider_name": "Tencent",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 24254
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 737
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 96120
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 603
+    }
+   ]
+  },
+  {
+   "model_permaslug": "xiaomi/mimo-v2.5-20260422",
+   "variant": "standard",
+   "weekly_tokens": 8676656451532,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 3482
+    },
+    {
+     "provider_name": "Xiaomi",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 372141
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1826
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 211
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1433
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 2501
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 3690
+    }
+   ]
+  },
+  {
+   "model_permaslug": "deepseek/deepseek-v4-flash-20260423",
+   "variant": "standard",
+   "weekly_tokens": 5240398974088,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 101715
+    },
+    {
+     "provider_name": "StreamLake",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 119187
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 619329
+    },
+    {
+     "provider_name": "Baidu",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 4785
+    },
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 17433
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 70770
+    },
+    {
+     "provider_name": "Alibaba",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 213253
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 39099
+    },
+    {
+     "provider_name": "Morph",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 67937
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Fireworks",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 24983
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 159600
+    },
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 32633
+    },
+    {
+     "provider_name": "Ambient",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 22261
+    },
+    {
+     "provider_name": "AkashML",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 14271
+    },
+    {
+     "provider_name": "Cloudflare",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 35430
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 77516
+    },
+    {
+     "provider_name": "DeepSeek",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 204548
+    },
+    {
+     "provider_name": "Io Net",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 7325
+    }
+   ]
+  },
+  {
+   "model_permaslug": "minimax/minimax-m3-20260531",
+   "variant": "standard",
+   "weekly_tokens": 3951536497593,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 17658
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 7327
+    },
+    {
+     "provider_name": "Minimax",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 95665
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 4024
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2456
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 491
+    },
+    {
+     "provider_name": "Morph",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 573
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1004
+    }
+   ]
+  },
+  {
+   "model_permaslug": "z-ai/glm-5.2-20260616",
+   "variant": "standard",
+   "weekly_tokens": 3515340760024,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "StreamLake",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 69692
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 35457
+    },
+    {
+     "provider_name": "Alibaba",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 10533
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2404
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 6416
+    },
+    {
+     "provider_name": "Inceptron",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 4784
+    },
+    {
+     "provider_name": "Ambient",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1314
+    },
+    {
+     "provider_name": "Morph",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2629
+    },
+    {
+     "provider_name": "Decart",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 5565
+    },
+    {
+     "provider_name": "Wafer",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1066
+    },
+    {
+     "provider_name": "Baidu",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2694
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2901
+    },
+    {
+     "provider_name": "AkashML",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 929
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 25389
+    },
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 10791
+    },
+    {
+     "provider_name": "Z.AI",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 11161
+    },
+    {
+     "provider_name": "Chutes",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 765
+    },
+    {
+     "provider_name": "Fireworks",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 9521
+    },
+    {
+     "provider_name": "Cloudflare",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1117
+    },
+    {
+     "provider_name": "Friendli",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2646
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1568
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 5400
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1645
+    },
+    {
+     "provider_name": "BaseTen",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2529
+    },
+    {
+     "provider_name": "Fireworks",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 8459
+    },
+    {
+     "provider_name": "Alibaba",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 607
+    },
+    {
+     "provider_name": "Io Net",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 442
+    },
+    {
+     "provider_name": "Wafer",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1179
+    },
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1164
+    },
+    {
+     "provider_name": "Ionstream",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1460
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "nvidia/nemotron-3-ultra-550b-a55b-20260604",
+   "variant": "free",
+   "weekly_tokens": 3275909176956,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Nvidia",
+     "variant": "free",
+     "quantization": "unknown",
+     "request_count_30m": 54337
+    }
+   ]
+  },
+  {
+   "model_permaslug": "deepseek/deepseek-v4-pro-20260423",
+   "variant": "standard",
+   "weekly_tokens": 2473441480536,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "DeepSeek",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 137694
+    },
+    {
+     "provider_name": "StreamLake",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 33265
+    },
+    {
+     "provider_name": "Baidu",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2431
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 14654
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 22440
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 6214
+    },
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2018
+    },
+    {
+     "provider_name": "Alibaba",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 4340
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 5674
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2444
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 4945
+    },
+    {
+     "provider_name": "BaseTen",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1465
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1055
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2725
+    },
+    {
+     "provider_name": "Fireworks",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2021
+    },
+    {
+     "provider_name": "Ionstream",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1583
+    }
+   ]
+  },
+  {
+   "model_permaslug": "anthropic/claude-4.8-opus-20260528",
+   "variant": "standard",
+   "weekly_tokens": 2195918000173,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 186
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 16992
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 9180
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 29517
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 16743
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 5
+    }
+   ]
+  },
+  {
+   "model_permaslug": "anthropic/claude-4.7-opus-20260416",
+   "variant": "standard",
+   "weekly_tokens": 2107276822808,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 13461
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 16920
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 8317
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 9022
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemini-3-flash-preview-20251217",
+   "variant": "standard",
+   "weekly_tokens": 947095724274,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 254230
+    },
+    {
+     "provider_name": "Google AI Studio",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 69761
+    }
+   ]
+  },
+  {
+   "model_permaslug": "anthropic/claude-4.6-sonnet-20260217",
+   "variant": "standard",
+   "weekly_tokens": 942074231914,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 47396
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 7989
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 847
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 11729
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 8439
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 54
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 31
+    }
+   ]
+  },
+  {
+   "model_permaslug": "anthropic/claude-sonnet-5-20260630",
+   "variant": "standard",
+   "weekly_tokens": 936723011167,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 906
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 7355
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2645
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 3353
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 29803
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 223
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "stepfun/step-3.7-flash-20260528",
+   "variant": "standard",
+   "weekly_tokens": 893527077750,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "StepFun",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 137614
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 244
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 86
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5.5-20260423",
+   "variant": "standard",
+   "weekly_tokens": 677882959419,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 18980
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 32619
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "xiaomi/mimo-v2.5-pro-20260422",
+   "variant": "standard",
+   "weekly_tokens": 633766561443,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Xiaomi",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 22711
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 571
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 3003
+    },
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1663
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1097
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 314
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemini-2.5-flash",
+   "variant": "standard",
+   "weekly_tokens": 608231921809,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 17917
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 293187
+    },
+    {
+     "provider_name": "Google AI Studio",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 32155
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 480
+    }
+   ]
+  },
+  {
+   "model_permaslug": "poolside/laguna-m.1-20260312",
+   "variant": "free",
+   "weekly_tokens": 558769967918,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Poolside",
+     "variant": "free",
+     "quantization": "fp4",
+     "request_count_30m": 7131
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemini-2.5-flash-lite",
+   "variant": "standard",
+   "weekly_tokens": 556102098788,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 289394
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 182363
+    },
+    {
+     "provider_name": "Google AI Studio",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 52476
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-oss-120b",
+   "variant": "standard",
+   "weekly_tokens": 538014829129,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "DekaLLM",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 21072
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 66879
+    },
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 17516
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 4849
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2223
+    },
+    {
+     "provider_name": "Mancer 2",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2288
+    },
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 8676
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 3540
+    },
+    {
+     "provider_name": "BaseTen",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 2769
+    },
+    {
+     "provider_name": "SambaNova",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 564
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 882
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 2589
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 705
+    },
+    {
+     "provider_name": "Nebius",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 2249
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 458
+    },
+    {
+     "provider_name": "Groq",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 64525
+    },
+    {
+     "provider_name": "Mara",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 400
+    },
+    {
+     "provider_name": "Cerebras",
+     "variant": "standard",
+     "quantization": "fp16",
+     "request_count_30m": 19719
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemini-3.1-flash-lite-20260507",
+   "variant": "standard",
+   "weekly_tokens": 532584322020,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Google AI Studio",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 163594
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 137515
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5.6-sol-20260709",
+   "variant": "standard",
+   "weekly_tokens": 411249519808,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 8216
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 13882
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5.4-20260305",
+   "variant": "standard",
+   "weekly_tokens": 403143407446,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 18074
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 24936
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "anthropic/claude-5-fable-20260609",
+   "variant": "standard",
+   "weekly_tokens": 375285408732,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 575
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 6773
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1545
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 989
+    }
+   ]
+  },
+  {
+   "model_permaslug": "deepseek/deepseek-v3.2-20251201",
+   "variant": "standard",
+   "weekly_tokens": 346234409568,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "StreamLake",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 28671
+    },
+    {
+     "provider_name": "Baidu",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 5917
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 19347
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 2152
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 26450
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 43094
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 6011
+    },
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1535
+    },
+    {
+     "provider_name": "Friendli",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 8005
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2235
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 481
+    },
+    {
+     "provider_name": "SambaNova",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 75
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 129
+    },
+    {
+     "provider_name": "Alibaba",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1
+    }
+   ]
+  },
+  {
+   "model_permaslug": "x-ai/grok-4.5-20260708",
+   "variant": "standard",
+   "weekly_tokens": 336085799788,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "xAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 29742
+    },
+    {
+     "provider_name": "xAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2504
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemma-4-31b-it-20260402",
+   "variant": "standard",
+   "weekly_tokens": 320310476246,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "OpenInference",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 10235
+    },
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 24643
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 2115
+    },
+    {
+     "provider_name": "Chutes",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 51050
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 19668
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 3812
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 7736
+    },
+    {
+     "provider_name": "Friendli",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 23100
+    },
+    {
+     "provider_name": "Morph",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 2489
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1780
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 13543
+    },
+    {
+     "provider_name": "ModelRun",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 14140
+    },
+    {
+     "provider_name": "SambaNova",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1548
+    },
+    {
+     "provider_name": "Cerebras",
+     "variant": "standard",
+     "quantization": "fp16",
+     "request_count_30m": 4136
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 5052
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 746
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 189
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemma-4-26b-a4b-it-20260403",
+   "variant": "standard",
+   "weekly_tokens": 307622764703,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "DekaLLM",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 22143
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 10630
+    },
+    {
+     "provider_name": "Cloudflare",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 20607
+    },
+    {
+     "provider_name": "NextBit",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 42659
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 5080
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 11109
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Wafer",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 23462
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1004
+    }
+   ]
+  },
+  {
+   "model_permaslug": "z-ai/glm-5-20260211",
+   "variant": "standard",
+   "weekly_tokens": 300659543671,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "StreamLake",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 4874
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 907
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 3719
+    },
+    {
+     "provider_name": "Baidu",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 440
+    },
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 180
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 315
+    },
+    {
+     "provider_name": "Chutes",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 113
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 596
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 405
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 268
+    },
+    {
+     "provider_name": "Z.AI",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 565
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 114
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 72
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemini-3.5-flash-20260519",
+   "variant": "standard",
+   "weekly_tokens": 300366376853,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 77223
+    },
+    {
+     "provider_name": "Google AI Studio",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 9468
+    }
+   ]
+  },
+  {
+   "model_permaslug": "moonshotai/kimi-k2.6-20260420",
+   "variant": "standard",
+   "weekly_tokens": 295806133970,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Inceptron",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 4868
+    },
+    {
+     "provider_name": "Decart",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 564
+    },
+    {
+     "provider_name": "Baidu",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1664
+    },
+    {
+     "provider_name": "ModelRun",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 2597
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 2025
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 2739
+    },
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 272
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 9634
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 4194
+    },
+    {
+     "provider_name": "StreamLake",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 485
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 1839
+    },
+    {
+     "provider_name": "Moonshot AI",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 3825
+    },
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 4318
+    },
+    {
+     "provider_name": "Cloudflare",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 72
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1246
+    },
+    {
+     "provider_name": "Chutes",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 2153
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 689
+    },
+    {
+     "provider_name": "BaseTen",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 426
+    },
+    {
+     "provider_name": "Fireworks",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 4099
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 976
+    }
+   ]
+  },
+  {
+   "model_permaslug": "mistralai/mistral-nemo",
+   "variant": "standard",
+   "weekly_tokens": 277023411256,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "DekaLLM",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 70052
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 238139
+    },
+    {
+     "provider_name": "Mistral",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 7039
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 3870
+    }
+   ]
+  },
+  {
+   "model_permaslug": "nvidia/nemotron-3-super-120b-a12b-20230311",
+   "variant": "free",
+   "weekly_tokens": 262473425432,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Nvidia",
+     "variant": "free",
+     "quantization": "unknown",
+     "request_count_30m": 24268
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5.6-luna-20260709",
+   "variant": "standard",
+   "weekly_tokens": 243631232733,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 31481
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 3390
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-4o-mini",
+   "variant": "standard",
+   "weekly_tokens": 232921038056,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 137816
+    },
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 174053
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "anthropic/claude-4.5-haiku-20251001",
+   "variant": "standard",
+   "weekly_tokens": 230766314613,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 5895
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 8796
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 67010
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 85
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "anthropic/claude-4.6-opus-20260205",
+   "variant": "standard",
+   "weekly_tokens": 213332688955,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2252
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 49
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 5294
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 6446
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 777
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5.4-mini-20260317",
+   "variant": "standard",
+   "weekly_tokens": 190488763281,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 95161
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 14213
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-oss-20b",
+   "variant": "standard",
+   "weekly_tokens": 188298535434,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 18737
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 12456
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 3169
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2034
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2055
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 119
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 25520
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 4790
+    },
+    {
+     "provider_name": "Fireworks",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 7416
+    },
+    {
+     "provider_name": "Groq",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 6735
+    },
+    {
+     "provider_name": "DekaLLM",
+     "variant": "standard",
+     "quantization": "bf16",
+     "request_count_30m": 3202
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1893
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemini-3.1-pro-preview-20260219",
+   "variant": "standard",
+   "weekly_tokens": 187952969447,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 32656
+    },
+    {
+     "provider_name": "Google AI Studio",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 9204
+    }
+   ]
+  },
+  {
+   "model_permaslug": "qwen/qwen3.7-max-20260520",
+   "variant": "standard",
+   "weekly_tokens": 162911604779,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Alibaba",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 5212
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/text-embedding-3-small",
+   "variant": "standard",
+   "weekly_tokens": 158266863382,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5.4-nano-20260317",
+   "variant": "standard",
+   "weekly_tokens": 151161667415,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 16329
+    },
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 62316
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5-mini-2025-08-07",
+   "variant": "standard",
+   "weekly_tokens": 147323778837,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 29271
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2886
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1
+    }
+   ]
+  },
+  {
+   "model_permaslug": "z-ai/glm-5.1-20260406",
+   "variant": "standard",
+   "weekly_tokens": 140249922583,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "StreamLake",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 2440
+    },
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 14
+    },
+    {
+     "provider_name": "Chutes",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 34
+    },
+    {
+     "provider_name": "Baidu",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1655
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1025
+    },
+    {
+     "provider_name": "Wafer",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 225
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 2016
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1143
+    },
+    {
+     "provider_name": "Crusoe",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 723
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1015
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 539
+    },
+    {
+     "provider_name": "Nebius",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 69
+    },
+    {
+     "provider_name": "Fireworks",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 102
+    },
+    {
+     "provider_name": "Friendli",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2482
+    },
+    {
+     "provider_name": "Z.AI",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1750
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1242
+    },
+    {
+     "provider_name": "BaseTen",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1400
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 439
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 129
+    }
+   ]
+  },
+  {
+   "model_permaslug": "moonshotai/kimi-k2.5-0127",
+   "variant": "standard",
+   "weekly_tokens": 139002645086,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "DigitalOcean",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 3
+    },
+    {
+     "provider_name": "Chutes",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 32
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1298
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 830
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 966
+    },
+    {
+     "provider_name": "StreamLake",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 3364
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 3120
+    },
+    {
+     "provider_name": "Moonshot AI",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 2571
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 69
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "moonshotai/kimi-k2.7-code-20260612",
+   "variant": "standard",
+   "weekly_tokens": 134557123267,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Inceptron",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 125
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 177
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 6
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Ambient",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 1502
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 165
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 634
+    },
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 69
+    },
+    {
+     "provider_name": "Moonshot AI",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 913
+    },
+    {
+     "provider_name": "Cloudflare",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 71
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 62
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 656
+    },
+    {
+     "provider_name": "Fireworks",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 397
+    },
+    {
+     "provider_name": "Moonshot AI",
+     "variant": "standard",
+     "quantization": "int4",
+     "request_count_30m": 25
+    }
+   ]
+  },
+  {
+   "model_permaslug": "qwen/qwen3-embedding-8b",
+   "variant": "standard",
+   "weekly_tokens": 129251730056,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Nebius",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "qwen/qwen3.7-plus-20260602",
+   "variant": "standard",
+   "weekly_tokens": 126334989483,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Alibaba",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 55226
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5.6-terra-20260709",
+   "variant": "standard",
+   "weekly_tokens": 126302992477,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 3026
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 57
+    },
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 10731
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemini-3.1-flash-lite-preview-20260303",
+   "variant": "standard",
+   "weekly_tokens": 125554189512,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Google AI Studio",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 44342
+    }
+   ]
+  },
+  {
+   "model_permaslug": "cohere/north-mini-code-20260617",
+   "variant": "free",
+   "weekly_tokens": 121286905421,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Cohere",
+     "variant": "free",
+     "quantization": "unknown",
+     "request_count_30m": 10151
+    }
+   ]
+  },
+  {
+   "model_permaslug": "minimax/minimax-m2.7-20260318",
+   "variant": "standard",
+   "weekly_tokens": 116266167857,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 905
+    },
+    {
+     "provider_name": "Novita",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1861
+    },
+    {
+     "provider_name": "Morph",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 35
+    },
+    {
+     "provider_name": "GMICloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 103
+    },
+    {
+     "provider_name": "Minimax",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 3898
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 694
+    },
+    {
+     "provider_name": "Fireworks",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 791
+    },
+    {
+     "provider_name": "Together",
+     "variant": "standard",
+     "quantization": "fp4",
+     "request_count_30m": 1071
+    },
+    {
+     "provider_name": "SambaNova",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 705
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 16
+    },
+    {
+     "provider_name": "Groq",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1730
+    },
+    {
+     "provider_name": "Minimax",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 321
+    },
+    {
+     "provider_name": "SambaNova",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1750
+    },
+    {
+     "provider_name": "Mara",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 357
+    }
+   ]
+  },
+  {
+   "model_permaslug": "poolside/laguna-xs-2.1-20260625",
+   "variant": "free",
+   "weekly_tokens": 99789952147,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Poolside",
+     "variant": "free",
+     "quantization": "fp8",
+     "request_count_30m": 7701
+    }
+   ]
+  },
+  {
+   "model_permaslug": "x-ai/grok-4.3-20260430",
+   "variant": "standard",
+   "weekly_tokens": 97682196737,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "xAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 36156
+    },
+    {
+     "provider_name": "xAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 355
+    }
+   ]
+  },
+  {
+   "model_permaslug": "anthropic/claude-4.5-sonnet-20250929",
+   "variant": "standard",
+   "weekly_tokens": 95455113183,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 11662
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2488
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 409
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2
+    },
+    {
+     "provider_name": "Anthropic",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1
+    },
+    {
+     "provider_name": "Amazon Bedrock",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  },
+  {
+   "model_permaslug": "google/gemini-2.5-pro",
+   "variant": "standard",
+   "weekly_tokens": 81008283072,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 21094
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 296
+    },
+    {
+     "provider_name": "Google",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 4
+    },
+    {
+     "provider_name": "Google AI Studio",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2252
+    }
+   ]
+  },
+  {
+   "model_permaslug": "qwen/qwen3.6-35b-a3b-20260415",
+   "variant": "standard",
+   "weekly_tokens": 80309062879,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "DekaLLM",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 2697
+    },
+    {
+     "provider_name": "AkashML",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 11882
+    },
+    {
+     "provider_name": "Parasail",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 0
+    },
+    {
+     "provider_name": "AtlasCloud",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 14776
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 926
+    },
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 7706
+    },
+    {
+     "provider_name": "Io Net",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 6412
+    }
+   ]
+  },
+  {
+   "model_permaslug": "qwen/qwen3.6-27b-20260422",
+   "variant": "standard",
+   "weekly_tokens": 79878168012,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "Morph",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 165
+    },
+    {
+     "provider_name": "Phala",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 223
+    },
+    {
+     "provider_name": "DeepInfra",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1383
+    },
+    {
+     "provider_name": "Venice",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 56
+    },
+    {
+     "provider_name": "Io Net",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 1827
+    },
+    {
+     "provider_name": "Alibaba",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1749
+    },
+    {
+     "provider_name": "WandB",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 4016
+    },
+    {
+     "provider_name": "SiliconFlow",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 64
+    },
+    {
+     "provider_name": "Chutes",
+     "variant": "standard",
+     "quantization": "fp8",
+     "request_count_30m": 137
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5.2-20251211",
+   "variant": "standard",
+   "weekly_tokens": 77539120057,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 87551
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 3302
+    }
+   ]
+  },
+  {
+   "model_permaslug": "openai/gpt-5-nano-2025-08-07",
+   "variant": "standard",
+   "weekly_tokens": 74056953148,
+   "variant_fallback": false,
+   "endpoints": [
+    {
+     "provider_name": "OpenAI",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 23652
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 1875
+    },
+    {
+     "provider_name": "Azure",
+     "variant": "standard",
+     "quantization": "unknown",
+     "request_count_30m": 0
+    }
+   ]
+  }
+ ]
+}
