@@ -19,6 +19,7 @@ Outputs:
   - data/csv/harness_rl_environments.csv
   - data/csv/quantization_kld.csv
   - data/csv/training_data.csv
+  - data/csv/model_harnesses_tools.csv
   - data/llm_data_tables.xlsx (all CSV tables compiled into one data-only workbook)
 """
 
@@ -53,6 +54,329 @@ MANUAL_OVERRIDES = {
 OPEN_KEYWORDS = re.compile(
     r"open[- ]?(weight|source)|MIT licen[cs]e|Apache[- ]2", re.IGNORECASE
 )
+
+# ------------------------------------------------- Per-model harnesses & tools
+# Hand-curated harness/tooling columns per model (researched 2026-07-29);
+# API feature flags and modalities are joined live from the OpenRouter catalog
+# snapshot. catalog_id keys into the models catalog.
+MODEL_HARNESS_TOOLS = [
+    {
+        "catalog_id": "moonshotai/kimi-k3",
+        "harness": "Kimi Code CLI; Kimi.com / Kimi Work apps; K3 Swarm Max "
+                   "orchestrator (up to 300 parallel sub-agents)",
+        "third_party": "Claude Code, Cursor, OpenClaw via Anthropic/OpenAI-"
+                       "compatible API - but requires preserved thinking history "
+                       "(verified harnesses only; no mid-session model switches)",
+        "tools": "Web search/fetch, terminal, code execution, vision-in-the-loop "
+                 "(live screenshots), video editing, Widgets + Dashboard in Kimi "
+                 "Work; MCP",
+        "notes": "Weights live on HF since 2026-07-27 (96 shards, ~99K downloads "
+                 "in 2 days); day-0 vLLM support with Moonshot-contributed KDA "
+                 "prefix caching.",
+    },
+    {
+        "catalog_id": "moonshotai/kimi-k2.6",
+        "harness": "Kimi CLI; native Agent Swarm (300 sub-agents, 4,000 steps)",
+        "third_party": "Claude Code, OpenClaw, Cline (Anthropic/OpenAI-compatible)",
+        "tools": "Web search, terminal, code execution, swarm orchestration; MCP; "
+                 "one of only two models here exposing parallel tool calls on "
+                 "OpenRouter",
+        "notes": "Apache-2.0-style open weights available now; HLE-with-tools "
+                 "54.0 led all frontier models at release.",
+    },
+    {
+        "catalog_id": "anthropic/claude-fable-5",
+        "harness": "Claude Code (CLI + SDK) - the industry reference harness; "
+                   "Claude Cowork for knowledge work",
+        "third_party": "Anthropic API only; broad ecosystem targets it (Cursor, "
+                       "OpenClaw, Cline all speak Anthropic protocol)",
+        "tools": "Memory tool, code execution, computer use, web search, "
+                 "programmatic tool calling, context editing / tool-result "
+                 "clearing, compaction, task budgets (beta); MCP. Adaptive "
+                 "thinking always on (effort parameter); no assistant prefill",
+        "notes": "Safety classifiers can reroute cyber/bio/distillation requests "
+                 "to Opus 4.8 (fallback affects <5% of sessions per Anthropic).",
+    },
+    {
+        "catalog_id": "anthropic/claude-sonnet-5",
+        "harness": "Claude Code; Claude.ai apps",
+        "third_party": "Anthropic API ecosystem (same as Fable 5)",
+        "tools": "Same Claude tool suite: memory tool, code execution, computer "
+                 "use, web search, compaction; MCP",
+        "notes": "Mid-tier workhorse at intro pricing ($2/$10 through Aug 2026).",
+    },
+    {
+        "catalog_id": "openai/gpt-5.6-sol",
+        "harness": "Codex suite: CLI, Cloud, VS Code extension, App Server "
+                   "(JSON-RPC); ChatGPT agent surfaces",
+        "third_party": "Responses API; community proxies run it inside Claude "
+                       "Code (some report it codes better there - model/harness "
+                       "entanglement debate)",
+        "tools": "Web search, code interpreter, file search, computer use "
+                 "(OSWorld 2.0 SOTA 62.6%), subagent orchestration (Sol as "
+                 "orchestrator over Terra/Luna; config bug openai/codex#31814), "
+                 "automatic compaction; MCP",
+        "notes": "Models explicitly tuned for the Codex harness; ~25h "
+                 "uninterrupted runs reported.",
+    },
+    {
+        "catalog_id": "openai/gpt-5.5",
+        "harness": "Codex suite (previous flagship)",
+        "third_party": "Responses API ecosystem",
+        "tools": "Web search, code interpreter, file search, computer use; MCP",
+        "notes": "Superseded by GPT-5.6 family for agentic work.",
+    },
+    {
+        "catalog_id": "z-ai/glm-5.2",
+        "harness": "None of its own - by design. GLM Coding Plan ($3-80/mo) "
+                   "plugs into third-party harnesses",
+        "third_party": "Claude Code (Anthropic-native API), OpenClaw, Cline, "
+                       "Cursor; drop-in config documented by Z.ai",
+        "tools": "Function calling with parallel tool calls; dynamic working-"
+                 "memory management for thousands-of-tool-call sessions; MCP",
+        "notes": "Strongest open-weights MCP Atlas score (82.6 on Moonshot's "
+                 "table; 77.0 per Z.ai's own blog).",
+    },
+    {
+        "catalog_id": "deepseek/deepseek-v4-pro",
+        "harness": "None - dual-mode OpenAI + Anthropic-compatible API",
+        "third_party": "Codex-style and Claude Code-style harnesses both work; "
+                       "popular in Kilo Code, OpenClaw, aggregators",
+        "tools": "Function calling via new XML-based DSML schema (replaces "
+                 "JSON); three reasoning modes (non-think/high/max); MCP",
+        "notes": "Agentic tool-use data injected in mid-training, not just "
+                 "post-training.",
+    },
+    {
+        "catalog_id": "deepseek/deepseek-v4-flash",
+        "harness": "None - same dual-mode API as V4 Pro",
+        "third_party": "Same as V4 Pro; the default budget model in many "
+                       "third-party coding agents",
+        "tools": "Same DSML function calling and reasoning modes; MCP",
+        "notes": "Highest real-world tool-call volume of any paid model on "
+                 "OpenRouter (~70M calls/week).",
+    },
+    {
+        "catalog_id": "minimax/minimax-m3",
+        "harness": "MiniMax Agent product; no dedicated CLI",
+        "third_party": "OpenAI/Anthropic-compatible API",
+        "tools": "Native computer use (only open model here with it), video "
+                 "input in tool workflows, function calling; MCP; 24h autonomous "
+                 "runs with ~2,000 tool calls reported",
+        "notes": "Multimodal agent focus (text+image+video input).",
+    },
+    {
+        "catalog_id": "nvidia/nemotron-3-ultra-550b-a55b",
+        "harness": "NVIDIA API / NIM; NeMo Gym ships out-of-the-box harnesses "
+                   "(incl. Claude Code and Hermes) for eval/training",
+        "third_party": "OpenAI-compatible endpoints; runs in standard open "
+                       "harnesses (OpenHands, mini-SWE-agent)",
+        "tools": "Function calling, structured outputs; tuned for TauBench-"
+                 "style conversational tool use (V3 avg 70.9); MCP via harness",
+        "notes": "Optimized for high-throughput agentic serving (300+ tok/s on "
+                 "Blackwell).",
+    },
+    {
+        "catalog_id": "qwen/qwen3.7-max",
+        "harness": "Qwen Chat; DashScope / Model Studio API",
+        "third_party": "Native OpenAI + Anthropic API compatibility (works in "
+                       "Claude Code / Codex-style harnesses)",
+        "tools": "Function calling, extended thinking with preserve_thinking "
+                 "across turns, prompt caching; MCP (leads MCP-Mark per "
+                 "Alibaba); 35h autonomous kernel-optimization run (1,158 tool "
+                 "calls) reported",
+        "notes": "Agent-first positioning; API-only.",
+    },
+    {
+        "catalog_id": "xiaomi/mimo-v2.5",
+        "harness": "Xiaomi AI Studio; MiMo API (Token Plans)",
+        "third_party": "OpenAI-compatible; SGLang/vLLM ship a dedicated 'mimo' "
+                       "tool-call parser for self-hosting",
+        "tools": "Function calling; omnimodal input (text+image+audio+video) "
+                 "usable inside tool loops; MCP",
+        "notes": "Highest-volume open model on OpenRouter after Hy3; ~110M "
+                 "tool calls/week.",
+    },
+    {
+        "catalog_id": "tencent/hy3",
+        "harness": "Tencent Yuanbao apps; Tencent Cloud API",
+        "third_party": "OpenAI-compatible; hosted by GMICloud, Novita, "
+                       "DeepInfra, SiliconFlow etc.",
+        "tools": "Function calling, structured outputs; MCP via harness",
+        "notes": "Free promo tier drove ~140M tool calls/week at peak; 295B/21B "
+                 "MoE (192 experts, top-8).",
+    },
+    {
+        "catalog_id": "google/gemini-3-flash-preview",
+        "harness": "Gemini CLI; AI Studio; Vertex AI Agent Builder",
+        "third_party": "Vertex/AI Studio APIs; Gemini CLI is open-source",
+        "tools": "Google Search grounding, code execution, URL context, "
+                 "function calling; MCP",
+        "notes": "Google's high-volume agentic workhorse tier.",
+    },
+    {
+        "catalog_id": "google/gemini-3.1-pro-preview",
+        "harness": "Gemini CLI; AI Studio; Vertex AI",
+        "third_party": "Same Google API surfaces",
+        "tools": "Google Search grounding, code execution, computer use "
+                 "(preview), function calling; MCP",
+        "notes": "Tops hard-reasoning benchmarks (GPQA 94.3) but trails on "
+                 "agentic harness benchmarks (Terminal-Bench 74.0).",
+    },
+    {
+        "catalog_id": "x-ai/grok-4.5",
+        "harness": "Grok Build (xAI's coding-agent harness); Grok apps / X "
+                   "integration",
+        "third_party": "OpenAI-compatible xAI API",
+        "tools": "Real-time X/web search, code execution, function calling; MCP",
+        "notes": "AA benchmarks it as the Grok 4.5 + Grok Build pair (ties Sol "
+                 "on SWE-Atlas-QnA).",
+    },
+    {
+        "catalog_id": "meta-llama/llama-4-maverick",
+        "harness": "None (no first-party agent product); Meta AI consumer apps "
+                   "use tuned variants",
+        "third_party": "Served by 20+ clouds; used in open harnesses "
+                       "(OpenHands, custom agents)",
+        "tools": "Function calling and structured outputs only - no reasoning-"
+                 "effort controls exposed (pre-reasoning-era design)",
+        "notes": "2025-generation model; still significant volume as a cheap "
+                 "workhorse.",
+    },
+    {
+        "catalog_id": "openai/gpt-oss-120b",
+        "harness": "None first-party; reference Harmony chat format",
+        "third_party": "Runs in most open harnesses; served by 20 providers",
+        "tools": "Function calling, structured outputs, reasoning effort "
+                 "controls; browser/python tool support in the Harmony format",
+        "notes": "OpenAI's open-weights line (Apache 2.0); no first-party "
+                 "agent product.",
+    },
+    {
+        "catalog_id": "stepfun/step-3.7-flash",
+        "harness": "StepFun API / apps",
+        "third_party": "OpenAI-compatible",
+        "tools": "Function calling, structured outputs, reasoning; video input; "
+                 "MCP via harness",
+        "notes": "Budget agentic tier; 894B tokens/week on OpenRouter.",
+    },
+]
+
+
+def enrich_harness_tools(models, rows):
+    byid = {x["id"]: x for x in models if ":" not in x["id"]}
+    canon_rows = {r["slug"]: r for r in rows}
+    out = []
+    for m in MODEL_HARNESS_TOOLS:
+        m = dict(m)
+        e = byid.get(m["catalog_id"])
+        if not e:
+            continue
+        sp = set(e.get("supported_parameters") or [])
+        m["model"] = e["name"]
+        m["developer"] = DEVELOPER_NAMES.get(e["id"].split("/")[0], e["id"].split("/")[0].title())
+        row = canon_rows.get(e["canonical_slug"])
+        m["open"] = row["open"] if row else bool(e.get("hugging_face_id"))
+        m["modalities"] = "+".join(sorted(e["architecture"]["input_modalities"]))
+        m["fc"] = "tools" in sp
+        m["parallel"] = "parallel_tool_calls" in sp
+        m["structured"] = "structured_outputs" in sp or "response_format" in sp
+        m["reasoning"] = "reasoning" in sp or "reasoning_effort" in sp
+        m["context"] = e.get("context_length") or 0
+        m["tokens"] = row["tokens_total"] if row else None
+        out.append(m)
+    return out
+
+
+def write_harness_tools_sheet(wb, ht_rows):
+    ws = wb.create_sheet("Model Harnesses & Tools")
+    ws["A1"] = "Harnesses and tools used by each model"
+    ws["A1"].font = Font(bold=True, size=14)
+    ws["A2"] = ("Per-model view: the harness each model ships with / runs in, and the tools it supports. API feature "
+                "flags and input modalities from the OpenRouter catalog snapshot (2026-07-16); harness and tool-suite "
+                "columns hand-curated from lab docs, researched 2026-07-29.")
+    ws["A2"].font = Font(italic=True, color="595959")
+
+    headers = [
+        "Model", "Developer", "Class", "First-party harness / agent surface",
+        "Third-party harness compatibility", "Built-in / first-party tools",
+        "Input modalities", "Function calling", "Parallel tool calls",
+        "Structured outputs", "Reasoning controls", "Context (tokens)",
+        "Weekly tokens (B)", "Notes",
+    ]
+    hr = 4
+    for c, h in enumerate(headers, 1):
+        ws.cell(row=hr, column=c, value=h)
+    style_header(ws, hr, len(headers))
+    ws.freeze_panes = f"B{hr + 1}"
+    for i, m in enumerate(ht_rows):
+        r = hr + 1 + i
+        vals = [
+            m["model"], m["developer"],
+            "Open-weights" if m["open"] else "Closed",
+            m["harness"], m["third_party"], m["tools"], m["modalities"],
+            "Yes" if m["fc"] else "No",
+            "Yes" if m["parallel"] else "No",
+            "Yes" if m["structured"] else "No",
+            "Yes" if m["reasoning"] else "No",
+            m["context"],
+            m["tokens"] / 1e9 if m["tokens"] else None,
+            m["notes"],
+        ]
+        for c, v in enumerate(vals, 1):
+            cell = ws.cell(row=r, column=c, value=v if v is not None else "—")
+            cell.border = BORDER
+            if c in (4, 5, 6, 14):
+                cell.alignment = Alignment(wrap_text=True, vertical="top")
+            if c == 3:
+                cell.fill = OPEN_FILL if m["open"] else CLOSED_FILL
+            if c in (9,) and v == "Yes":
+                cell.fill = OPEN_FILL
+        ws.cell(row=r, column=12).number_format = "#,##0"
+        if isinstance(ws.cell(row=r, column=13).value, (int, float)):
+            ws.cell(row=r, column=13).number_format = "#,##0.0"
+        ws.row_dimensions[r].height = 92
+    ws.auto_filter.ref = f"A{hr}:N{hr + len(ht_rows)}"
+    autosize(ws, [26, 14, 12, 34, 32, 44, 18, 10, 10, 10, 10, 12, 12, 40])
+
+    nrow = hr + len(ht_rows) + 2
+    notes = [
+        "Function calling / parallel tool calls / structured outputs / reasoning flags reflect what each model "
+        "exposes through the OpenRouter API (catalog snapshot " + WEEK_ENDING + "); first-party APIs may expose more "
+        "(e.g. Anthropic's memory tool and computer use are Claude API features, not OpenRouter parameters).",
+        "Only GLM-5.2 and Kimi K2.6 expose parallel tool calls via OpenRouter; Llama 4 is the only row without "
+        "reasoning-effort controls (pre-reasoning-era design).",
+        "Pattern: closed labs bundle model + harness + tool suite as one product (Claude Code, Codex, Gemini CLI, "
+        "Grok Build); Chinese open-weights labs except Moonshot ship API compatibility instead of harnesses and let "
+        "Claude Code / OpenClaw / Cursor be the surface; Moonshot is the only open-weights lab shipping a full "
+        "first-party harness + swarm orchestrator (Kimi Code, K3 Swarm Max).",
+        "MCP (Model Context Protocol) is supported across effectively all rows, natively or via the harness layer - "
+        "it has become the cross-vendor tool-integration standard.",
+        "Kimi K3 weights shipped on Hugging Face 2026-07-27 as promised (96 safetensors shards); self-hosted K3 can "
+        "now run in any compatible harness, subject to the preserved-thinking requirement.",
+    ]
+    for i, n in enumerate(notes):
+        ws.cell(row=nrow + i, column=1, value=n).font = Font(size=9, color="595959")
+
+
+def write_harness_tools_csv(ht_rows):
+    with open(os.path.join(OUT_CSV_DIR, "model_harnesses_tools.csv"), "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow([
+            "model", "developer", "class", "first_party_harness",
+            "third_party_harness_compatibility", "builtin_tools", "input_modalities",
+            "function_calling", "parallel_tool_calls", "structured_outputs",
+            "reasoning_controls", "context_tokens", "weekly_tokens", "notes",
+        ])
+        for m in ht_rows:
+            w.writerow([
+                m["model"], m["developer"],
+                "open-weights" if m["open"] else "closed",
+                m["harness"], m["third_party"], m["tools"], m["modalities"],
+                m["fc"], m["parallel"], m["structured"], m["reasoning"],
+                m["context"], m["tokens"], m["notes"],
+            ])
+
 
 # ---------------------------------------------------------- Training dataset sizes
 # Pretraining corpus sizes as disclosed by each lab (researched 2026-07-24).
@@ -1738,7 +2062,8 @@ def write_params_benchmarks_sheet(wb, pb_rows):
 
 
 def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows,
-                   tu_rows, top_callers, total_calls, cloud_rows, cloud_cats, cloud_meta):
+                   tu_rows, top_callers, total_calls, cloud_rows, cloud_cats, cloud_meta,
+                   ht_rows):
     wb = Workbook()
 
     # ---- Sheet 1: Summary (open vs closed)
@@ -1913,6 +2238,9 @@ def write_workbook(rows, summary, devs, grand_total, excluded_tokens, pb_rows,
     # ---- Sheet 10: Training dataset sizes
     write_training_data_sheet(wb)
 
+    # ---- Sheet 11: Per-model harnesses & tools
+    write_harness_tools_sheet(wb, ht_rows)
+
     wb.save(OUT_XLSX)
 
 
@@ -2030,8 +2358,10 @@ def main():
     pb_rows = enrich_params_benchmarks(models, rows)
     tu_rows, top_callers, total_calls = enrich_tool_use(catalog, rows)
     cloud_rows, cloud_cats, cloud_meta = build_cloud_split(rows)
+    ht_rows = enrich_harness_tools(models, rows)
     write_workbook(rows, summary, devs, grand_total, excluded, pb_rows,
-                   tu_rows, top_callers, total_calls, cloud_rows, cloud_cats, cloud_meta)
+                   tu_rows, top_callers, total_calls, cloud_rows, cloud_cats, cloud_meta,
+                   ht_rows)
     write_csvs(rows, summary, devs, grand_total)
     write_params_benchmarks_csv(pb_rows)
     write_tool_use_csv(tu_rows)
@@ -2039,6 +2369,7 @@ def main():
     write_harness_rl_csv()
     write_quant_kld_csv()
     write_training_data_csv()
+    write_harness_tools_csv(ht_rows)
     tables_path = write_csv_compilation_workbook()
     print(f"Wrote {tables_path}")
 

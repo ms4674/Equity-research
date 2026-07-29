@@ -50,6 +50,7 @@ of estimated dollar spend.
 | Harnesses & RL Envs | Agent harness and RL-environment comparison across 8 labs (Kimi K3, Claude Fable 5, GPT-5.6 Sol, GLM-5/5.2, DeepSeek V4, Nemotron 3, MiniMax M3, Qwen3.7 Max): first-party harnesses, API compatibility, RL algorithms and training stacks, disclosed RL environments, and openness of each post-training stack, plus a shared-infrastructure reference (Claude Code, Codex, Kimi Code, Terminus-2, Harbor, RepoLaunch, NeMo Gym, slime) |
 | Quantization & KLD | Quantization-fidelity (KL divergence) comparison: per-model release precision and QAT status, whether KLD is externally measurable, and published KLD at native/4-bit/2-bit tiers for Kimi K3, Kimi K2.6, DeepSeek V4 Pro/Flash, GLM-5.2, MiniMax M3, Nemotron 3 Ultra vs unmeasurable closed models; includes the measured DeepSeek V4 Flash KLD ladder and a 4-bit format KLD reference table |
 | Training Data | Vendor-disclosed pretraining corpus sizes for 15 model families (MiMo-V2.5 48T, Llama 4 Scout 40T, DeepSeek V4 32T, GLM-5 27T, Nemotron 3 25T, Kimi K2 15.5T; closed labs undisclosed), with tokens-per-parameter ratios, data-pipeline notes, and a disclosed-corpus bar chart |
+| Model Harnesses & Tools | Per-model matrix for 20 models: first-party harness/agent surface, third-party harness compatibility, built-in tool suite (web search, code execution, computer use, memory, MCP...), input modalities, and API feature flags (function calling, parallel tool calls, structured outputs, reasoning controls) joined from the OpenRouter catalog |
 
 CSV versions of every table are in [`csv/`](csv/).
 
@@ -71,6 +72,13 @@ CSV versions of every table are in [`csv/`](csv/).
   models' global volume share is understated relative to what these numbers show.
   Token counts use each upstream provider's own tokenizer, so cross-provider token
   comparisons are approximate.
+- **Model Harnesses & Tools sheet:** API feature flags (function calling, parallel
+  tool calls, structured outputs, reasoning controls) and input modalities are joined
+  from the OpenRouter catalog snapshot and reflect what each model exposes *through
+  OpenRouter*; first-party APIs may expose more (e.g. Anthropic's memory tool and
+  computer use are Claude API features). Harness and tool-suite columns are
+  hand-curated from lab docs (researched 2026-07-29, after Kimi K3's weights shipped
+  on 2026-07-27).
 - **Training Data sheet:** pretraining corpus sizes are vendor-reported and not
   independently verifiable; token counts are not apples-to-apples across labs
   (different tokenizers, dedup, multimodal counting). Kimi K3's corpus is undisclosed
