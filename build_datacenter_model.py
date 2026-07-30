@@ -361,6 +361,37 @@ AI_CAPEX_LAG_QUARTERS = {
 
 
 # ============================================================
+# ROIC DATA — Operating Margins, Depreciation, Tax Rates
+# ============================================================
+
+# Operating margins on AI revenue (hyperscalers) / total revenue (neoclouds)
+# Hyperscalers: margin on AI-specific cloud services; improving with scale
+# Neoclouds: overall operating margin; initially negative/low, improving toward profitability
+# Format: [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026E, 2027E, 2028E, 2029E, 2030E]
+AI_OPERATING_MARGIN = {
+    "Amazon (AWS)":       [0.00, 0.05, 0.10, 0.15, 0.18, 0.22, 0.26, 0.30, 0.32, 0.34, 0.36, 0.37, 0.38],
+    "Microsoft (Azure)":  [0.00, 0.05, 0.12, 0.18, 0.22, 0.28, 0.32, 0.36, 0.38, 0.40, 0.42, 0.43, 0.44],
+    "Google (GCP)":       [0.00, 0.02, 0.05, 0.08, 0.12, 0.16, 0.22, 0.26, 0.29, 0.32, 0.34, 0.36, 0.38],
+    "Meta":               [0.00, 0.30, 0.35, 0.38, 0.35, 0.38, 0.42, 0.44, 0.45, 0.46, 0.47, 0.48, 0.48],
+    "Oracle Cloud":       [0.00, 0.00, 0.00, 0.02, 0.05, 0.10, 0.18, 0.24, 0.28, 0.32, 0.35, 0.37, 0.38],
+    "Apple":              [0.00, 0.00, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.38, 0.40, 0.42, 0.44, 0.45],
+    "CoreWeave":          [0.00, 0.00, 0.00, 0.00,-0.50,-0.20, 0.02, 0.08, 0.12, 0.16, 0.20, 0.23, 0.25],
+    "Lambda":             [0.00, 0.00, 0.00, 0.00,-0.80,-0.30,-0.05, 0.04, 0.08, 0.12, 0.15, 0.18, 0.20],
+    "Crusoe Energy":      [0.00, 0.00, 0.00, 0.00,-0.60,-0.25,-0.02, 0.05, 0.09, 0.13, 0.16, 0.19, 0.22],
+    "Voltage Park":       [0.00, 0.00, 0.00, 0.00, 0.00,-0.40,-0.10, 0.02, 0.06, 0.10, 0.14, 0.17, 0.20],
+    "Together AI":        [0.00, 0.00, 0.00, 0.00, 0.00,-0.60,-0.20,-0.05, 0.03, 0.08, 0.12, 0.15, 0.18],
+    "Applied Digital":    [0.00, 0.00, 0.00, 0.00,-0.50,-0.20, 0.00, 0.05, 0.09, 0.13, 0.16, 0.19, 0.22],
+}
+
+# Effective tax rate for NOPAT calculation
+EFFECTIVE_TAX_RATE = 0.21
+
+# Average useful life of DC assets for depreciation (years)
+# Used to compute accumulated depreciation and net invested capital
+DC_ASSET_USEFUL_LIFE = 7  # blended: servers 4-5 yrs, building/power 15-20 yrs → ~7yr avg
+
+
+# ============================================================
 # POWER SUPPLY & GENERATION DATA
 # ============================================================
 
@@ -2502,6 +2533,308 @@ def build_capex_decomposition_sheet(wb):
     return ws
 
 
+def build_roic_sheet(wb):
+    """Build the ROIC tab — AI revenue (hyperscalers) / total revenue (neoclouds) vs invested capital."""
+    ws = wb.create_sheet(title="ROIC Analysis")
+    num_cols = 1 + len(YEARS)
+
+    ws.column_dimensions['A'].width = 32
+    for i in range(len(YEARS)):
+        ws.column_dimensions[get_column_letter(i + 2)].width = 12
+
+    row = 1
+    write_title_row(ws, row, "Return on Invested Capital (ROIC) — AI Revenue for Hyperscalers, Total Revenue for Neoclouds", num_cols)
+    row += 1
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=num_cols)
+    note = ws.cell(row=row, column=1,
+        value="ROIC = NOPAT / Invested Capital  |  NOPAT = AI Op. Income x (1 - Tax)  |  Invested Capital = Cum. AI Capex - Accum. Depreciation  |  Yellow = 2026E+ Forecast")
+    apply_cell_style(note, font=NOTE_FONT)
+    row += 2
+
+    # Companies for ROIC: hyperscalers use AI revenue, neoclouds use total revenue
+    roic_companies = HYPERSCALERS + NEOCLOUDS
+
+    # ====================================================================
+    # SECTION 1: Revenue Base ($B)
+    # ====================================================================
+    write_section_header(ws, row, "Revenue Base ($B) — AI Revenue for Hyperscalers, Total Revenue for Neoclouds", num_cols)
+    row += 1
+    rev_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    rev_rows = []
+    # For hyperscalers use AI_REVENUE_DATA, for neoclouds use REVENUE_DATA (which is ~100% AI)
+    for idx, company in enumerate(roic_companies):
+        if company in HYPERSCALERS:
+            rev = AI_REVENUE_DATA[company]
+        else:
+            rev = REVENUE_DATA[company]
+        write_data_row(ws, row, company, rev, fmt="#,##0.0", alt=(idx % 2 == 1))
+        rev_rows.append(row)
+        row += 1
+    row += 1
+
+    # ====================================================================
+    # SECTION 2: Operating Margin (%)
+    # ====================================================================
+    write_section_header(ws, row, "Operating Margin on AI/Cloud Revenue (%)", num_cols)
+    row += 1
+    margin_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    margin_rows = []
+    for idx, company in enumerate(roic_companies):
+        margins = AI_OPERATING_MARGIN[company]
+        write_data_row(ws, row, company, margins, fmt="0.0%", alt=(idx % 2 == 1))
+        margin_rows.append(row)
+        row += 1
+    row += 1
+
+    # ====================================================================
+    # SECTION 3: NOPAT ($B)
+    # ====================================================================
+    write_section_header(ws, row, "NOPAT ($B) — Net Operating Profit After Tax [Revenue x Margin x (1 - 21% Tax)]", num_cols)
+    row += 1
+    nopat_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    nopat_data = {}
+    nopat_rows = []
+    for idx, company in enumerate(roic_companies):
+        if company in HYPERSCALERS:
+            rev = AI_REVENUE_DATA[company]
+        else:
+            rev = REVENUE_DATA[company]
+        margins = AI_OPERATING_MARGIN[company]
+        nopat_vals = [round(rev[y] * margins[y] * (1 - EFFECTIVE_TAX_RATE), 2) for y in range(len(YEARS))]
+        nopat_data[company] = nopat_vals
+        write_data_row(ws, row, company, nopat_vals, fmt="#,##0.0", alt=(idx % 2 == 1))
+        nopat_rows.append(row)
+        row += 1
+    row += 1
+
+    # ====================================================================
+    # SECTION 4: Invested Capital ($B)
+    # ====================================================================
+    write_section_header(ws, row,
+        "Invested Capital ($B) — Cumulative AI Capex Less Accumulated Depreciation ({}yr avg life)".format(DC_ASSET_USEFUL_LIFE), num_cols)
+    row += 1
+    ic_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    ic_data = {}
+    ic_rows = []
+    for idx, company in enumerate(roic_companies):
+        # Use AI_CAPEX_DATA for both hyperscalers and neoclouds (AI-specific infra investment)
+        capex_series = AI_CAPEX_DATA[company]
+        # Compute net invested capital: cumulative capex - accumulated straight-line depreciation
+        # Each year's capex depreciates over DC_ASSET_USEFUL_LIFE years
+        ic_vals = []
+        for y in range(len(YEARS)):
+            gross = 0.0
+            accum_dep = 0.0
+            for prior_y in range(y + 1):
+                c = capex_series[prior_y]
+                gross += c
+                years_in_service = y - prior_y
+                dep = min(c, c * years_in_service / DC_ASSET_USEFUL_LIFE)
+                accum_dep += dep
+            net_ic = gross - accum_dep
+            ic_vals.append(round(net_ic, 1))
+        ic_data[company] = ic_vals
+        write_data_row(ws, row, company, ic_vals, fmt="#,##0.0", alt=(idx % 2 == 1))
+        ic_rows.append(row)
+        row += 1
+    row += 1
+
+    # ====================================================================
+    # SECTION 5: ROIC (%)
+    # ====================================================================
+    write_section_header(ws, row, "ROIC (%) — NOPAT / Average Invested Capital", num_cols)
+    row += 1
+    roic_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    roic_data = {}
+    roic_rows = []
+    for idx, company in enumerate(roic_companies):
+        roic_vals = []
+        for y in range(len(YEARS)):
+            nopat_y = nopat_data[company][y]
+            # Average invested capital (current + prior / 2), handle year 0
+            ic_curr = ic_data[company][y]
+            ic_prev = ic_data[company][y-1] if y > 0 else 0
+            avg_ic = (ic_curr + ic_prev) / 2
+            roic_vals.append(round(nopat_y / avg_ic, 4) if avg_ic > 0.5 else 0)
+        roic_data[company] = roic_vals
+        write_data_row(ws, row, company, roic_vals, fmt="0.0%", alt=(idx % 2 == 1))
+        roic_rows.append(row)
+        row += 1
+    row += 1
+
+    # ====================================================================
+    # SECTION 6: Incremental ROIC (%)
+    # ====================================================================
+    write_section_header(ws, row, "Incremental ROIC (%) — ΔNOPATᵧ / ΔInvested Capitalᵧ₋₁ (Return on New Capital Deployed)", num_cols)
+    row += 1
+    inc_roic_header = row
+    write_column_headers(ws, row, ["Company"] + YEAR_LABELS)
+    row += 1
+
+    inc_roic_rows = []
+    for idx, company in enumerate(roic_companies):
+        inc_vals = [0]
+        for y in range(1, len(YEARS)):
+            delta_nopat = nopat_data[company][y] - nopat_data[company][y-1]
+            delta_ic = ic_data[company][y] - ic_data[company][y-1]
+            if delta_ic > 0.5:
+                inc_vals.append(round(delta_nopat / delta_ic, 4))
+            else:
+                inc_vals.append(0)
+        write_data_row(ws, row, company, inc_vals, fmt="0.0%", alt=(idx % 2 == 1))
+        inc_roic_rows.append(row)
+        row += 1
+    row += 1
+
+    # ====================================================================
+    # SECTION 7: ROIC Summary Table
+    # ====================================================================
+    write_section_header(ws, row, "ROIC Summary — Key Metrics by Company", num_cols)
+    row += 1
+
+    sum_headers = ["Company", "2024 ROIC", "2025 ROIC", "2026E ROIC", "2028E ROIC", "2030E ROIC",
+                   "2025 NOPAT ($B)", "2025 IC ($B)", "Incr. ROIC 2025", "Incr. ROIC 2030E"]
+    for i, h in enumerate(sum_headers):
+        cell = ws.cell(row=row, column=1 + i, value=h)
+        apply_cell_style(cell, font=HEADER_FONT, fill=HEADER_FILL, border=THIN_BORDER,
+                         alignment=Alignment(horizontal="center", vertical="center", wrap_text=True))
+    ws.row_dimensions[row].height = 28
+    row += 1
+
+    # Year indices: 2024=6, 2025=7, 2026=8, 2028=10, 2030=12
+    yr_idx = {"2024": 6, "2025": 7, "2026E": 8, "2028E": 10, "2030E": 12}
+    for idx, company in enumerate(roic_companies):
+        alt = idx % 2 == 1
+        nopat_y = nopat_data[company]
+        ic_y = ic_data[company]
+        roic_y = roic_data[company]
+        # Incremental ROIC
+        def get_inc_roic(y):
+            if y == 0:
+                return 0
+            dn = nopat_y[y] - nopat_y[y-1]
+            dic = ic_y[y] - ic_y[y-1]
+            return round(dn / dic, 4) if dic > 0.5 else 0
+
+        vals = [
+            company,
+            roic_y[6], roic_y[7], roic_y[8], roic_y[10], roic_y[12],
+            round(nopat_y[7], 1), round(ic_y[7], 1),
+            get_inc_roic(7), get_inc_roic(12),
+        ]
+
+        for ci, v in enumerate(vals):
+            cell = ws.cell(row=row, column=1 + ci, value=v)
+            fmt = "#,##0.0"
+            if ci == 0:
+                apply_cell_style(cell, font=COMPANY_FONT, fill=ALT_ROW_FILL if alt else None,
+                                 border=THIN_BORDER, alignment=Alignment(horizontal="left"))
+                continue
+            elif ci in [1, 2, 3, 4, 5, 8, 9]:
+                fmt = "0.0%"
+            apply_cell_style(cell, font=DATA_FONT, fill=ALT_ROW_FILL if alt else None,
+                             border=THIN_BORDER, number_format=fmt,
+                             alignment=Alignment(horizontal="center"))
+        row += 1
+    row += 2
+
+    # ====================================================================
+    # SECTION 8: Key Observations
+    # ====================================================================
+    write_section_header(ws, row, "Key ROIC Observations", num_cols)
+    row += 1
+    observations = [
+        "MICROSOFT leads in ROIC among hyperscalers: strong Copilot/OpenAI monetization + high margin (36-44%) on AI cloud revenue yields the highest return on AI invested capital; ROIC crosses 20%+ by 2027-2028E",
+        "META has the highest absolute ROIC due to its unique model: AI capex improves ad targeting with very high incremental margins (44-48%); internal AI deployments have minimal sales/GTM cost vs external cloud",
+        "AMAZON (AWS) shows improving ROIC trajectory: AI margins expanding from 26% (2024) to 38% (2030E) as Bedrock/Trainium/Inferentia scale; ROIC inflects positive by 2024-2025 and improves steadily",
+        "ORACLE has the fastest ROIC improvement rate: starting from near-zero in 2023, expanding rapidly as OCI AI contracts scale against a still-modest capital base; by 2030E ROIC approaches 20-25%",
+        "NEOCLOUDS show low but improving ROIC: heavy capex front-loading (GPU fleet) with thin margins initially; CoreWeave and Lambda achieving positive NOPAT by 2025; ROIC expected at 5-10% by 2028-2030E as margins normalize",
+        "INCREMENTAL ROIC is the key forward-looking metric: shows the return on the NEXT dollar invested; hyperscalers showing 15-25%+ incremental ROIC by 2027-2030E, validating continued AI capex acceleration",
+        "APPLE stands out with very high ROIC due to low AI capex relative to the massive services revenue uplift enabled by Apple Intelligence; atypical model vs pure cloud providers",
+        "Key assumption: invested capital uses 7-year blended depreciation life (servers 4-5yr, buildings 15-20yr); different depreciation assumptions materially affect ROIC levels",
+    ]
+    for obs in observations:
+        ws.cell(row=row, column=1, value="•")
+        ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=num_cols)
+        cell = ws.cell(row=row, column=2, value=obs)
+        apply_cell_style(cell, font=Font(name="Calibri", size=9),
+                         alignment=Alignment(wrap_text=True, vertical="top"))
+        ws.row_dimensions[row].height = 30
+        row += 1
+    row += 2
+
+    # ====================================================================
+    # CHARTS
+    # ====================================================================
+    chart_row = row
+
+    # Chart 1: ROIC — Hyperscalers
+    hyper_roic_rows = roic_rows[:6]
+    add_line_chart(ws, "ROIC (%) — Hyperscalers (AI Revenue Based)",
+                   roic_header, hyper_roic_rows, HYPERSCALERS,
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row, chart_col=1, width=26, height=15)
+
+    # Chart 2: ROIC — Neoclouds
+    neo_roic_rows = roic_rows[6:]
+    add_line_chart(ws, "ROIC (%) — Neoclouds (Total Revenue Based)",
+                   roic_header, neo_roic_rows, NEOCLOUDS,
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row, chart_col=10, width=24, height=15)
+
+    chart_row2 = chart_row + 17
+
+    # Chart 3: NOPAT — Key companies
+    focus = ["Amazon (AWS)", "Microsoft (Azure)", "Google (GCP)", "Meta", "Oracle Cloud", "CoreWeave"]
+    focus_nopat_rows = [nopat_rows[roic_companies.index(c)] for c in focus]
+    add_line_chart(ws, "NOPAT ($B) — Key Companies",
+                   nopat_header, focus_nopat_rows, focus,
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row2, chart_col=1, width=26, height=15)
+
+    # Chart 4: Invested Capital — Key companies
+    focus_ic_rows = [ic_rows[roic_companies.index(c)] for c in focus]
+    add_line_chart(ws, "Net Invested Capital ($B) — Key Companies",
+                   ic_header, focus_ic_rows, focus,
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row2, chart_col=10, width=24, height=15)
+
+    chart_row3 = chart_row2 + 17
+
+    # Chart 5: Incremental ROIC — Hyperscalers
+    add_line_chart(ws, "Incremental ROIC (%) — Hyperscalers",
+                   inc_roic_header, hyper_roic_rows[:6],
+                   HYPERSCALERS,
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row3, chart_col=1, width=26, height=15)
+
+    # Chart 6: Operating Margins
+    focus_margin_rows = [margin_rows[roic_companies.index(c)] for c in focus]
+    add_line_chart(ws, "AI Operating Margins (%) — Key Companies",
+                   margin_header, focus_margin_rows, focus,
+                   min_col=2, max_col=1+len(YEARS),
+                   chart_row=chart_row3, chart_col=10, width=24, height=15)
+
+    ws.freeze_panes = "B1"
+    ws.sheet_properties.tabColor = "006100"  # Dark green for returns
+    return ws
+
+
 def build_assumptions_sheet(wb):
     """Build an Assumptions & Sources sheet."""
     ws = wb.create_sheet(title="Assumptions & Sources")
@@ -2564,6 +2897,18 @@ def build_assumptions_sheet(wb):
             "Supply chain TAM exceeds operator capex because it includes maintenance, refresh, and software",
             "Revenue multiplier (TAM/Capex) reflects that capex flows through multiple vendor layers",
             "Key supply chain bottlenecks: GPU supply, transformer manufacturing, skilled labor, power",
+        ]),
+        ("ROIC Analysis Assumptions", [
+            "ROIC = NOPAT / Average Invested Capital; measures the after-tax return generated per dollar of capital invested in AI infrastructure",
+            "Revenue base: AI-specific revenue for hyperscalers (cloud AI services, Copilot, etc.); total revenue for neoclouds (which is ~100% AI/GPU-as-a-service)",
+            "Operating margins estimated from segment-level disclosures where available (AWS, Azure, GCP); otherwise based on peer margins and management commentary",
+            "Meta margin reflects AI-attributable ad revenue uplift — high margin because AI improves existing ad platform vs building new service from scratch",
+            "Neocloud margins start negative (heavy COGS from GPU depreciation + power costs) and improve toward 20-25% at scale as utilization rises",
+            "Tax rate: 21% effective (US federal corporate rate); does not account for R&D credits, international structures, or NOL carryforwards",
+            "Invested capital: cumulative AI capex less accumulated straight-line depreciation at 7-year blended useful life",
+            "7-year useful life is blended average: GPU servers 4-5 years, power/cooling infrastructure 12-15 years, buildings 20+ years",
+            "Incremental ROIC = change in NOPAT / change in invested capital; captures the marginal return on each new dollar invested",
+            "ROIC levels are sensitive to depreciation assumptions; shorter useful life → lower IC → higher ROIC (and vice versa)",
         ]),
         ("Capex Decomposition Assumptions", [
             "Component price indices use 2020 as base year (index = 100); chosen because 2020 was pre-inflation, pre-AI-boom baseline",
@@ -2685,6 +3030,9 @@ def main():
 
     print("Building Capex Decomposition sheet...")
     build_capex_decomposition_sheet(wb)
+
+    print("Building ROIC Analysis sheet...")
+    build_roic_sheet(wb)
 
     print("Building Assumptions sheet...")
     build_assumptions_sheet(wb)
