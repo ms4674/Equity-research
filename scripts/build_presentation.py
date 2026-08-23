@@ -269,6 +269,92 @@ def chart_microsoft():
 
 
 # ---------------------------------------------------------------------------
+# Chart 8: GitHub commits by agent (two panels)
+# ---------------------------------------------------------------------------
+def chart_github():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.4, 5.0),
+                                   gridspec_kw={"width_ratios": [1.35, 1]})
+    agents = ["Codex", "OpenHands", "CodeRabbit", "Devin", "Aider", "Jules",
+              "Replit", "Claude Code"]
+    commits = [731, 25676, 34940, 98493, 196132, 215804, 314779, 886122]
+    colors = [BLUE, GRAY, GREEN, GRAY, GRAY, GRAY, ORANGE, NAVY]
+    bars = ax1.barh(agents, commits, color=colors, height=0.62)
+    ax1.set_xscale("log")
+    ax1.set_xlim(300, 4e6)
+    fmt = lambda v: f"{v/1e3:.0f}K" if v >= 10000 else f"{v:,}"
+    for b, v in zip(bars, commits):
+        ax1.annotate(fmt(v), (v, b.get_y() + b.get_height() / 2), xytext=(5, 0),
+                     textcoords="offset points", va="center", fontsize=10.5,
+                     fontweight="bold", color=NAVY)
+    ax1.set_title("Attributed commits, Dec '25 - Apr '26 (log scale)\nClaude Code = 50% of all AI-attributed commits",
+                  fontsize=12.5, fontweight="bold", color=NAVY)
+    ax1.annotate("Codex is PR-native: 814,522 PRs\nbut near-zero commit traces",
+                 xy=(0.42, 0.06), xycoords="axes fraction", fontsize=10, color=BLUE)
+
+    owners = ["Devin +\nWindsurf", "GitHub\nCopilot", "Codex", "Claude\nCode"]
+    units = [0.256, 3.8, 5.1, 12.5]
+    colors2 = [GRAY, "#9DC3E6", BLUE, NAVY]
+    bars2 = ax2.bar(owners, units, color=colors2, width=0.6)
+    for b, v in zip(bars2, units):
+        ax2.annotate(f"{v}M", (b.get_x() + b.get_width() / 2, v), xytext=(0, 5),
+                     textcoords="offset points", ha="center", fontsize=11.5,
+                     fontweight="bold", color=NAVY)
+    ax2.set_title("All-time attributed units, commits + PRs\n(millions, Aug '26)",
+                  fontsize=12.5, fontweight="bold", color=NAVY)
+    ax2.set_ylim(0, 14.5)
+    ax2.tick_params(axis="x", labelsize=10)
+    fig.text(0.01, -0.04, "Attribution undercounts silent agents: Cursor and IDE Copilot do not sign commits; "
+             "Codex's PR marker stopped appearing Nov '25. Copilot SWE agent: 1.13M commits cumulative through Oct '25 (different window).",
+             fontsize=9.5, color=GRAY)
+    fig.tight_layout(w_pad=3)
+    return save(fig, "github.png")
+
+
+# ---------------------------------------------------------------------------
+# Chart 9: Reasoning tokens by agent workload (two panels)
+# ---------------------------------------------------------------------------
+def chart_reasoning():
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.4, 5.0))
+
+    cats = ["Q1 2025", "Late 2025"]
+    share = [2, 52]
+    bars = ax1.bar(cats, share, color=["#9DC3E6", NAVY], width=0.45)
+    for b, v, lb in zip(bars, share, ["~0-2%", ">50%"]):
+        ax1.annotate(lb, (b.get_x() + b.get_width() / 2, v), xytext=(0, 5),
+                     textcoords="offset points", ha="center", fontsize=13,
+                     fontweight="bold", color=NAVY)
+    ax1.set_title("Share of OpenRouter tokens served by\nreasoning-optimized models",
+                  fontsize=12.5, fontweight="bold", color=NAVY)
+    ax1.set_ylim(0, 62)
+    ax1.set_ylabel("% of routed tokens")
+    ax1.annotate("Completion tokens per request ~3x,\nmostly reasoning tokens;\ntop reasoning models are code-oriented\n(Grok Code Fast 1, Gemini 2.5 Pro/Flash)",
+                 xy=(0.04, 0.95), xycoords="axes fraction", va="top", fontsize=10,
+                 color=GRAY)
+
+    labels = ["Agentic SWE task\n(token type)", "Initial coding\n(stage)", "Code review\n(stage)",
+              "Documentation\n(stage)"]
+    reasoning = [21.6, 35, 23, 6]
+    other = [100 - r for r in reasoning]
+    x = range(len(labels))
+    ax2.bar(x, reasoning, color=ORANGE, width=0.58, label="Reasoning tokens")
+    ax2.bar(x, other, bottom=reasoning, color="#D9D9D9", width=0.58, label="Input + output tokens")
+    for i, r in enumerate(reasoning):
+        ax2.annotate(f"{r}%", (i, r), xytext=(0, 3), textcoords="offset points",
+                     ha="center", fontsize=11.5, fontweight="bold", color="#833C00")
+    ax2.set_xticks(list(x))
+    ax2.set_xticklabels(labels, fontsize=9.5)
+    ax2.set_title("Reasoning share of agentic coding tokens\n(ChatDev + GPT-5, 30 real tasks)",
+                  fontsize=12.5, fontweight="bold", color=NAVY)
+    ax2.set_ylim(0, 112)
+    ax2.legend(loc="upper right", frameon=False, fontsize=10)
+    fig.text(0.01, -0.04, "Full task mix: input 53.9% / output 24.4% / reasoning 21.6%; 17K-40K reasoning tokens per task. "
+             "Code review alone consumes 59.4% of all task tokens; reads/navigation are 76% of single-agent loop tokens.",
+             fontsize=9.5, color=GRAY)
+    fig.tight_layout(w_pad=3)
+    return save(fig, "reasoning.png")
+
+
+# ---------------------------------------------------------------------------
 # PPTX assembly
 # ---------------------------------------------------------------------------
 prs = Presentation()
@@ -400,6 +486,14 @@ chart_slide(
     "Microsoft: agent adoption at platform scale",
     "M365 Copilot seats and GitHub Copilot users/subscribers; Agent 365 registered ~40M agents in its first two months",
     chart_microsoft(), "Microsoft FY26 Q2/Q3/Q4 earnings; Axis Intelligence  [#7, 36, 37]")
+chart_slide(
+    "GitHub commits: which agents actually ship code",
+    "Multi-method census of 180M repositories (WoC V2604) plus all-time attribution tracking; channels differ by agent",
+    chart_github(), "arXiv 2606.24429 census; Amplifying.ai; JetBrains survey  [#41, 42, 43]")
+chart_slide(
+    "Reasoning tokens: now the default mode for agentic work",
+    "Reasoning-optimized models serve the majority of routed tokens; ~22% of agentic coding task tokens are reasoning",
+    chart_reasoning(), "OpenRouter State of AI; arXiv 2601.14470 Tokenomics study  [#26, 44, 45]")
 chart_slide(
     "Token throughput: the clearest demand signal",
     "Google platform-wide monthly tokens, ~330x in two years; agentic workloads are the driver (do not sum reference points)",

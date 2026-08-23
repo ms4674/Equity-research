@@ -39,3 +39,13 @@ id,publisher,title,url
 38,Presenc AI,Medical AI Tools Landscape 2026 (ambient scribes ~$600M 2025 revenue),https://presenc.ai/research/medical-ai-tools-landscape-2026
 39,AI Funding Tracker,Top AI Agent Startups 2026 (Funding & Valuation),https://aifundingtracker.com/top-ai-agent-startups/
 40,THE DAILY BRIEF (beri.net),Why SpaceX Paid $60B for Cursor: $4B ARR (June 2026),https://www.beri.net/article/spacex-cursor-60b-acquisition-2026
+41,arXiv 2606.24429,Detecting AI Coding Agents in Open Source: A Validated Multi-Method Census of 180M Repositories (WoC V2510/V2604),https://www.alphaxiv.org/abs/2606.24429
+42,Amplifying.ai,Coding Agents By Owner: all-time attributed commits + PRs per agent,https://amplifying.ai/coding-agents/public-companies
+43,JetBrains Research,"AI Coding Agents: Adoption Trends (Developer Ecosystem Survey, Aug 2026)",https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/
+44,arXiv 2601.14470,Tokenomics: Quantifying Where Tokens Are Used in Agentic Software Engineering (ChatDev + GPT-5),https://doi.org/10.48550/arxiv.2601.14470
+45,SaaSCity,"59% of AI Agent Tokens Go to Code Review, Not Code Generation (Tokenomics coverage)",https://saascity.io/blog/tokenomics-quantifying-tokens-agentic-software-engineering-2026
+46,unerr,Token optimization for AI coding agents (SWE-Pruner: reads 76.1% of agent tokens),https://unerr.dev/blog/token-optimization-coding-agents
+47,Augment Code,AI Coding Cost Analysis: Where Token Spend Really Goes in an Agent Loop,https://www.augmentcode.com/guides/ai-coding-cost-analysis-agent-token-spend
+48,arXiv 2601.17406,Fingerprinting AI Coding Agents on GitHub (AIDev-pop PR mix by agent),https://doi.org/10.48550/arxiv.2601.17406
+49,arXiv 2507.15003,The Rise of AI Teammates in SE 3.0 (agent attribution channels),https://arxiv.org/html/2507.15003v1
+50,arXiv 2607.03691,Scaffolding Evolution & Coding Agent Quality (failed tasks consume 2.7x tokens),https://doi.org/10.48550/arxiv.2607.03691

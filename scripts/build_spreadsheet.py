@@ -63,6 +63,147 @@ SOURCES = [
     (38, "Presenc AI", "Medical AI Tools Landscape 2026 (ambient scribes ~$600M 2025 revenue)", "https://presenc.ai/research/medical-ai-tools-landscape-2026"),
     (39, "AI Funding Tracker", "Top AI Agent Startups 2026 (Funding & Valuation)", "https://aifundingtracker.com/top-ai-agent-startups/"),
     (40, "THE DAILY BRIEF (beri.net)", "Why SpaceX Paid $60B for Cursor: $4B ARR (June 2026)", "https://www.beri.net/article/spacex-cursor-60b-acquisition-2026"),
+    (41, "arXiv 2606.24429", "Detecting AI Coding Agents in Open Source: A Validated Multi-Method Census of 180M Repositories (WoC V2510/V2604)", "https://www.alphaxiv.org/abs/2606.24429"),
+    (42, "Amplifying.ai", "Coding Agents By Owner: all-time attributed commits + PRs per agent", "https://amplifying.ai/coding-agents/public-companies"),
+    (43, "JetBrains Research", "AI Coding Agents: Adoption Trends (Developer Ecosystem Survey, Aug 2026)", "https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/"),
+    (44, "arXiv 2601.14470", "Tokenomics: Quantifying Where Tokens Are Used in Agentic Software Engineering (ChatDev + GPT-5)", "https://doi.org/10.48550/arxiv.2601.14470"),
+    (45, "SaaSCity", "59% of AI Agent Tokens Go to Code Review, Not Code Generation (Tokenomics coverage)", "https://saascity.io/blog/tokenomics-quantifying-tokens-agentic-software-engineering-2026"),
+    (46, "unerr", "Token optimization for AI coding agents (SWE-Pruner: reads 76.1% of agent tokens)", "https://unerr.dev/blog/token-optimization-coding-agents"),
+    (47, "Augment Code", "AI Coding Cost Analysis: Where Token Spend Really Goes in an Agent Loop", "https://www.augmentcode.com/guides/ai-coding-cost-analysis-agent-token-spend"),
+    (48, "arXiv 2601.17406", "Fingerprinting AI Coding Agents on GitHub (AIDev-pop PR mix by agent)", "https://doi.org/10.48550/arxiv.2601.17406"),
+    (49, "arXiv 2507.15003", "The Rise of AI Teammates in SE 3.0 (agent attribution channels)", "https://arxiv.org/html/2507.15003v1"),
+    (50, "arXiv 2607.03691", "Scaffolding Evolution & Coding Agent Quality (failed tasks consume 2.7x tokens)", "https://doi.org/10.48550/arxiv.2607.03691"),
+]
+
+# ---------------------------------------------------------------------------
+# Reasoning tokens by agent type / workload
+# Fields: agent_type, metric, value, as_of, context, sources
+# ---------------------------------------------------------------------------
+REASONING_TOKENS = [
+    ("All agent types (router-wide)", "Share of tokens routed through reasoning-optimized models",
+     ">50% of all OpenRouter tokens (vs ~0% in early Q1 2025)", "Late 2025",
+     "Measures tokens served by reasoning models, not reasoning tokens within outputs; driven by agent-style workflows (GPT-5, Claude 4.5, Gemini 3 era)", "26"),
+    ("All agent types (router-wide)", "Top reasoning models by token volume",
+     "xAI Grok Code Fast 1 #1, then Gemini 2.5 Pro, Gemini 2.5 Flash, Grok 4 Fast, gpt-oss-120b", "Late 2025",
+     "Code-oriented reasoning models lead the category; rapid model turnover", "26"),
+    ("All agent types (router-wide)", "Completion-token growth per request",
+     "~3x increase, mostly due to reasoning tokens", "2025",
+     "Reasoning tokens are billed inside completion tokens; programming workloads drive prompt growth (routinely >20K input tokens/request)", "26"),
+    ("Coding agents (multi-agent SWE)", "Reasoning share of task tokens",
+     "21.6% reasoning / 53.9% input / 24.4% output", "Jan 2026 (study)",
+     "ChatDev framework + GPT-5 across 30 real development tasks", "44, 45"),
+    ("Coding agents (multi-agent SWE)", "Reasoning tokens per task",
+     "17,280-40,000 reasoning tokens per software task", "Jan 2026 (study)",
+     "400K context window, 128K max output configuration", "44, 45"),
+    ("Coding agents (multi-agent SWE)", "Token consumption by SDLC stage",
+     "Code review 59.4% of all tokens; code completion 26.8%; initial coding 8.6%; design 2.4%", "Jan 2026 (study)",
+     "Cost sits in automated refinement/verification, not initial generation", "44, 45"),
+    ("Coding agents (multi-agent SWE)", "Reasoning intensity by stage",
+     "Initial coding ~35% reasoning; code review ~23%; documentation ~6%", "Jan 2026 (study)",
+     "Generative stages are reasoning-heavy; analysis stages are input-heavy (documentation 80.2% input)", "44, 45"),
+    ("Coding agents (single-agent loops)", "Token mix by operation",
+     "Reading/navigating code 76.1%; executing/testing 12.1%; editing 11.8%", "2026",
+     "SWE-Pruner measurements on real agent workloads; agents mostly re-read the codebase", "46"),
+    ("Coding agents (single-agent loops)", "Input-token dominance",
+     "Input >90-99% of trajectory volume; input:output ratio >150:1", "2026",
+     "Stateless loops re-send accumulated context every roundtrip; 99% of Claude 4 Sonnet's ~100B tokens/day on OpenRouter (Sep 2025) were input", "47"),
+    ("Coding agents vs chat", "Total token multiplier",
+     "~1,000x tokens vs a single-turn chat request", "2026",
+     "Third-party token-economics research", "23, 47"),
+    ("Multi-agent systems vs chatbot", "Token multiplier",
+     "Up to 15x tokens vs a chatbot request", "2026",
+     "Anthropic estimate; consistent with OpenRouter's ~15x agentic-vs-human per-request measurement", "23, 25"),
+    ("Coding agents (task outcomes)", "Failed vs successful task consumption",
+     "Unresolved tasks: 697.7K tokens / 12.95 tool calls avg; resolved: 258.7K / 7.2 (2.7x gap)", "2026 (study)",
+     "No positive correlation between token spend and success; failing patches trap agents in edit-test-read loops. Latest scaffold versions average ~668K tokens/task", "50"),
+    ("Configuration reference", "Reasoning-effort budget mapping",
+     "'low' ~20% of max_tokens for thinking; 'high' ~80%", "2026",
+     "OpenRouter API reasoning.effort parameter; reasoning tokens billed as output", "26"),
+]
+
+# ---------------------------------------------------------------------------
+# GitHub commits by agent (WoC census V2510 = cumulative through Oct 2025;
+# V2604 = Dec 2025 - Apr 2026 window; disjoint windows)
+# Fields: agent, vendor, deployment, channel, v2510, v2604, trend, projects,
+#         alltime_units, adoption, notes, sources
+# ---------------------------------------------------------------------------
+GITHUB_COMMITS = [
+    ("Claude Code", "Anthropic", "CLI / in-editor (commits directly)",
+     "Co-authored-by trailer + bot account (30x undercount if bot-only)",
+     850157, 886122, "+4%", "17,295",
+     "12.5M", "39% of devs worldwide (47% US), up from 18% Jan 2026; most-used tool for 31%",
+     "50% of all AI-attributed commits in V2604; ~4% of ALL public GitHub commits (SemiAnalysis, Feb 2026), projected 20%+ of daily commits by end-2026; near-absent from PR channel (1.4% of AIDev agentic PRs)",
+     "41, 42, 43, 4, 48"),
+    ("GitHub Copilot (SWE agent)", "Microsoft (GitHub)", "PR-based cloud agent + IDE",
+     "Bot account / workflow; IDE Copilot is commit-silent (config-file detection only)",
+     1127201, None, "n/a (not in V2604 table)", "85,739",
+     "3.8M", "21% of devs, down from 29% a year ago; 79% awareness",
+     "Largest agent in V2510 (2x Dependabot's volume); IDE Copilot appears in 92,276 projects via config files but <0.5% of commits - silent-agent undercount",
+     "41, 42, 43"),
+    ("Replit Agent", "Replit", "Auto-commits generated code (no PRs)",
+     "Message-signature template",
+     312705, 314779, "+1% (flat)", None,
+     None, None,
+     "Dominates explicit commit attribution among app-builder agents due to auto-commit workflow",
+     "41, 42"),
+    ("Google Jules", "Google", "Async cloud agent",
+     "Bot account / workflow",
+     209911, 215804, "+3%", "16,924",
+     None, None,
+     "Reached ~210K commits within nine months of launch",
+     "41"),
+    ("Aider", "Open source", "CLI pair-programmer",
+     "Author-name suffix '(aider)'",
+     195029, 196132, "+1% (flat)", "355 authors",
+     None, None,
+     "Only 4 config files in the entire corpus - invisible without author-name scanning; skews to existing repos rather than greenfield",
+     "41"),
+    ("Devin (+ Windsurf)", "Cognition", "Autonomous cloud engineer (PR + commit channels)",
+     "Bot account (devin-ai-integration[bot]) + conventional commits",
+     215998, 98493, "-54%", "7,050",
+     "256.4K", None,
+     "Uses both PR and commit channels (3,657 shared repos); V2604 window volume fell by half; 14.4% of AIDev agentic PRs",
+     "41, 42, 48"),
+    ("CodeRabbit", "CodeRabbit", "Code-review agent",
+     "Bot account",
+     297, 34940, "+117x", None,
+     None, None,
+     "Fastest-growing commit-attributed agent between snapshots (review-agent category emerging)",
+     "41"),
+    ("OpenHands", "All Hands AI", "Open-source autonomous agent",
+     "Bot account",
+     20863, 25676, "+23%", "1,022",
+     None, None,
+     "Predominantly used in born-with-AI greenfield repositories",
+     "41"),
+    ("Codex", "OpenAI", "PR-based cloud agent",
+     "PR body marker (stopped appearing Nov 2025); no commit attribution",
+     843, 731, "-13%", "102",
+     "5.1M", "16% of devs, up from 3% Jan 2026; awareness 27% -> 65%",
+     "Mirror image of Claude Code: largest agent by PULL REQUESTS (814,522 in AIDev; 64.9% of agentic PRs) yet near-absent from commit data - commit census misses essentially all Codex adopters; all-time units undercounted since Nov 2025",
+     "41, 42, 43, 48"),
+    ("Cursor (agent mode)", "Anysphere", "IDE agent",
+     "None by default (commit-silent); .cursorrules config detection",
+     0, None, "n/a", "28,909 (config)",
+     None, None,
+     "Zero attributed commits; 32,941 PRs in AIDev (4.6% of agentic PRs); a major example of attribution undercounting silent agents",
+     "41, 48"),
+    ("Dependabot (control)", "GitHub", "Non-LLM dependency bot (baseline)",
+     "Bot account",
+     475379, None, "n/a", "44,731",
+     None, None,
+     "Non-AI control baseline active since 2017; Copilot SWE agent alone now exceeds 2x its cumulative volume",
+     "41"),
+    ("(Ecosystem) All AI agents", "-", "-", "-",
+     None, 1772677, "-", "315,426 projects",
+     "27.1M (all agents)", None,
+     "1.77M commit-attributed AI commits in Dec 2025-Apr 2026; >320K AI commits/month by mid-2025 (from 75K in Dec 2024); AI share of non-bot commits in adopting projects: 1.6% (Dec 2025) -> 6.7% (Mar 2026)",
+     "41, 42"),
+    ("(Ecosystem) Agentic PR mix", "-", "-", "-",
+     None, None, "-", None,
+     None, None,
+     "AIDev-pop (Oct 2025) agentic PR share: Codex 64.9%, Copilot 14.8%, Devin 14.4%, Cursor 4.6%, Claude Code 1.4% - PR and commit censuses capture nearly disjoint agent populations",
+     "48"),
 ]
 
 # ---------------------------------------------------------------------------
@@ -426,6 +567,8 @@ readme_lines = [
     ("  Offerings - one row per agentic offering: revenue, growth trajectory, valuation, pricing model, scale and token metrics, sources.", BODY_FONT),
     ("  Sector Aggregates - revenue summed by sector (live SUMIFS over the Offerings sheet; memo rows excluded).", BODY_FONT),
     ("  Token Usage - platform- and ecosystem-level token throughput metrics relevant to agentic workloads.", BODY_FONT),
+    ("  Reasoning Tokens - reasoning-token consumption by agent type/workload (router-wide shares, per-task splits, stage-level intensity).", BODY_FONT),
+    ("  GitHub Commits - commit attribution per coding agent (WoC census V2510/V2604 windows, all-time attributed units, dev adoption).", BODY_FONT),
     ("  Sources - numbered source list; the 'Sources' column in other sheets references these numbers.", BODY_FONT),
     ("", None),
     ("DEFINITIONS", SECTION_FONT),
@@ -445,6 +588,11 @@ readme_lines = [
     ("     routed through them - a small single-digit % of global volume). Do not sum across rows.", BODY_FONT),
     ("  5. Some figures are stale (Abridge/Ambience May 2025; Manus Aug 2025); dates are given per row.", BODY_FONT),
     ("  6. Run-rates in this market can double in a quarter; treat point-in-time numbers accordingly.", BODY_FONT),
+    ("  7. GitHub commit attribution systematically undercounts 'silent' agents: Cursor and IDE Copilot do not sign commits, and", BODY_FONT),
+    ("     Codex surfaces via pull requests, not commits (its PR marker stopped appearing Nov 2025). PR and commit censuses capture", BODY_FONT),
+    ("     nearly disjoint agent populations - compare agents only within the same detection channel.", BODY_FONT),
+    ("  8. 'Reasoning tokens' has two meanings: share of tokens served by reasoning-optimized models (OpenRouter, >50%) vs reasoning", BODY_FONT),
+    ("     tokens inside completions (~21.6% of agentic SWE task tokens). The Reasoning Tokens sheet labels each metric explicitly.", BODY_FONT),
 ]
 for i, (text, font) in enumerate(readme_lines, start=1):
     cell = ws.cell(row=i, column=1, value=text)
@@ -557,6 +705,46 @@ set_widths(ws, [26, 32, 44, 18, 62, 12])
 ws.freeze_panes = "A2"
 ws.auto_filter.ref = f"A1:F{ws.max_row}"
 
+# --- Reasoning Tokens ---
+ws = wb.create_sheet("Reasoning Tokens")
+rt_headers = ["Agent type / workload", "Metric", "Value", "As-of", "Context / notes", "Sources (#)"]
+ws.append(rt_headers)
+style_header_row(ws, 1, len(rt_headers))
+for row_data in REASONING_TOKENS:
+    ws.append(list(row_data))
+for row in ws.iter_rows(min_row=2, max_row=ws.max_row, max_col=len(rt_headers)):
+    for cell in row:
+        cell.font = BODY_FONT
+        cell.alignment = WRAP
+        cell.border = BORDER
+set_widths(ws, [30, 36, 48, 16, 62, 12])
+ws.freeze_panes = "A2"
+ws.auto_filter.ref = f"A1:F{ws.max_row}"
+
+# --- GitHub Commits ---
+ws = wb.create_sheet("GitHub Commits")
+gh_headers = ["Agent", "Vendor", "Deployment type", "Attribution channel",
+              "Commits (cum. thru Oct 2025, WoC V2510)", "Commits (Dec 2025-Apr 2026, WoC V2604)",
+              "Trend", "Projects", "All-time attributed units (commits+PRs, Aug 2026)",
+              "Developer adoption (May-Jul 2026)", "Notes", "Sources (#)"]
+ws.append(gh_headers)
+style_header_row(ws, 1, len(gh_headers))
+for row_data in GITHUB_COMMITS:
+    ws.append(list(row_data))
+for row in ws.iter_rows(min_row=2, max_row=ws.max_row, max_col=len(gh_headers)):
+    is_eco = str(row[0].value).startswith("(Ecosystem)") or "control" in str(row[0].value)
+    for cell in row:
+        cell.font = BODY_FONT
+        cell.alignment = WRAP
+        cell.border = BORDER
+        if is_eco:
+            cell.fill = MEMO_FILL
+    row[4].number_format = "#,##0"
+    row[5].number_format = "#,##0"
+set_widths(ws, [22, 16, 26, 32, 16, 16, 12, 14, 16, 32, 56, 12])
+ws.freeze_panes = "B2"
+ws.auto_filter.ref = f"A1:L{ws.max_row}"
+
 # --- Sources ---
 ws = wb.create_sheet("Sources")
 src_headers = ["#", "Publisher", "Title / description", "URL"]
@@ -623,10 +811,25 @@ with open("data/token_usage_metrics.csv", "w", newline="") as f:
     for row_data in TOKEN_METRICS:
         w.writerow(list(row_data))
 
+with open("data/reasoning_tokens.csv", "w", newline="") as f:
+    w = csv.writer(f)
+    w.writerow(["agent_type_workload", "metric", "value", "as_of", "context_notes", "source_ids"])
+    for row_data in REASONING_TOKENS:
+        w.writerow(list(row_data))
+
+with open("data/github_commits.csv", "w", newline="") as f:
+    w = csv.writer(f)
+    w.writerow(["agent", "vendor", "deployment_type", "attribution_channel",
+                "commits_thru_oct2025_v2510", "commits_dec2025_apr2026_v2604", "trend",
+                "projects", "alltime_attributed_units_aug2026",
+                "developer_adoption_may_jul_2026", "notes", "source_ids"])
+    for row_data in GITHUB_COMMITS:
+        w.writerow(list(row_data))
+
 with open("data/sources.csv", "w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["id", "publisher", "title", "url"])
     for num, pub, title, url in SOURCES:
         w.writerow([num, pub, title, url])
 
-print("Wrote agentic_ai_revenue_token_usage_2026.xlsx and 4 CSVs under data/")
+print("Wrote agentic_ai_revenue_token_usage_2026.xlsx and 6 CSVs under data/")
