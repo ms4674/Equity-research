@@ -1,0 +1,9 @@
+sector,offerings_tracked,offerings_in_aggregate,aggregate_annualized_revenue_usd_m,share_of_tracked_total,notes
+Coding & software development,7,7,30367,86.9%,Largest agentic sector by revenue; Claude Code + Codex figures are third-party tracked estimates. Cursor acquired by SpaceX for $60B (Jun 2026).
+Customer experience & support,3,2,300,0.9%,Excludes Agentforce (classified under Enterprise platforms) and Wonderful AI (revenue n/d). Category commands the highest revenue multiples (~127x ARR avg).
+Legal,1,1,300,0.9%,Harvey dominates; 7-figure enterprise contracts at large law firms.
+Healthcare,4,4,506,1.4%,"Sub-segment sizing (Information Matters, May 2026): scribes $300-500M; RCM automation $0.8-1.2B; payer prior-auth $200-400M; sector central case ~$5.5B incl. drug-discovery value."
+Financial services,3,3,299.6,0.9%,Rogo ARR not disclosed - $75M shown is midpoint of analyst-inferred $50-100M. AlphaSense only partially agentic.
+Enterprise platform agents,4,3,2500,7.2%,Excludes Microsoft M365 Copilot (revenue n/d; 30M+ seats imply up to ~$10.8B at list price) - materially understated.
+General-purpose & consumer agents,4,3,690,2.0%,Perplexity figure is company-wide; Manus figure dated Aug 2025. OpenAI ChatGPT Agent excluded (memo; overlaps Codex).
+"TOTAL (tracked, ex-memo rows)",26,23,34962.6,100.0%,
