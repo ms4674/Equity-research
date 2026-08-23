@@ -285,8 +285,8 @@ for i, (big, body) in enumerate(cols):
 add_text(s, MARGIN, Inches(6.72), SLIDE_W - 2 * MARGIN, Inches(0.35),
          [("Bottom line:  ", {"bold": True, "color": NAVY}),
           ("the market has moved from \u201Cwhat is an agent?\u201D to \u201Cwho can run one under audit?\u201D "
-           "— and finance is where that test is being run first.", {"color": MUTED})],
-         size=13)
+           "— and finance is running that test first.", {"color": MUTED})],
+         size=12.5)
 footer(s)
 
 # ================================================================ SLIDE 3 ==
@@ -343,7 +343,7 @@ footer(s)
 # Market sizing
 s = new_slide()
 fill_bg(s, WHITE)
-content_header(s, "State of the market", "How big is the agentic AI market? Depends who's counting")
+content_header(s, "State of the market", "Market sizing: it depends who's counting")
 
 add_text(s, MARGIN, Inches(1.62), Inches(12.1), Inches(0.55),
          "Analyst estimates for 2026 span $9B to $206B because each firm draws the perimeter differently — "
@@ -513,7 +513,7 @@ footer(s)
 # Competitive landscape
 s = new_slide()
 fill_bg(s, WHITE)
-content_header(s, "State of the market", "Landscape: platforms consolidate, standards emerge, capital follows")
+content_header(s, "State of the market", "Landscape: platforms, standards, and capital")
 
 vendors = [
     ("Microsoft", "Copilot Studio embedded across the enterprise estate; agents woven into M365, Dynamics, GitHub."),
@@ -610,7 +610,7 @@ footer(s)
 # Adoption in financial services
 s = new_slide()
 fill_bg(s, WHITE)
-content_header(s, "AI agents in finance", "Adoption: half the industry is in motion, a quarter is scaling")
+content_header(s, "AI agents in finance", "Adoption: half in motion, a quarter scaling")
 
 bar_data = CategoryChartData()
 bar_data.categories = [
@@ -704,10 +704,10 @@ for i, (h, b, acc) in enumerate(cases):
     add_text(s, x + Inches(0.2), y + Inches(0.75), cw4 - Inches(0.4), Inches(1.45),
              b, size=11, color=INK, line_spacing=1.14)
 
-add_text(s, MARGIN, Inches(6.68), SLIDE_W - 2 * MARGIN, Inches(0.4),
+add_text(s, MARGIN, Inches(6.7), SLIDE_W - 2 * MARGIN, Inches(0.4),
          [("Pattern:  ", {"bold": True, "color": NAVY}),
           ("the first production wins are back- and middle-office — high volume, clear policy, "
-           "measurable unit cost — before customer-facing autonomy.", {"color": MUTED})],
+           "measurable unit cost.", {"color": MUTED})],
          size=12.5)
 footer(s)
 
@@ -775,12 +775,12 @@ for i, (h, b) in enumerate(deps):
     y = Inches(1.78) + row * (ch6 + Inches(0.16))
     info_card(s, x, y, cw6, ch6, h, b, heading_size=13.5, body_size=11)
 
-add_text(s, MARGIN, Inches(6.68), SLIDE_W - 2 * MARGIN, Inches(0.4),
+add_text(s, MARGIN, Inches(6.7), SLIDE_W - 2 * MARGIN, Inches(0.4),
          [("Signal:  ", {"bold": True, "color": NAVY}),
-          ("the largest, most-regulated institutions are past experimentation — they are naming systems, "
-           "publishing accuracy figures, and building payment rails for an agent-to-agent economy.",
+          ("the most-regulated institutions are past experimentation — naming systems, "
+           "publishing accuracy, and building payment rails.",
            {"color": MUTED})],
-         size=12.5)
+         size=12)
 footer(s)
 
 # =============================================================== SLIDE 14 ==
