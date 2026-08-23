@@ -1,0 +1,18 @@
+entity_platform,metric,value,as_of,context_notes,source_ids
+Industry-wide,Estimated global token processing,~370 trillion/day (~135 quadrillion/yr),Mid-2026,I/O Fund estimate; already 2.4x Dell's 2028 forecast of 57 quadrillion/yr,23
+Google (all products),Monthly tokens processed,3.2 quadrillion/month,May 2026 (I/O),"vs ~480T May 2025 (~7x YoY) and 9.7T May 2024 (~330x in 2 years); includes Search, Workspace, Gemini apps",21
+Google Gemini Developer API,API token throughput,19B tokens/min (~800T/month),May 2026,375+ Google Cloud customers each processed >1T tokens in trailing 12 months,"21, 22"
+Google Gemini models,Model token throughput,22B tokens/min (~1 quadrillion/month),Q2 2026 earnings,+120% in six months,23
+OpenAI API,API token throughput,>6B tokens/min (~260T/month),Oct 2025 (DevDay),API only; excludes ChatGPT consumer traffic (800M+ weekly users),22
+Anthropic,Token throughput,Not disclosed,2026,Barclays analysts see Anthropic leading enterprise inference tokens; 65% of Vercel AI Gateway spend on 30% of volume,"22, 24"
+Microsoft Azure AI Foundry,Customers at 1T-token annualized run-rate,Up 4x YoY; 100K Foundry customers,Q4 FY26 (Jun 2026),"Foundry revenue more than doubled YoY; 11,000+ models offered; Copilot workload throughput up 4x during FY26","36, 37"
+Microsoft Agent 365,Registered agents,~40M agents,Q4 FY26 (2 months post-launch),Across tens of thousands of companies; agent governance layer,"36, 37"
+Salesforce Agentforce,Tokens processed,28.6T in Q1 FY2027 (+152% QoQ),Qtr ended Apr 2026,3.8B agentic work units delivered (+111%),"17, 18"
+OpenRouter (router),Total routed tokens,>20T/week (~80-90T/month),Mid-2026,State of AI study covered 100T+ tokens over ~1 year,"22, 26"
+OpenRouter (router),Agentic token multiplier,~15x tokens per request vs human chat,2026,Agentic share exploded starting Feb 2026; traffic segmented agentic/mixed/human by 7-signal composite,25
+OpenRouter (router),Reasoning-model share of tokens,>50% of routed tokens,Late 2025,Up from negligible in early 2025; driven by agent-style workflows,26
+OpenRouter (router),Chinese-origin open-weight share,~46% of identified token volume,Mid-2026,Up from <2% a year earlier; DeepSeek alone ~17.6%; agentic workloads drove DeepSeek V4 to ~20% token share,"3 (context), 25"
+OpenRouter apps (snapshot),Top agent apps by tokens,Hermes Agent 27.0T (45.9% of tracked app tokens); Kilo Code 6.9T; Claude Code 6.5T; OpenClaw 3.5T; Cline 2.7T; Codex 0.69T,Mid-2026,Coding/CLI agents dominate router token volume; app defaults are kingmakers,"27, 28"
+Vercel AI Gateway,Total routed tokens,Tens of trillions/month,Jul 2026,Anthropic: 65% of gateway spend on 30% of token volume at 4.4x average price; >80% of coding-agent spend; open-weight models >1/3 of volume; avg price/token -13.6% MoM,24
+Coding agents (research),Token intensity vs chat,"~1,000x tokens vs a chat request (third-party researchers); multi-agent systems up to 15x (Anthropic estimate)",2026,Explains why agentic offerings dominate token demand,23
+Claude Code,Output footprint,~4% of all global public GitHub commits (SemiAnalysis); projected 20%+ of daily commits by end-2026,Feb 2026,Average developer ~20 hrs/week in tool,"4 (via orbilontech), 5"
