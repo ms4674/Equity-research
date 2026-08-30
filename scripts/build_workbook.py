@@ -60,6 +60,40 @@ BUDGET_TIER = {
     "Google - Flash": ["Gemini 1.5 Flash", "Gemini 2.0 Flash", "Gemini 2.5 Flash", "Gemini 3 Flash", "Gemini 3.5 Flash"],
 }
 
+# --------------------------------------------------------------------------
+# Estimated average monthly LLM token consumption per company, by company
+# size segment (millions of tokens per company per month). MODELED ESTIMATES,
+# not vendor-reported data - calibrated to the anchors documented on the
+# 'Token Usage by Size' sheet (Ramp AI Index, Deloitte via OpenRouter,
+# OpenAI Enterprise Signals, VendorBenchmark; see Sources sheet).
+# --------------------------------------------------------------------------
+USAGE_COLUMNS = [
+    "Small business (1-99 emp.)",
+    "Mid-market (100-999 emp.)",
+    "Enterprise (1,000-9,999 emp.)",
+    "Large enterprise (10,000+ emp.)",
+    "AI-native startup (memo)",
+    "All companies - median (memo)",
+]
+# quarter -> tokens in millions per company per month
+USAGE_SERIES = [
+    ("2023 Q1", 1, 15, 90, 500, 60, 2),
+    ("2023 Q2", 1.5, 22, 140, 800, 120, 3),
+    ("2023 Q3", 2.2, 32, 210, 1300, 230, 4.5),
+    ("2023 Q4", 3.2, 48, 320, 2000, 420, 6.5),
+    ("2024 Q1", 4.5, 70, 480, 3100, 750, 9),
+    ("2024 Q2", 6.5, 100, 720, 4800, 1300, 13),
+    ("2024 Q3", 9, 145, 1050, 7200, 2200, 18),
+    ("2024 Q4", 13, 210, 1600, 11000, 3700, 26),
+    ("2025 Q1", 18, 300, 2400, 17000, 6000, 36),
+    ("2025 Q2", 28, 470, 3800, 27000, 10000, 56),
+    ("2025 Q3", 45, 750, 6200, 44000, 16500, 90),
+    ("2025 Q4", 75, 1250, 10500, 74000, 27000, 150),
+    ("2026 Q1", 130, 2150, 18000, 128000, 44000, 260),
+    ("2026 Q2", 200, 3300, 28000, 200000, 68000, 400),
+    ("2026 Q3", 280, 4600, 39000, 280000, 95000, 560),
+]
+
 
 def parse_date(s):
     return datetime.strptime(s, "%Y-%m-%d").date()
@@ -143,6 +177,7 @@ def sheet_readme(wb):
         ("", "- Price History: long-format time series - one row per price event (launch, cut, increase) per model. ~160 observations."),
         ("", "- Current Snapshot: the latest standard list price for every model as of the compile date, ranked by blended price."),
         ("", "- Quarterly Series: carry-forward blended price of each vendor's flagship / budget lineage at each quarter end (the price of the newest model in that lineage at that date). Feeds the charts."),
+        ("", "- Token Usage by Size: quarterly time series of estimated average monthly token consumption per company, by company-size segment (modeled estimates calibrated to Ramp AI Index, Deloitte, OpenAI Enterprise Signals, and VendorBenchmark anchors; methodology on the sheet)."),
         ("", "- Charts: blended price trajectories on a log scale - frontier flagships, open-weight flagships, and budget tiers."),
         ("", "- Sources: pricing pages, launch announcements, and trackers used."),
         ("", ""),
@@ -305,6 +340,76 @@ def sheet_quarterly(wb, recs):
     return len(qends), lineages, group_spans
 
 
+def sheet_usage(wb):
+    ws = wb.create_sheet("Token Usage by Size")
+    ws.cell(row=1, column=1, value="Estimated average monthly LLM token consumption per company, by company size - millions of tokens per company per month").font = SUB_FONT
+    ws.cell(row=2, column=1, value="MODELED ESTIMATES calibrated to published anchors (see notes below) - not vendor-reported data. Includes API and subscription-mediated usage.").font = Font(italic=True, color="C00000")
+
+    headers = ["Quarter"] + USAGE_COLUMNS
+    ws.append([])  # row 3 spacer consumed by append offset below
+    for j, h in enumerate(headers, start=1):
+        ws.cell(row=4, column=j, value=h)
+    style_header(ws, 4, len(headers), height=42)
+
+    first_data_row = 5
+    for i, row in enumerate(USAGE_SERIES, start=first_data_row):
+        ws.cell(row=i, column=1, value=row[0]).font = Font(bold=True)
+        for j, v in enumerate(row[1:], start=2):
+            c = ws.cell(row=i, column=j, value=v)
+            c.number_format = "#,##0.0" if v < 10 else "#,##0"
+    last_data_row = first_data_row + len(USAGE_SERIES) - 1
+
+    n = len(USAGE_SERIES)
+    ws.conditional_formatting.add(
+        f"B{first_data_row}:E{last_data_row}",
+        DataBarRule(start_type="min", end_type="max", color="70AD47", showValue=True),
+    )
+
+    notes = [
+        "How this series was built:",
+        "1. Anchor (2026 Q2): Ramp AI Index (Apr-Jun 2026, 70,000+ US businesses) - median company token spend $2,246/month at an observed effective rate of $0.72 per 1M tokens "
+        "implies ~3.1B tokens/month for the median Ramp-tracked (mid-market, tech-forward) company; average spend $140,842/month implies ~200B tokens for the large-enterprise average.",
+        "2. Growth path: Ramp reports token usage among businesses with connected AI grew 1,001% (~11x) from Jan 2025 to Apr 2026; each segment's series is backcast at that pace for 2025-2026 "
+        "and at slower adoption-era rates for 2023-2024 (ChatGPT API launched Mar 2023).",
+        "3. Cross-checks: Deloitte 2026 (cited by OpenRouter): 67% of enterprises consume >1B tokens/month - consistent with the Enterprise column crossing 1B in 2024 and reaching ~28-39B in 2026. "
+        "VendorBenchmark 2026: enterprise LLM API spend of $4-22 per employee/month supports the Enterprise and Large-enterprise levels. "
+        "OpenAI Enterprise Signals (Jun 2026): top-decile 'frontier firms' generate 8.3x the output tokens per active user of typical firms - reflected in the AI-native startup memo column.",
+        "4. Segment averages are means; token usage is power-law distributed within every segment (Ramp: median $2,246 vs average $140,842 monthly spend), so a segment's typical company sits "
+        "well below its average. The 'All companies - median' memo column is the better 'typical firm' line.",
+        "5. Usage includes tokens consumed through subscription products (ChatGPT/Claude/Copilot seats) valued at effective token rates, not only direct API billing.",
+        "Caveats: no vendor publishes tokens-by-company-size; treat levels as order-of-magnitude estimates. Growth rates and 2026 anchors are well-sourced; 2023-2024 levels are extrapolations. "
+        "Aggregate context: OpenRouter alone routed ~100T tokens/month (May 2026, 5x in 6 months); Google reported >3.2 quadrillion tokens/month across products (I/O 2026); Meta burned ~70T/month (Feb 2026, SemiAnalysis).",
+    ]
+    note_row = last_data_row + 2
+    for k, text in enumerate(notes):
+        cell = ws.cell(row=note_row + k, column=1, value=text)
+        cell.alignment = Alignment(wrap_text=True, vertical="top")
+        ws.merge_cells(start_row=note_row + k, start_column=1, end_row=note_row + k, end_column=7)
+        ws.row_dimensions[note_row + k].height = 15 if len(text) < 120 else 45
+    ws.cell(row=note_row, column=1).font = Font(bold=True)
+
+    chart = LineChart()
+    chart.title = "Avg monthly tokens per company by size (millions, log scale)"
+    chart.style = 12
+    chart.height = 12
+    chart.width = 26
+    chart.y_axis.title = "Millions of tokens per company per month"
+    chart.x_axis.title = "Quarter"
+    chart.y_axis.scaling.logBase = 10
+    chart.y_axis.majorGridlines = None
+    for c in range(2, 2 + len(USAGE_COLUMNS)):
+        ref = Reference(ws, min_col=c, min_row=4, max_row=last_data_row)
+        chart.add_data(ref, titles_from_data=True)
+    chart.set_categories(Reference(ws, min_col=1, min_row=first_data_row, max_row=last_data_row))
+    for s in chart.series:
+        s.marker = Marker(symbol="circle", size=5)
+        s.smooth = False
+    ws.add_chart(chart, "I4")
+
+    ws.freeze_panes = "B5"
+    set_widths(ws, [10, 15, 15, 16, 17, 15, 16])
+
+
 def sheet_charts(wb, n_quarters, group_spans):
     ws = wb.create_sheet("Charts")
     ws.sheet_view.showGridLines = False
@@ -364,6 +469,12 @@ def sheet_sources(wb):
         ("AI Cost Check / aipricing.guru / techjack", "Llama hosted-rate ranges across providers", "https://aicostcheck.com/provider/meta", "2026-08-29"),
         ("hidekazu-konishi.com - OpenAI GPT model release timeline", "OpenAI launch dates 2023-2026", "https://hidekazu-konishi.com/entry/openai_gpt_model_release_timeline.html", "2026-08-29"),
         ("arXiv 2603.28576 - Tiered Super-Moore's Law", "Historical context: 600x price decline, tier half-lives", "https://arxiv.org/abs/2603.28576", "2026-08-29"),
+        ("Ramp - AI token cost benchmarks (AI Index, Apr-Jun 2026)", "Token Usage sheet anchors: $0.72/1M effective rate, median/average company spend, 1,001% usage growth Jan 2025-Apr 2026, PEPM benchmarks", "https://ramp.com/blog/ai-token-cost-for-businesses", "2026-08-30"),
+        ("OpenAI - Enterprise Signals", "Token Usage sheet: frontier firms generate 8.3x output tokens per active user vs typical firms (Jun 2026)", "https://openai.com/signals/enterprise-data/", "2026-08-30"),
+        ("TechStartups - OpenRouter Series B (Deloitte 2026 study cited)", "Token Usage sheet: 67% of enterprises consume >1B tokens/month; OpenRouter ~100T tokens/month, 5x in 6 months", "https://techstartups.com/2026/05/26/openrouter-raises-113m-as-ai-token-usage-surges-to-100-trillion-monthly/", "2026-08-30"),
+        ("VendorBenchmark - Enterprise GenAI cost benchmark 2026", "Token Usage sheet: enterprise LLM API spend $4-22 per employee/month; segment PEPM ranges", "https://vendorbenchmark.com/guides/enterprise-genai-cost-benchmark-2026", "2026-08-30"),
+        ("SemiAnalysis - TokenBudgeting newsletter", "Token Usage sheet: Meta ~70T tokens/month (Feb 2026); enterprise spend percentiles", "https://newsletter.semianalysis.com/p/tokenbudgeting-our-conversations", "2026-08-30"),
+        ("Trending Topics EU - open-weight share of AI usage", "Aggregate token volumes: Google >3.2 quadrillion tokens/month (I/O 2026), OpenAI API ~260T/month (Oct 2025)", "https://www.trendingtopics.eu/open-weight-models-from-china-are-capturing-a-growing-share-of-ai-usage/", "2026-08-30"),
         ("Vendor announcements 2023-2025 (compiled)", "Historical launch prices: GPT-4/Turbo/4o, Claude 2/3/4, Gemini 1.5-2.5, Grok 2-4, Llama 2-4, DeepSeek V2-V3.2, Kimi K2, GLM-4.5+", "various (see notes column in Price History)", "2026-08-29"),
     ]
     for i, s in enumerate(sources, start=2):
@@ -388,6 +499,7 @@ def main():
     sheet_history(wb, recs)
     n_models = sheet_snapshot(wb, recs)
     n_quarters, lineages, group_spans = sheet_quarterly(wb, recs)
+    sheet_usage(wb)
     sheet_charts(wb, n_quarters, group_spans)
     sheet_sources(wb)
     wb.save(XLSX_PATH)

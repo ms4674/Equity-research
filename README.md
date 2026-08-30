@@ -14,6 +14,7 @@ workbook.
 | Price History | Long-format time series: 157 price events (launches, cuts, increases) across 142 models |
 | Current Snapshot | Latest list price per model as of 2026-08-29, ranked by blended price |
 | Quarterly Series | Carry-forward blended price of 13 vendor lineages, 2023 Q1 – 2026 Q3 |
+| Token Usage by Size | Quarterly time series of estimated average monthly tokens consumed per company, by company-size segment (modeled, anchor-calibrated), with log-scale chart |
 | Charts | Log-scale blended price trajectories: frontier flagships, open-weight flagships, budget tier |
 | Sources | Pricing pages, announcements, and trackers used |
 
