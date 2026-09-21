@@ -23,7 +23,7 @@ Two structural notes on the estimate-heavy delivery column: China's platforms (M
 - **Period.** Latest completed full fiscal year: calendar 2025 for most; FY ending March 2026 for Eternal, Swiggy, MakeMyTrip, eDreams, Ixigo, WEB Travel; February 2026 for Trainline; September 2025 for HBX. Tongcheng (FY2024), Despegar (FY2024) and Hopper (CY2024) are the last years those companies disclosed.
 - **FX.** Full-period average rates: EUR/USD ~1.13 (1.10 for travel names per HBX's stated average), GBP/USD ~1.29–1.30, CNY 7.15–7.19/USD, RUB 83.8/USD, INR 87–94/USD depending on fiscal period, AUD/USD 0.65, KRW 1,400/USD.
 - **Basis.** Every line is tagged `disclosed` or `estimate` in [`data/marketplace_bookings_2025.csv`](../data/marketplace_bookings_2025.csv). Estimates are used only where companies do not publish the figure (mostly China delivery and private companies) and are drawn from company qualitative disclosures, card-panel data, and credible industry research — treat them as directional.
-- **Reproducibility.** `python3 scripts/aggregate_bookings.py` recomputes all subtotals from the CSV.
+- **Reproducibility.** `python3 scripts/aggregate_bookings.py` recomputes all subtotals from the CSV. An Excel workbook with live SUMIFS-driven subtotals and hyperlinked sources is at [`data/marketplace_bookings_2025.xlsx`](../data/marketplace_bookings_2025.xlsx) (regenerate with `python3 scripts/build_excel.py`; requires `openpyxl`).
 
 ## Sector 1: Food & grocery delivery (~$651B)
 
