@@ -19,9 +19,11 @@ BASE = Path(__file__).parent
 CACHE_DIR = BASE / "cache"
 OUT_PATH = BASE.parent / "Index_Capex_Aggregation.xlsx"
 
-FIRST_YEAR = 2021
+FIRST_YEAR = 2022
 LAST_YEAR = 2026
 YEARS = list(range(FIRST_YEAR, LAST_YEAR + 1))
+# Years with (near-)complete constituent coverage, shown in the chart.
+CHART_YEARS = [2023, 2024, 2025]
 ACWI_AS_OF = "Sep 23, 2026"
 
 
@@ -192,6 +194,8 @@ def write_workbook(sp_companies, acwi_companies, sp_agg, acwi_agg,
     f_note = wb.add_format({"font_color": "#666666"})
     f_wrap = wb.add_format({"text_wrap": True, "valign": "top"})
     f_bold = wb.add_format({"bold": True})
+    f_weight = wb.add_format({"num_format": "0.000%"})
+    f_fx = wb.add_format({"num_format": "0.000000"})
 
     # ------------------------------------------------------------ Summary
     ws = wb.add_worksheet("Summary")
@@ -208,7 +212,8 @@ def write_workbook(sp_companies, acwi_companies, sp_agg, acwi_agg,
         ws.write(3, j, h, f_hdr)
     r = 4
     for y in sp_agg.index:
-        ws.write(r, 0, f"FY{y}", f_year)
+        label = f"FY{y}" if y in CHART_YEARS else f"FY{y} (partial)"
+        ws.write(r, 0, label, f_year)
         ws.write_number(r, 1, sp_agg.loc[y, "capex_usd"] / 1e9, f_usd_bn)
         ws.write_number(r, 2, int(sp_agg.loc[y, "n_companies"]), f_int)
         ws.write_number(r, 3, sp_agg.loc[y, "n_companies"] / sp_total, f_pct)
@@ -216,37 +221,36 @@ def write_workbook(sp_companies, acwi_companies, sp_agg, acwi_agg,
         ws.write_number(r, 5, int(acwi_agg.loc[y, "n_companies"]), f_int)
         ws.write_number(r, 6, acwi_agg.loc[y, "weight_covered"] / 100.0, f_pct)
         r += 1
-    ws.set_column(0, 0, 12)
+    ws.set_column(0, 0, 16)
     ws.set_column(1, 6, 16)
-    n_years = len(sp_agg.index)
     first_data_row = 4
 
     ws.write(r + 1, 0, "Fiscal year = calendar year in which the company's "
-             "fiscal year ends. Years with low coverage (first/last) are "
-             "incomplete: FY2021 pre-dates most companies' available history "
-             "and FY2026 only includes early fiscal-year-ends reported so far.",
-             f_note)
+             "fiscal year ends. '(partial)' years are incomplete: Yahoo only "
+             "provides ~4 recent fiscal years, so FY2022 misses many "
+             "non-calendar fiscal-year companies, and FY2026 only includes "
+             "fiscal years ending in 2026 that have been reported so far. "
+             "FY2023-FY2025 are the comparable, near-complete years.", f_note)
     ws.write(r + 2, 0, "MSCI ACWI is proxied by iShares MSCI ACWI ETF "
              f"holdings as of {ACWI_AS_OF}. See Methodology sheet.", f_note)
 
     chart = wb.add_chart({"type": "column"})
+    years_list = list(sp_agg.index)
+    chart_first = first_data_row + years_list.index(CHART_YEARS[0])
+    chart_last = first_data_row + years_list.index(CHART_YEARS[-1])
     chart.add_series({
         "name": "S&P 500",
-        "categories": ["Summary", first_data_row, 0,
-                       first_data_row + n_years - 1, 0],
-        "values": ["Summary", first_data_row, 1,
-                   first_data_row + n_years - 1, 1],
+        "categories": ["Summary", chart_first, 0, chart_last, 0],
+        "values": ["Summary", chart_first, 1, chart_last, 1],
         "fill": {"color": "#1F4E78"},
     })
     chart.add_series({
         "name": "MSCI ACWI",
-        "categories": ["Summary", first_data_row, 0,
-                       first_data_row + n_years - 1, 0],
-        "values": ["Summary", first_data_row, 4,
-                   first_data_row + n_years - 1, 4],
+        "categories": ["Summary", chart_first, 0, chart_last, 0],
+        "values": ["Summary", chart_first, 4, chart_last, 4],
         "fill": {"color": "#C55A11"},
     })
-    chart.set_title({"name": "Aggregate capex (USD bn)"})
+    chart.set_title({"name": "Aggregate capex, complete fiscal years (USD bn)"})
     chart.set_size({"width": 640, "height": 360})
     chart.set_legend({"position": "bottom"})
     ws.insert_chart(r + 4, 0, chart)
@@ -279,8 +283,7 @@ def write_workbook(sp_companies, acwi_companies, sp_agg, acwi_agg,
                 ws.write(i, 1, c["name"] or (row_meta["name"] if row_meta is not None else ""))
                 ws.write(i, 2, row_meta["sector"] if row_meta is not None else "")
                 ws.write(i, 3, row_meta["location"] if row_meta is not None else "")
-                ws.write_number(i, 4, c["weight"] / 100.0,
-                                wb.add_format({"num_format": "0.000%"}))
+                ws.write_number(i, 4, c["weight"] / 100.0, f_weight)
                 base_col = 5
             ws.write(i, base_col, c["currency"] or "n/a")
             for k, y in enumerate(YEARS):
@@ -309,8 +312,7 @@ def write_workbook(sp_companies, acwi_companies, sp_agg, acwi_agg,
         ws.write(i, 0, cur)
         for j, y in enumerate(YEARS):
             if y in fx[cur]:
-                ws.write_number(i, 1 + j, fx[cur][y],
-                                wb.add_format({"num_format": "0.000000"}))
+                ws.write_number(i, 1 + j, fx[cur][y], f_fx)
     ws.set_column(0, len(YEARS) + 1, 12)
 
     # ------------------------------------------------------- Methodology
@@ -351,9 +353,16 @@ def write_workbook(sp_companies, acwi_companies, sp_agg, acwi_agg,
         ("- Constituent lists are as of the dates above; historical years use "
          "today's membership (no back-filling of historical index changes).",
          f_wrap),
-        ("- FY2021 coverage is low because Yahoo only provides ~4-5 years of "
-         "statements; FY2026 is incomplete because most fiscal years ending "
-         "in 2026 have not yet been reported. Compare FY2022-FY2025.", f_wrap),
+        ("- Yahoo only provides ~4 recent fiscal years of statements, so "
+         "FY2022 misses many companies with non-calendar fiscal years; "
+         "FY2026 is incomplete because most fiscal years ending in 2026 have "
+         "not yet been reported. FY2023-FY2025 are the comparable years.",
+         f_wrap),
+        ("- Banks, insurers and REITs frequently have no capital-expenditure "
+         "line in Yahoo's normalised cash-flow statement (their spending is "
+         "classified differently); such companies are excluded from the "
+         "aggregate. This is the main reason S&P 500 company counts are "
+         "~475 rather than 500.", f_wrap),
         ("- Financial companies often report little or no capex; companies "
          "with no reported capex line are excluded (see coverage columns).",
          f_wrap),

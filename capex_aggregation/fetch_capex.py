@@ -1,7 +1,11 @@
 """Fetch annual capital expenditure for every index constituent from Yahoo
 Finance, caching one JSON file per ticker so the run is resumable.
 
-Usage: python3 fetch_capex.py [--retry-errors]
+Usage: python3 fetch_capex.py [--retry-errors] [--skip-info] [--info-only]
+
+--skip-info: only fetch cash-flow statements (avoids the crumb-authenticated
+             quoteSummary endpoint, which rate-limits aggressively).
+--info-only: only fetch financial currency for records that lack it.
 """
 
 import json
@@ -26,41 +30,44 @@ def cache_path(symbol: str) -> Path:
     return CACHE_DIR / (symbol.replace("/", "_") + ".json")
 
 
-def fetch_one(symbol: str) -> dict:
+def fetch_one(symbol: str, skip_info: bool = False,
+              info_only: bool = False) -> dict:
     result = {"symbol": symbol}
     t = yf.Ticker(symbol)
-    cf = t.get_cashflow(freq="yearly")
     capex = {}
-    capex_tag = None
-    if cf is not None and not cf.empty:
-        for tag in CAPEX_TAGS:
-            if tag in cf.index:
-                row = cf.loc[tag]
-                capex = {
-                    str(k.date()): float(v)
-                    for k, v in row.items()
-                    if pd.notna(v)
-                }
-                capex_tag = tag
-                break
-    result["capex"] = capex
-    result["capex_tag"] = capex_tag
-    try:
-        info = t.get_info()
-        result["financial_currency"] = info.get("financialCurrency")
-        result["name"] = info.get("shortName") or info.get("longName")
-    except Exception as exc:  # capex may still be usable without info
-        result["financial_currency"] = None
-        result["info_error"] = str(exc)[:200]
-    if not capex:
+    if not info_only:
+        cf = t.get_cashflow(freq="yearly")
+        capex_tag = None
+        if cf is not None and not cf.empty:
+            for tag in CAPEX_TAGS:
+                if tag in cf.index:
+                    row = cf.loc[tag]
+                    capex = {
+                        str(k.date()): float(v)
+                        for k, v in row.items()
+                        if pd.notna(v)
+                    }
+                    capex_tag = tag
+                    break
+        result["capex"] = capex
+        result["capex_tag"] = capex_tag
+    if not skip_info:
+        try:
+            info = t.get_info()
+            result["financial_currency"] = info.get("financialCurrency")
+            result["name"] = info.get("shortName") or info.get("longName")
+        except Exception as exc:  # capex may still be usable without info
+            result["financial_currency"] = None
+            result["info_error"] = str(exc)[:200]
+    if not info_only and not capex:
         result["error"] = "no capex data"
     return result
 
 
-def worker(symbol: str) -> None:
+def worker(symbol: str, skip_info: bool, info_only: bool) -> None:
     path = cache_path(symbol)
     try:
-        result = fetch_one(symbol)
+        result = fetch_one(symbol, skip_info=skip_info, info_only=info_only)
     except Exception as exc:
         result = {"symbol": symbol, "capex": {}, "error": str(exc)[:300]}
     # Never let a failed refetch clobber previously good data.
@@ -85,6 +92,8 @@ def worker(symbol: str) -> None:
 
 def main() -> None:
     retry_errors = "--retry-errors" in sys.argv
+    skip_info = "--skip-info" in sys.argv
+    info_only = "--info-only" in sys.argv
     CACHE_DIR.mkdir(exist_ok=True)
 
     base = Path(__file__).parent
@@ -98,15 +107,22 @@ def main() -> None:
     for s in symbols:
         p = cache_path(s)
         if not p.exists():
-            todo.append(s)
-        elif retry_errors:
-            rec = json.loads(p.read_text())
-            if rec.get("error") or not rec.get("financial_currency"):
+            if not info_only:
                 todo.append(s)
+            continue
+        rec = json.loads(p.read_text())
+        if info_only:
+            if not rec.get("financial_currency") and rec.get("capex"):
+                todo.append(s)
+        elif retry_errors and (
+            rec.get("error")
+            or (not skip_info and not rec.get("financial_currency"))
+        ):
+            todo.append(s)
     print(f"universe: {len(symbols)} symbols; to fetch: {len(todo)}", flush=True)
 
     with ThreadPoolExecutor(max_workers=N_THREADS) as ex:
-        futures = [ex.submit(worker, s) for s in todo]
+        futures = [ex.submit(worker, s, skip_info, info_only) for s in todo]
         for f in as_completed(futures):
             f.result()
 
