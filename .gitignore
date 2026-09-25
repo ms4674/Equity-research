@@ -1,0 +1,4 @@
+capex_aggregation/cache/
+capex_aggregation/*.log
+capex_aggregation/acwi_raw.csv
+__pycache__/
