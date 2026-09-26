@@ -1,0 +1,138 @@
+date,lab,lab_hq,model,tier,event,input_usd_per_1m,output_usd_per_1m,cached_input_usd_per_1m,notes,source
+2020-06-11,OpenAI,US,GPT-3 (davinci),Frontier,Launch,60.00,60.00,,"$0.06 per 1K tokens; no input/output split at the time",OpenAI pricing (archived)
+2022-09-01,OpenAI,US,GPT-3 (davinci),Frontier,Price cut,20.00,20.00,,"66% cut to $0.02 per 1K; text-davinci-003 (Nov 2022) kept this rate",OpenAI announcement
+2023-03-01,OpenAI,US,GPT-3.5 Turbo,Small/cheap,Launch,2.00,2.00,,"ChatGPT API launch; 10x cheaper than GPT-3 davinci",OpenAI announcement
+2023-03-14,OpenAI,US,GPT-4 (8K),Frontier,Launch,30.00,60.00,,"Defined the 2023 frontier price",OpenAI announcement
+2023-03-14,OpenAI,US,GPT-4 (32K),Frontier,Launch,60.00,120.00,,"32K-context variant",OpenAI announcement
+2023-03-14,Anthropic,US,Claude 1,Frontier,Launch,11.02,32.68,,"Originally quoted per character; token-equivalent rate shown",Anthropic announcement (archived)
+2023-03-14,Anthropic,US,Claude Instant,Small/cheap,Launch,1.63,5.51,,"Fast/cheap tier at API launch",Anthropic announcement (archived)
+2023-06-13,OpenAI,US,GPT-3.5 Turbo (0613),Small/cheap,Price cut,1.50,2.00,,"25% input price cut; 16K variant added",OpenAI announcement
+2023-07-11,Anthropic,US,Claude 2,Frontier,Launch,11.02,32.68,,"First 100K context window; price held from Claude 1",Anthropic announcement
+2023-10-01,Meta,US,Llama 2 70B (via Together AI),Frontier,Hosted reference price,0.90,0.90,,"Open weights; Together AI hosted rate used as reference (Meta had no first-party API)",Together AI pricing (archived)
+2023-11-06,OpenAI,US,GPT-4 Turbo,Frontier,Launch,10.00,30.00,,"DevDay 2023; first 128K-context OpenAI model; 3x cheaper input vs GPT-4",OpenAI announcement
+2023-11-06,OpenAI,US,GPT-3.5 Turbo (1106),Small/cheap,Price cut,1.00,2.00,,"Further input cut alongside DevDay",OpenAI announcement
+2023-11-21,Anthropic,US,Claude 2.1,Frontier,Launch + price cut,8.00,24.00,,"200K context; ~27% price cut vs Claude 2",Anthropic announcement
+2023-11-21,Anthropic,US,Claude Instant,Small/cheap,Price cut,0.80,2.40,,"Cut alongside Claude 2.1 launch",Anthropic announcement
+2023-12-11,Mistral,Europe,Mistral Medium (original),Mid,Launch,2.50,7.50,,"la Plateforme API launch",Mistral announcement
+2024-01-25,OpenAI,US,GPT-3.5 Turbo (0125),Small/cheap,Price cut,0.50,1.50,,"50% input / 25% output cut; final GPT-3.5 price",OpenAI announcement
+2024-02-15,Google,US,Gemini 1.0 Pro,Frontier,Launch (paid tier),0.50,1.50,,"Paid tier opened after free preview",Google announcement
+2024-02-26,Mistral,Europe,Mistral Large,Frontier,Launch,8.00,24.00,,"Mistral's first frontier-priced flagship",Mistral announcement
+2024-03-04,Anthropic,US,Claude 3 Opus,Frontier,Launch,15.00,75.00,,"Established the Opus $15/$75 tier",Anthropic announcement
+2024-03-04,Anthropic,US,Claude 3 Sonnet,Mid,Launch,3.00,15.00,,"Established the Sonnet $3/$15 tier held through 4.x",Anthropic announcement
+2024-03-13,Anthropic,US,Claude 3 Haiku,Small/cheap,Launch,0.25,1.25,,"Cheapest frontier-lab model at the time; half of GPT-3.5 Turbo input",Anthropic announcement
+2024-04-18,Meta,US,Llama 3 70B (via Together AI),Frontier,Hosted reference price,0.90,0.90,,"Open weights; hosted reference rate",Together AI pricing (archived)
+2024-05-06,DeepSeek,China,DeepSeek-V2,Frontier,Launch,0.14,0.28,,"Triggered the China-side AI price war",DeepSeek announcement
+2024-05-13,OpenAI,US,GPT-4o,Frontier,Launch,5.00,15.00,,"50% cut vs GPT-4 Turbo; 6x off GPT-4 launch price",OpenAI announcement
+2024-05-14,Google,US,Gemini 1.5 Pro,Frontier,Launch (GA pricing),3.50,10.50,,"Rate for prompts <=128K; >128K billed $7/$21",Google I/O announcement
+2024-05-14,Google,US,Gemini 1.5 Flash,Small/cheap,Launch,0.35,1.05,,"Rate for prompts <=128K",Google I/O announcement
+2024-06-20,Anthropic,US,Claude 3.5 Sonnet,Mid,Launch,3.00,15.00,0.30,"Opus-level quality at Sonnet price; prompt caching added Aug 2024 (90% discount)",Anthropic announcement
+2024-07-18,OpenAI,US,GPT-4o mini,Small/cheap,Launch,0.15,0.60,0.075,"Replaced GPT-3.5 tier at 60-70% lower price",OpenAI announcement
+2024-07-23,Meta,US,Llama 3.1 405B (via Together AI),Frontier,Hosted reference price,3.50,3.50,,"405B open-weights flagship; hosted reference rate",Together AI pricing (archived)
+2024-07-24,Mistral,Europe,Mistral Large 2,Frontier,Launch + price cut,3.00,9.00,,"62% cut on both legs vs Mistral Large",Mistral announcement
+2024-08-06,OpenAI,US,GPT-4o (2024-08-06),Frontier,Price cut,2.50,10.00,1.25,"50% input / 33% output cut; prompt caching introduced Oct 2024",OpenAI announcement
+2024-08-12,Google,US,Gemini 1.5 Flash,Small/cheap,Price cut,0.075,0.30,,"~78% cut on both legs",Google Developers Blog
+2024-09-12,OpenAI,US,o1-preview,Reasoning,Launch,15.00,60.00,,"First production reasoning model; reasoning tokens billed as output",OpenAI announcement
+2024-09-12,OpenAI,US,o1-mini,Reasoning,Launch,3.00,12.00,1.50,"Cheap reasoning companion to o1-preview",OpenAI announcement
+2024-10-01,Google,US,Gemini 1.5 Pro,Frontier,Price cut,1.25,5.00,,"64% input / 52% output cut (<=128K); announced Sep 24 2024",Google Developers Blog
+2024-11-04,Anthropic,US,Claude 3.5 Haiku,Small/cheap,Launch + price increase,1.00,5.00,0.10,"4x price of Claude 3 Haiku; only mid-generation increase in the Haiku tier",Anthropic announcement
+2024-12-05,OpenAI,US,o1,Reasoning,Launch,15.00,60.00,7.50,"Full o1 release at o1-preview price",OpenAI announcement
+2024-12-06,Meta,US,Llama 3.3 70B (via Together AI),Frontier,Hosted reference price,0.88,0.88,,"Open weights; hosted reference rate at launch",Together AI pricing (archived)
+2024-12-11,Google,US,Gemini 2.0 Flash,Small/cheap,Launch,0.10,0.40,,"Held the cheap-tier price through 2.5 Flash-Lite",Google announcement
+2024-12-12,xAI,US,Grok 2,Frontier,Launch,2.00,10.00,,"First paid xAI API model; vision variant same price",xAI announcement
+2024-12-26,DeepSeek,China,DeepSeek-V3,Frontier,Launch (promo),0.14,0.28,,"Promotional launch pricing held at V2 rate until Feb 8 2025",DeepSeek announcement
+2025-01-20,DeepSeek,China,DeepSeek R1,Reasoning,Launch,0.55,2.19,0.14,"~25x below o1; off-peak discount up to 75%",DeepSeek announcement
+2025-01-25,Alibaba,China,Qwen Max,Frontier,Launch (international list),1.60,6.40,0.32,"International (Singapore) USD list; mainland table differs",Alibaba Model Studio pricing
+2025-01-25,Alibaba,China,Qwen Plus,Mid,Launch (international list),0.40,1.20,0.08,"International (Singapore) USD list; <=256K prompts",Alibaba Model Studio pricing
+2025-01-30,Mistral,Europe,Mistral Small 3,Small/cheap,Launch,0.20,0.60,,"Apache 2.0 open weights; retired Nov 30 2025",Mistral announcement
+2025-01-31,OpenAI,US,o3-mini,Reasoning,Launch,1.10,4.40,0.55,"Replaced o1-mini at one-third the cost",OpenAI announcement
+2025-02-08,DeepSeek,China,DeepSeek-V3,Frontier,Price increase (end of promo),0.27,1.10,0.07,"Standard list took effect after launch promo expired",DeepSeek API docs
+2025-02-17,xAI,US,Grok 3,Frontier,Launch,3.00,15.00,0.75,"Matched Claude Sonnet/GPT-4o-era pricing",xAI announcement
+2025-02-17,xAI,US,Grok 3 Mini,Small/cheap,Launch,0.30,0.50,,"Cheap tier",xAI announcement
+2025-02-24,Anthropic,US,Claude 3.7 Sonnet,Mid,Launch,3.00,15.00,0.30,"Extended-thinking mode; Sonnet price unchanged",Anthropic announcement
+2025-03-17,Mistral,Europe,Mistral Small 3.1,Small/cheap,Launch,0.20,0.60,,"Added image understanding; price held",Mistral announcement
+2025-03-25,Google,US,Gemini 2.5 Pro,Frontier,Launch,1.25,10.00,0.125,"<=200K prompts; >200K billed $2.50/$15",Google announcement
+2025-04-05,Meta,US,Llama 4 Scout (via Together AI),Small/cheap,Hosted reference price,0.18,0.59,,"10M-context open weights; hosted reference rate",Together AI pricing
+2025-04-05,Meta,US,Llama 4 Maverick (via Together AI),Frontier,Hosted reference price,0.27,0.85,,"Open-weights flagship; hosted reference rate",Together AI pricing
+2025-04-14,OpenAI,US,GPT-4.1,Frontier,Launch,2.00,8.00,0.50,"First OpenAI 1M-context production model",OpenAI announcement
+2025-04-14,OpenAI,US,GPT-4.1 mini,Small/cheap,Launch,0.40,1.60,0.10,,OpenAI announcement
+2025-04-14,OpenAI,US,GPT-4.1 nano,Small/cheap,Launch,0.10,0.40,0.025,,OpenAI announcement
+2025-04-16,OpenAI,US,o3,Reasoning,Launch,10.00,40.00,2.50,"33% below o1",OpenAI announcement
+2025-04-16,OpenAI,US,o4-mini,Reasoning,Launch,1.10,4.40,0.28,"Same shelf price as o3-mini",OpenAI announcement
+2025-05-07,Mistral,Europe,Mistral Medium 3,Mid,Launch,0.40,2.00,,"'Medium is the new large' positioning",Mistral announcement
+2025-05-22,Anthropic,US,Claude Opus 4,Frontier,Launch,15.00,75.00,1.50,"Opus tier carried through from Claude 3",Anthropic announcement
+2025-05-22,Anthropic,US,Claude Sonnet 4,Mid,Launch,3.00,15.00,0.30,"Sonnet price unchanged into 4.x line",Anthropic announcement
+2025-06-10,OpenAI,US,o3,Reasoning,Price cut,2.00,8.00,0.50,"80% cut three months post-launch",OpenAI announcement
+2025-06-10,OpenAI,US,o3-pro,Reasoning,Launch,20.00,80.00,,"Higher-compute o3 variant; Responses API only",OpenAI announcement
+2025-06-17,Google,US,Gemini 2.5 Flash,Small/cheap,Launch (GA),0.30,2.50,0.03,"Output stepped up vs 2.0 Flash to reflect thinking capacity",Google announcement
+2025-07-09,xAI,US,Grok 4,Frontier,Launch,3.00,15.00,0.75,"Held Grok 3 pricing",xAI announcement
+2025-07-22,Google,US,Gemini 2.5 Flash-Lite,Small/cheap,Launch,0.10,0.40,0.01,"Held the 2.0 Flash cheap-tier price",Google announcement
+2025-08-05,Anthropic,US,Claude Opus 4.1,Frontier,Launch,15.00,75.00,1.50,"Opus pricing held at $15/$75 for life of model",Anthropic announcement
+2025-08-07,OpenAI,US,GPT-5,Frontier,Launch,1.25,10.00,0.125,"Unified router; first OpenAI frontier under $2 input",OpenAI announcement
+2025-08-07,OpenAI,US,GPT-5 mini,Small/cheap,Launch,0.25,2.00,0.025,,OpenAI announcement
+2025-08-07,OpenAI,US,GPT-5 nano,Small/cheap,Launch,0.05,0.40,0.005,,OpenAI announcement
+2025-08-21,DeepSeek,China,DeepSeek-V3.1,Frontier,Launch + price increase,0.56,1.68,0.07,"Unified thinking/non-thinking model; ended off-peak discounts",DeepSeek API docs
+2025-08-26,xAI,US,Grok Code Fast 1,Small/cheap,Launch,0.20,1.50,0.02,"Coding-specialized cheap tier",xAI announcement
+2025-09-29,Anthropic,US,Claude Sonnet 4.5,Mid,Launch,3.00,15.00,0.30,"1M-context beta; standard pricing <=200K",Anthropic announcement
+2025-09-29,DeepSeek,China,DeepSeek-V3.2-Exp,Frontier,Launch + price cut,0.28,0.42,0.028,"Sparse-attention experimental model; API price cut 50%+",DeepSeek API docs
+2025-10-15,Anthropic,US,Claude Haiku 4.5,Small/cheap,Launch,1.00,5.00,0.10,"Held the $1/$5 tier set by Claude 3.5 Haiku",Anthropic announcement
+2025-11-13,OpenAI,US,GPT-5.1,Frontier,Launch,1.25,10.00,0.125,"Pricing held at GPT-5 tier",OpenAI announcement
+2025-11-18,Google,US,Gemini 3 Pro,Frontier,Launch (preview),2.00,12.00,0.20,"<=200K prompts; >200K billed $4/$18",Google announcement
+2025-11-24,Anthropic,US,Claude Opus 4.5,Frontier,Launch + price cut,5.00,25.00,0.50,"First Opus price cut: $15/$75 reset to $5/$25",Anthropic announcement
+2025-12-02,Mistral,Europe,Mistral Large 3,Frontier,Launch,2.00,6.00,,"Return of the Large tier",Mistral announcement
+2025-12-11,OpenAI,US,GPT-5.2,Frontier,Launch + price increase,1.75,14.00,0.17,"40% bump on both legs vs GPT-5.1",OpenAI announcement
+2025-12-17,Google,US,Gemini 3 Flash,Small/cheap,Launch,0.50,3.00,0.05,"Flash tier stepped up from 2.5 Flash",Google announcement
+2026-02-05,OpenAI,US,GPT-5.3,Frontier,Launch,1.75,14.00,0.17,"Pricing held at 5.2 tier; only gpt-5.3-codex still sold at this rate",OpenAI announcement
+2026-02-05,Anthropic,US,Claude Opus 4.6,Frontier,Launch,5.00,25.00,0.50,"Opus tier held at $5/$25",Anthropic announcement
+2026-02-17,Anthropic,US,Claude Sonnet 4.6,Mid,Launch,3.00,15.00,0.30,"1M-context default",Anthropic announcement
+2026-03-03,Google,US,Gemini 3.1 Flash-Lite,Small/cheap,Launch,0.25,1.50,0.025,"Cheap tier for the Gemini 3 series",Google announcement
+2026-03-15,xAI,US,Grok 4.20,Frontier,Launch (introductory),2.00,6.00,,"Introductory rate; day-of-month approximate (March 2026)",xAI pricing table (via tracker)
+2026-03-16,Mistral,Europe,Mistral Small 4,Small/cheap,Launch,0.10,0.30,,"New small-tier floor for Mistral",Mistral announcement
+2026-04-02,Alibaba,China,Qwen3.6 Plus,Mid,Launch (international list),0.50,3.00,0.05,"<=256K prompts; >256K billed $2/$6",Alibaba Model Studio pricing
+2026-04-16,Anthropic,US,Claude Opus 4.7,Frontier,Launch,5.00,25.00,0.50,"Opus tier held at $5/$25",Anthropic announcement
+2026-04-23,OpenAI,US,GPT-5.5,Frontier,Launch + price increase,5.00,30.00,0.50,"ChatGPT-default GA tier; gpt-5.5-pro variant $30/$180",OpenAI announcement
+2026-04-24,DeepSeek,China,DeepSeek-V4-Pro,Frontier,Launch + price increase,1.74,3.48,,"DeepSeek's most expensive flagship launch",DeepSeek API docs
+2026-04-24,DeepSeek,China,DeepSeek-V4-Flash,Small/cheap,Launch,0.14,0.28,,"Returned to the V2 launch price",DeepSeek API docs
+2026-04-28,Mistral,Europe,Mistral Medium 3.5,Frontier,Launch,1.50,7.50,0.15,"128B dense open-weights flagship; modified MIT license",Mistral announcement
+2026-04-30,xAI,US,Grok 4.3,Frontier,Launch + price cut,1.25,2.50,0.20,"83% off Grok 4's output rate",xAI announcement
+2026-05-14,xAI,US,Grok Build 0.1,Small/cheap,Launch,1.00,2.00,0.20,"Successor to grok-code-fast-1; 256K context",xAI announcement
+2026-05-15,Alibaba,China,Qwen3.7 Max,Frontier,Launch,2.50,7.50,0.50,"Reasoning-agent flagship; 1M context",Alibaba model page
+2026-05-19,Google,US,Gemini 3.1 Pro,Frontier,Repricing,2.00,12.00,0.20,"Repriced alongside Gemini 3.1 preview cycle; >200K at $4/$18",Google pricing page
+2026-05-19,Google,US,Gemini 3.5 Flash,Frontier,Launch + price increase,1.50,9.00,0.15,"Frontier-class Flash priced 3x the 3 Flash rate",Google announcement
+2026-05-28,Anthropic,US,Claude Opus 4.8,Frontier,Launch,5.00,25.00,0.50,"Opus tier held; optional fast mode $10/$50",Anthropic announcement
+2026-05-31,Alibaba,China,Qwen3.7 Plus,Mid,Launch,0.40,1.60,0.08,"Multimodal agent flagship; ~1/6 price of Qwen3.7-Max",Alibaba model page
+2026-06-01,DeepSeek,China,DeepSeek-V4-Pro,Frontier,Price cut,0.43,0.87,,"75% cut from launch price",DeepSeek API docs
+2026-06-01,xAI,US,Grok Composer 2.5,Small/cheap,Launch,0.50,2.50,,"Subscription-bundled agentic-coding model; rate from launch post",xAI announcement
+2026-06-04,Mistral,Europe,Mistral Large 3,Frontier,Price cut,0.50,1.50,0.05,"75% cut on both legs; repositioned as low-cost open-weights tier",Mistral pricing page
+2026-06-09,Anthropic,US,Claude Fable 5,Frontier,Launch + price increase,10.00,50.00,1.00,"First GA Mythos-class model; a tier above Opus",Anthropic announcement
+2026-06-10,xAI,US,Grok 4.3,Frontier,Cached-rate correction,1.25,2.50,0.20,"Pricing-table entry date; headline rate unchanged from launch",xAI pricing table
+2026-06-14,xAI,US,Grok 4.20,Frontier,Price cut,1.25,2.50,0.20,"Unannounced cut from introductory $2/$6; all three 4.20 SKUs",xAI pricing table
+2026-06-18,Meta,US,Llama 3.3 70B (via Together AI),Frontier,Price increase (host),1.04,1.04,,"Together repriced upward from $0.88/$0.88",Together AI pricing
+2026-06-30,Anthropic,US,Claude Sonnet 5,Mid,Launch + price cut,2.00,10.00,0.20,"Introductory $2/$10 later made permanent; scheduled Sep 2026 rise to $3/$15 cancelled",Anthropic announcement + pricing page
+2026-06-30,Mistral,Europe,Mistral Small 4,Small/cheap,Price increase,0.15,0.60,0.015,"Post-launch raise from $0.10/$0.30",Mistral pricing page
+2026-07-08,xAI,US,Grok 4.5,Frontier,Launch + price increase,2.00,6.00,0.30,"<200K prompts; >=200K bills whole request at 2x",xAI announcement
+2026-07-09,OpenAI,US,GPT-5.6 Sol,Frontier,Launch,5.00,30.00,0.50,"Flagship of the 5.6 family",OpenAI announcement
+2026-07-09,OpenAI,US,GPT-5.6 Terra,Mid,Launch,2.50,15.00,0.25,,OpenAI announcement
+2026-07-09,OpenAI,US,GPT-5.6 Luna,Small/cheap,Launch,1.00,6.00,0.10,,OpenAI announcement
+2026-07-09,Meta,US,Muse Spark 1.1,Frontier,Launch,1.25,4.25,0.15,"Meta's first first-party paid API (Meta Model API public preview)",Meta announcement
+2026-07-21,Google,US,Gemini 3.6 Flash,Frontier,Launch + price cut,1.50,7.50,0.15,"Workhorse Flash; output cut vs 3.5 Flash",Google announcement
+2026-07-21,Google,US,Gemini 3.5 Flash-Lite,Small/cheap,Launch,0.30,2.50,0.03,"Cheapest GA model in the 3.5 family",Google announcement
+2026-07-24,Anthropic,US,Claude Opus 5,Frontier,Launch,5.00,25.00,0.50,"New Opus generation at the held $5/$25 tier; 1M context",Anthropic announcement
+2026-07-30,OpenAI,US,GPT-5.6 Terra,Mid,Price cut,2.00,12.00,0.20,"20% cut on both legs",OpenAI announcement
+2026-07-30,OpenAI,US,GPT-5.6 Luna,Small/cheap,Price cut,0.20,1.20,0.02,"80% cut on both legs; steepest single OpenAI price move",OpenAI announcement
+2026-08-03,Alibaba,China,Qwen3.8 Max,Frontier,Launch + price cut,2.00,6.00,0.25,"20% cut on both legs vs Qwen3.7-Max",Alibaba model page
+2026-08-05,Meta,US,Muse Spark 1.2,Frontier,Launch,1.25,4.25,0.15,"Generation change with no price move",Meta announcement
+2026-08-10,Meta,US,Muse Glimmer 30B (via Together AI),Small/cheap,Hosted reference price,0.35,1.50,0.04,"First Meta open-weights release under Apache 2.0; hosted reference rate",Together AI pricing
+2026-08-12,xAI,US,Grok 4.6,Frontier,Launch,2.00,6.00,0.50,"Headline rate held from 4.5; cached input raised $0.30 to $0.50",xAI announcement
+2026-08-13,Google,US,Gemini 3.7 Flash,Frontier,Launch + price cut,0.75,3.75,0.075,"Time-boxed introductory rate through Dec 31 2026; reverts to $1.50/$7.50",Google announcement
+2026-08-13,Google,US,Gemini 3.6 Flash,Frontier,Price cut (retroactive),0.75,3.75,0.075,"Cut to match 3.7 Flash; reverts Jan 1 2027",Google announcement
+2026-08-16,DeepSeek,China,DeepSeek-V4-Pro,Frontier,Price increase,0.66,1.98,0.022,"Off-peak leg shown; peak is exactly 2x; end of flat-rate era",DeepSeek API docs
+2026-08-16,DeepSeek,China,DeepSeek-V4-Flash,Small/cheap,Price increase,0.22,0.66,0.007,"Off-peak leg shown; peak is exactly 2x",DeepSeek API docs
+2026-08-19,Alibaba,China,Qwen3.8-27B,Small/cheap,Launch,0.50,3.00,0.10,"27B dense open weights (Apache 2.0); hosted on Qwen Cloud",Alibaba model page
+2026-08-21,OpenAI,US,GPT-5.6 Sol,Frontier,Price cut,4.00,20.00,0.40,"Promotional rate through at least Nov 21 2026",OpenAI pricing page
+2026-08-26,Alibaba,China,Qwen3.8-Flash,Small/cheap,Launch,0.15,0.47,0.016,"Alibaba's cheapest hosted text tier",Alibaba model page
+2026-09-01,Anthropic,US,Claude Fable 5.1,Frontier,Launch,10.00,50.00,0.25,"Headline held from Fable 5; cache-hit rate cut $1 to $0.25",Anthropic pricing page
+2026-09-02,Google,US,Gemini 3.8 Flash,Frontier,Launch,0.75,3.75,0.075,"Introductory rate held from 3.7 Flash; reverts to $1.50/$7.50 Jan 1 2027",Google announcement
+2026-09-02,Meta,US,Muse Spark 1.3,Frontier,Launch,1.25,4.25,0.15,"Third consecutive Spark release at the same rate",Meta announcement
+2026-09-03,OpenAI,US,GPT-6 Astra,Frontier,Launch + price increase,10.00,50.00,1.00,"2.5x the previous flagship's promotional rate; >272K prompts bill $20/$75",OpenAI announcement
+2026-09-10,DeepSeek,China,DeepSeek-V4.1-Flash,Frontier,Launch + price cut,0.15,0.60,0.003,"Took the flagship slot; off-peak leg shown; peak is 2x",DeepSeek API docs
+2026-09-21,xAI,US,Grok 4.7,Frontier,Launch,2.00,6.00,0.50,"Same price as Grok 4.6; third consecutive flagship at $2/$6",xAI announcement
